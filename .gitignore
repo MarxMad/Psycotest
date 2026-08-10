@@ -1,0 +1,17 @@
+.DS_Store
+.claude/
+.venv/
+*.pyc
+__pycache__/
+~$*
+
+# Datos locales (no subir BD ni secretos)
+data/
+app/data/
+app/.env
+app/.env.local
+
+# Dependencias y build (también en app/.gitignore)
+**/node_modules/
+**/.next/
+**/out/

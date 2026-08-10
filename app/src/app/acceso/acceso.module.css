@@ -1,0 +1,140 @@
+.main {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.panel {
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem 1.75rem;
+  background: color-mix(in srgb, var(--raised) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.panel h1 {
+  font-size: 1.75rem;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+}
+
+.iconWrap {
+  display: inline-flex;
+  padding: 0.65rem;
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--hartman) 12%, transparent);
+  color: var(--hartman);
+  margin-bottom: 0.75rem;
+}
+
+.form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.form input {
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.form input:focus {
+  outline: 2px solid color-mix(in srgb, var(--hartman) 40%, transparent);
+  border-color: var(--hartman);
+}
+
+.error {
+  color: #c45c4a;
+  font-size: 0.88rem;
+}
+
+.security {
+  display: flex;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule-soft);
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.security svg {
+  flex: none;
+  margin-top: 0.15rem;
+  color: var(--hartman);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.25rem 0;
+}
+
+.testCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: var(--r);
+  border: 1px solid color-mix(in srgb, var(--tint) 35%, var(--rule));
+  background: color-mix(in srgb, var(--tint) 8%, var(--surface));
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.testCard:hover:not([data-done="true"]) {
+  border-color: var(--tint);
+  transform: translateX(2px);
+}
+
+.testCard[data-done="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.testCard span {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.mensaje {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.panel :global(.btn) {
+  width: 100%;
+  justify-content: center;
+}
+
+.panel :global(.btn) + :global(.btn) {
+  margin-top: 0.5rem;
+}

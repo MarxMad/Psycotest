@@ -1,0 +1,77 @@
+.main {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.25rem;
+}
+
+.card {
+  max-width: 32rem;
+  width: 100%;
+  text-align: center;
+  padding: 2.5rem 2rem;
+  background: color-mix(in srgb, var(--raised) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.icon {
+  color: var(--hartman);
+  margin: 0 auto 1rem;
+}
+
+.card h1 {
+  font-size: 1.85rem;
+  margin: 0.35rem 0 0.75rem;
+}
+
+.lede {
+  color: var(--ink-soft);
+  line-height: 1.55;
+  margin-bottom: 1.5rem;
+}
+
+.meta {
+  display: grid;
+  gap: 0.85rem;
+  text-align: left;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+}
+
+.meta div {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.meta dt {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.meta dd {
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+
+.mensaje {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-soft);
+}
+
+.card :global(.btn) {
+  width: 100%;
+  justify-content: center;
+}

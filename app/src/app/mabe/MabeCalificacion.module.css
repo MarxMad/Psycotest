@@ -1,0 +1,111 @@
+.wrap {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.nota {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 0.85rem 1rem;
+  background: color-mix(in srgb, var(--raised) 90%, transparent);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+}
+
+.azul {
+  color: #4a7fb8;
+  font-weight: 600;
+}
+
+.rojo {
+  color: #c45c4a;
+  font-weight: 600;
+}
+
+.block {
+  padding: 1.15rem;
+  background: var(--raised);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r-lg);
+}
+
+.block h3 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.formula {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.table th,
+.table td {
+  padding: 0.45rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.table th {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.table tfoot td {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-bottom: none;
+  padding-top: 0.65rem;
+}
+
+.combo {
+  margin-top: 0.65rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  font-family: var(--mono);
+}
+
+.brechaGrid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 560px) {
+  .brechaGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.brechaGrid h4 {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.brechaGrid ul {
+  list-style: none;
+  display: grid;
+  gap: 0.3rem;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.brechaGrid span {
+  display: inline-block;
+  width: 1.2rem;
+  font-weight: 700;
+}

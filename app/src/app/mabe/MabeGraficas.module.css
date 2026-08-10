@@ -1,0 +1,112 @@
+.wrap {
+  display: grid;
+  gap: 2rem;
+}
+
+@media (min-width: 960px) {
+  .wrap {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chartBlock {
+  background: var(--raised);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  padding: 1.25rem 1.5rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.chartBlock h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.75rem;
+}
+
+.legend {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.legend span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.dotPuesto,
+.dotPersona {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.dotPuesto {
+  background: #4a7fb8;
+}
+
+.dotPersona {
+  background: #c45c4a;
+}
+
+.chart {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+  min-height: 220px;
+  padding-top: 0.5rem;
+}
+
+.col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  max-width: 52px;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  background: linear-gradient(to top, var(--rule-soft) 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+
+.barPuesto,
+.barPersona {
+  width: 38%;
+  min-height: 4px;
+  border-radius: 2px 2px 0 0;
+  transition: height 0.35s ease;
+}
+
+.barPuesto {
+  background: linear-gradient(to top, #3a6a9e, #6a9fd4);
+}
+
+.barPersona {
+  background: linear-gradient(to top, #a84838, #d4806e);
+}
+
+.key {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.name {
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.2;
+}

@@ -1,0 +1,380 @@
+.main {
+  min-height: calc(100dvh - 56px);
+  padding: 2rem 0 4rem;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.head h1 {
+  margin-top: 0.25rem;
+}
+
+.head p {
+  color: var(--muted);
+  margin-top: 0.35rem;
+  max-width: 32rem;
+}
+
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stats {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  flex: 1;
+  max-width: 180px;
+  padding: 1.15rem 1.35rem;
+  background: color-mix(in srgb, var(--raised) 80%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
+  border-radius: var(--r-lg);
+  display: grid;
+  gap: 0.25rem;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+.statIcon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.statN {
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.stat span:last-child {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.filter,
+.filterOn {
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 99px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.filterOn {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: var(--raised);
+  border: 1px dashed var(--rule);
+  border-radius: var(--r);
+}
+
+.empty p {
+  margin-bottom: 1rem;
+  color: var(--muted);
+}
+
+.tableShell {
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--raised) 85%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule-soft);
+  background: var(--surface);
+}
+
+.table td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--rule-soft);
+  vertical-align: middle;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: color-mix(in srgb, var(--paper) 50%, transparent);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.5rem;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--c, var(--ink)) 12%, transparent);
+  color: var(--c, var(--ink));
+}
+
+.badge[data-i="papi"] {
+  --c: var(--papi);
+}
+
+.badge[data-i="hartman"] {
+  --c: var(--hartman);
+}
+
+.badge[data-i="mabe"] {
+  --c: var(--mabe);
+}
+
+.ok {
+  color: var(--hartman);
+  font-size: 0.82rem;
+}
+
+.pending {
+  color: var(--mabe);
+  font-size: 0.82rem;
+}
+
+.review {
+  color: var(--papi);
+  font-size: 0.82rem;
+}
+
+.validated {
+  color: var(--hartman);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.validatedMsg {
+  margin-top: 1rem;
+  font-size: 0.88rem;
+  color: var(--hartman);
+}
+
+.link {
+  font-size: 0.82rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.crumb {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.detailHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.detailHead h1 {
+  margin-top: 0.35rem;
+}
+
+.approved {
+  color: var(--hartman);
+  font-weight: 500;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule-soft);
+  padding-bottom: 0;
+}
+
+.tab,
+.tabOn {
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0.65rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.tabOn {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+  font-weight: 500;
+}
+
+.respBox,
+.interpBox {
+  background: var(--raised);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  padding: 1.25rem;
+}
+
+.respBox pre,
+.interpBox pre {
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  max-height: 400px;
+  overflow: auto;
+  margin-bottom: 1rem;
+}
+
+.notasLabel {
+  display: grid;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 1rem;
+}
+
+.notasLabel textarea {
+  font: inherit;
+  padding: 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--surface);
+  resize: vertical;
+}
+
+.row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.miniTable {
+  width: 100%;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  border-collapse: collapse;
+}
+
+.miniTable td {
+  padding: 0.4rem 0.75rem;
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.miniTable td:nth-child(2),
+.miniTable td:nth-child(4) {
+  font-family: var(--mono);
+  text-align: right;
+  width: 3rem;
+}
+
+.alertBox {
+  background: color-mix(in srgb, var(--alert) 8%, var(--raised));
+  border: 1px solid color-mix(in srgb, var(--alert) 35%, transparent);
+  border-radius: var(--r);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.88rem;
+}
+
+.alertBox strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--alert);
+}
+
+.alertBox ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--ink);
+}
+
+.alertBox li {
+  margin-bottom: 0.25rem;
+}
+
+.mabeCalif {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.hartmanGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.hartmanGrid h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.hartmanGrid p {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
