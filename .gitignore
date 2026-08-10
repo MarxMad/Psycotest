@@ -5,8 +5,8 @@
 __pycache__/
 ~$*
 
-# Datos locales (no subir BD ni secretos)
-data/
+# BD SQLite local (no confundir con app/src/data/, código fuente de ítems)
+/data/
 app/data/
 app/.env
 app/.env.local

@@ -1,0 +1,452 @@
+[
+ {
+  "n": 1,
+  "a": "Soy trabajador",
+  "b": "No soy de humor variable"
+ },
+ {
+  "n": 2,
+  "a": "Me gusta hacer el trabajo mejor que los demás",
+  "b": "Me gusta seguir con lo que he empezado hasta terminarlo"
+ },
+ {
+  "n": 3,
+  "a": "Me gusta enseñar a la gente cómo hacer las cosas",
+  "b": "Me gusta hacer las cosas lo mejor posible"
+ },
+ {
+  "n": 4,
+  "a": "Me gusta hacer cosas graciosas",
+  "b": "Me gusta decir a la gente lo que tiene que hacer"
+ },
+ {
+  "n": 5,
+  "a": "Me gusta unirme a grupos",
+  "b": "Me gusta ser tomado en cuenta por los grupos"
+ },
+ {
+  "n": 6,
+  "a": "Me gusta hacer un amigo íntimo",
+  "b": "Me gusta hacer amistad con el grupo"
+ },
+ {
+  "n": 7,
+  "a": "Soy rápido en cambiar cuando lo creo necesario",
+  "b": "Intento hacer amigos íntimos"
+ },
+ {
+  "n": 8,
+  "a": "Me gusta «devolverla» cuando alguien me ofende",
+  "b": "Me gusta hacer cosas nuevas o diferentes"
+ },
+ {
+  "n": 9,
+  "a": "Quiero que mi jefe me estime",
+  "b": "Me gusta decir a la gente cuándo están equivocados"
+ },
+ {
+  "n": 10,
+  "a": "Me gustaría seguir las instrucciones que me dan",
+  "b": "Me gusta agradar a mis superiores"
+ },
+ {
+  "n": 11,
+  "a": "Me esfuerzo mucho",
+  "b": "Soy ordenado. Pongo todo en su sitio"
+ },
+ {
+  "n": 12,
+  "a": "Consigo que la gente haga lo que yo quiero",
+  "b": "No me altero fácilmente"
+ },
+ {
+  "n": 13,
+  "a": "Me gusta decir al grupo lo que tiene que hacer",
+  "b": "Siempre continúo un trabajo hasta que está hecho"
+ },
+ {
+  "n": 14,
+  "a": "Me gusta ser animado e interesante",
+  "b": "Yo quiero tener mucho éxito"
+ },
+ {
+  "n": 15,
+  "a": "Me gusta «encajar» con grupos",
+  "b": "Me gusta ayudar a las personas a tomar decisiones"
+ },
+ {
+  "n": 16,
+  "a": "Me preocupa cuando alguien no me estima",
+  "b": "Me gusta que la gente note mi presencia"
+ },
+ {
+  "n": 17,
+  "a": "Me gusta probar cosas nuevas",
+  "b": "Prefiero trabajar con otras personas que sólo"
+ },
+ {
+  "n": 18,
+  "a": "Algunas veces culpo a otros cuando las cosas salen mal",
+  "b": "Me molesta cuando no le gusto a alguien"
+ },
+ {
+  "n": 19,
+  "a": "Me gusta complacer a mis superiores",
+  "b": "Me gusta intentar trabajos nuevos y diferentes"
+ },
+ {
+  "n": 20,
+  "a": "Me gusta tener instrucciones detalladas para hacer un trabajo",
+  "b": "Me gusta decírselo a la gente cuando me enfada"
+ },
+ {
+  "n": 21,
+  "a": "Siempre me esfuerzo mucho",
+  "b": "Me gusta ir paso a paso con gran cuidado"
+ },
+ {
+  "n": 22,
+  "a": "Soy un buen «dirigente»",
+  "b": "Organizo bien el trabajo de un puesto"
+ },
+ {
+  "n": 23,
+  "a": "Me enfado con facilidad",
+  "b": "Soy lento tomando decisiones"
+ },
+ {
+  "n": 24,
+  "a": "Me gusta trabajar en varias actividades al mismo tiempo",
+  "b": "Cuando estoy en grupo me gusta estar callado"
+ },
+ {
+  "n": 25,
+  "a": "Me encanta que me inviten",
+  "b": "Me gusta hacer las cosas mejor que los demás"
+ },
+ {
+  "n": 26,
+  "a": "Me gusta hacer amigos íntimos",
+  "b": "Me gusta aconsejar a los demás"
+ },
+ {
+  "n": 27,
+  "a": "Me gusta hacer cosas nuevas y diferentes",
+  "b": "Me gusta hablar de mis éxitos"
+ },
+ {
+  "n": 28,
+  "a": "Cuando tengo razón me gusta luchar por ella",
+  "b": "Me gustar pertenecer a un grupo"
+ },
+ {
+  "n": 29,
+  "a": "Evito ser diferente",
+  "b": "Intento acercarme mucho a la gente"
+ },
+ {
+  "n": 30,
+  "a": "Me gusta que me digan exactamente cómo hacer las cosas",
+  "b": "Me aburro fácilmente"
+ },
+ {
+  "n": 31,
+  "a": "Trabajo mucho",
+  "b": "Pienso y planeo mucho"
+ },
+ {
+  "n": 32,
+  "a": "Me gusta dirigir el grupo",
+  "b": "Los pequeños detalles me interesan"
+ },
+ {
+  "n": 33,
+  "a": "Tomo decisiones fácil y rápidamente",
+  "b": "Tengo mis cosas cuidadas y ordenadas"
+ },
+ {
+  "n": 34,
+  "a": "Hago las cosas de prisa",
+  "b": "Yo no me pongo enfadado ni triste a menudo"
+ },
+ {
+  "n": 35,
+  "a": "Quiero ser parte del grupo",
+  "b": "Quiero hacer un solo trabajo a un tiempo"
+ },
+ {
+  "n": 36,
+  "a": "Intento hacer amigos íntimos",
+  "b": "Intento mucho ser el mejor"
+ },
+ {
+  "n": 37,
+  "a": "Me gustan los nuevos estilos en trajes y coches",
+  "b": "Me gusta ser responsable por otros"
+ },
+ {
+  "n": 38,
+  "a": "Disfruto discutiendo",
+  "b": "Me gusta llamar la atención"
+ },
+ {
+  "n": 39,
+  "a": "Me gusta agradar a mis superiores",
+  "b": "Estoy interesado en ser parte del grupo"
+ },
+ {
+  "n": 40,
+  "a": "Me gusta seguir las reglas con cuidado",
+  "b": "Me gusta que la gente me conozca muy bien"
+ },
+ {
+  "n": 41,
+  "a": "Me esfuerzo mucho",
+  "b": "Soy muy amigable"
+ },
+ {
+  "n": 42,
+  "a": "La gente piensa que soy un buen «dirigente»",
+  "b": "Pienso con cuidado y largamente"
+ },
+ {
+  "n": 43,
+  "a": "A menudo me arriesgo",
+  "b": "Me gusta protestar por pequeñas cosas"
+ },
+ {
+  "n": 44,
+  "a": "La gente piensa que trabajo deprisa",
+  "b": "La gente piensa que tengo mis cosas cuidadas y ordenadas"
+ },
+ {
+  "n": 45,
+  "a": "Me gusta jugar y hacer deportes",
+  "b": "Soy muy agradable"
+ },
+ {
+  "n": 46,
+  "a": "Me gusta que la gente esté unida y sea amistosa",
+  "b": "Siempre trato de terminar lo que he empezado"
+ },
+ {
+  "n": 47,
+  "a": "Me gusta experimentar y probar nuevas cosas",
+  "b": "Me gusta hacer bien un trabajo difícil"
+ },
+ {
+  "n": 48,
+  "a": "Me gusta que me traten justamente",
+  "b": "Me gusta decir a los demás cómo hacer las cosas"
+ },
+ {
+  "n": 49,
+  "a": "Me gusta hacer aquello que esperan de mí",
+  "b": "Me gusta llamar la atención"
+ },
+ {
+  "n": 50,
+  "a": "Me gusta tener instrucciones precisas para hacer un trabajo",
+  "b": "Me gusta estar con la gente"
+ },
+ {
+  "n": 51,
+  "a": "Siempre trato de hacer mi trabajo perfecto",
+  "b": "Me dicen que soy prácticamente incansable"
+ },
+ {
+  "n": 52,
+  "a": "Soy el tipo «dirigente»",
+  "b": "Hago amigos fácilmente"
+ },
+ {
+  "n": 53,
+  "a": "Asumo riesgos",
+  "b": "Pienso mucho"
+ },
+ {
+  "n": 54,
+  "a": "Trabajo a un paso rápido y constante",
+  "b": "Disfruto trabajando en detalles"
+ },
+ {
+  "n": 55,
+  "a": "Tengo mucha energía para juegos y deportes",
+  "b": "Tengo mis cosas cuidadas y ordenadas"
+ },
+ {
+  "n": 56,
+  "a": "Me llevo bien con todo el mundo",
+  "b": "Soy de temperamento estable"
+ },
+ {
+  "n": 57,
+  "a": "Quiero conocer nueva gente y hacer cosas nuevas",
+  "b": "Siempre quiero terminar el trabajo que he empezado"
+ },
+ {
+  "n": 58,
+  "a": "Normalmente lucho por lo que yo creo",
+  "b": "Normalmente me gusta trabajar mucho"
+ },
+ {
+  "n": 59,
+  "a": "Me gustan las sugerencias de las personas que admiro",
+  "b": "Me gusta estar encargado de otras personas"
+ },
+ {
+  "n": 60,
+  "a": "Me dejo influenciar mucho por la gente",
+  "b": "Me gusta ser el centro de atención"
+ },
+ {
+  "n": 61,
+  "a": "Normalmente trabajo mucho",
+  "b": "Normalmente trabajo de prisa"
+ },
+ {
+  "n": 62,
+  "a": "Cuando hablo, el grupo escucha",
+  "b": "Soy hábil con herramientas"
+ },
+ {
+  "n": 63,
+  "a": "Soy lento en hacer amigos",
+  "b": "Soy lento en decidirme"
+ },
+ {
+  "n": 64,
+  "a": "Normalmente como deprisa",
+  "b": "Disfruto leyendo"
+ },
+ {
+  "n": 65,
+  "a": "Me gusta el trabajo en donde puedo moverme",
+  "b": "Me gusta el trabajo que tenga que hacerse con cuidado"
+ },
+ {
+  "n": 66,
+  "a": "Hago el mayor número posible de amigos",
+  "b": "Encuentro lo que he guardado"
+ },
+ {
+  "n": 67,
+  "a": "Planeo a largo plazo",
+  "b": "Siempre soy agradable"
+ },
+ {
+  "n": 68,
+  "a": "Tengo gran orgullo de mi buen nombre",
+  "b": "Insisto en un problema hasta que está resuelto"
+ },
+ {
+  "n": 69,
+  "a": "Me gusta agradar a la gente que admiro",
+  "b": "Quiero tener éxito"
+ },
+ {
+  "n": 70,
+  "a": "Me gusta que otros tomen decisiones para el grupo",
+  "b": "A mi me gusta tomar decisiones para el grupo"
+ },
+ {
+  "n": 71,
+  "a": "Siempre me esfuerzo mucho",
+  "b": "Tomo decisiones fácil y rápidamente"
+ },
+ {
+  "n": 72,
+  "a": "El grupo hace normalmente lo que yo quiero",
+  "b": "Normalmente tengo prisa"
+ },
+ {
+  "n": 73,
+  "a": "A menudo me siento cansado",
+  "b": "Soy lento tomando decisiones"
+ },
+ {
+  "n": 74,
+  "a": "Trabajo de prisa",
+  "b": "Hago amigos enseguida"
+ },
+ {
+  "n": 75,
+  "a": "Normalmente tengo energía",
+  "b": "Dedico mucho tiempo a pensar"
+ },
+ {
+  "n": 76,
+  "a": "Soy muy cordial con la gente",
+  "b": "Me gusta el trabajo que requiere precisión"
+ },
+ {
+  "n": 77,
+  "a": "Pienso y planeo mucho",
+  "b": "Guardo todas las cosas en su sitio"
+ },
+ {
+  "n": 78,
+  "a": "Me gusta el trabajo que requiere detalles",
+  "b": "Tardo en enfadarme"
+ },
+ {
+  "n": 79,
+  "a": "Me gusta seguir a la gente que admiro",
+  "b": "Siempre termino el trabajo que he empezado"
+ },
+ {
+  "n": 80,
+  "a": "Me gustan las instrucciones claras",
+  "b": "Me gusta trabajar mucho"
+ },
+ {
+  "n": 81,
+  "a": "Persigo aquello que deseo",
+  "b": "Soy un buen «dirigente»"
+ },
+ {
+  "n": 82,
+  "a": "Hago que los demás trabajen mucho",
+  "b": "Soy desenfadado"
+ },
+ {
+  "n": 83,
+  "a": "Tomo decisiones rápidas",
+  "b": "Hablo de prisa"
+ },
+ {
+  "n": 84,
+  "a": "Normalmente trabajo de prisa",
+  "b": "Hago ejercicio con regularidad"
+ },
+ {
+  "n": 85,
+  "a": "No me gusta conocer gente",
+  "b": "Me canso enseguida"
+ },
+ {
+  "n": 86,
+  "a": "Hago muchísimos amigos",
+  "b": "Dedico mucho tiempo a pensar"
+ },
+ {
+  "n": 87,
+  "a": "Me gusta pensar sobre teoría",
+  "b": "Me gusta trabajar con detalles"
+ },
+ {
+  "n": 88,
+  "a": "Me gusta trabajar con detalles",
+  "b": "Me gusta organizar mi trabajo"
+ },
+ {
+  "n": 89,
+  "a": "Pongo las cosas en su sitio",
+  "b": "Siempre soy agradable"
+ },
+ {
+  "n": 90,
+  "a": "Me gusta que me digan que he de hacer",
+  "b": "Tengo que terminar lo que he empezado"
+ }
+]

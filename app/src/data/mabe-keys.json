@@ -1,0 +1,1674 @@
+{
+  "keys": {
+    "procPuesto_A": [
+      "D6",
+      "D11",
+      "D14",
+      "K8",
+      "K11",
+      "K16"
+    ],
+    "procPuesto_L": [
+      "D7",
+      "D10",
+      "D12",
+      "D16",
+      "K6",
+      "K17"
+    ],
+    "procPuesto_I": [
+      "D9",
+      "D15",
+      "K7",
+      "K10",
+      "K12",
+      "K14"
+    ],
+    "procPuesto_V": [
+      "D8",
+      "D13",
+      "D17",
+      "K9",
+      "K13",
+      "K15"
+    ],
+    "valPuesto_T": [
+      "D7",
+      "D11",
+      "L9",
+      "L12",
+      "L18"
+    ],
+    "valPuesto_E": [
+      "D9",
+      "D12",
+      "D17",
+      "L10",
+      "L14"
+    ],
+    "valPuesto_A": [
+      "D8",
+      "D15",
+      "D19",
+      "L8",
+      "L16"
+    ],
+    "valPuesto_S": [
+      "D6",
+      "D18",
+      "L7",
+      "L15",
+      "L20"
+    ],
+    "valPuesto_P": [
+      "D10",
+      "D13",
+      "D16",
+      "L11",
+      "L17"
+    ],
+    "valPuesto_R": [
+      "D14",
+      "D20",
+      "L6",
+      "L13",
+      "L19"
+    ],
+    "procPs_I_A": [
+      "B6",
+      "B8",
+      "H5",
+      "K7",
+      "E12"
+    ],
+    "procPs_II_A": [
+      "I18",
+      "I19",
+      "I21",
+      "O18",
+      "O20"
+    ],
+    "procPs_III_A": [
+      "V5",
+      "V8",
+      "V13",
+      "V19",
+      "V22"
+    ],
+    "procPs_I_L": [
+      "E7",
+      "E8",
+      "K5",
+      "K6",
+      "H12"
+    ],
+    "procPs_II_L": [
+      "C18",
+      "I17",
+      "I20",
+      "O16",
+      "O17"
+    ],
+    "procPs_III_L": [
+      "V6",
+      "V11",
+      "V16",
+      "V18",
+      "V24"
+    ],
+    "procPs_I_I": [
+      "E5",
+      "E6",
+      "K8",
+      "H11",
+      "B7"
+    ],
+    "procPs_II_I": [
+      "C17",
+      "C20",
+      "C21",
+      "I16",
+      "I22"
+    ],
+    "procPs_III_I": [
+      "V9",
+      "V10",
+      "V17",
+      "V21",
+      "V23"
+    ],
+    "procPs_I_V": [
+      "B5",
+      "H6",
+      "H7",
+      "H8",
+      "E11"
+    ],
+    "procPs_II_V": [
+      "C16",
+      "C19",
+      "C22",
+      "O19",
+      "O21"
+    ],
+    "procPs_III_V": [
+      "V12",
+      "V14",
+      "V15",
+      "V20",
+      "V7"
+    ],
+    "valPs_T": [
+      "D6",
+      "D14",
+      "D15",
+      "L13",
+      "T14"
+    ],
+    "valPs_E": [
+      "D7",
+      "D12",
+      "D16",
+      "L6",
+      "L15",
+      "T6"
+    ],
+    "valPs_A": [
+      "L5",
+      "L9",
+      "T8",
+      "T12"
+    ],
+    "valPs_S": [
+      "D5",
+      "D13",
+      "L16",
+      "T7",
+      "T16"
+    ],
+    "valPs_P": [
+      "D9",
+      "L7",
+      "L12",
+      "T5",
+      "T13"
+    ],
+    "valPs_R": [
+      "D8",
+      "L8",
+      "L14",
+      "T9",
+      "T15"
+    ]
+  },
+  "groups": [
+    {
+      "id": "procPuesto",
+      "title": "Proceso pensante del puesto",
+      "subtitle": "24 reactivos · escala 1–5",
+      "items": [
+        {
+          "id": "D6",
+          "block": "procPuesto_A",
+          "sheet": "Proc. Ps.",
+          "cell": "D6",
+          "row": 6,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "D11",
+          "block": "procPuesto_A",
+          "sheet": "Proc. Ps.",
+          "cell": "D11",
+          "row": 11,
+          "col": "D",
+          "demo": "V",
+          "tag": "I"
+        },
+        {
+          "id": "D14",
+          "block": "procPuesto_A",
+          "sheet": "Val. Ps.",
+          "cell": "D14",
+          "row": 14,
+          "col": "D",
+          "demo": 2,
+          "tag": "T"
+        },
+        {
+          "id": "K8",
+          "block": "procPuesto_A",
+          "sheet": "Val. Puesto",
+          "cell": "K8",
+          "row": 8,
+          "col": "K",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "K11",
+          "block": "procPuesto_A",
+          "sheet": "Proc. Puesto",
+          "cell": "K11",
+          "row": 11,
+          "col": "K",
+          "demo": null,
+          "tag": "A"
+        },
+        {
+          "id": "K16",
+          "block": "procPuesto_A",
+          "sheet": "Val. Puesto",
+          "cell": "K16",
+          "row": 16,
+          "col": "K",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "D7",
+          "block": "procPuesto_L",
+          "sheet": "Proc. Ps.",
+          "cell": "D7",
+          "row": 7,
+          "col": "D",
+          "demo": "L",
+          "tag": "A"
+        },
+        {
+          "id": "D10",
+          "block": "procPuesto_L",
+          "sheet": "Proc. Puesto",
+          "cell": "D10",
+          "row": 10,
+          "col": "D",
+          "demo": null,
+          "tag": "I"
+        },
+        {
+          "id": "D12",
+          "block": "procPuesto_L",
+          "sheet": "Proc. Ps.",
+          "cell": "D12",
+          "row": 12,
+          "col": "D",
+          "demo": "A",
+          "tag": "L"
+        },
+        {
+          "id": "D16",
+          "block": "procPuesto_L",
+          "sheet": "Val. Ps.",
+          "cell": "D16",
+          "row": 16,
+          "col": "D",
+          "demo": 5,
+          "tag": "S"
+        },
+        {
+          "id": "K6",
+          "block": "procPuesto_L",
+          "sheet": "Proc. Ps.",
+          "cell": "K6",
+          "row": 6,
+          "col": "K",
+          "demo": 2,
+          "tag": "L"
+        },
+        {
+          "id": "K17",
+          "block": "procPuesto_L",
+          "sheet": "Proc. Puesto",
+          "cell": "K17",
+          "row": 17,
+          "col": "K",
+          "demo": null,
+          "tag": "L"
+        },
+        {
+          "id": "D9",
+          "block": "procPuesto_I",
+          "sheet": "Val. Ps.",
+          "cell": "D9",
+          "row": 9,
+          "col": "D",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "D15",
+          "block": "procPuesto_I",
+          "sheet": "Val. Ps.",
+          "cell": "D15",
+          "row": 15,
+          "col": "D",
+          "demo": 4,
+          "tag": "E"
+        },
+        {
+          "id": "K7",
+          "block": "procPuesto_I",
+          "sheet": "Proc. Ps.",
+          "cell": "K7",
+          "row": 7,
+          "col": "K",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "K10",
+          "block": "procPuesto_I",
+          "sheet": "Proc. Puesto",
+          "cell": "K10",
+          "row": 10,
+          "col": "K",
+          "demo": null,
+          "tag": "I"
+        },
+        {
+          "id": "K12",
+          "block": "procPuesto_I",
+          "sheet": "Proc. Puesto",
+          "cell": "K12",
+          "row": 12,
+          "col": "K",
+          "demo": null,
+          "tag": "I"
+        },
+        {
+          "id": "K14",
+          "block": "procPuesto_I",
+          "sheet": "Proc. Puesto",
+          "cell": "K14",
+          "row": 14,
+          "col": "K",
+          "demo": null,
+          "tag": "I"
+        },
+        {
+          "id": "D8",
+          "block": "procPuesto_V",
+          "sheet": "Proc. Ps.",
+          "cell": "D8",
+          "row": 8,
+          "col": "D",
+          "demo": "L",
+          "tag": "I"
+        },
+        {
+          "id": "D13",
+          "block": "procPuesto_V",
+          "sheet": "Val. Ps.",
+          "cell": "D13",
+          "row": 13,
+          "col": "D",
+          "demo": 3,
+          "tag": "T"
+        },
+        {
+          "id": "D17",
+          "block": "procPuesto_V",
+          "sheet": "Proc. Ps.",
+          "cell": "D17",
+          "row": 17,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "K9",
+          "block": "procPuesto_V",
+          "sheet": "Val. Ps.",
+          "cell": "K9",
+          "row": 9,
+          "col": "K",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "K13",
+          "block": "procPuesto_V",
+          "sheet": "Proc. Puesto",
+          "cell": "K13",
+          "row": 13,
+          "col": "K",
+          "demo": null,
+          "tag": "V"
+        },
+        {
+          "id": "K15",
+          "block": "procPuesto_V",
+          "sheet": "Proc. Puesto",
+          "cell": "K15",
+          "row": 15,
+          "col": "K",
+          "demo": null,
+          "tag": "V"
+        }
+      ]
+    },
+    {
+      "id": "procPs",
+      "title": "Proceso pensante personal",
+      "subtitle": "60 reactivos · 3 secciones",
+      "items": [
+        {
+          "id": "B6",
+          "block": "procPs_I_A",
+          "sheet": "Proc. Puesto",
+          "cell": "B6",
+          "row": 6,
+          "col": "B",
+          "demo": "A",
+          "tag": "L"
+        },
+        {
+          "id": "B8",
+          "block": "procPs_I_A",
+          "sheet": "Proc. Ps.",
+          "cell": "B8",
+          "row": 8,
+          "col": "B",
+          "demo": 3,
+          "tag": "I"
+        },
+        {
+          "id": "H5",
+          "block": "procPs_I_A",
+          "sheet": "Proc. Ps.",
+          "cell": "H5",
+          "row": 5,
+          "col": "H",
+          "demo": 2,
+          "tag": "L"
+        },
+        {
+          "id": "K7",
+          "block": "procPs_I_A",
+          "sheet": "Proc. Ps.",
+          "cell": "K7",
+          "row": 7,
+          "col": "K",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "E12",
+          "block": "procPs_I_A",
+          "sheet": "Proc. Ps.",
+          "cell": "E12",
+          "row": 12,
+          "col": "E",
+          "demo": 1,
+          "tag": "L"
+        },
+        {
+          "id": "I18",
+          "block": "procPs_II_A",
+          "sheet": "Val. Puesto",
+          "cell": "I18",
+          "row": 18,
+          "col": "I",
+          "demo": "T",
+          "tag": "T"
+        },
+        {
+          "id": "I19",
+          "block": "procPs_II_A",
+          "sheet": "Proc. Ps.",
+          "cell": "I19",
+          "row": 19,
+          "col": "I",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "I21",
+          "block": "procPs_II_A",
+          "sheet": "Proc. Puesto",
+          "cell": "I21",
+          "row": 21,
+          "col": "I",
+          "demo": 0,
+          "tag": "A"
+        },
+        {
+          "id": "O18",
+          "block": "procPs_II_A",
+          "sheet": "Proc. Ps.",
+          "cell": "O18",
+          "row": 18,
+          "col": "O",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "O20",
+          "block": "procPs_II_A",
+          "sheet": "Proc. Ps.",
+          "cell": "O20",
+          "row": 20,
+          "col": "O",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "V5",
+          "block": "procPs_III_A",
+          "sheet": "Proc. Ps.",
+          "cell": "V5",
+          "row": 5,
+          "col": "V",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "V8",
+          "block": "procPs_III_A",
+          "sheet": "Proc. Ps.",
+          "cell": "V8",
+          "row": 8,
+          "col": "V",
+          "demo": 3,
+          "tag": "I"
+        },
+        {
+          "id": "V13",
+          "block": "procPs_III_A",
+          "sheet": "Proc. Ps.",
+          "cell": "V13",
+          "row": 13,
+          "col": "V",
+          "demo": 4,
+          "tag": null
+        },
+        {
+          "id": "V19",
+          "block": "procPs_III_A",
+          "sheet": "Proc. Ps.",
+          "cell": "V19",
+          "row": 19,
+          "col": "V",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "V22",
+          "block": "procPs_III_A",
+          "sheet": "Proc. Ps.",
+          "cell": "V22",
+          "row": 22,
+          "col": "V",
+          "demo": 3,
+          "tag": "I"
+        },
+        {
+          "id": "E7",
+          "block": "procPs_I_L",
+          "sheet": "Proc. Ps.",
+          "cell": "E7",
+          "row": 7,
+          "col": "E",
+          "demo": 5,
+          "tag": "A"
+        },
+        {
+          "id": "E8",
+          "block": "procPs_I_L",
+          "sheet": "Proc. Ps.",
+          "cell": "E8",
+          "row": 8,
+          "col": "E",
+          "demo": 5,
+          "tag": "I"
+        },
+        {
+          "id": "K5",
+          "block": "procPs_I_L",
+          "sheet": "Proc. Ps.",
+          "cell": "K5",
+          "row": 5,
+          "col": "K",
+          "demo": 1,
+          "tag": "L"
+        },
+        {
+          "id": "K6",
+          "block": "procPs_I_L",
+          "sheet": "Proc. Ps.",
+          "cell": "K6",
+          "row": 6,
+          "col": "K",
+          "demo": 2,
+          "tag": "L"
+        },
+        {
+          "id": "H12",
+          "block": "procPs_I_L",
+          "sheet": "Proc. Ps.",
+          "cell": "H12",
+          "row": 12,
+          "col": "H",
+          "demo": 5,
+          "tag": "L"
+        },
+        {
+          "id": "C18",
+          "block": "procPs_II_L",
+          "sheet": "Proc. Ps.",
+          "cell": "C18",
+          "row": 18,
+          "col": "C",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "I17",
+          "block": "procPs_II_L",
+          "sheet": "Proc. Ps.",
+          "cell": "I17",
+          "row": 17,
+          "col": "I",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "I20",
+          "block": "procPs_II_L",
+          "sheet": "Proc. Puesto",
+          "cell": "I20",
+          "row": 20,
+          "col": "I",
+          "demo": "D",
+          "tag": "A"
+        },
+        {
+          "id": "O16",
+          "block": "procPs_II_L",
+          "sheet": "Proc. Ps.",
+          "cell": "O16",
+          "row": 16,
+          "col": "O",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "O17",
+          "block": "procPs_II_L",
+          "sheet": "Proc. Ps.",
+          "cell": "O17",
+          "row": 17,
+          "col": "O",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "V6",
+          "block": "procPs_III_L",
+          "sheet": "Proc. Ps.",
+          "cell": "V6",
+          "row": 6,
+          "col": "V",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "V11",
+          "block": "procPs_III_L",
+          "sheet": "Proc. Ps.",
+          "cell": "V11",
+          "row": 11,
+          "col": "V",
+          "demo": 4,
+          "tag": "I"
+        },
+        {
+          "id": "V16",
+          "block": "procPs_III_L",
+          "sheet": "Proc. Ps.",
+          "cell": "V16",
+          "row": 16,
+          "col": "V",
+          "demo": 3,
+          "tag": "L"
+        },
+        {
+          "id": "V18",
+          "block": "procPs_III_L",
+          "sheet": "Proc. Ps.",
+          "cell": "V18",
+          "row": 18,
+          "col": "V",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "V24",
+          "block": "procPs_III_L",
+          "sheet": "Proc. Ps.",
+          "cell": "V24",
+          "row": 24,
+          "col": "V",
+          "demo": 4,
+          "tag": null
+        },
+        {
+          "id": "E5",
+          "block": "procPs_I_I",
+          "sheet": "Proc. Ps.",
+          "cell": "E5",
+          "row": 5,
+          "col": "E",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "E6",
+          "block": "procPs_I_I",
+          "sheet": "Val. Puesto",
+          "cell": "E6",
+          "row": 6,
+          "col": "E",
+          "demo": "S",
+          "tag": "S"
+        },
+        {
+          "id": "K8",
+          "block": "procPs_I_I",
+          "sheet": "Val. Puesto",
+          "cell": "K8",
+          "row": 8,
+          "col": "K",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "H11",
+          "block": "procPs_I_I",
+          "sheet": "Proc. Ps.",
+          "cell": "H11",
+          "row": 11,
+          "col": "H",
+          "demo": 4,
+          "tag": "I"
+        },
+        {
+          "id": "B7",
+          "block": "procPs_I_I",
+          "sheet": "Proc. Ps.",
+          "cell": "B7",
+          "row": 7,
+          "col": "B",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "C17",
+          "block": "procPs_II_I",
+          "sheet": "Proc. Ps.",
+          "cell": "C17",
+          "row": 17,
+          "col": "C",
+          "demo": 5,
+          "tag": "L"
+        },
+        {
+          "id": "C20",
+          "block": "procPs_II_I",
+          "sheet": "Proc. Ps.",
+          "cell": "C20",
+          "row": 20,
+          "col": "C",
+          "demo": 2,
+          "tag": "A"
+        },
+        {
+          "id": "C21",
+          "block": "procPs_II_I",
+          "sheet": "Proc. Ps.",
+          "cell": "C21",
+          "row": 21,
+          "col": "C",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "I16",
+          "block": "procPs_II_I",
+          "sheet": "Proc. Puesto",
+          "cell": "I16",
+          "row": 16,
+          "col": "I",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "I22",
+          "block": "procPs_II_I",
+          "sheet": "Proc. Puesto",
+          "cell": "I22",
+          "row": 22,
+          "col": "I",
+          "demo": 0,
+          "tag": "L"
+        },
+        {
+          "id": "V9",
+          "block": "procPs_III_I",
+          "sheet": "Proc. Ps.",
+          "cell": "V9",
+          "row": 9,
+          "col": "V",
+          "demo": 4,
+          "tag": null
+        },
+        {
+          "id": "V10",
+          "block": "procPs_III_I",
+          "sheet": "Proc. Ps.",
+          "cell": "V10",
+          "row": 10,
+          "col": "V",
+          "demo": 4,
+          "tag": null
+        },
+        {
+          "id": "V17",
+          "block": "procPs_III_I",
+          "sheet": "Proc. Ps.",
+          "cell": "V17",
+          "row": 17,
+          "col": "V",
+          "demo": 4,
+          "tag": "L"
+        },
+        {
+          "id": "V21",
+          "block": "procPs_III_I",
+          "sheet": "Proc. Ps.",
+          "cell": "V21",
+          "row": 21,
+          "col": "V",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "V23",
+          "block": "procPs_III_I",
+          "sheet": "Proc. Ps.",
+          "cell": "V23",
+          "row": 23,
+          "col": "V",
+          "demo": 3,
+          "tag": null
+        },
+        {
+          "id": "B5",
+          "block": "procPs_I_V",
+          "sheet": "Proc. Ps.",
+          "cell": "B5",
+          "row": 5,
+          "col": "B",
+          "demo": 3,
+          "tag": "L"
+        },
+        {
+          "id": "H6",
+          "block": "procPs_I_V",
+          "sheet": "Proc. Ps.",
+          "cell": "H6",
+          "row": 6,
+          "col": "H",
+          "demo": 1,
+          "tag": "L"
+        },
+        {
+          "id": "H7",
+          "block": "procPs_I_V",
+          "sheet": "Proc. Ps.",
+          "cell": "H7",
+          "row": 7,
+          "col": "H",
+          "demo": 2,
+          "tag": "A"
+        },
+        {
+          "id": "H8",
+          "block": "procPs_I_V",
+          "sheet": "Proc. Ps.",
+          "cell": "H8",
+          "row": 8,
+          "col": "H",
+          "demo": 4,
+          "tag": "I"
+        },
+        {
+          "id": "E11",
+          "block": "procPs_I_V",
+          "sheet": "Proc. Ps.",
+          "cell": "E11",
+          "row": 11,
+          "col": "E",
+          "demo": 3,
+          "tag": "I"
+        },
+        {
+          "id": "C16",
+          "block": "procPs_II_V",
+          "sheet": "Proc. Puesto",
+          "cell": "C16",
+          "row": 16,
+          "col": "C",
+          "demo": "L",
+          "tag": "A"
+        },
+        {
+          "id": "C19",
+          "block": "procPs_II_V",
+          "sheet": "Val. Puesto",
+          "cell": "C19",
+          "row": 19,
+          "col": "C",
+          "demo": "A",
+          "tag": "A"
+        },
+        {
+          "id": "C22",
+          "block": "procPs_II_V",
+          "sheet": "Proc. Ps.",
+          "cell": "C22",
+          "row": 22,
+          "col": "C",
+          "demo": 4,
+          "tag": "I"
+        },
+        {
+          "id": "O19",
+          "block": "procPs_II_V",
+          "sheet": "Val. Puesto",
+          "cell": "O19",
+          "row": 19,
+          "col": "O",
+          "demo": "R",
+          "tag": "A"
+        },
+        {
+          "id": "O21",
+          "block": "procPs_II_V",
+          "sheet": "Proc. Ps.",
+          "cell": "O21",
+          "row": 21,
+          "col": "O",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "V12",
+          "block": "procPs_III_V",
+          "sheet": "Proc. Ps.",
+          "cell": "V12",
+          "row": 12,
+          "col": "V",
+          "demo": 3,
+          "tag": "L"
+        },
+        {
+          "id": "V14",
+          "block": "procPs_III_V",
+          "sheet": "Proc. Ps.",
+          "cell": "V14",
+          "row": 14,
+          "col": "V",
+          "demo": 3,
+          "tag": null
+        },
+        {
+          "id": "V15",
+          "block": "procPs_III_V",
+          "sheet": "Proc. Ps.",
+          "cell": "V15",
+          "row": 15,
+          "col": "V",
+          "demo": 3,
+          "tag": null
+        },
+        {
+          "id": "V20",
+          "block": "procPs_III_V",
+          "sheet": "Proc. Ps.",
+          "cell": "V20",
+          "row": 20,
+          "col": "V",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "V7",
+          "block": "procPs_III_V",
+          "sheet": "Proc. Ps.",
+          "cell": "V7",
+          "row": 7,
+          "col": "V",
+          "demo": 4,
+          "tag": "A"
+        }
+      ]
+    },
+    {
+      "id": "valPuesto",
+      "title": "Valores del puesto",
+      "subtitle": "30 reactivos · escala 1–5",
+      "items": [
+        {
+          "id": "D7",
+          "block": "valPuesto_T",
+          "sheet": "Proc. Ps.",
+          "cell": "D7",
+          "row": 7,
+          "col": "D",
+          "demo": "L",
+          "tag": "A"
+        },
+        {
+          "id": "D11",
+          "block": "valPuesto_T",
+          "sheet": "Proc. Ps.",
+          "cell": "D11",
+          "row": 11,
+          "col": "D",
+          "demo": "V",
+          "tag": "I"
+        },
+        {
+          "id": "L9",
+          "block": "valPuesto_T",
+          "sheet": "Val. Ps.",
+          "cell": "L9",
+          "row": 9,
+          "col": "L",
+          "demo": 2,
+          "tag": "A"
+        },
+        {
+          "id": "L12",
+          "block": "valPuesto_T",
+          "sheet": "Proc. Puesto",
+          "cell": "L12",
+          "row": 12,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "L18",
+          "block": "valPuesto_T",
+          "sheet": "?",
+          "cell": "L18",
+          "row": 18,
+          "col": "L",
+          "demo": null,
+          "tag": null
+        },
+        {
+          "id": "D9",
+          "block": "valPuesto_E",
+          "sheet": "Val. Ps.",
+          "cell": "D9",
+          "row": 9,
+          "col": "D",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "D12",
+          "block": "valPuesto_E",
+          "sheet": "Proc. Ps.",
+          "cell": "D12",
+          "row": 12,
+          "col": "D",
+          "demo": "A",
+          "tag": "L"
+        },
+        {
+          "id": "D17",
+          "block": "valPuesto_E",
+          "sheet": "Proc. Ps.",
+          "cell": "D17",
+          "row": 17,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "L10",
+          "block": "valPuesto_E",
+          "sheet": "Proc. Puesto",
+          "cell": "L10",
+          "row": 10,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "L14",
+          "block": "valPuesto_E",
+          "sheet": "Proc. Puesto",
+          "cell": "L14",
+          "row": 14,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "D8",
+          "block": "valPuesto_A",
+          "sheet": "Proc. Ps.",
+          "cell": "D8",
+          "row": 8,
+          "col": "D",
+          "demo": "L",
+          "tag": "I"
+        },
+        {
+          "id": "D15",
+          "block": "valPuesto_A",
+          "sheet": "Val. Ps.",
+          "cell": "D15",
+          "row": 15,
+          "col": "D",
+          "demo": 4,
+          "tag": "E"
+        },
+        {
+          "id": "D19",
+          "block": "valPuesto_A",
+          "sheet": "?",
+          "cell": "D19",
+          "row": 19,
+          "col": "D",
+          "demo": null,
+          "tag": null
+        },
+        {
+          "id": "L8",
+          "block": "valPuesto_A",
+          "sheet": "Val. Ps.",
+          "cell": "L8",
+          "row": 8,
+          "col": "L",
+          "demo": 5,
+          "tag": "R"
+        },
+        {
+          "id": "L16",
+          "block": "valPuesto_A",
+          "sheet": "Val. Ps.",
+          "cell": "L16",
+          "row": 16,
+          "col": "L",
+          "demo": 3,
+          "tag": "S"
+        },
+        {
+          "id": "D6",
+          "block": "valPuesto_S",
+          "sheet": "Proc. Ps.",
+          "cell": "D6",
+          "row": 6,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "D18",
+          "block": "valPuesto_S",
+          "sheet": "?",
+          "cell": "D18",
+          "row": 18,
+          "col": "D",
+          "demo": null,
+          "tag": null
+        },
+        {
+          "id": "L7",
+          "block": "valPuesto_S",
+          "sheet": "Proc. Puesto",
+          "cell": "L7",
+          "row": 7,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "L15",
+          "block": "valPuesto_S",
+          "sheet": "Val. Ps.",
+          "cell": "L15",
+          "row": 15,
+          "col": "L",
+          "demo": 4,
+          "tag": "E"
+        },
+        {
+          "id": "L20",
+          "block": "valPuesto_S",
+          "sheet": "Val. Ps.",
+          "cell": "L20",
+          "row": 20,
+          "col": "L",
+          "demo": 10,
+          "tag": "R"
+        },
+        {
+          "id": "D10",
+          "block": "valPuesto_P",
+          "sheet": "Proc. Puesto",
+          "cell": "D10",
+          "row": 10,
+          "col": "D",
+          "demo": null,
+          "tag": "I"
+        },
+        {
+          "id": "D13",
+          "block": "valPuesto_P",
+          "sheet": "Val. Ps.",
+          "cell": "D13",
+          "row": 13,
+          "col": "D",
+          "demo": 3,
+          "tag": "T"
+        },
+        {
+          "id": "D16",
+          "block": "valPuesto_P",
+          "sheet": "Val. Ps.",
+          "cell": "D16",
+          "row": 16,
+          "col": "D",
+          "demo": 5,
+          "tag": "S"
+        },
+        {
+          "id": "L11",
+          "block": "valPuesto_P",
+          "sheet": "?",
+          "cell": "L11",
+          "row": 11,
+          "col": "L",
+          "demo": null,
+          "tag": null
+        },
+        {
+          "id": "L17",
+          "block": "valPuesto_P",
+          "sheet": "?",
+          "cell": "L17",
+          "row": 17,
+          "col": "L",
+          "demo": null,
+          "tag": null
+        },
+        {
+          "id": "D14",
+          "block": "valPuesto_R",
+          "sheet": "Val. Ps.",
+          "cell": "D14",
+          "row": 14,
+          "col": "D",
+          "demo": 2,
+          "tag": "T"
+        },
+        {
+          "id": "D20",
+          "block": "valPuesto_R",
+          "sheet": "Proc. Ps.",
+          "cell": "D20",
+          "row": 20,
+          "col": "D",
+          "demo": "I",
+          "tag": "A"
+        },
+        {
+          "id": "L6",
+          "block": "valPuesto_R",
+          "sheet": "Val. Ps.",
+          "cell": "L6",
+          "row": 6,
+          "col": "L",
+          "demo": 3,
+          "tag": "E"
+        },
+        {
+          "id": "L13",
+          "block": "valPuesto_R",
+          "sheet": "Val. Ps.",
+          "cell": "L13",
+          "row": 13,
+          "col": "L",
+          "demo": 1,
+          "tag": "T"
+        },
+        {
+          "id": "L19",
+          "block": "valPuesto_R",
+          "sheet": "Val. Ps.",
+          "cell": "L19",
+          "row": 19,
+          "col": "L",
+          "demo": "A",
+          "tag": "P"
+        }
+      ]
+    },
+    {
+      "id": "valPs",
+      "title": "Valores personales",
+      "subtitle": "30 reactivos · escala 1–5",
+      "items": [
+        {
+          "id": "D6",
+          "block": "valPs_T",
+          "sheet": "Proc. Ps.",
+          "cell": "D6",
+          "row": 6,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "D14",
+          "block": "valPs_T",
+          "sheet": "Val. Ps.",
+          "cell": "D14",
+          "row": 14,
+          "col": "D",
+          "demo": 2,
+          "tag": "T"
+        },
+        {
+          "id": "D15",
+          "block": "valPs_T",
+          "sheet": "Val. Ps.",
+          "cell": "D15",
+          "row": 15,
+          "col": "D",
+          "demo": 4,
+          "tag": "E"
+        },
+        {
+          "id": "L13",
+          "block": "valPs_T",
+          "sheet": "Val. Ps.",
+          "cell": "L13",
+          "row": 13,
+          "col": "L",
+          "demo": 1,
+          "tag": "T"
+        },
+        {
+          "id": "T14",
+          "block": "valPs_T",
+          "sheet": "Val. Ps.",
+          "cell": "T14",
+          "row": 14,
+          "col": "T",
+          "demo": 5,
+          "tag": "T"
+        },
+        {
+          "id": "D7",
+          "block": "valPs_E",
+          "sheet": "Proc. Ps.",
+          "cell": "D7",
+          "row": 7,
+          "col": "D",
+          "demo": "L",
+          "tag": "A"
+        },
+        {
+          "id": "D12",
+          "block": "valPs_E",
+          "sheet": "Proc. Ps.",
+          "cell": "D12",
+          "row": 12,
+          "col": "D",
+          "demo": "A",
+          "tag": "L"
+        },
+        {
+          "id": "D16",
+          "block": "valPs_E",
+          "sheet": "Val. Ps.",
+          "cell": "D16",
+          "row": 16,
+          "col": "D",
+          "demo": 5,
+          "tag": "S"
+        },
+        {
+          "id": "L6",
+          "block": "valPs_E",
+          "sheet": "Val. Ps.",
+          "cell": "L6",
+          "row": 6,
+          "col": "L",
+          "demo": 3,
+          "tag": "E"
+        },
+        {
+          "id": "L15",
+          "block": "valPs_E",
+          "sheet": "Val. Ps.",
+          "cell": "L15",
+          "row": 15,
+          "col": "L",
+          "demo": 4,
+          "tag": "E"
+        },
+        {
+          "id": "T6",
+          "block": "valPs_E",
+          "sheet": "Val. Ps.",
+          "cell": "T6",
+          "row": 6,
+          "col": "T",
+          "demo": 3,
+          "tag": "E"
+        },
+        {
+          "id": "L5",
+          "block": "valPs_A",
+          "sheet": "Val. Ps.",
+          "cell": "L5",
+          "row": 5,
+          "col": "L",
+          "demo": 4,
+          "tag": "A"
+        },
+        {
+          "id": "L9",
+          "block": "valPs_A",
+          "sheet": "Val. Ps.",
+          "cell": "L9",
+          "row": 9,
+          "col": "L",
+          "demo": 2,
+          "tag": "A"
+        },
+        {
+          "id": "T8",
+          "block": "valPs_A",
+          "sheet": "Proc. Ps.",
+          "cell": "T8",
+          "row": 8,
+          "col": "T",
+          "demo": "A",
+          "tag": "I"
+        },
+        {
+          "id": "T12",
+          "block": "valPs_A",
+          "sheet": "Val. Ps.",
+          "cell": "T12",
+          "row": 12,
+          "col": "T",
+          "demo": 3,
+          "tag": "P"
+        },
+        {
+          "id": "D5",
+          "block": "valPs_S",
+          "sheet": "Proc. Ps.",
+          "cell": "D5",
+          "row": 5,
+          "col": "D",
+          "demo": "I",
+          "tag": "L"
+        },
+        {
+          "id": "D13",
+          "block": "valPs_S",
+          "sheet": "Val. Ps.",
+          "cell": "D13",
+          "row": 13,
+          "col": "D",
+          "demo": 3,
+          "tag": "T"
+        },
+        {
+          "id": "L16",
+          "block": "valPs_S",
+          "sheet": "Val. Ps.",
+          "cell": "L16",
+          "row": 16,
+          "col": "L",
+          "demo": 3,
+          "tag": "S"
+        },
+        {
+          "id": "T7",
+          "block": "valPs_S",
+          "sheet": "Val. Ps.",
+          "cell": "T7",
+          "row": 7,
+          "col": "T",
+          "demo": 4,
+          "tag": "P"
+        },
+        {
+          "id": "T16",
+          "block": "valPs_S",
+          "sheet": "Val. Ps.",
+          "cell": "T16",
+          "row": 16,
+          "col": "T",
+          "demo": 2,
+          "tag": "S"
+        },
+        {
+          "id": "D9",
+          "block": "valPs_P",
+          "sheet": "Val. Ps.",
+          "cell": "D9",
+          "row": 9,
+          "col": "D",
+          "demo": 3,
+          "tag": "A"
+        },
+        {
+          "id": "L7",
+          "block": "valPs_P",
+          "sheet": "Proc. Puesto",
+          "cell": "L7",
+          "row": 7,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "L12",
+          "block": "valPs_P",
+          "sheet": "Proc. Puesto",
+          "cell": "L12",
+          "row": 12,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "T5",
+          "block": "valPs_P",
+          "sheet": "Proc. Ps.",
+          "cell": "T5",
+          "row": 5,
+          "col": "T",
+          "demo": "A",
+          "tag": "L"
+        },
+        {
+          "id": "T13",
+          "block": "valPs_P",
+          "sheet": "Proc. Ps.",
+          "cell": "T13",
+          "row": 13,
+          "col": "T",
+          "demo": "A",
+          "tag": null
+        },
+        {
+          "id": "D8",
+          "block": "valPs_R",
+          "sheet": "Proc. Ps.",
+          "cell": "D8",
+          "row": 8,
+          "col": "D",
+          "demo": "L",
+          "tag": "I"
+        },
+        {
+          "id": "L8",
+          "block": "valPs_R",
+          "sheet": "Val. Ps.",
+          "cell": "L8",
+          "row": 8,
+          "col": "L",
+          "demo": 5,
+          "tag": "R"
+        },
+        {
+          "id": "L14",
+          "block": "valPs_R",
+          "sheet": "Proc. Puesto",
+          "cell": "L14",
+          "row": 14,
+          "col": "L",
+          "demo": "I",
+          "tag": "I"
+        },
+        {
+          "id": "T9",
+          "block": "valPs_R",
+          "sheet": "Val. Ps.",
+          "cell": "T9",
+          "row": 9,
+          "col": "T",
+          "demo": 5,
+          "tag": "A"
+        },
+        {
+          "id": "T15",
+          "block": "valPs_R",
+          "sheet": "Val. Ps.",
+          "cell": "T15",
+          "row": 15,
+          "col": "T",
+          "demo": 4,
+          "tag": "E"
+        }
+      ]
+    }
+  ]
+}

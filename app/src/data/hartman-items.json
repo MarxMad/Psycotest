@@ -1,0 +1,222 @@
+{
+ "parteI": [
+  {
+   "id": "a",
+   "texto": "Una buena comida",
+   "norma": 6,
+   "eje": "E"
+  },
+  {
+   "id": "b",
+   "texto": "Un mejoramiento técnico",
+   "norma": 9,
+   "eje": "S"
+  },
+  {
+   "id": "c",
+   "texto": "Una idea absurda",
+   "norma": 10,
+   "eje": "S"
+  },
+  {
+   "id": "d",
+   "texto": "Una multa",
+   "norma": 11,
+   "eje": "E"
+  },
+  {
+   "id": "e",
+   "texto": "Basura",
+   "norma": 13,
+   "eje": "E"
+  },
+  {
+   "id": "f",
+   "texto": "Un científico dedicado",
+   "norma": 5,
+   "eje": "I"
+  },
+  {
+   "id": "g",
+   "texto": "Hacer estallar un avión de pasajeros en pleno vuelo",
+   "norma": 17,
+   "eje": "E"
+  },
+  {
+   "id": "h",
+   "texto": "Quemar un hereje en la hoguera",
+   "norma": 16,
+   "eje": "S"
+  },
+  {
+   "id": "i",
+   "texto": "Un corto circuito eléctrico",
+   "norma": 12,
+   "eje": "S"
+  },
+  {
+   "id": "j",
+   "texto": "“Con este anillo yo te desposo”",
+   "norma": 4,
+   "eje": "I"
+  },
+  {
+   "id": "k",
+   "texto": "Un bebé",
+   "norma": 1,
+   "eje": "I"
+  },
+  {
+   "id": "l",
+   "texto": "Torturar a una persona",
+   "norma": 18,
+   "eje": "I"
+  },
+  {
+   "id": "m",
+   "texto": "Amor por la naturaleza",
+   "norma": 2,
+   "eje": "E"
+  },
+  {
+   "id": "n",
+   "texto": "Un loco",
+   "norma": 14,
+   "eje": "I"
+  },
+  {
+   "id": "o",
+   "texto": "Una línea de producción en serie",
+   "norma": 8,
+   "eje": "E"
+  },
+  {
+   "id": "p",
+   "texto": "Esclavitud",
+   "norma": 15,
+   "eje": "I"
+  },
+  {
+   "id": "q",
+   "texto": "Un genio matemático",
+   "norma": 3,
+   "eje": "S"
+  },
+  {
+   "id": "r",
+   "texto": "Un uniforme",
+   "norma": 7,
+   "eje": "S"
+  }
+ ],
+ "parteII": [
+  {
+   "id": "a",
+   "texto": "“Me gusta mi trabajo y me hace bien”",
+   "norma": 6,
+   "eje": "E"
+  },
+  {
+   "id": "b",
+   "texto": "“El universo me parece un sistema notablemente armonioso”",
+   "norma": 9,
+   "eje": "S"
+  },
+  {
+   "id": "c",
+   "texto": "“El mundo no tiene mucho sentido para mi”",
+   "norma": 10,
+   "eje": "S"
+  },
+  {
+   "id": "d",
+   "texto": "“Por más intensamente que trabaje, siempre me sentiré frustrado”",
+   "norma": 11,
+   "eje": "E"
+  },
+  {
+   "id": "e",
+   "texto": "“Las condiciones en que yo trabajo son deplorables y arruinan mi labor”",
+   "norma": 13,
+   "eje": "E"
+  },
+  {
+   "id": "f",
+   "texto": "“Me siento a gusto en el mundo”",
+   "norma": 5,
+   "eje": "I"
+  },
+  {
+   "id": "g",
+   "texto": "“Detesto mi trabajo”",
+   "norma": 17,
+   "eje": "E"
+  },
+  {
+   "id": "h",
+   "texto": "“Mi vida esta trastornando al mundo”",
+   "norma": 16,
+   "eje": "S"
+  },
+  {
+   "id": "i",
+   "texto": "“Mi trabajo no contribuye en nada al mundo”",
+   "norma": 12,
+   "eje": "S"
+  },
+  {
+   "id": "j",
+   "texto": "“Mi trabajo pone de manifiesto lo mejor que hay en mi”",
+   "norma": 4,
+   "eje": "I"
+  },
+  {
+   "id": "k",
+   "texto": "“Estoy contento con ser yo mismo”",
+   "norma": 1,
+   "eje": "I"
+  },
+  {
+   "id": "l",
+   "texto": "“Maldigo el día en que nací”",
+   "norma": 18,
+   "eje": "I"
+  },
+  {
+   "id": "m",
+   "texto": "“Me encanta mi trabajo”",
+   "norma": 2,
+   "eje": "E"
+  },
+  {
+   "id": "n",
+   "texto": "“Me molesta que el universo no tenga sentido”",
+   "norma": 14,
+   "eje": "I"
+  },
+  {
+   "id": "o",
+   "texto": "“Cuando mejor comprendo mi lugar en el mundo, tanto mejor me va en mi trabajo”",
+   "norma": 8,
+   "eje": "E"
+  },
+  {
+   "id": "p",
+   "texto": "“Mi trabajo me hace desdichado”",
+   "norma": 15,
+   "eje": "I"
+  },
+  {
+   "id": "q",
+   "texto": "“Amo la belleza del mundo”",
+   "norma": 3,
+   "eje": "S"
+  },
+  {
+   "id": "r",
+   "texto": "“Mi trabajo contribuye a la belleza y armonía del mundo”",
+   "norma": 7,
+   "eje": "S"
+  }
+ ]
+}
