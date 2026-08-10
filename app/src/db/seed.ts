@@ -1,11 +1,12 @@
 import bcrypt from "bcryptjs";
-import { count } from "drizzle-orm";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema";
 
-export async function seedIfEmpty(db: BetterSQLite3Database<typeof schema>) {
-  const [{ value }] = await db.select({ value: count() }).from(schema.users);
-  if (value > 0) return;
+type AppDb = BetterSQLite3Database<typeof schema>;
+
+export async function seedIfEmpty(db: AppDb) {
+  const existing = await db.select({ id: schema.users.id }).from(schema.users).limit(1);
+  if (existing.length > 0) return;
 
   const now = new Date().toISOString();
   const email = process.env.DEFAULT_ADMIN_EMAIL ?? "admin@psycotest.local";
