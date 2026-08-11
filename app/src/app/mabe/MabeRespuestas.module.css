@@ -1,0 +1,117 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tab,
+.tabOn {
+  font-size: 0.78rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule-soft);
+  background: var(--raised);
+  cursor: pointer;
+}
+
+.tabOn {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.head h2 {
+  font-size: 1.05rem;
+  margin-bottom: 0.25rem;
+}
+
+.head p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.count {
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.instr {
+  font-size: 0.82rem;
+  color: var(--muted);
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+.instr li + li {
+  margin-top: 0.25rem;
+}
+
+.seccion h3 {
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.num,
+.val {
+  font-family: var(--mono);
+  width: 2.5rem;
+  text-align: center;
+}
+
+.val {
+  font-weight: 600;
+}
+
+.escala {
+  font-size: 0.75rem;
+  color: var(--muted);
+  min-width: 8rem;
+}
+
+.faltante {
+  background: rgba(196, 92, 74, 0.06);
+}
+
+.faltante .val {
+  color: #c45c4a;
+}

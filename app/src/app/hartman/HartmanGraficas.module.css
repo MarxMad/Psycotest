@@ -1,0 +1,169 @@
+.section {
+  margin-top: 1.5rem;
+}
+
+.ejeGrid {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.ejeCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  min-width: 72px;
+}
+
+.ejeKey {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.ejeBars {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+  height: 100px;
+  width: 100%;
+  justify-content: center;
+}
+
+.ejeDim,
+.ejeInt {
+  width: 22px;
+  min-height: 4px;
+  border-radius: 2px 2px 0 0;
+}
+
+.ejeDim {
+  background: linear-gradient(to top, #3a6a9e, #6a9fd4);
+}
+
+.ejeInt {
+  background: linear-gradient(to top, #a84838, #d4806e);
+}
+
+.ejeCol small {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.meta {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 1rem 0 0;
+  font-family: var(--mono);
+}
+
+.ring {
+  fill: none;
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+
+.spoke {
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 12px;
+  fill: var(--muted);
+  font-weight: 600;
+}
+
+.poly {
+  fill: rgba(74, 127, 184, 0.2);
+  stroke: #4a7fb8;
+  stroke-width: 2;
+}
+
+.itemChart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 320px;
+  overflow: auto;
+  margin-bottom: 0.75rem;
+}
+
+.itemRow {
+  display: grid;
+  grid-template-columns: 1.25rem 1fr 2rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.itemId {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
+
+.itemTrack {
+  position: relative;
+  height: 10px;
+  background: var(--rule-soft);
+  border-radius: 999px;
+}
+
+.itemNorma,
+.itemResp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 999px;
+  opacity: 0.85;
+}
+
+.itemNorma {
+  background: #4a7fb8;
+  z-index: 1;
+}
+
+.itemResp {
+  background: #c45c4a;
+  opacity: 0.55;
+  z-index: 2;
+}
+
+.dis {
+  font-size: 0.68rem;
+  color: #c45c4a;
+  font-weight: 600;
+}
+
+.ok {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.table th,
+.table td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+}
+
+.table th {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.alert {
+  font-size: 0.82rem;
+  color: #c45c4a;
+  margin-bottom: 0.75rem;
+}

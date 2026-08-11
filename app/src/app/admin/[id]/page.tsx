@@ -3,10 +3,12 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { PerfilPapi } from "@/app/papi/PerfilPapi";
 import { MabeGraficas } from "@/app/mabe/MabeGraficas";
 import { MabeCalificacion } from "@/app/mabe/MabeCalificacion";
-import { calificarPapi, DIADAS, NOMBRES, type Respuestas } from "@/lib/papi";
+import { PapiGraficas } from "@/app/papi/PapiGraficas";
+import { HartmanGraficas } from "@/app/hartman/HartmanGraficas";
+import { HartmanCalificacion } from "@/app/hartman/HartmanCalificacion";
+import { calificarPapi, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
 import { dbSessionToSesion, fetchSession } from "@/lib/api-client";
@@ -16,7 +18,8 @@ import {
   obtenerSesion,
   type Sesion,
 } from "@/lib/storage";
-import { ExportarPdfButton } from "@/components/admin/ExportarPdfButton";
+import { InterpretacionPanel } from "@/components/admin/InterpretacionPanel";
+import { RespuestasPanel } from "@/components/admin/RespuestasPanel";
 import s from "../admin.module.css";
 
 export default function AdminDetallePage() {
@@ -150,41 +153,18 @@ export default function AdminDetallePage() {
 
         {tab === "resp" && (
           <div className={s.respBox}>
-            <pre>{JSON.stringify(ses.respuestas, null, 2)}</pre>
+            <RespuestasPanel sesion={ses} />
           </div>
         )}
 
         {tab === "interp" && (
-          <div className={s.interpBox}>
-            <pre>{ses.interpretacion ?? "Sin interpretación generada."}</pre>
-            <label className={s.notasLabel}>
-              Notas del psicólogo
-              <textarea
-                value={notas}
-                onChange={(e) => setNotas(e.target.value)}
-                rows={6}
-                placeholder="Observaciones clínicas, ajustes al informe…"
-              />
-            </label>
-            <div className={s.row}>
-              <button type="button" className="btn" onClick={guardarNotas}>
-                Guardar borrador
-              </button>
-              <button type="button" className="btn btn-primary" onClick={aprobar}>
-                Validar informe
-              </button>
-            </div>
-            {ses.aprobada && (
-              <p className={s.validatedMsg}>
-                Informe validado. Ya puedes exportar el PDF personalizado del participante.
-              </p>
-            )}
-            <ExportarPdfButton
-              sessionId={ses.id}
-              participante={ses.participante}
-              aprobada={ses.aprobada}
-            />
-          </div>
+          <InterpretacionPanel
+            sesion={ses}
+            notas={notas}
+            setNotas={setNotas}
+            onGuardar={guardarNotas}
+            onAprobar={aprobar}
+          />
         )}
       </div>
     </main>
@@ -199,28 +179,12 @@ function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
       : calificarPapi(resp);
     return (
       <div>
-        <PerfilPapi
-          puntajes={cal.puntajes}
+        <PapiGraficas
+          cal={cal}
           nombre={sesion.participante}
           puesto={sesion.puesto}
           empresa={sesion.empresa}
         />
-        <table className={s.miniTable}>
-          <tbody>
-            {DIADAS.map((d) => (
-              <tr key={d.rol}>
-                <td>
-                  {d.rol} · {NOMBRES[d.rol]}
-                </td>
-                <td>{cal.puntajes[d.rol]}</td>
-                <td>
-                  {d.necesidad} · {NOMBRES[d.necesidad]}
-                </td>
-                <td>{cal.puntajes[d.necesidad]}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     );
   }
@@ -231,22 +195,9 @@ function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
       ? (sesion.calificacion as ReturnType<typeof calificarHartman>)
       : calificarHartman(resp.parteI, resp.parteII);
     return (
-      <div className={s.respBox}>
-        <p>
-          Interpretable: <strong>{cal.interpretable ? "Sí" : "No"}</strong>
-          {!cal.interpretable && cal.motivo && <> — {cal.motivo}</>}
-        </p>
-        <div className={s.hartmanGrid}>
-          <div>
-            <h3>V.Q.</h3>
-            <p>DIS: {cal.VQ.DIS} · DIF: {cal.VQ.DIF} · INT: {cal.VQ.INT}</p>
-          </div>
-          <div>
-            <h3>S.Q.</h3>
-            <p>DIS: {cal.SQ.DIS} · DIF: {cal.SQ.DIF} · INT: {cal.SQ.INT}</p>
-          </div>
-        </div>
-        <pre>{JSON.stringify(cal, null, 2)}</pre>
+      <div>
+        <HartmanCalificacion cal={cal} />
+        <HartmanGraficas cal={cal} />
       </div>
     );
   }
@@ -256,13 +207,15 @@ function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
     const cal = (sesion.calificacion as ResultadoMabe) ?? calificarMabe(resp);
     return (
       <div className={s.mabeCalif}>
-        <MabeCalificacion resultado={cal} />
         <MabeGraficas
           procPuesto={cal.procPuesto.cuadrantes}
           procPersona={cal.procPersona.cuadrantes}
           valPuesto={cal.valPuesto.valores}
           valPersona={cal.valPersona.valores}
+          brechas={cal.brechas}
+          combinaciones={cal.combinaciones}
         />
+        <MabeCalificacion resultado={cal} />
       </div>
     );
   }

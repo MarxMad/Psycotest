@@ -1,3 +1,54 @@
+.section {
+  margin-top: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.sectionHint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.tab,
+.tabActive {
+  font-size: 0.78rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule-soft);
+  background: var(--raised);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.tab:hover {
+  border-color: var(--rule);
+}
+
+.tabActive {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
 .wrap {
   display: grid;
   gap: 2rem;
@@ -9,7 +60,8 @@
   }
 }
 
-.chartBlock {
+.chartBlock,
+.chartBlockWide {
   background: var(--raised);
   border: 1px solid var(--rule-soft);
   border-radius: var(--r);
@@ -17,7 +69,12 @@
   box-shadow: var(--shadow);
 }
 
-.chartBlock h3 {
+.chartBlockWide {
+  grid-column: 1 / -1;
+}
+
+.chartBlock h3,
+.chartBlockWide h3 {
   font-size: 1.05rem;
   margin-bottom: 0.75rem;
 }
@@ -109,4 +166,247 @@
   color: var(--muted);
   text-align: center;
   line-height: 1.2;
+}
+
+/* Curvas y radar (SVG) */
+.svgChart {
+  width: 100%;
+  max-width: 420px;
+  display: block;
+  margin: 0 auto;
+}
+
+.gridLine {
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+
+.linePuesto {
+  fill: none;
+  stroke: #4a7fb8;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.linePersona {
+  fill: none;
+  stroke: #c45c4a;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+
+.dotPuestoSvg {
+  fill: #4a7fb8;
+}
+
+.dotPersonaSvg {
+  fill: #c45c4a;
+}
+
+.axisLabel {
+  font-size: 11px;
+  fill: var(--muted);
+  font-family: var(--mono);
+}
+
+.radarRing {
+  fill: none;
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+
+.radarSpoke {
+  stroke: var(--rule-soft);
+  stroke-width: 1;
+}
+
+.radarPuesto {
+  fill: rgba(74, 127, 184, 0.2);
+  stroke: #4a7fb8;
+  stroke-width: 2;
+}
+
+.radarPersona {
+  fill: rgba(196, 92, 74, 0.15);
+  stroke: #c45c4a;
+  stroke-width: 2;
+}
+
+.radarLabel {
+  font-size: 10px;
+  fill: var(--muted);
+  font-family: var(--mono);
+  font-weight: 600;
+}
+
+/* Brecha */
+.brechaHint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: -0.25rem 0 1rem;
+}
+
+.brechaList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.brechaRow {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr 3rem;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.brechaKey {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.brechaTrack {
+  position: relative;
+  height: 14px;
+  background: var(--rule-soft);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.brechaCenter {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--rule);
+  z-index: 1;
+}
+
+.brechaPos,
+.brechaNeg {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.brechaPos {
+  background: linear-gradient(to right, #c45c4a, #e08070);
+}
+
+.brechaNeg {
+  background: linear-gradient(to left, #4a7fb8, #6a9fd4);
+}
+
+.brechaValPos {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: #c45c4a;
+  text-align: right;
+}
+
+.brechaValNeg {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: #4a7fb8;
+  text-align: right;
+}
+
+/* Mapa cerebral */
+.brainGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.brainCell {
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  padding: 0.85rem 1rem;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.brainCell strong {
+  font-family: var(--mono);
+  font-size: 1.1rem;
+}
+
+.brainCell > span:nth-child(2) {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.brainBars {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 0.35rem;
+}
+
+.brainPuesto,
+.brainPersona {
+  height: 8px;
+  border-radius: 999px;
+  max-width: 100%;
+  transition: width 0.35s ease;
+}
+
+.brainPuesto {
+  background: linear-gradient(to right, #3a6a9e, #6a9fd4);
+}
+
+.brainPersona {
+  background: linear-gradient(to right, #a84838, #d4806e);
+}
+
+.brainGap {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+.comboGrid h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.65rem;
+}
+
+.comboCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.comboCard {
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  background: var(--paper);
+}
+
+.comboKey {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.comboLabel {
+  font-size: 0.68rem;
+  color: var(--muted);
+  line-height: 1.2;
+}
+
+.comboCard strong {
+  font-size: 1.25rem;
+  margin-top: 0.15rem;
 }

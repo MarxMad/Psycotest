@@ -1,0 +1,63 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.meta {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.block h2 {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem 0.65rem;
+  border-bottom: 1px solid var(--rule-soft);
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.num,
+.mono {
+  font-family: var(--mono);
+}
+
+.num {
+  text-align: center;
+  width: 3rem;
+}
+
+.elegida {
+  background: rgba(74, 127, 184, 0.08);
+  font-weight: 500;
+}
+
+.faltante {
+  background: rgba(196, 92, 74, 0.06);
+}
+
+.raw {
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+}
