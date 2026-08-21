@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ConsultorioNav } from "../ConsultorioNav";
+import { BrandShell } from "../BrandShell";
 import { psycotest } from "@/lib/routes";
 import c from "../cursos/cursos.module.css";
 
@@ -55,7 +56,7 @@ function AuthForm() {
   }
 
   return (
-    <div className={c.platziRoot}>
+    <BrandShell>
       <ConsultorioNav />
       <div className={c.authPage}>
       <form className={c.authCard} onSubmit={onSubmit}>
@@ -112,7 +113,8 @@ function AuthForm() {
           ¿Eres psicólogo del panel clínico? <Link href={psycotest.login}>Acceso profesional</Link>
         </p>
       </form>
-    </div>
+      </div>
+    </BrandShell>
   );
 }
 

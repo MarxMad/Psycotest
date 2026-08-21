@@ -1,0 +1,11 @@
+/**
+ * Marca MH / CONOCER — colores canónicos.
+ */
+:root {
+  --brand: #1e4a6f;
+  --brand-bright: #2d6a9f;
+  --brand-soft: #e8f1f8;
+  --brand-dark: #0c1929;
+  --gold: #c9a227;
+  --gold-soft: #f5eed6;
+}

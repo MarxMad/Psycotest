@@ -1,63 +1,86 @@
 /* ------------------------------------------------------------------ *
- * Sistema de diseño — Sistema para conocer y prospectar la conducta
+ * Sistema de diseño — Martín Hernández · CONOCER · PsycoTest
  * ------------------------------------------------------------------ */
+
+@import "../styles/brand-tokens.css";
 
 :root {
   color-scheme: light;
-  --ink: #191b1f;
-  --ink-soft: #3c4148;
-  --muted: #6d7278;
-  --faint: #9a9ea3;
-  --paper: #f4f4f0;
-  --surface: #fcfcfa;
+
+  --ink: #0f172a;
+  --ink-soft: #475569;
+  --muted: #64748b;
+  --faint: #94a3b8;
+  --paper: #ffffff;
+  --surface: #f1f5f9;
   --raised: #ffffff;
-  --rule: #dcdcd4;
-  --rule-soft: #e9e9e2;
+  --rule: #e2e8f0;
+  --rule-soft: #f1f5f9;
 
-  --papi: #3e5a6e;
-  --hartman: #3d6d5b;
-  --mabe: #8d6a1c;
-  --alert: #8c3b2e;
+  --papi: #2d6a9f;
+  --hartman: #1e6b52;
+  --mabe: #9a7420;
+  --alert: #b91c1c;
 
-  --accent: var(--papi);
-  --on-accent: #fbfbf8;
+  --accent: var(--brand);
+  --on-accent: #ffffff;
 
-  --serif: var(--font-serif), "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --sans: var(--font-sans), "Outfit", system-ui, -apple-system, sans-serif;
+  --serif: var(--font-serif), "Source Serif 4", Georgia, serif;
+  --sans: var(--font-sans), "Source Sans 3", system-ui, -apple-system, sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  --r: 6px;
+  --r: 8px;
   --r-lg: 12px;
-  --r-xl: 18px;
-  --shadow: 0 1px 2px rgba(25, 27, 31, 0.04), 0 8px 24px -12px rgba(25, 27, 31, 0.12);
-  --shadow-lg: 0 4px 8px rgba(25, 27, 31, 0.04), 0 24px 56px -20px rgba(25, 27, 31, 0.16);
-  --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
-    0 12px 40px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+  --r-xl: 16px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.1);
+  --shadow-lg: 0 4px 8px rgba(15, 23, 42, 0.06), 0 24px 56px -20px rgba(15, 23, 42, 0.14);
+  --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand) 18%, transparent),
+    0 12px 40px -12px color-mix(in srgb, var(--brand) 28%, transparent);
+
+  --site-max: 1180px;
+  --site-pad: 1.25rem;
+
+  /* Alias legacy consultorio */
+  --c-blue: var(--brand);
+  --c-blue-bright: var(--brand-bright);
+  --c-blue-soft: var(--brand-soft);
+  --c-gold: var(--gold);
+  --c-gold-soft: var(--gold-soft);
+  --c-ink: var(--ink);
+  --c-slate: var(--ink-soft);
+  --c-muted: var(--muted);
+  --c-paper: var(--paper);
+  --c-surface: var(--surface);
+  --c-border: var(--rule);
+  --c-dark: var(--brand-dark);
 }
 
 /* Oscuro: preferencia del sistema (día claro / noche oscuro) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --ink: #e8e8e3;
-    --ink-soft: #c4c5c2;
-    --muted: #8f9499;
-    --faint: #6a6f75;
-    --paper: #131518;
-    --surface: #1b1e22;
-    --raised: #22262b;
-    --rule: #33373d;
-    --rule-soft: #262a2f;
+    --ink: #e8edf4;
+    --ink-soft: #cbd5e1;
+    --muted: #94a3b8;
+    --faint: #64748b;
+    --paper: #0c1929;
+    --surface: #132337;
+    --raised: #1a2d45;
+    --rule: #2d3f56;
+    --rule-soft: #1e3348;
 
-    --papi: #8db1cb;
-    --hartman: #79b59c;
-    --mabe: #cba852;
-    --alert: #d08272;
-    --on-accent: #14161a;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.25), 0 24px 48px -16px rgba(0, 0, 0, 0.55);
-    --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
-      0 12px 40px -12px color-mix(in srgb, var(--accent) 40%, transparent);
+    --brand-soft: #1a3350;
+    --gold-soft: #3d3520;
+
+    --papi: #7cb8ff;
+    --hartman: #6bc4a8;
+    --mabe: #e4c56a;
+    --alert: #f87171;
+    --on-accent: #ffffff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.3), 0 24px 48px -16px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand-bright) 30%, transparent),
+      0 12px 40px -12px color-mix(in srgb, var(--brand-bright) 35%, transparent);
   }
 }
 
@@ -68,25 +91,28 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --ink: #e8e8e3;
-  --ink-soft: #c4c5c2;
-  --muted: #8f9499;
-  --faint: #6a6f75;
-  --paper: #131518;
-  --surface: #1b1e22;
-  --raised: #22262b;
-  --rule: #33373d;
-  --rule-soft: #262a2f;
+  --ink: #e8edf4;
+  --ink-soft: #cbd5e1;
+  --muted: #94a3b8;
+  --faint: #64748b;
+  --paper: #0c1929;
+  --surface: #132337;
+  --raised: #1a2d45;
+  --rule: #2d3f56;
+  --rule-soft: #1e3348;
 
-  --papi: #8db1cb;
-  --hartman: #79b59c;
-  --mabe: #cba852;
-  --alert: #d08272;
-  --on-accent: #14161a;
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.25), 0 24px 48px -16px rgba(0, 0, 0, 0.55);
-  --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
-    0 12px 40px -12px color-mix(in srgb, var(--accent) 40%, transparent);
+  --brand-soft: #1a3350;
+  --gold-soft: #3d3520;
+
+  --papi: #7cb8ff;
+  --hartman: #6bc4a8;
+  --mabe: #e4c56a;
+  --alert: #f87171;
+  --on-accent: #ffffff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.3), 0 24px 48px -16px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand-bright) 30%, transparent),
+    0 12px 40px -12px color-mix(in srgb, var(--brand-bright) 35%, transparent);
 }
 
 *,

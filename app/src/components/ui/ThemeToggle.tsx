@@ -4,7 +4,7 @@ import { Monitor, Moon, Sun } from "lucide-react";
 import { THEME_LABELS } from "@/lib/theme";
 import { useTheme } from "@/components/providers/ThemeProvider";
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { mode, cycleTheme } = useTheme();
 
   const Icon = mode === "system" ? Monitor : mode === "light" ? Sun : Moon;
@@ -12,7 +12,7 @@ export function ThemeToggle() {
   return (
     <button
       type="button"
-      className="theme-toggle"
+      className={className ? `${className} theme-toggle` : "theme-toggle"}
       onClick={cycleTheme}
       aria-label={THEME_LABELS[mode]}
       title={THEME_LABELS[mode]}

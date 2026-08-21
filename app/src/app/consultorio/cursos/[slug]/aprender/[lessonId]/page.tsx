@@ -3,7 +3,6 @@ import { getSessionUser } from "@/lib/auth";
 import { canAccessLesson, getEnrollmentBySlug, getPlayerState } from "@/lib/course-access";
 import { getLessonInCourse } from "@/lib/courses";
 import { CoursePlayer } from "../../../CoursePlayer";
-import c from "../../../cursos.module.css";
 
 type Props = { params: Promise<{ slug: string; lessonId: string }> };
 
@@ -67,8 +66,7 @@ export default async function LessonPage({ params }: Props) {
   }
 
   return (
-    <div className={c.platziRoot}>
-      <CoursePlayer
+    <CoursePlayer
         courseSlug={slug}
         courseTitle={lessonRow.course.title}
         currentLessonId={lessonId}
@@ -76,6 +74,5 @@ export default async function LessonPage({ params }: Props) {
         videoUrl={lessonRow.lesson.videoUrl}
         progressPercent={state?.enrollment.progressPercent ?? 0}
       />
-    </div>
   );
 }

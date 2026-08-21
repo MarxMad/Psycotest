@@ -1,19 +1,7 @@
 .root {
-  --c-blue: #1e4a6f;
-  --c-blue-bright: #2d6a9f;
-  --c-blue-soft: #e8f1f8;
-  --c-gold: #c9a227;
-  --c-gold-soft: #f5eed6;
-  --c-ink: #0f172a;
-  --c-slate: #475569;
-  --c-muted: #64748b;
-  --c-paper: #ffffff;
-  --c-surface: #f1f5f9;
-  --c-border: #e2e8f0;
-  --c-dark: #0c1929;
-  font-family: var(--ige-sans), "Source Sans 3", system-ui, sans-serif;
-  color: var(--c-ink);
-  background: var(--c-paper);
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--paper);
   min-height: 100vh;
 }
 
@@ -87,7 +75,7 @@
 }
 
 .brandText strong {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: 0.95rem;
   line-height: 1.2;
 }
@@ -116,8 +104,13 @@
 }
 
 .navLink:hover {
-  color: var(--c-blue);
-  background: var(--c-blue-soft);
+  color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.navLinkActive {
+  color: var(--brand);
+  background: var(--brand-soft);
 }
 
 .headerActions {
@@ -125,6 +118,24 @@
   align-items: center;
   gap: 0.5rem;
   margin-left: auto;
+}
+
+.userBadge {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.themeToggle {
+  height: 36px;
+  border-radius: 8px;
 }
 
 .navGhost {
@@ -275,7 +286,7 @@
 }
 
 .heroCopy h1 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.95rem, 4.8vw, 3.15rem);
   line-height: 1.06;
   margin: 0 0 1rem;
@@ -617,7 +628,7 @@
 }
 
 .conocerIntro h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.55rem, 3vw, 2.25rem);
   margin: 0 0 0.75rem;
   line-height: 1.12;
@@ -701,7 +712,7 @@
 
 .conocerOrg h3 {
   margin: 0 0 1rem;
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: 1.15rem;
 }
 
@@ -780,7 +791,7 @@
 }
 
 .sectionHead h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.5rem, 3vw, 2.15rem);
   margin: 0 0 0.65rem;
 }
@@ -918,7 +929,7 @@
 }
 
 .sectionDark h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.5rem, 3vw, 2rem);
   margin: 0 0 0.75rem;
 }
@@ -984,7 +995,7 @@
 }
 
 .courseFeature h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   margin: 0 0 0.65rem;
 }
 
@@ -1123,7 +1134,7 @@
 }
 
 .ctaBand h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   margin: 0 0 0.65rem;
 }
 
@@ -1157,7 +1168,7 @@
 }
 
 .footerBrand {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-weight: 700;
   margin: 0 0 0.25rem;
   color: #fff;
@@ -1215,7 +1226,7 @@
 }
 
 .courseHero h1 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   margin: 0.5rem 0;
   color: var(--c-ink);
@@ -1240,7 +1251,7 @@
 }
 
 .courseBody h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: 1.25rem;
   color: var(--c-blue);
   margin: 0 0 0.75rem;
@@ -1399,7 +1410,7 @@
 }
 
 .bannerCopy h2 {
-  font-family: var(--ige-serif), "Source Serif 4", Georgia, serif;
+  font-family: var(--serif);
   font-size: clamp(1.5rem, 3.5vw, 2.35rem);
   margin: 0 0 0.65rem;
   max-width: 18ch;

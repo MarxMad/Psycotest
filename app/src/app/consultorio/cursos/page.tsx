@@ -39,12 +39,8 @@ export default async function CursosCatalogPage() {
           <p className={c.catalogEyebrow}>Academy · Formación CONOCER</p>
           <h1>Aprende certificación y evaluación a tu ritmo</h1>
           <p className={c.catalogLead}>
-            Cursos grabados con clases en video, temario por módulos y seguimiento de avance — inspirado en la
-            experiencia de plataformas como{" "}
-            <a href="https://platzi.com/" target="_blank" rel="noopener noreferrer" className={c.platziLink}>
-              Platzi
-            </a>
-            .
+            Cursos grabados con clases en video, temario por módulos y seguimiento de avance integrado con
+            certificación CONOCER.
           </p>
           <CourseSearchBar />
           <div className={c.catalogStats}>

@@ -1,13 +1,17 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { ConsultorioNav } from "../ConsultorioNav";
-import c from "./cursos.module.css";
+import { BrandShell } from "../BrandShell";
 
 export function CursosShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isPlayer = pathname.includes("/aprender/");
+
   return (
-    <div className={c.platziRoot}>
-      <ConsultorioNav />
+    <BrandShell>
+      {!isPlayer ? <ConsultorioNav /> : null}
       {children}
-    </div>
+    </BrandShell>
   );
 }

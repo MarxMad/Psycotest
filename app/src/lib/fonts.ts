@@ -1,15 +1,16 @@
-import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Source_Sans_3, Source_Serif_4 } from "next/font/google";
 
-export const serif = Cormorant_Garamond({
+/** Tipografía unificada MH / CONOCER en todo el sitio */
+export const serif = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["600", "700"],
   variable: "--font-serif",
   display: "swap",
 });
 
-export const sans = Outfit({
+export const sans = Source_Sans_3({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });
