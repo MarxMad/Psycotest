@@ -55,8 +55,9 @@ function AuthForm() {
   }
 
   return (
-    <div className={c.authPage}>
+    <div className={c.platziRoot}>
       <ConsultorioNav />
+      <div className={c.authPage}>
       <form className={c.authCard} onSubmit={onSubmit}>
         <h1>{mode === "login" ? "Iniciar sesión" : "Crear cuenta"}</h1>
         <p>Accede a tus cursos grabados y lleva el registro de tu avance.</p>

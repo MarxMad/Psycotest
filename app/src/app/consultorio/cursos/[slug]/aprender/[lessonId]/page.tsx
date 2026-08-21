@@ -2,9 +2,8 @@ import { redirect, notFound } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { canAccessLesson, getEnrollmentBySlug, getPlayerState } from "@/lib/course-access";
 import { getLessonInCourse } from "@/lib/courses";
-import { ConsultorioNav } from "../../../../ConsultorioNav";
 import { CoursePlayer } from "../../../CoursePlayer";
-import styles from "../../../../consultorio.module.css";
+import c from "../../../cursos.module.css";
 
 type Props = { params: Promise<{ slug: string; lessonId: string }> };
 
@@ -68,8 +67,7 @@ export default async function LessonPage({ params }: Props) {
   }
 
   return (
-    <div className={styles.page}>
-      <ConsultorioNav />
+    <div className={c.platziRoot}>
       <CoursePlayer
         courseSlug={slug}
         courseTitle={lessonRow.course.title}
