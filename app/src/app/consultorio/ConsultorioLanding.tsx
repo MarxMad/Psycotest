@@ -1,20 +1,26 @@
 import Link from "next/link";
 import { CONSULTORIO } from "@/lib/consultorio-brand";
 import {
+  BANNER_STRIP,
   CONOCER_ORG_BENEFITS,
   CONOCER_PERSON_BENEFITS,
+  EVALUATION_DIMENSIONS,
   HERO_STATS,
   PLATFORM_MODULES,
   ROADMAP,
   SERVICES,
+  VISUAL_STORIES,
 } from "@/lib/consultorio-content";
 import { formatDuration, listPublishedCourses } from "@/lib/courses";
 import { psycotest } from "@/lib/routes";
 import { formatMxn } from "@/lib/stripe";
 import { ConsultorioHeroVisual } from "./ConsultorioHeroVisual";
 import { ConsultorioNav } from "./ConsultorioNav";
+import { EvalShowcase } from "./EvalShowcase";
 import { ConocerSeal, LandingModuleIcon } from "./LandingIcons";
+import { LandingBannerStrip, LandingVisualStories } from "./LandingVisuals";
 import { LandingReveal, LandingStagger, LandingStaggerItem } from "./LandingReveal";
+import { ServiceCards } from "./ServiceCards";
 import styles from "./consultorio.module.css";
 
 const STATUS_LABEL = {
@@ -45,8 +51,8 @@ export async function ConsultorioLanding() {
               <Link href="/consultorio/cursos" className={styles.btnSecondary}>
                 Ver cursos
               </Link>
-              <Link href={psycotest.home} className={styles.btnGhostHero}>
-                PsycoTest
+              <Link href="#evaluacion" className={styles.btnGhostHero}>
+                Evaluación en línea
               </Link>
             </div>
             <dl className={styles.heroStats}>
@@ -59,9 +65,9 @@ export async function ConsultorioLanding() {
             </dl>
           </LandingReveal>
 
-          <LandingReveal delay={0.15} y={40}>
+          <div className={styles.heroVisualWrap}>
             <ConsultorioHeroVisual />
-          </LandingReveal>
+          </div>
         </div>
       </section>
 
@@ -115,13 +121,16 @@ export async function ConsultorioLanding() {
         </div>
       </section>
 
+      <LandingBannerStrip {...BANNER_STRIP} />
+      <LandingVisualStories stories={VISUAL_STORIES} />
+
       <section className={styles.section} id="plataforma">
         <div className={styles.wrap}>
           <LandingReveal className={styles.sectionHead}>
             <p className={styles.eyebrow}>Ecosistema digital</p>
             <h2>Una plataforma, todo el ciclo formativo</h2>
             <p>
-              Desde la capacitación hasta la constancia CONOCER — evaluación psicométrica, cursos grabados, clases en
+              Desde la capacitación hasta la constancia CONOCER — evaluación confidencial, cursos grabados, clases en
               vivo y cobro en línea bajo la marca de {CONSULTORIO.shortName}.
             </p>
           </LandingReveal>
@@ -159,39 +168,28 @@ export async function ConsultorioLanding() {
         </div>
       </section>
 
-      <section className={`${styles.section} ${styles.sectionDark}`} id="psycotest">
+      <section className={`${styles.section} ${styles.sectionDark}`} id="evaluacion">
         <div className={styles.wrap}>
           <div className={styles.split}>
             <LandingReveal>
               <p className={styles.eyebrowLight}>Evaluación · Operativo</p>
-              <h2>PsycoTest — pruebas psicométricas en línea</h2>
+              <h2>Diagnóstico psicométrico en línea</h2>
               <p className={styles.leadLight}>
-                PAPI, Hartman y MABE con calificación automática, gráficas, panel del psicólogo e informe PDF. Ideal
-                para procesos de selección y diagnóstico previo a certificación de competencias.
+                Aplicamos baterías validadas para medir perfil, valores, aptitudes y competencias — con calificación
+                automática, gráficas e informes PDF. El evaluado no conoce el instrumento; tú interpretas con criterio
+                profesional.
               </p>
               <ul className={styles.checkListLight}>
-                <li>Códigos de acceso para evaluados</li>
+                <li>Códigos de acceso confidenciales</li>
                 <li>Validación de protocolo y puntajes automáticos</li>
                 <li>Informes trazables para expediente CONOCER</li>
               </ul>
               <Link href={psycotest.home} className={styles.btnOnDark}>
-                Entrar a PsycoTest
+                Acceder al panel de evaluación
               </Link>
             </LandingReveal>
-            <LandingReveal delay={0.12} className={styles.mockPanelWrap}>
-              <div className={styles.mockPanel} aria-hidden>
-                <div className={styles.mockBar} />
-                <div className={styles.mockBody}>
-                  <div className={styles.mockRow} />
-                  <div className={styles.mockRow} />
-                  <div className={styles.mockChart} />
-                  <div className={styles.mockTags}>
-                    <span>PAPI</span>
-                    <span>Hartman</span>
-                    <span>MABE</span>
-                  </div>
-                </div>
-              </div>
+            <LandingReveal delay={0.12}>
+              <EvalShowcase image="/ige/download-1.jpg" dimensions={EVALUATION_DIMENSIONS} />
             </LandingReveal>
           </div>
         </div>
@@ -240,14 +238,7 @@ export async function ConsultorioLanding() {
             <p>Evaluación, capacitación y certificación CONOCER para organizaciones públicas y privadas.</p>
           </LandingReveal>
           <LandingStagger className={styles.serviceGrid}>
-            {SERVICES.map((s) => (
-              <LandingStaggerItem key={s.title}>
-                <article className={styles.serviceCard}>
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
-                </article>
-              </LandingStaggerItem>
-            ))}
+            <ServiceCards services={SERVICES} />
           </LandingStagger>
         </div>
       </section>
@@ -277,7 +268,7 @@ export async function ConsultorioLanding() {
           <LandingReveal>
             <h2>¿Listo para certificar competencias a escala?</h2>
             <p>
-              Agenda una demo de la plataforma: cursos, evaluación psicométrica y certificación CONOCER en un solo
+              Agenda una demo de la plataforma: cursos, evaluación confidencial y certificación CONOCER en un solo
               ecosistema.
             </p>
             <div className={styles.ctaActions}>
@@ -302,7 +293,7 @@ export async function ConsultorioLanding() {
             <div className={styles.footerLinks}>
               <a href="#conocer">CONOCER</a>
               <Link href="/consultorio/cursos">Cursos</Link>
-              <Link href={psycotest.home}>PsycoTest</Link>
+              <a href="#evaluacion">Evaluación</a>
               <a href="#contacto">Contacto</a>
             </div>
           </div>

@@ -4,7 +4,7 @@ export const CONSULTORIO = {
   practiceTitle: "Centro certificador CONOCER · Psicología organizacional",
   tagline: "Certifica competencias laborales con la plataforma más completa de México",
   heroLead:
-    "Capacitación en línea, evaluación psicométrica, clases en vivo y certificación CONOCER con respaldo de la SEP — todo integrado para que tu centro certificador escale sin perder rigor ni trazabilidad.",
+    "Capacitación en línea, evaluación confidencial de competencias y certificación CONOCER con respaldo de la SEP — todo integrado para que tu centro certificador escale sin perder rigor ni trazabilidad.",
   email: "martintlax@gmail.com",
   phone: "5580413220",
   conocerUrl: "https://www.conocer.gob.mx",

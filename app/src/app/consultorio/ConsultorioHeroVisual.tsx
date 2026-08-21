@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { CSSProperties } from "react";
 import {
   Award,
   BadgeCheck,
@@ -11,35 +12,42 @@ import {
   ScrollText,
   Sparkles,
 } from "lucide-react";
+import { HeroThreeBackground } from "./HeroThreeBackground";
 import styles from "./consultorio.module.css";
 
+/** Íconos distribuidos simétricamente sobre la órbita (cada 60°). */
 const ORBIT = [
-  { Icon: Brain, className: styles.floatBrain, duration: 5.2, delay: 0 },
-  { Icon: Glasses, className: styles.floatGlasses, duration: 4.6, delay: 0.4 },
-  { Icon: BookOpen, className: styles.floatBook, duration: 5.8, delay: 0.8 },
-  { Icon: GraduationCap, className: styles.floatGrad, duration: 4.2, delay: 0.2 },
-  { Icon: ScrollText, className: styles.floatScroll, duration: 6, delay: 1 },
-  { Icon: Award, className: styles.floatAward, duration: 5, delay: 0.6 },
+  { Icon: Brain, angle: -90, duration: 5.2, delay: 0 },
+  { Icon: Glasses, angle: -30, duration: 4.6, delay: 0.4 },
+  { Icon: Award, angle: 30, duration: 5, delay: 0.6 },
+  { Icon: GraduationCap, angle: 90, duration: 4.2, delay: 0.2 },
+  { Icon: ScrollText, angle: 150, duration: 6, delay: 1 },
+  { Icon: BookOpen, angle: 210, duration: 5.8, delay: 0.8 },
 ] as const;
 
-function FloatIcon({
+function OrbitIcon({
   Icon,
-  className,
+  angle,
   duration,
   delay,
 }: {
   Icon: (typeof ORBIT)[number]["Icon"];
-  className: string;
+  angle: number;
   duration: number;
   delay: number;
 }) {
+  const slotStyle = { "--orbit-angle": `${angle}deg` } as CSSProperties;
+
   return (
     <motion.div
-      className={`${styles.floatIcon} ${className}`}
-      animate={{ y: [0, -14, 0], rotate: [0, 4, -3, 0] }}
+      className={styles.orbitIconSlot}
+      style={slotStyle}
+      animate={{ y: [0, -10, 0] }}
       transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
     >
-      <Icon size={22} strokeWidth={1.6} aria-hidden />
+      <div className={styles.floatIcon}>
+        <Icon size={22} strokeWidth={1.6} aria-hidden />
+      </div>
     </motion.div>
   );
 }
@@ -47,64 +55,46 @@ function FloatIcon({
 export function ConsultorioHeroVisual() {
   return (
     <div className={styles.heroVisual} aria-hidden>
+      <HeroThreeBackground />
       <div className={styles.heroOrbA} />
       <div className={styles.heroOrbB} />
-      <div className={styles.heroOrbC} />
 
-      <svg className={styles.heroLines} viewBox="0 0 400 400">
-        <motion.circle
-          cx="200"
-          cy="200"
-          r="120"
-          fill="none"
-          stroke="rgba(147,197,253,0.2)"
-          strokeWidth="1"
-          strokeDasharray="6 8"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 48, repeat: Infinity, ease: "linear" }}
-          style={{ transformOrigin: "200px 200px" }}
-        />
-        <motion.circle
-          cx="200"
-          cy="200"
-          r="155"
-          fill="none"
-          stroke="rgba(201,162,39,0.15)"
-          strokeWidth="1"
-          strokeDasharray="4 10"
-          animate={{ rotate: -360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          style={{ transformOrigin: "200px 200px" }}
-        />
-      </svg>
+      <div className={styles.heroOrbitHub}>
+        <svg className={styles.heroRingsSvg} viewBox="0 0 200 200" aria-hidden>
+          <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(147,197,253,0.28)" strokeWidth="0.75" strokeDasharray="4 6" />
+          <circle cx="100" cy="100" r="76" fill="none" stroke="rgba(201,162,39,0.22)" strokeWidth="0.75" strokeDasharray="3 7" />
+        </svg>
 
-      {ORBIT.map(({ Icon, className, duration, delay }) => (
-        <FloatIcon key={className} Icon={Icon} className={className} duration={duration} delay={delay} />
-      ))}
+        {ORBIT.map(({ Icon, angle, duration, delay }) => (
+          <OrbitIcon key={angle} Icon={Icon} angle={angle} duration={duration} delay={delay} />
+        ))}
 
-      <motion.div
-        className={styles.heroCore}
-        animate={{ scale: [1, 1.04, 1] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
-      >
+        <div className={styles.heroCoreAnchor}>
+          <motion.div
+            className={styles.heroCorePulse}
+            animate={{ scale: [1, 1.035, 1] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className={styles.heroCore}>
+              <div className={styles.heroCoreRing} />
+              <BadgeCheck size={36} strokeWidth={1.5} className={styles.heroCoreIcon} />
+              <span className={styles.heroCoreLabel}>CONOCER</span>
+              <span className={styles.heroCoreSub}>Competencias laborales</span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className={styles.heroSparkWrap}>
         <motion.div
-          className={styles.heroCoreRing}
-          animate={{ opacity: [0.4, 0.85, 0.4], scale: [1, 1.08, 1] }}
-          transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <BadgeCheck size={36} strokeWidth={1.5} className={styles.heroCoreIcon} />
-        <span className={styles.heroCoreLabel}>CONOCER</span>
-        <span className={styles.heroCoreSub}>Competencias laborales</span>
-      </motion.div>
-
-      <motion.div
-        className={styles.heroSpark}
-        animate={{ opacity: [0.5, 1, 0.5], y: [0, -6, 0] }}
-        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-      >
-        <Sparkles size={16} />
-        <span>Certificación SEP</span>
-      </motion.div>
+          className={styles.heroSpark}
+          animate={{ opacity: [0.55, 1, 0.55] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <Sparkles size={16} />
+          <span>Certificación SEP</span>
+        </motion.div>
+      </div>
     </div>
   );
 }

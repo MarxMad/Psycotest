@@ -49,7 +49,7 @@ export function ConsultorioNav() {
             Acceder
           </Link>
           <Link href={psycotest.home} className={styles.navGhost}>
-            PsycoTest
+            Panel evaluación
           </Link>
           <a href="#conocer" className={styles.btnPrimary}>
             Certificarse
@@ -82,7 +82,7 @@ export function ConsultorioNav() {
             Acceder a cursos
           </Link>
           <Link href={psycotest.home} className={styles.mobileLink} onClick={() => setOpen(false)}>
-            PsycoTest (panel clínico)
+            Panel de evaluación
           </Link>
         </div>
       ) : null}
