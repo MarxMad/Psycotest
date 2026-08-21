@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acuerdo de colaboración 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <style>
+@page { size: letter; margin: 2.2cm 2cm 2.4cm; }
+:root {
+  --ink: #0f1419; --muted: #5a6570; --teal: #1a6b7a; --teal-l: #2a9aad;
+  --border: #d8dde3; --surface: #f4f1ec;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-size: 10.5pt; line-height: 1.45; color: var(--ink);
+  max-width: 18cm; margin: 0 auto; padding: 1.5rem 0 3rem;
+  background: var(--surface);
+}
+.doc {
+  background: #fff; padding: 2.2rem 2.4rem;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 24px rgba(15,20,25,.06);
+}
+@media print {
+  body { background: #fff; padding: 0; }
+  .doc { border: none; box-shadow: none; padding: 0; }
+}
+
+.doc-header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--teal); }
+.doc-header h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.55rem; font-weight: 700; margin: 0 0 .35rem; letter-spacing: -.01em;
+}
+.doc-header .subtitle {
+  font-size: .82rem; color: var(--muted); font-weight: 500; margin: 0;
+}
+
+.parties {
+  width: 100%; border-collapse: collapse; margin: 0 0 1.25rem; font-size: .88rem;
+  border: 1px solid var(--border);
+}
+.parties td {
+  padding: .55rem .75rem; vertical-align: top; border-bottom: 1px solid var(--border);
+}
+.parties td:first-child {
+  width: 28%; font-weight: 600; background: #f7f9fa; color: var(--teal);
+  border-right: 1px solid var(--border);
+}
+.parties tr:last-child td { border-bottom: none; }
+
+h2 {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--teal);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: .35rem; margin: 1.6rem 0 .75rem;
+  page-break-after: avoid;
+}
+h2:first-of-type { margin-top: 0; }
+
+h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.15rem; font-weight: 700; color: var(--ink);
+  margin: 2rem 0 .75rem; page-break-before: always;
+  page-break-after: avoid;
+}
+h1:first-of-type { page-break-before: avoid; margin-top: 0; }
+
+h3 {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .95rem; font-weight: 600; color: var(--ink);
+  margin: 1rem 0 .4rem; page-break-after: avoid;
+}
+
+p { margin: 0 0 .55rem; text-align: justify; hyphens: auto; }
+p strong { font-weight: 600; }
+
+ul { margin: .25rem 0 .75rem; padding-left: 1.25rem; }
+li { margin-bottom: .3rem; }
+
+table:not(.parties) {
+  width: 100%; border-collapse: collapse; margin: .5rem 0 1rem; font-size: .88rem;
+  border: 1px solid var(--border);
+}
+table:not(.parties) th {
+  background: var(--teal); color: #fff; font-weight: 600;
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .04em;
+  padding: .45rem .6rem; text-align: left;
+}
+table:not(.parties) td {
+  padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: top;
+}
+table:not(.parties) tr:last-child td { border-bottom: none; }
+table:not(.parties) td:last-child,
+table:not(.parties) th:last-child { text-align: right; }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
+
+em { font-style: italic; color: var(--muted); }
+
+.signatures {
+  margin-top: 2.5rem; page-break-inside: avoid;
+}
+.signatures table { border: none; margin-top: 1rem; }
+.signatures td {
+  width: 50%; text-align: center; vertical-align: bottom;
+  padding: 2rem 1rem 0; border: none !important;
+}
+.sign-line {
+  border-bottom: 1px solid var(--ink); height: 2.5rem; margin-bottom: .5rem;
+}
+.sign-name { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: .95rem; }
+.sign-role { font-size: .78rem; color: var(--muted); margin-top: .15rem; }
+
+.footnote {
+  font-size: .78rem; color: var(--muted); margin-top: 1.5rem;
+  padding-top: .75rem; border-top: 1px solid var(--border);
+  font-style: italic;
+}
+</style>
+</head>
+<body>
+<div class="doc"><div class="doc-header"><h1>Acuerdo de colaboración</h1><p class="subtitle">Plataforma integral de evaluación psicológica y formación profesional</p></div>
+<table class="parties">
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>El desarrollador</strong></td>
+<td>Gerardo Pedrizco Vela · gerardo.gerry.pedrizco@gmail.com · 5666672072</td>
+</tr>
+<tr>
+<td><strong>El cliente</strong></td>
+<td>Martín Hernández González · martintlax@gmail.com · 5580413220</td>
+</tr>
+<tr>
+<td><strong>Lugar y fecha</strong></td>
+<td>CDMX, 17 de agosto de 2026</td>
+</tr>
+</tbody>
+</table>
+<p>Ambas partes —colaboradores de confianza en un proyecto profesional— acuerdan ampliar y formalizar el desarrollo de una <strong>plataforma digital propia</strong> para el consultorio del cliente, que integra <strong>evaluación psicométrica</strong> (PAPI, Hartman, MABE y <strong>dos pruebas adicionales a digitalizar</strong>), <strong>formación en línea</strong> (landings de curso, streaming propio, cobro, clases en vivo con grabación) y <strong>herramientas de marketing</strong> para promoción en redes sociales, operadas desde un <strong>panel administrativo unificado</strong>.</p>
+<hr />
+<h2>QUÉ RECIBE EL CLIENTE</h2>
+<p>Al <strong>cierre del proyecto y pago total</strong>, el consultorio cuenta con un ecosistema digital operado bajo su marca, con lo siguiente:</p>
+<h3>A. Evaluación psicológica (PsycoTest)</h3>
+<p><strong>Las tres pruebas listas para aplicar (ya en producción)</strong></p>
+<ul>
+<li><strong>PAPI:</strong> 90 pares de frases y hoja de perfil de los 20 factores, como la lámina impresa.</li>
+<li><strong>Hartman:</strong> dos ordenamientos de 18 enunciados, tres axiogramas y niveles de desarrollo por indicador.</li>
+<li><strong>MABE:</strong> cuatro bloques (candidato y puesto) y gráficas comparativas de ambos perfiles.</li>
+</ul>
+<p><strong>Dos pruebas adicionales incluidas en el proyecto</strong></p>
+<p>Digitalización de <strong>dos (2) instrumentos psicométricos adicionales</strong> que el cliente elija, distintos de PAPI, Hartman y MABE, con el mismo alcance funcional: aplicación en línea según manual, calificación automática, visualización (gráfica, perfil o tabla según el instrumento), informe PDF borrador y revisión clínica por el psicólogo. Los instrumentos se <strong>definen por escrito</strong> entre las partes durante el proyecto (idealmente febrero–marzo 2027). El cliente aporta manual, clave de calificación, plantillas de referencia y confirma <strong>licencia de uso</strong> para digitalizar cada uno.</p>
+<p>Cada prueba incluye instrucciones del manual durante la aplicación. Códigos de acceso para aplicantes; el evaluado no ve resultados ni panel clínico.</p>
+<p><strong>Calificación automática</strong></p>
+<p>Captura de respuestas, puntajes automáticos y validación de protocolo (sumas de control, disimilitudes Hartman, etc.). Si el protocolo no es válido, el sistema lo detiene y explica por qué.</p>
+<p><strong>Informes</strong></p>
+<p>Gráficas de perfil, vistas comparativas y texto borrador según manuales. El psicólogo edita, anota, valida y firma. Exportación PDF con fecha, responsable y versión de claves. Informe firmado queda inalterable.</p>
+<p><strong>Panel clínico</strong></p>
+<p>Listado de sesiones, detalle por participante, pestañas de calificación, respuestas e interpretación, perfiles de acceso (aplicador, psicólogo, administrador).</p>
+<h3>B. Plataforma comercial, streaming y marketing</h3>
+<p><strong>Prioridad de desarrollo acordada:</strong> primero <strong>páginas de curso</strong>, <strong>plataforma de streaming propia</strong> y <strong>pagos en línea</strong>; después LMS completo, panel de marketing, clases en vivo públicas y pulido clínico.</p>
+<p><strong>Landing page por curso</strong></p>
+<p>Página de venta propia por curso: hero con titular y CTA, beneficios, temario, instructor, precio e inscripción; catálogo general; plantilla reutilizable para nuevos cursos.</p>
+<p><strong>Plataforma de streaming propia</strong></p>
+<p>Reproductor integrado en el sitio; almacenamiento de video; transmisión en vivo con cámara, micrófono, chat y <strong>pizarra compartida</strong> (hasta ~30 participantes), con <strong>Jitsi</strong> (software libre); calendario de sesiones; grabación publicada como replay dentro del curso.</p>
+<p><strong>Cobro en línea</strong></p>
+<p>Integración Stripe México; checkout en la landing; inscripción automática al confirmar pago; cursos internos por invitación sin pago.</p>
+<p><strong>LMS y roles</strong></p>
+<p>Módulos y lecciones (texto, PDF, video); progreso del alumno; paneles de administrador, instructor y alumno.</p>
+<p><strong>Panel de marketing y publicaciones</strong></p>
+<p>Integrado al panel unificado junto con pruebas, cursos y streaming. Generador visual de piezas promocionales; plantillas (lanzamiento, características, CTA, video corto, estadísticas, invitación); exportación PNG en formatos 1:1, 9:16 y 16:9; personalización de copy y marca; campañas tipo puzzle de Instagram (4, 6 o 9 piezas); material promocional por curso y por transmisión. <em>No incluye publicación programada directa a APIs de redes sociales.</em></p>
+<p><strong>Panel administrativo unificado</strong></p>
+<p>Un solo acceso con secciones: pruebas psicométricas, cursos, streaming y clases en vivo, marketing y publicaciones, pagos e inscripciones.</p>
+<p><strong>Conexión con evaluación</strong></p>
+<p>Flujo o enlace desde cursos hacia pruebas psicométricas cuando el programa lo requiera.</p>
+<h3>C. Arranque y operación</h3>
+<p>Instalación en producción, respaldos, capacitación al equipo, manual de uso y aviso de privacidad integrado antes de aplicar pruebas.</p>
+<p>El desglose completo está en el <strong>Anexo A</strong>. Lo no listado se cotiza aparte y se acuerda por escrito antes de ejecutarse.</p>
+<hr />
+<h2>OPERACIÓN DIGITAL Y ACCESO</h2>
+<p><strong>a)</strong> El desarrollador administra, durante la vigencia del acuerdo, la <strong>infraestructura digital</strong> del proyecto: hosting, dominios, bases de datos, credenciales técnicas, despliegues y respaldos. Lo hace <strong>a nombre y en beneficio del cliente</strong>, pero conserva el control operativo necesario para desarrollar, mantener y proteger el sistema.</p>
+<p><strong>b)</strong> Mientras <strong>no se complete el pago total</strong> de $45,000 MXN (+ IVA), el cliente recibe un <strong>permiso de uso temporal</strong> para prueba, validación y operación comercial limitada, <strong>no una licencia plena</strong> (ver Propiedad intelectual).</p>
+<p><strong>c)</strong> El acceso del cliente y de sus usuarios depende del <strong>cumplimiento al corriente de los pagos</strong>. Un retraso <strong>superior a quince (15) días hábiles</strong> en cualquier mensualidad permite al desarrollador <strong>pausar el trabajo</strong> en curso, previo aviso por escrito.</p>
+<p><strong>d)</strong> Un retraso <strong>superior a treinta (30) días naturales</strong> en cualquier mensualidad, o la falta de pago del saldo al vencimiento del calendario, autoriza al desarrollador a <strong>suspender el acceso</strong> a la plataforma —incluido <strong>apagar o despublicar el sitio</strong>— hasta regularizar el adeudo. Esta medida protege al desarrollador sin eliminar la obligación del cliente de cubrir lo adeudado ni los datos clínicos ya generados, que siguen siendo del cliente.</p>
+<p><strong>e)</strong> Al <strong>completar el pago total</strong>, el desarrollador entrega acceso administrativo acordado, copia del código fuente y restablece la operación normal en un plazo razonable (hasta diez días hábiles).</p>
+<p><strong>f)</strong> Los costos recurrentes de hosting, dominio, almacenamiento, servicios de pago (comisiones Stripe) y servidores de clases en vivo <strong>no están incluidos</strong> en el precio de desarrollo; se contratan a nombre del cliente (el desarrollador puede gestionarlos como intermediario técnico).</p>
+<hr />
+<h2>PRECIO Y PAGOS</h2>
+<p><strong>$45,000.00 MXN (cuarenta y cinco mil pesos 00/100 moneda nacional) más IVA</strong>, desglosados así:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th style="text-align: right;">Monto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Plataforma de evaluación psicológica (PAPI, Hartman, MABE + <strong>2 adicionales</strong>)</td>
+<td style="text-align: right;">$15,000 + IVA</td>
+</tr>
+<tr>
+<td>Plataforma comercial, streaming, marketing y LMS</td>
+<td style="text-align: right;">$30,000 + IVA</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>$45,000 + IVA</strong></td>
+</tr>
+</tbody>
+</table>
+<h3>Calendario de pagos</h3>
+<table>
+<thead>
+<tr>
+<th>Mes</th>
+<th style="text-align: right;">Importe</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agosto 2026</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pagado a la firma de este acuerdo</td>
+</tr>
+<tr>
+<td>Septiembre 2026</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Octubre 2026</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Noviembre 2026</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Diciembre 2026</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Enero 2027</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Febrero 2027</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Marzo 2027</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td>Abril 2027</td>
+<td style="text-align: right;">$5,000 + IVA</td>
+<td>Pendiente — cierre</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Saldo pendiente:</strong> $40,000 + IVA en ocho mensualidades.</p>
+<p>Cada pago se realiza dentro de los <strong>cinco (5) días hábiles</strong> siguientes al día <strong>1</strong> de cada mes (septiembre 2026 – abril 2027). El desarrollador emite comprobante fiscal digital por cada exhibición.</p>
+<p>Al inicio de cada mes el desarrollador informa el avance del mes anterior. El cliente tiene <strong>cinco días hábiles</strong> para observaciones fundadas; sin ellas, el entregable del mes se da por aceptado.</p>
+<hr />
+<h2>TIEMPOS</h2>
+<p>Plazo global del proyecto: <strong>agosto 2026 – abril 2027</strong>, alineado al calendario de pagos.</p>
+<p><strong>Fecha clave acordada:</strong> la plataforma comercial (venta de cursos, cobro en línea, clases en vivo, marketing y uso operativo de pruebas) <strong>debe estar lista para operar en diciembre de 2026</strong>, de modo que el cliente pueda atender alumnos y evaluados reales. Los pagos mensuarios <strong>continúan enero – abril 2027</strong> mientras el cliente ya utiliza la plataforma; en ese periodo se completan LMS, validación clínica, capacitación y cierre.</p>
+<table>
+<thead>
+<tr>
+<th>Periodo</th>
+<th>Fase</th>
+<th>Entregable orientativo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ago 2026</td>
+<td>0 — PsycoTest</td>
+<td>Evaluación en producción (pagado)</td>
+</tr>
+<tr>
+<td>Sep 2026</td>
+<td>1 — Landings</td>
+<td>Catálogo + landing del primer curso + marca</td>
+</tr>
+<tr>
+<td>Oct 2026</td>
+<td>2 — Streaming</td>
+<td>Videos y clases en vivo en el sitio</td>
+</tr>
+<tr>
+<td>Nov 2026</td>
+<td>3 — Pagos</td>
+<td>Stripe + cobro en la landing</td>
+</tr>
+<tr>
+<td><strong>Dic 2026</strong></td>
+<td><strong>4 — Lanzamiento</strong></td>
+<td><strong>Marketing + integración; plataforma operativa</strong></td>
+</tr>
+<tr>
+<td>Ene 2027</td>
+<td>5 — LMS + live</td>
+<td>Módulos, lecciones, panel alumno (cliente ya opera)</td>
+</tr>
+<tr>
+<td>Feb 2027</td>
+<td>6 — Instructor</td>
+<td>Autonomía en panel + enlace a pruebas</td>
+</tr>
+<tr>
+<td>Mar 2027</td>
+<td>7 — Validación</td>
+<td>Validación PsycoTest (5 instrumentos); avance o cierre de las 2 pruebas adicionales</td>
+</tr>
+<tr>
+<td>Abr 2027</td>
+<td>8 — Cierre</td>
+<td>Capacitación, documentación, código fuente</td>
+</tr>
+</tbody>
+</table>
+<p>El plazo se <strong>suspende</strong> por insumos pendientes del cliente, falta de disponibilidad para sesiones de validación o pausa por mora en pagos.</p>
+<hr />
+<h2>LO QUE NECESITA EL DESARROLLADOR</h2>
+<ul>
+<li>Un <strong>protocolo real calificado a mano</strong> de cada prueba incluida (PAPI, Hartman, MABE y las <strong>2 adicionales</strong>), como referencia de validación.</li>
+<li><strong>Tres sesiones de dos horas</strong> para aprobar claves de calificación (puede designar otro profesional).</li>
+<li><strong>Confirmación</strong> de licencias vigentes de PAPI, Hartman, MABE y de las <strong>2 pruebas adicionales</strong> elegidas.</li>
+<li><strong>Manual, clave y plantillas</strong> de las 2 pruebas adicionales (feb–mar 2027), y acuerdo por escrito sobre cuáles se digitalizarán.</li>
+<li><strong>Marca, logo y colores</strong> de la plataforma.</li>
+<li><strong>Textos e imágenes del primer curso</strong> (hero, temario, instructor) para la landing.</li>
+<li><strong>Video o teaser</strong> del curso para la plataforma de streaming.</li>
+<li><strong>Outline del primer curso</strong> (módulos y lecciones planeadas).</li>
+<li><strong>Cuenta Stripe México</strong> verificada (antes de activar cobros).</li>
+<li><strong>Dominio</strong> propio — el cliente ya lo tiene; se configura en Vercel sin costo adicional de desarrollo.</li>
+<li>Disponibilidad para validaciones mensuales.</li>
+</ul>
+<p>Mientras las claves no estén aprobadas por escrito, la plataforma muestra advertencia y no se usa para emitir informes clínicos definitivos.</p>
+<hr />
+<h2>PROPIEDAD INTELECTUAL</h2>
+<h3>Del cliente</h3>
+<p>Datos de participantes, alumnos, respuestas, resultados, informes, notas clínicas y contenido de cursos <strong>creado por el cliente</strong> son propiedad exclusiva del cliente desde el primer día.</p>
+<h3>Del desarrollador</h3>
+<p>Código, arquitectura, algoritmos genéricos, diseño reutilizable y know-how son propiedad del desarrollador, reutilizables en otros proyectos sin incluir datos ni contenido propietario de las pruebas del cliente.</p>
+<h3>Licencia del cliente</h3>
+<p><strong>Licencia de uso plena</strong> (perpetua, irrevocable, no exclusiva, intransferible) sobre la plataforma para la práctica profesional del cliente, <strong>solo al completarse el pago total</strong> de $45,000 + IVA.</p>
+<p><strong>Antes del pago total:</strong> permiso temporal de uso para validación y operación, revocable en caso de incumplimiento de pago conforme a la sección Operación digital.</p>
+<h3>Código fuente</h3>
+<p>Con el <strong>pago total</strong>, el cliente recibe copia del código fuente para uso interno y continuidad operativa. No se transfiere la propiedad del código ni se autoriza distribución o comercialización del software como producto.</p>
+<h3>Las pruebas</h3>
+<p>PAPI, Hartman, MABE y los <strong>dos instrumentos adicionales</strong> acordados pertenecen a sus editores o autores. El cliente declara contar con licencias para uso y digitalización de <strong>los cinco instrumentos incluidos</strong> y responde por reclamaciones, dejando indemne al desarrollador.</p>
+<hr />
+<h2>ACUERDOS FINALES</h2>
+<p><strong>La herramienta</strong> es apoyo profesional, no diagnóstico automático. Los textos son borrador; ningún informe clínico sin firma del psicólogo. Responsabilidad del desarrollador limitada al monto efectivamente pagado.</p>
+<p><strong>Garantía:</strong> sesenta (60) días tras la entrega final, corrección sin costo de defectos reportados por escrito. Mantenimiento posterior se cotiza aparte.</p>
+<p><strong>Confidencialidad:</strong> cinco (5) años. El desarrollador puede usar capturas con datos ficticios en portafolio.</p>
+<p><strong>Relación previa:</strong> las partes reconocen relación de amistad; este acuerdo regula la parte comercial y técnica para evitar malentendidos y proteger a ambos.</p>
+<p><strong>Cierre:</strong> termina al cumplirse el proyecto y el pago total, por acuerdo mutuo, o por incumplimiento no corregido en quince (15) días tras aviso. Si termina antes, se pagan etapas concluidas y proporcional de la en curso; la licencia plena no aplica a lo no cubierto.</p>
+<p><strong>Disputas:</strong> diálogo directo primero; ley mexicana; tribunales de CDMX. Cambios solo por escrito firmado.</p>
+<hr />
+<h2>FIRMAS</h2>
+<div class="signatures">
+  <table><tr>
+    <td><div class="sign-line"></div><div class="sign-name">Gerardo Pedrizco Vela</div><div class="sign-role">El desarrollador</div></td>
+    <td><div class="sign-line"></div><div class="sign-name">Martín Hernández González</div><div class="sign-role">El cliente</div></td>
+  </tr></table>
+  <p class="footnote" style="margin-top:1rem;border:none;padding:0;font-style:italic;">Los datos de facturación se intercambian por separado.</p>
+</div>
+<hr />
+<h1 class="annex">Anexo A · Alcance</h1>
+<h2>A.1 Evaluación psicológica</h2>
+<p><strong>Aplicación:</strong> instrucciones por manual; aviso de privacidad; validación de protocolo; guardado automático; códigos de acceso; registro de participantes, sesiones y puestos.</p>
+<p><strong>Calificación:</strong> puntajes automáticos; puertas de validez; desglose reactivo.</p>
+<p><strong>Interpretación:</strong> perfil PAPI; axiogramas Hartman; gráficas MABE (curvas, radar, brechas); visualización e interpretación de las <strong>2 pruebas adicionales</strong> según manual; textos borrador; panel de revisión; PDF trazable; firma del psicólogo.</p>
+<p><strong>Pruebas adicionales (2):</strong> selección acordada con el cliente; captura y calificación según manual aportado; gráfica o perfil equivalente; validación clínica conjunta antes de uso definitivo en informes.</p>
+<p><strong>Seguridad:</strong> roles aplicador / psicólogo / admin; acceso con contraseña; tráfico cifrado; respaldos; bitácora.</p>
+<h2>A.2 Comercial, streaming, marketing y LMS</h2>
+<p><strong>Landings:</strong> catálogo; landing por curso (hero, beneficios, temario, instructor, precio, CTA); plantilla reutilizable.</p>
+<p><strong>Streaming propio:</strong> reproductor embebido; almacenamiento de video; transmisión en vivo (cámara, micrófono, chat, <strong>pizarra</strong>, ~30 usuarios) con Jitsi; calendario; grabación → replay.</p>
+<p><strong>Comercial:</strong> Stripe MX; checkout en landing; inscripción post-pago; cursos públicos e internos.</p>
+<p><strong>LMS:</strong> módulos y lecciones; video bajo demanda; progreso; panel alumno e instructor.</p>
+<p><strong>Marketing:</strong> generador visual de piezas; plantillas promocionales; export PNG 1:1, 9:16, 16:9; campañas puzzle Instagram; personalización de marca; piezas por curso y live. Sin publicación automática a APIs de redes.</p>
+<p><strong>Panel unificado:</strong> pruebas · cursos · streaming · marketing · pagos.</p>
+<h2>A.3 No incluido</h2>
+<p>App móvil nativa · publicación programada a APIs de redes sociales · certificados PDF con QR (fase opcional) · integración SSO · <strong>más de dos pruebas adicionales</strong> distintas de las cinco incluidas (PAPI, Hartman, MABE + 2) · revisión legal del aviso de privacidad · mantenimiento post-garantía · hosting mensual.</p>
+<hr />
+<h1 class="annex">Anexo B · Entregables por fase</h1>
+<table>
+<thead>
+<tr>
+<th>Fase</th>
+<th>Periodo</th>
+<th>Entregables explícitos</th>
+<th>Pago</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Ago 2026</td>
+<td>PsycoTest en producción; panel clínico; códigos de acceso</td>
+<td>$5,000 (pagado)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Sep 2026</td>
+<td>Identidad visual; catálogo; landing primer curso; panel cursos v1</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Oct 2026</td>
+<td>Streaming propio; reproductor; almacenamiento; live base; calendario</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Nov 2026</td>
+<td>Stripe; checkout; inscripción automática; panel pagos</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Dic 2026</td>
+<td>Panel marketing; integración final; <strong>plataforma operativa para el cliente</strong></td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Ene 2027</td>
+<td>LMS; panel alumno; primera live pública (cliente ya en operación)</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Feb 2027</td>
+<td>Rol instructor; panel unificado v1; enlace curso → pruebas</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Mar 2027</td>
+<td>Validación PsycoTest (5 instrumentos); digitalización/cierre de 2 adicionales; pruebas de carga streaming; documentación</td>
+<td>$5,000</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Abr 2027</td>
+<td>Capacitación; panel final; código fuente; cierre</td>
+<td>$5,000</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p class="footnote">Documento listo para exportar a PDF. Sustituye el acuerdo de julio 2026 en lo relativo a precio, alcance ampliado y calendario de pagos; lo no modificado expresamente sigue en espíritu de colaboración entre las partes.</p></div>
+</body>
+</html>

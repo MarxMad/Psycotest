@@ -7,14 +7,14 @@
 **Tarifa de referencia:** **10 USD / hora**.
 
 Documentos técnicos ligados:
-- [`docs/PAPI-CALIFICACION.md`](docs/PAPI-CALIFICACION.md) — motor PAPI
-- [`docs/HARTMAN-CALIFICACION.md`](docs/HARTMAN-CALIFICACION.md) — motor Hartman
+- [`docs/tecnico/PAPI-CALIFICACION.md`](docs/tecnico/PAPI-CALIFICACION.md) — motor PAPI
+- [`docs/tecnico/HARTMAN-CALIFICACION.md`](docs/tecnico/HARTMAN-CALIFICACION.md) — motor Hartman
 
 ---
 
 ## 1. Resumen ejecutivo
 
-> ⚠️ **Las cifras vigentes están en [`docs/CRONOGRAMA.md`](docs/CRONOGRAMA.md) (revisión 4).** Este documento conserva la arquitectura y el razonamiento; su estimación corresponde a la revisión 2, cuando el alcance eran dos instrumentos y la metodología de Hartman todavía tenía incógnitas.
+> ⚠️ **Las cifras vigentes están en [`docs/PROPUESTA-PLATAFORMA-INTEGRAL-2026.md`](docs/PROPUESTA-PLATAFORMA-INTEGRAL-2026.md) y el acuerdo 2026.** Este documento conserva la arquitectura y el razonamiento; su estimación corresponde a la revisión 2, cuando el alcance eran dos instrumentos y la metodología de Hartman todavía tenía incógnitas.
 
 | Concepto | Rev. 2 (este doc) | **Rev. 4 — vigente** |
 |----------|------------------:|---------------------:|
@@ -345,7 +345,7 @@ Ordenado por urgencia. Los tres primeros son bloqueantes de F0:
 1. 🔴 **Un protocolo PAPI real calificado a mano** — las 90 respuestas A/B y los 20 puntajes resultantes.
 2. 🔴 **Un protocolo Hartman real calificado a mano** — los rankings de ambas partes y todas las salidas (DIF, DIM, INT, DIS, VQ, SQ, BQr, BQa, CQ y niveles).
 3. 🔴 **`Calificación Hartman.xlsx` exportado sin cifrar** o en CSV por hoja. Resuelve de un golpe las fórmulas de D.I./A.I./VQ y la tabla Gráfica completa.
-4. 🟠 **Firma de la clave I/E/S de Hartman** — confirmar los 7 ítems señalados en `docs/HARTMAN-CALIFICACION.md` §2.5.
+4. 🟠 **Firma de la clave I/E/S de Hartman** — confirmar los 7 ítems señalados en `docs/tecnico/HARTMAN-CALIFICACION.md` §2.5.
 5. 🟠 **Confirmación de licencias vigentes** de PAPI y de la adaptación Hartman.
 6. 🟡 Decisión de hospedaje: nube gestionada vs servidor propio (afecta M1 y M10).
 7. 🟡 Política de retención de datos: cuántos años se conservan los informes.
@@ -375,4 +375,4 @@ Ordenado por urgencia. Los tres primeros son bloqueantes de F0:
 
 ---
 
-*Revisión 2 — replaneada sobre verificación directa del material base. Ver `docs/PAPI-CALIFICACION.md` y `docs/HARTMAN-CALIFICACION.md` para el detalle técnico de cada motor.*
+*Revisión 2 — replaneada sobre verificación directa del material base. Ver `docs/tecnico/PAPI-CALIFICACION.md` y `docs/tecnico/HARTMAN-CALIFICACION.md` para el detalle técnico de cada motor.*

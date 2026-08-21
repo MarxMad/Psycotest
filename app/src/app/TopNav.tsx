@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { psycotest } from "@/lib/routes";
 
 interface AuthUser {
   nombre: string;
@@ -51,29 +52,29 @@ export function TopNav() {
   async function logout() {
     await fetch("/api/auth/login", { method: "DELETE" });
     setUser(null);
-    router.push("/login");
+    router.push(psycotest.login);
     router.refresh();
   }
 
-  const enPanel = pathname.startsWith("/admin");
-  const enParticipantes = pathname.startsWith("/participantes");
-  const enLogin = pathname.startsWith("/login");
+  const enPanel = pathname.startsWith(psycotest.admin);
+  const enParticipantes = pathname.startsWith(psycotest.participantes);
+  const enLogin = pathname.startsWith(psycotest.login);
 
   return (
     <nav className="topnav" aria-label="Navegación principal">
-      <NavLink href="/" active={pathname === "/"}>
+      <NavLink href={psycotest.home} active={pathname === psycotest.home}>
         Aplicación
       </NavLink>
 
       {ready && user ? (
         <>
-          <NavLink href="/admin" active={enPanel}>
+          <NavLink href={psycotest.admin} active={enPanel && !pathname.startsWith(psycotest.codigos)}>
             Panel
           </NavLink>
-          <NavLink href="/admin/codigos" active={pathname.startsWith("/admin/codigos")}>
+          <NavLink href={psycotest.codigos} active={pathname.startsWith(psycotest.codigos)}>
             Códigos
           </NavLink>
-          <NavLink href="/participantes" active={enParticipantes}>
+          <NavLink href={psycotest.participantes} active={enParticipantes}>
             Participantes
           </NavLink>
           <div className="topnav-user">
@@ -87,7 +88,7 @@ export function TopNav() {
         </>
       ) : ready ? (
         <Link
-          href="/login"
+          href={psycotest.login}
           className={enLogin ? "topnav-cta topnav-cta--active" : "topnav-cta"}
         >
           Acceso profesional

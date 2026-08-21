@@ -3,6 +3,7 @@ import path from "path";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema";
 import { seedIfEmpty } from "./seed";
+import { seedCoursesIfEmpty } from "./seed-courses";
 
 /** Tipo unificado para Drizzle; en runtime puede ser SQLite local o Turso. */
 export type AppDb = BetterSQLite3Database<typeof schema>;
@@ -43,6 +44,7 @@ export function getDb(): AppDb {
   if (!globalForDb.__psycotestDb) {
     globalForDb.__psycotestDb = createDb();
     void seedIfEmpty(globalForDb.__psycotestDb);
+    void seedCoursesIfEmpty(globalForDb.__psycotestDb);
   }
   return globalForDb.__psycotestDb;
 }

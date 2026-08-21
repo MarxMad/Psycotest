@@ -5,7 +5,8 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   nombre: text("nombre").notNull(),
   passwordHash: text("password_hash").notNull(),
-  rol: text("rol", { enum: ["admin", "psicologo", "aplicador"] }).notNull().default("psicologo"),
+  rol: text("rol", { enum: ["admin", "psicologo", "aplicador", "alumno"] }).notNull().default("psicologo"),
+  stripeCustomerId: text("stripe_customer_id"),
   createdAt: text("created_at").notNull(),
 });
 
@@ -104,8 +105,105 @@ export const auditLog = sqliteTable("audit_log", {
   createdAt: text("created_at").notNull(),
 });
 
+export const courseCategories = sqliteTable("course_categories", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export const courses = sqliteTable("courses", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => courseCategories.id),
+  title: text("title").notNull(),
+  subtitle: text("subtitle"),
+  description: text("description").notNull(),
+  thumbnailUrl: text("thumbnail_url"),
+  instructorName: text("instructor_name").notNull(),
+  instructorBio: text("instructor_bio"),
+  priceMxn: integer("price_mxn").notNull().default(0),
+  /** Price ID en Stripe (mode: payment) */
+  stripePriceId: text("stripe_price_id"),
+  level: text("level", { enum: ["basico", "intermedio", "avanzado"] }).notNull().default("basico"),
+  durationMinutes: integer("duration_minutes").notNull().default(0),
+  published: integer("published", { mode: "boolean" }).notNull().default(true),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const courseModules = sqliteTable("course_modules", {
+  id: text("id").primaryKey(),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id, { onDelete: "cascade" }),
+  title: text("title").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export const courseLessons = sqliteTable("course_lessons", {
+  id: text("id").primaryKey(),
+  moduleId: text("module_id")
+    .notNull()
+    .references(() => courseModules.id, { onDelete: "cascade" }),
+  slug: text("slug").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  videoUrl: text("video_url"),
+  durationSeconds: integer("duration_seconds").notNull().default(0),
+  sortOrder: integer("sort_order").notNull().default(0),
+  freePreview: integer("free_preview", { mode: "boolean" }).notNull().default(false),
+});
+
+export const courseEnrollments = sqliteTable("course_enrollments", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id),
+  status: text("status", { enum: ["pending", "active", "refunded"] }).notNull().default("pending"),
+  stripeSessionId: text("stripe_session_id").unique(),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  progressPercent: integer("progress_percent").notNull().default(0),
+  enrolledAt: text("enrolled_at"),
+  completedAt: text("completed_at"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const lessonProgress = sqliteTable("lesson_progress", {
+  id: text("id").primaryKey(),
+  enrollmentId: text("enrollment_id")
+    .notNull()
+    .references(() => courseEnrollments.id, { onDelete: "cascade" }),
+  lessonId: text("lesson_id")
+    .notNull()
+    .references(() => courseLessons.id, { onDelete: "cascade" }),
+  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+  lastPositionSeconds: integer("last_position_seconds").notNull().default(0),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const stripeWebhookEvents = sqliteTable("stripe_webhook_events", {
+  id: text("id").primaryKey(),
+  eventId: text("event_id").notNull().unique(),
+  type: text("type").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Participant = typeof participants.$inferSelect;
 export type AccessCode = typeof accessCodes.$inferSelect;
 export type AccessRedemption = typeof accessRedemptions.$inferSelect;
 export type AssessmentSession = typeof assessmentSessions.$inferSelect;
+export type Course = typeof courses.$inferSelect;
+export type CourseCategory = typeof courseCategories.$inferSelect;
+export type CourseModule = typeof courseModules.$inferSelect;
+export type CourseLesson = typeof courseLessons.$inferSelect;
+export type CourseEnrollment = typeof courseEnrollments.$inferSelect;

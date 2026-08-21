@@ -21,7 +21,7 @@ export interface AuthUser {
   id: string;
   email: string;
   nombre: string;
-  rol: "admin" | "psicologo" | "aplicador";
+  rol: "admin" | "psicologo" | "aplicador" | "alumno";
 }
 
 export async function signIn(email: string, password: string): Promise<AuthUser | null> {

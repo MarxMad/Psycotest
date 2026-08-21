@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
+import { psycotest } from "@/lib/routes";
 import s from "./ConfirmacionPrueba.module.css";
 
 const ETIQUETAS: Record<Instrumento, string> = {
@@ -55,7 +56,7 @@ export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn }: 
           cuando esté listo.
         </p>
 
-        <Link href="/" className="btn btn-primary">
+        <Link href={psycotest.acceso} className="btn btn-primary">
           Volver al inicio
         </Link>
       </div>

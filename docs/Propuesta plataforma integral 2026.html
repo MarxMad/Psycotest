@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta — Plataforma digital integral 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink: #0f1419; --surface: #f4f1ec; --white: #fff;
+      --teal: #1a6b7a; --teal-l: #2a9aad; --coral: #e85d4c;
+      --gold: #d4a017; --mint: #3d9970; --lav: #6b5b95;
+      --muted: #5a6570; --border: rgba(15,20,25,.08);
+      --pad: clamp(1rem, 3vw, 2.5rem);
+    }
+    html, body { height: 100%; overflow: hidden; }
+    body { font-family: 'Source Sans 3', sans-serif; background: var(--ink); color: var(--ink); }
+
+    .font-display { font-family: 'Source Serif 4', Georgia, serif; }
+
+    .deck { height: 100vh; width: 100vw; position: relative; }
+    .slide {
+      position: absolute; inset: 0; opacity: 0; visibility: hidden;
+      transform: scale(.97); transition: opacity .45s, transform .45s, visibility .45s;
+      overflow: hidden;
+    }
+    .slide.active { opacity: 1; visibility: visible; transform: none; z-index: 1; }
+
+    .inner {
+      height: 100%; max-width: 1080px; width: 100%; margin: 0 auto;
+      padding: var(--pad); padding-bottom: calc(var(--pad) + 56px);
+      display: flex; flex-direction: column; justify-content: center; gap: clamp(.5rem, 1.5vh, 1rem);
+      position: relative; z-index: 2;
+    }
+
+    /* Decorative shapes — solid, no blur */
+    .shape { position: absolute; pointer-events: none; z-index: 0; }
+    .disc { border-radius: 50%; opacity: .12; }
+    .ring { border-radius: 50%; border: 2px solid; opacity: .18; }
+    .block { border-radius: 16px; opacity: .08; }
+
+    /* SVG icons */
+    .ico { display: flex; align-items: center; justify-content: center; color: inherit; }
+    .ico svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hub-node .ico svg { width: 22px; height: 22px; }
+    .cta-ring .ico svg { width: 28px; height: 28px; stroke-width: 2.5; }
+
+    .tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .62rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+      padding: .35rem .75rem; border-radius: 999px; width: fit-content;
+    }
+    h1 { font-family: 'Source Serif 4', Georgia, serif; font-weight: 700; font-size: clamp(1.75rem, 4.2vw, 2.85rem); line-height: 1.15; letter-spacing: -.01em; }
+    h2 { font-family: 'Source Serif 4', Georgia, serif; font-weight: 600; font-size: clamp(1.15rem, 2.6vw, 1.65rem); line-height: 1.2; letter-spacing: 0; }
+    .sub { font-size: clamp(.82rem, 1.5vw, .95rem); line-height: 1.55; max-width: 52ch; }
+
+    /* Slide themes */
+    .s-hero { background: var(--ink); color: var(--white); }
+    .s-hero .tag { background: rgba(255,255,255,.1); color: #7ec8d8; border: 1px solid rgba(255,255,255,.12); }
+    .s-hero .sub { color: #9eb0bc; }
+    .s-hero .accent-line { width: 64px; height: 4px; background: var(--coral); border-radius: 999px; }
+
+    .s-light { background: var(--surface); }
+    .s-light .tag { background: var(--white); color: var(--teal); border: 1px solid var(--border); }
+
+    .s-teal { background: var(--teal); color: var(--white); }
+    .s-teal .tag { background: rgba(255,255,255,.12); color: #a8e8f0; }
+
+    .s-dark { background: #1a1f2e; color: var(--white); }
+    .s-dark .tag { background: rgba(255,255,255,.08); color: #8ec4d4; }
+
+    .s-warm { background: #3d3028; color: var(--white); }
+    .s-warm .tag { background: rgba(255,255,255,.1); color: #ffd4a8; }
+
+    /* Bento & visual blocks */
+    .bento { display: grid; gap: .65rem; }
+    .bento-2 { grid-template-columns: 1fr 1fr; }
+    .bento-3 { grid-template-columns: repeat(3, 1fr); }
+    .bento-4 { grid-template-columns: repeat(4, 1fr); }
+    .bento-asym { grid-template-columns: 1.2fr .8fr; }
+    @media (max-width: 768px) {
+      .bento-2, .bento-3, .bento-4, .bento-asym { grid-template-columns: 1fr; }
+    }
+
+    .tile {
+      border-radius: 16px; padding: .85rem 1rem; position: relative; overflow: hidden;
+      transition: transform .2s;
+    }
+    .tile::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--teal-l);
+    }
+    .tile-light { background: var(--white); border: 1px solid var(--border); box-shadow: 0 4px 24px rgba(15,20,25,.04); }
+    .tile-glass { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14); }
+    .tile-glass::before { background: var(--gold); }
+    .tile-accent { background: var(--teal); color: var(--white); border: none; }
+    .tile-accent::before { display: none; }
+    .tile-coral { background: var(--coral); color: var(--white); }
+    .tile-coral::before { display: none; }
+
+    .tile-icon {
+      width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      margin-bottom: .5rem;
+    }
+    .tile-light .tile-icon { background: #e8f4f6; color: var(--teal); }
+    .tile-glass .tile-icon { background: rgba(255,255,255,.15); color: #fff; }
+    .tile-accent .tile-icon { background: rgba(255,255,255,.18); color: #fff; }
+    .tile-icon.num { font-family: 'Source Sans 3', sans-serif; font-size: .8rem; font-weight: 700; letter-spacing: .02em; }
+    .tile h3 { font-family: 'Source Sans 3', sans-serif; font-size: .82rem; font-weight: 600; margin-bottom: .25rem; letter-spacing: .01em; }
+    .tile p, .tile li { font-size: .74rem; line-height: 1.45; opacity: .88; }
+    .tile-light p { color: var(--muted); }
+    .tile ul { list-style: none; margin-top: .35rem; }
+    .tile ul li::before { content: '→ '; color: var(--teal-l); font-weight: 600; }
+
+    .stat-big { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(1.85rem, 4.5vw, 2.9rem); font-weight: 700; line-height: 1.1; }
+    .stat-label { font-size: .72rem; opacity: .75; margin-top: .2rem; }
+
+    /* Hub diagram */
+    .hub { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: auto auto auto; gap: .5rem; align-items: center; justify-items: center; max-width: 520px; margin: 0 auto; }
+    .hub-center {
+      grid-row: 1 / 4; grid-column: 2;
+      width: 110px; height: 110px; border-radius: 50%;
+      background: var(--gold);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; font-family: 'Source Sans 3', sans-serif; font-weight: 700; font-size: .68rem; letter-spacing: .06em;
+      color: var(--white);
+      z-index: 2;
+    }
+    .hub-node {
+      width: 100%; max-width: 140px; padding: .55rem .65rem; border-radius: 12px;
+      background: var(--white); border: 1px solid var(--border); text-align: center;
+      font-size: .68rem; font-weight: 600; color: var(--ink);
+      box-shadow: 0 2px 12px rgba(15,20,25,.06);
+    }
+    .hub-node .ico { margin: 0 auto .3rem; color: var(--teal); }
+    .hub-node.tl { grid-column: 1; grid-row: 1; }
+    .hub-node.tr { grid-column: 3; grid-row: 1; }
+    .hub-node.bl { grid-column: 1; grid-row: 3; }
+    .hub-node.br { grid-column: 3; grid-row: 3; }
+
+    /* Timeline */
+    .timeline { display: flex; gap: 0; position: relative; padding-top: 1.5rem; }
+    .timeline::before {
+      content: ''; position: absolute; top: .55rem; left: 5%; right: 5%; height: 3px;
+      background: var(--teal-l);
+      border-radius: 999px;
+    }
+    .tl-node { flex: 1; text-align: center; position: relative; padding: 0 .25rem; }
+    .tl-dot {
+      width: 14px; height: 14px; border-radius: 50%; margin: 0 auto .5rem;
+      background: var(--white); border: 3px solid var(--teal-l); position: relative; z-index: 1;
+    }
+    .tl-node.launch .tl-dot { width: 18px; height: 18px; border-color: var(--gold); background: var(--gold); box-shadow: 0 0 0 4px rgba(212,160,23,.25); }
+    .tl-node.done .tl-dot { border-color: var(--mint); background: var(--mint); }
+    .tl-month { font-family: 'Source Sans 3', sans-serif; font-size: .62rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+    .tl-title { font-size: .68rem; margin-top: .2rem; line-height: 1.35; opacity: .85; }
+    .tl-pay { font-size: .58rem; color: var(--teal-l); font-weight: 600; margin-top: .15rem; }
+    .s-teal .tl-pay, .s-dark .tl-pay { color: #a8e8f0; }
+
+    /* Phase bands */
+    .phase-band {
+      display: flex; border-radius: 14px; overflow: hidden; font-size: .72rem;
+    }
+    .phase-band > div { flex: 1; padding: .65rem .85rem; }
+    .phase-build { background: rgba(26,107,122,.15); border-left: 4px solid var(--teal-l); }
+    .phase-run { background: rgba(212,160,23,.12); border-left: 4px solid var(--gold); }
+    .phase-band strong { display: block; font-family: 'Source Sans 3', sans-serif; font-size: .78rem; font-weight: 600; margin-bottom: .2rem; }
+
+    /* Cost pills */
+    .cost-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+    @media (max-width: 640px) { .cost-grid { grid-template-columns: 1fr; } }
+    .cost-pill {
+      border-radius: 16px; padding: 1rem; text-align: center; position: relative;
+    }
+    .cost-pill .amt { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.55rem; font-weight: 700; line-height: 1; }
+    .cost-pill .lbl { font-size: .68rem; margin-top: .35rem; opacity: .8; line-height: 1.35; }
+    .cost-pill.paid { background: #e8f6ef; border: 1px solid rgba(61,153,112,.2); color: var(--mint); }
+    .cost-pill.paid .amt { color: #2d7a4f; }
+    .cost-pill.main { background: var(--teal); color: var(--white); }
+    .cost-pill.free { background: #eef2f6; border: 2px dashed rgba(26,107,122,.25); color: var(--teal); }
+    .cost-pill.free .amt { font-size: 1.3rem; }
+
+    .total-bar {
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      background: var(--white); border-radius: 14px; padding: .85rem 1.2rem;
+      border: 2px solid var(--teal-l); margin-top: .5rem;
+    }
+    .total-bar .stat-big { color: var(--teal); font-size: 1.8rem; }
+
+    /* Progress payment visual */
+    .pay-track { display: flex; gap: 3px; height: 28px; border-radius: 8px; overflow: hidden; margin: .5rem 0; }
+    .pay-seg { flex: 1; display: flex; align-items: center; justify-content: center; font-size: .55rem; font-weight: 700; color: rgba(255,255,255,.9); }
+    .pay-seg.done { background: var(--mint); }
+    .pay-seg.build { background: var(--teal-l); }
+    .pay-seg.run { background: var(--gold); }
+    .pay-seg.pending { background: rgba(255,255,255,.12); color: rgba(255,255,255,.5); }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .pill { font-size: .68rem; padding: .35rem .65rem; border-radius: 999px; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); }
+
+    .cta-ring {
+      width: 72px; height: 72px; border-radius: 50%; margin: 0 auto .75rem;
+      background: var(--coral);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white);
+    }
+
+    .contact-line { font-size: .72rem; opacity: .65; margin-top: .75rem; }
+
+    /* Controls */
+    .controls {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .55rem 1rem; background: rgba(15,20,25,.94); backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .btn { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 10px; cursor: pointer; font-size: 1rem; }
+    .btn:disabled { opacity: .25; }
+    .prog { flex: 1; max-width: 200px; margin: 0 .75rem; height: 3px; background: rgba(255,255,255,.1); border-radius: 999px; overflow: hidden; }
+    .prog-fill { height: 100%; background: var(--teal-l); transition: width .35s; }
+    .cnt { font-size: .68rem; color: #888; font-weight: 600; min-width: 36px; text-align: right; }
+    .dots { display: flex; gap: 5px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; border: none; background: rgba(255,255,255,.2); cursor: pointer; padding: 0; transition: .2s; }
+    .dot.on { background: var(--teal-l); transform: scale(1.3); }
+
+    @media print {
+      .controls { display: none; }
+      .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; page-break-after: always; min-height: 100vh; }
+      html, body, .deck { overflow: visible; height: auto; }
+    }
+  </style>
+</head>
+<body>
+<!-- Icon sprite -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-scatter" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM17 14h3v3h-3zM14 17h3v3h-3z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><path d="m16 13 5-3v8l-5-3z"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11 6v12"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16V8M12 16V5M17 16v-4"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></symbol>
+  <symbol id="i-broadcast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49M7.76 7.76a6 6 0 0 0 0 8.49M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m12 11 8-8M16 7l2 2"/></symbol>
+  <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+</svg>
+<div class="deck" id="deck">
+
+  <!-- 1 · Portada -->
+  <section class="slide s-hero active">
+    <div class="shape disc" style="width:280px;height:280px;background:var(--teal-l);top:-80px;right:-40px;"></div>
+    <div class="shape disc" style="width:160px;height:160px;background:var(--coral);bottom:10%;left:5%;"></div>
+    <div class="shape ring" style="width:180px;height:180px;border-color:var(--gold);top:18%;right:10%;"></div>
+    <div class="inner">
+      <div class="tag">Propuesta comercial · v2.3</div>
+      <div class="accent-line"></div>
+      <h1>Plataforma digital<br><span style="color:var(--teal-l)">integral</span> para el consultorio</h1>
+      <p class="sub">Un solo sitio con la marca del consultorio: cursos, clases en vivo, cobros, marketing y evaluación psicométrica — integrados.</p>
+      <div class="bento bento-3" style="margin-top:.5rem;">
+        <div class="tile tile-glass">
+          <div class="stat-big" style="color:var(--gold);">Dic</div>
+          <div class="stat-label">2026 · Lanzamiento operativo</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big">$45k</div>
+          <div class="stat-label">Inversión total del proyecto</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big" style="color:#7ec8d8;">$40</div>
+          <div class="stat-label">USD/mes · mantenimiento fijo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Problema → Solución + 4 pilares -->
+  <section class="slide s-light">
+    <div class="shape block" style="width:120px;height:120px;background:var(--teal);top:8%;right:4%;"></div>
+    <div class="inner">
+      <div class="tag">Visión del proyecto</div>
+      <h2>De herramientas dispersas a un ecosistema unificado</h2>
+      <div class="bento bento-asym">
+        <div>
+          <div class="bento bento-2" style="margin-bottom:.65rem;">
+            <div class="tile tile-light" style="border-left:4px solid var(--coral);">
+              <div class="tile-icon ico"><svg><use href="#i-scatter"/></svg></div>
+              <h3>Hoy</h3>
+              <p>WhatsApp, Excel, Zoom, Canva y pruebas en sistemas separados — sin marca unificada.</p>
+            </div>
+            <div class="tile tile-accent">
+              <div class="tile-icon ico"><svg><use href="#i-layers"/></svg></div>
+              <h3>Propuesta</h3>
+              <p>Todo bajo un mismo sitio profesional: formación, cobro, clases, promoción y evaluación clínica.</p>
+            </div>
+          </div>
+          <div class="hub">
+            <div class="hub-node tl"><div class="ico"><svg><use href="#i-book"/></svg></div>Venta de cursos</div>
+            <div class="hub-center">PANEL<br>ÚNICO</div>
+            <div class="hub-node tr"><div class="ico"><svg><use href="#i-video"/></svg></div>Clases + pizarra</div>
+            <div class="hub-node bl"><div class="ico"><svg><use href="#i-megaphone"/></svg></div>Marketing</div>
+            <div class="hub-node br"><div class="ico"><svg><use href="#i-chart"/></svg></div>PAPI · Hartman · MABE + 2</div>
+          </div>
+        </div>
+        <div class="tile tile-light" style="align-self:stretch;display:flex;flex-direction:column;justify-content:center;">
+          <div class="tile-icon ico"><svg><use href="#i-card"/></svg></div>
+          <h3>Cobro integrado</h3>
+          <p>Stripe México: el alumno paga con tarjeta y queda inscrito automáticamente.</p>
+          <div style="margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border);">
+            <div class="tile-icon ico"><svg><use href="#i-broadcast"/></svg></div>
+            <h3>Clases en vivo</h3>
+            <p>Jitsi embebido — cámara, chat y pizarra compartida. Sin Meet ni Zoom.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Ya operativo hoy -->
+  <section class="slide s-teal">
+    <div class="shape disc" style="width:200px;height:200px;background:var(--mint);bottom:-60px;right:-30px;"></div>
+    <div class="inner">
+      <div class="tag">Agosto 2026 · Entregado</div>
+      <h2>Módulo clínico ya en producción</h2>
+      <p class="sub" style="color:rgba(255,255,255,.75);">Parte clínica del proyecto ($15,000) — disponible para prueba inmediata.</p>
+      <div class="bento bento-4">
+        <div class="tile tile-glass"><div class="tile-icon num">P</div><h3>PAPI</h3><p>En línea con calificación automática</p></div>
+        <div class="tile tile-glass"><div class="tile-icon num">H</div><h3>Hartman</h3><p>Gráficas e interpretación</p></div>
+        <div class="tile tile-glass"><div class="tile-icon num">M</div><h3>MABE</h3><p>Informe PDF firmable</p></div>
+        <div class="tile tile-glass"><div class="tile-icon ico"><svg><use href="#i-grid"/></svg></div><h3>Panel</h3><p>Códigos, sesiones e informes</p></div>
+      </div>
+      <div class="tile tile-glass" style="margin-top:.25rem;text-align:center;">
+        <strong style="font-family:'Source Sans 3',sans-serif;font-size:.92rem;font-weight:600;">sistemapsic.vercel.app</strong>
+        <span style="opacity:.7;font-size:.75rem;margin-left:.5rem;">— PAPI, Hartman y MABE operativos hoy</span>
+      </div>
+      <div class="tile tile-glass" style="margin-top:.35rem;text-align:center;border:1px solid rgba(255,255,255,.25);">
+        <strong style="font-size:.85rem;">Incluido en el proyecto:</strong>
+        <span style="opacity:.85;font-size:.78rem;margin-left:.35rem;">digitalización de <strong>2 pruebas psicométricas adicionales</strong> (a elegir contigo) — mismo flujo: aplicación, calificación, gráfica e informe PDF</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Cronograma completo -->
+  <section class="slide s-dark">
+    <div class="shape ring" style="width:320px;height:320px;border-color:var(--teal-l);bottom:-80px;left:-60px;"></div>
+    <div class="inner">
+      <div class="tag">Cronograma</div>
+      <h2>Construcción hasta diciembre · Operación hasta abril</h2>
+      <div class="phase-band" style="margin-bottom:.65rem;">
+        <div class="phase-build"><strong>Sep – Dic 2026</strong>Construcción mes a mes → lanzamiento con alumnos reales</div>
+        <div class="phase-run"><strong>Ene – Abr 2027</strong>Operación activa + refinamiento (LMS, validación, cierre)</div>
+      </div>
+      <div class="timeline">
+        <div class="tl-node done"><div class="tl-dot"></div><div class="tl-month">Ago</div><div class="tl-title">Pruebas en línea</div><div class="tl-pay">Pagado</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-month">Sep</div><div class="tl-title">Landing del curso</div><div class="tl-pay">$5,000</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-month">Oct</div><div class="tl-title">Videos + live + pizarra</div><div class="tl-pay">$5,000</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-month">Nov</div><div class="tl-title">Stripe / cobros</div><div class="tl-pay">$5,000</div></div>
+        <div class="tl-node launch"><div class="tl-dot"></div><div class="tl-month">Dic</div><div class="tl-title">Marketing + lanzamiento</div><div class="tl-pay">$5,000</div></div>
+        <div class="tl-node"><div class="tl-dot"></div><div class="tl-month">Ene–Abr</div><div class="tl-title">Operación + afinado</div><div class="tl-pay">4 × $5,000</div></div>
+      </div>
+      <div class="pay-track">
+        <div class="pay-seg done" title="Ago">1</div>
+        <div class="pay-seg build">2</div><div class="pay-seg build">3</div><div class="pay-seg build">4</div><div class="pay-seg build">5</div>
+        <div class="pay-seg run">6</div><div class="pay-seg run">7</div><div class="pay-seg run">8</div><div class="pay-seg run">9</div>
+      </div>
+      <p style="font-size:.68rem;opacity:.6;text-align:center;">9 pagos · $45,000 total · $5,000 anticipo registrado</p>
+    </div>
+  </section>
+
+  <!-- 5 · Inversión -->
+  <section class="slide s-light">
+    <div class="shape block" style="width:100px;height:100px;background:var(--gold);bottom:12%;left:4%;"></div>
+    <div class="inner">
+      <div class="tag">Inversión</div>
+      <h2>Calendario de pagos del proyecto</h2>
+      <div class="bento bento-3" style="margin-bottom:.65rem;">
+        <div class="tile tile-light" style="text-align:center;">
+          <div class="stat-big" style="color:var(--teal);">$45,000</div>
+          <div class="stat-label">Total del desarrollo</div>
+        </div>
+        <div class="tile tile-light" style="text-align:center;border:2px solid var(--mint);">
+          <div class="stat-big" style="color:var(--mint);">$5,000</div>
+          <div class="stat-label">Anticipo · agosto 2026</div>
+        </div>
+        <div class="tile tile-light" style="text-align:center;">
+          <div class="stat-big" style="color:var(--coral);">$40,000</div>
+          <div class="stat-label">Saldo · 8 mensualidades</div>
+        </div>
+      </div>
+      <div class="bento bento-2">
+        <div class="tile tile-light">
+          <h3>Sep – Dic · Construcción ($20,000)</h3>
+          <ul>
+            <li>Landing + marca del curso</li>
+            <li>Streaming con pizarra (Jitsi)</li>
+            <li>Pagos con tarjeta (Stripe)</li>
+            <li>Panel de marketing + go-live</li>
+          </ul>
+        </div>
+        <div class="tile tile-light">
+          <h3>Ene – Abr · Operación ($20,000)</h3>
+          <ul>
+            <li>Módulos y lecciones del LMS</li>
+            <li>Autogestión de cursos</li>
+            <li>Validación clínica de pruebas (3 actuales + 2 adicionales)</li>
+            <li>Digitalización de 2 instrumentos a elegir (feb–mar)</li>
+            <li>Capacitación y cierre del proyecto</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:.7rem;color:var(--muted);margin-top:.25rem;">Factura por pago · + IVA si aplica · Licencia y código al completar $45,000</p>
+    </div>
+  </section>
+
+  <!-- 6 · Costos operativos -->
+  <section class="slide s-light">
+    <div class="inner">
+      <div class="tag">Operación mensual</div>
+      <h2>Infraestructura en línea — $40 USD/mes fijos</h2>
+      <p class="sub">Desarrollo aparte (pago único). Sin licencias de Meet ni Zoom.</p>
+      <div class="cost-grid">
+        <div class="cost-pill main">
+          <div class="amt">$20</div>
+          <div class="lbl"><strong>Vercel Pro</strong><br>Sitio, panel e interfaz de clases</div>
+        </div>
+        <div class="cost-pill main">
+          <div class="amt">$20</div>
+          <div class="lbl"><strong>Almacenamiento</strong><br>Videos grabados y replays</div>
+        </div>
+        <div class="cost-pill free">
+          <div class="amt">$0</div>
+          <div class="lbl"><strong>Jitsi embebido</strong><br>Live + pizarra · sin servidor extra al inicio</div>
+        </div>
+      </div>
+      <div class="total-bar">
+        <div>
+          <div style="font-size:.72rem;color:var(--muted);">Total fijo mensual</div>
+          <div class="stat-big">$40 USD</div>
+          <div style="font-size:.68rem;color:var(--muted);">~ $720 MXN · Stripe solo al vender (~3.6%)</div>
+        </div>
+        <div class="tile tile-light" style="flex:1;max-width:380px;margin:0;">
+          <h3>¿Por qué Vercel Pro?</h3>
+          <p style="font-size:.72rem;color:var(--muted);">Aloja la plataforma completa. El video en tiempo real (WebRTC) se integra con Jitsi dentro del mismo sitio — ningún hosting procesa live por sí solo. Servidor dedicado solo si el volumen futuro lo exige.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Requisitos del cliente -->
+  <section class="slide s-teal">
+    <div class="shape disc" style="width:160px;height:160px;background:var(--gold);top:6%;left:-30px;"></div>
+    <div class="inner">
+      <div class="tag">Entregables del cliente</div>
+      <h2>Material necesario para cumplir diciembre</h2>
+      <div class="bento bento-2">
+        <div class="tile tile-glass">
+          <div class="tile-icon num">01</div>
+          <h3>Septiembre</h3>
+          <p>Nombre comercial, logo, colores, textos del curso (temario, biografía, precio) e imagen.</p>
+        </div>
+        <div class="tile tile-glass">
+          <div class="tile-icon num">02</div>
+          <h3>Octubre</h3>
+          <p>Video corto o avance grabado del curso para probar reproducción en el sitio.</p>
+        </div>
+        <div class="tile tile-glass">
+          <div class="tile-icon num">03</div>
+          <h3>Noviembre</h3>
+          <p>Cuenta Stripe México — con acompañamiento paso a paso para su apertura.</p>
+        </div>
+        <div class="tile tile-glass">
+          <div class="tile-icon num">04</div>
+          <h3>Antes del 1er live · Marzo</h3>
+          <p>Aviso de privacidad y consentimiento de grabación. Validación con protocolos calificados a mano. Manual y clave de las <strong>2 pruebas adicionales</strong> a digitalizar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · Marco administrativo -->
+  <section class="slide s-light">
+    <div class="inner">
+      <div class="tag">Marco del proyecto</div>
+      <h2>Condiciones generales de colaboración</h2>
+      <div class="bento bento-3">
+        <div class="tile tile-light" style="border-top:4px solid var(--teal-l);">
+          <div class="tile-icon ico"><svg><use href="#i-settings"/></svg></div>
+          <h3>Administración técnica</h3>
+          <p>Infraestructura gestionada a nombre del cliente: disponibilidad, respaldos y accesos.</p>
+        </div>
+        <div class="tile tile-light" style="border-top:4px solid var(--mint);">
+          <div class="tile-icon ico"><svg><use href="#i-key"/></svg></div>
+          <h3>Licencia y entrega</h3>
+          <p>Uso pleno desde el lanzamiento. Licencia definitiva y código al completar $45,000.</p>
+        </div>
+        <div class="tile tile-light" style="border-top:4px solid var(--coral);">
+          <div class="tile-icon ico"><svg><use href="#i-clipboard"/></svg></div>
+          <h3>Mora en pagos</h3>
+          <p>15 días hábiles → pausa del desarrollo. 30 días → suspensión de acceso. Datos clínicos siempre del cliente.</p>
+        </div>
+      </div>
+      <div class="tile tile-accent" style="margin-top:.5rem;text-align:center;">
+        Detalle legal completo en el <strong>Acuerdo de colaboración 2026</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Resumen visual -->
+  <section class="slide s-dark">
+    <div class="shape ring" style="width:240px;height:240px;border-color:var(--coral);top:10%;right:8%;"></div>
+    <div class="inner">
+      <div class="tag">Resumen ejecutivo</div>
+      <h2>Todo en una mirada</h2>
+      <div class="bento bento-3">
+        <div class="tile tile-glass" style="grid-column:span 1;">
+          <div class="stat-big" style="color:var(--gold);font-size:2.2rem;">Dic 2026</div>
+          <div class="stat-label">Plataforma operativa con alumnos reales</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big">4</div>
+          <div class="stat-label">Áreas integradas: venta · clases · marketing · evaluación</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big" style="color:#7ec8d8;">1</div>
+          <div class="stat-label">Panel unificado de administración</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big">$45k</div>
+          <div class="stat-label">Desarrollo · $5k pagados · $5k/mes</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big" style="color:var(--mint);">$40</div>
+          <div class="stat-label">USD/mes mantenimiento · Jitsi sin costo extra</div>
+        </div>
+        <div class="tile tile-glass">
+          <div class="stat-big" style="font-size:1.4rem;">5 pruebas</div>
+          <div class="stat-label">3 en línea hoy + 2 adicionales incluidas</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · Próximo paso -->
+  <section class="slide s-warm">
+    <div class="shape disc" style="width:220px;height:220px;background:var(--gold);top:-50px;right:-40px;"></div>
+    <div class="shape ring" style="width:100px;height:100px;border-color:rgba(255,255,255,.2);bottom:18%;left:6%;"></div>
+    <div class="inner" style="text-align:center;align-items:center;">
+      <div class="cta-ring ico"><svg><use href="#i-arrow"/></svg></div>
+      <div class="tag">Próximo paso</div>
+      <h2>Inicio del proyecto — septiembre 2026</h2>
+      <p class="sub" style="margin:0 auto;text-align:center;max-width:42ch;">Confirmación de la propuesta y entrega del material del primer curso.</p>
+      <div class="bento bento-3" style="margin-top:.5rem;width:100%;text-align:left;">
+        <div class="tile tile-glass"><div class="tile-icon num">1</div><h3>Confirmar</h3><p>Plan y fecha de lanzamiento (diciembre 2026)</p></div>
+        <div class="tile tile-glass"><div class="tile-icon num">2</div><h3>Entregar</h3><p>Marca, textos e imagen del curso</p></div>
+        <div class="tile tile-glass"><div class="tile-icon num">3</div><h3>Septiembre</h3><p>Página de venta en línea</p></div>
+      </div>
+      <div class="pill-row" style="justify-content:center;margin-top:.5rem;">
+        <span class="pill">Gerardo Pedrizco Vela</span>
+        <span class="pill">gerardo.gerry.pedrizco@gmail.com</span>
+        <span class="pill">5666672072</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button class="btn" id="prev">←</button>
+  <button class="btn" id="next">→</button>
+  <div class="prog"><div class="prog-fill" id="prog"></div></div>
+  <div class="dots" id="dots"></div>
+  <div class="cnt" id="cnt">1/10</div>
+</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')], n=slides.length; let c=0;
+  const prev=document.getElementById('prev'), next=document.getElementById('next');
+  const prog=document.getElementById('prog'), cnt=document.getElementById('cnt'), dotsEl=document.getElementById('dots');
+  slides.forEach((_,i)=>{ const d=document.createElement('button'); d.className='dot'+(i?'':' on'); d.onclick=()=>go(i); dotsEl.appendChild(d); });
+  const dots=[...dotsEl.children];
+  function go(i){
+    if(i<0||i>=n||i===c)return;
+    slides[c].classList.remove('active'); c=i;
+    slides.forEach((s,j)=>s.classList.toggle('active',j===c));
+    prog.style.width=((c+1)/n*100)+'%'; cnt.textContent=(c+1)+'/'+n;
+    prev.disabled=!c; next.disabled=c===n-1;
+    dots.forEach((d,j)=>d.classList.toggle('on',j===c));
+  }
+  prev.onclick=()=>go(c-1); next.onclick=()=>go(c+1);
+  document.onkeydown=e=>{
+    if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(c+1);}
+    if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(c-1);}
+  };
+  let tx=0; document.ontouchstart=e=>tx=e.changedTouches[0].screenX;
+  document.ontouchend=e=>{const dx=e.changedTouches[0].screenX-tx;if(Math.abs(dx)>50)go(dx<0?c+1:c-1);};
+  go(0);
+})();
+</script>
+</body>
+</html>

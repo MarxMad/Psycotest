@@ -7,7 +7,7 @@ Plataforma para aplicación, calificación e interpretación de pruebas psicomé
 | Carpeta | Contenido |
 |---------|-----------|
 | `app/` | Aplicación Next.js 15 (UI + API + SQLite) |
-| `docs/` | Documentación técnica y calificación |
+| `docs/` | Documentación comercial 2026 y técnica en `docs/tecnico/` |
 
 ## Desarrollo local
 
