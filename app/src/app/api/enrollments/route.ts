@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { enrollments } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
 const db = getDb();
 
@@ -11,17 +11,23 @@ export async function GET(request: Request) {
     const userId = searchParams.get("userId");
     const courseId = searchParams.get("courseId");
 
-    let query = db.select().from(enrollments);
+    let allEnrollments;
 
-    if (userId) {
-      query = query.where(eq(enrollments.userId, userId));
+    if (userId && courseId) {
+      allEnrollments = await db
+        .select()
+        .from(enrollments)
+        .where(and(eq(enrollments.userId, userId), eq(enrollments.courseId, courseId)));
+    } else if (userId) {
+      allEnrollments = await db.select().from(enrollments).where(eq(enrollments.userId, userId));
+    } else if (courseId) {
+      allEnrollments = await db
+        .select()
+        .from(enrollments)
+        .where(eq(enrollments.courseId, courseId));
+    } else {
+      allEnrollments = await db.select().from(enrollments);
     }
-
-    if (courseId) {
-      query = query.where(eq(enrollments.courseId, courseId));
-    }
-
-    const allEnrollments = await query;
 
     return NextResponse.json({ enrollments: allEnrollments });
   } catch (error) {
