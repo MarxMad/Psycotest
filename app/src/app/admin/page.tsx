@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                   <GraduationCap size={16} />
                   Cursos publicados
                 </div>
-                <div className={s.statValue}>{stats.cursos.total}</div>
+                <div className={s.statValue}>{stats?.cursos.total || 0}</div>
               </div>
             )}
           </div>
@@ -192,9 +192,9 @@ export default function AdminDashboard() {
                     <Video size={16} />
                     Programadas
                   </div>
-                  <div className={s.statValue}>{stats.clasesVivo.programadas}</div>
+                  <div className={s.statValue}>{stats?.clasesVivo.programadas || 0}</div>
                 </div>
-                {stats.clasesVivo.hoy > 0 && (
+                {stats?.clasesVivo.hoy && stats.clasesVivo.hoy > 0 && (
                   <div className={s.highlight}>
                     <span className={s.highlightDot} />
                     {stats.clasesVivo.hoy} clase{stats.clasesVivo.hoy > 1 ? "s" : ""} hoy
