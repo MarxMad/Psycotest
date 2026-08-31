@@ -20,7 +20,7 @@ import {
 } from "@/lib/storage";
 import { InterpretacionPanel } from "@/components/admin/InterpretacionPanel";
 import { RespuestasPanel } from "@/components/admin/RespuestasPanel";
-import s from "../admin.module.css";
+import s from "../../../admin.module.css";
 
 export default function AdminDetallePage() {
   const { id } = useParams<{ id: string }>();
