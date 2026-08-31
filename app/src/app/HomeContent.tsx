@@ -1,11 +1,46 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, KeyRound, Layers, Shield } from "lucide-react";
+import { Clock, KeyRound, Layers, Shield, GraduationCap, Video, Award, FlaskConical } from "lucide-react";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { FadeIn, StaggerItem } from "@/components/motion";
 import { APP_NAME } from "@/lib/brand";
 import s from "./page.module.css";
+
+const servicios = [
+  {
+    icon: FlaskConical,
+    titulo: "Pruebas Psicométricas",
+    descripcion: "Aplique, califique e interprete PAPI, Hartman y MABE con motor integrado.",
+    href: "/acceso",
+    color: "var(--papi)",
+    badge: "3 instrumentos",
+  },
+  {
+    icon: GraduationCap,
+    titulo: "Cursos Online",
+    descripcion: "Plataforma LMS completa con gestión de estudiantes, lecciones y certificaciones.",
+    href: "/admin/cursos",
+    color: "var(--hartman)",
+    badge: "Próximamente",
+  },
+  {
+    icon: Video,
+    titulo: "Clases en Vivo",
+    descripcion: "Sistema propio de videoclases con pizarra interactiva, chat y grabación.",
+    href: "/admin/clases-vivo",
+    color: "var(--mabe)",
+    badge: "Meet propio",
+  },
+  {
+    icon: Award,
+    titulo: "Certificaciones",
+    descripcion: "Emita certificados digitales verificables para cursos y capacitaciones.",
+    href: "/admin",
+    color: "var(--accent)",
+    badge: "Próximamente",
+  },
+];
 
 const pruebas = [
   {
@@ -50,9 +85,21 @@ const pruebas = [
 ];
 
 const pilares = [
-  { icon: Layers, title: "Tres instrumentos", text: "PAPI, Hartman y MABE con motor de calificación integrado." },
-  { icon: Clock, title: "Guardado continuo", text: "Borradores automáticos; retome donde se quedó." },
-  { icon: Shield, title: "Acceso controlado", text: "Código único por lote; cupos limitados y trazabilidad." },
+  { 
+    icon: Layers, 
+    title: "Plataforma integral", 
+    text: "Tests, cursos, clases en vivo y certificaciones en un solo lugar." 
+  },
+  { 
+    icon: Clock, 
+    title: "Guardado continuo", 
+    text: "Borradores automáticos; retome donde se quedó." 
+  },
+  { 
+    icon: Shield, 
+    title: "Acceso controlado", 
+    text: "Código único por lote; cupos limitados y trazabilidad." 
+  },
 ];
 
 export function HomeContent() {
@@ -62,11 +109,11 @@ export function HomeContent() {
       <main className={s.main}>
         <div className="wrap">
           <FadeIn className={s.hero}>
-            <span className="eyebrow">Uso profesional</span>
+            <span className="eyebrow">Plataforma integral para psicólogos</span>
             <h1>{APP_NAME}</h1>
             <p>
-              Aplique, califique e interprete PAPI, Hartman y MABE desde un flujo diseñado para
-              psicólogos. Captura en papel, transcripción digital, informe en panel.
+              Plataforma todo-en-uno: aplique pruebas psicométricas, imparta cursos online,
+              realice clases en vivo y emita certificaciones profesionales.
             </p>
           </FadeIn>
 
@@ -85,10 +132,39 @@ export function HomeContent() {
           </FadeIn>
 
           <FadeIn className={s.sectionLabel} delay={0.12}>
-            Instrumentos disponibles
+            Servicios disponibles
           </FadeIn>
 
-          <FadeIn delay={0.14}>
+          <div className={s.serviciosGrid}>
+            {servicios.map((servicio, i) => (
+              <StaggerItem key={servicio.titulo} index={i}>
+                <Link
+                  href={servicio.href}
+                  className={s.servicioCard}
+                  style={{ ["--tint" as string]: servicio.color }}
+                >
+                  <div className={s.cardGlow} aria-hidden />
+                  <div className={s.servicioIcon}>
+                    <servicio.icon size={24} strokeWidth={1.75} />
+                  </div>
+                  <div className={s.servicioContent}>
+                    <div className={s.servicioHeader}>
+                      <h3>{servicio.titulo}</h3>
+                      <span className="chip">{servicio.badge}</span>
+                    </div>
+                    <p>{servicio.descripcion}</p>
+                  </div>
+                  <span className={s.go}>Explorar →</span>
+                </Link>
+              </StaggerItem>
+            ))}
+          </div>
+
+          <FadeIn className={s.sectionLabel} delay={0.2} style={{ marginTop: "4rem" }}>
+            Instrumentos psicométricos
+          </FadeIn>
+
+          <FadeIn delay={0.24}>
             <Link href="/acceso" className={s.accesoBanner}>
               <KeyRound size={20} />
               <div>
@@ -132,9 +208,20 @@ export function HomeContent() {
             ))}
           </div>
 
-          <FadeIn className={s.note} delay={0.4}>
-            <strong>Desarrollo activo.</strong> Falta validar calificaciones contra protocolos
-            calificados a mano antes de emitir informes clínicos definitivos.
+          <FadeIn className={s.ctaSection} delay={0.5}>
+            <h2>Panel de administración profesional</h2>
+            <p>
+              Gestione pruebas, cursos, clases en vivo y usuarios desde un panel unificado con
+              interpretaciones detalladas y reportes completos.
+            </p>
+            <Link href="/login" className="btn btn-primary btn-lg">
+              Acceso profesional →
+            </Link>
+          </FadeIn>
+
+          <FadeIn className={s.note} delay={0.6}>
+            <strong>Plataforma en desarrollo activo.</strong> Algunos servicios están en fase de
+            implementación. Contacta para más información sobre disponibilidad.
           </FadeIn>
         </div>
       </main>
