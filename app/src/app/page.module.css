@@ -76,6 +76,91 @@
   margin-bottom: 1rem;
 }
 
+.serviciosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.servicioCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--raised);
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.servicioCard:hover {
+  border-color: var(--tint);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
+}
+
+.servicioIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--tint) 10%, var(--raised));
+  color: var(--tint);
+  display: grid;
+  place-items: center;
+}
+
+.servicioContent {
+  flex: 1;
+}
+
+.servicioHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.servicioHeader h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.servicioContent p {
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ctaSection {
+  text-align: center;
+  padding: 3rem 2rem;
+  margin: 4rem 0 2rem;
+  background: color-mix(in srgb, var(--accent) 5%, var(--raised));
+  border: 1px solid color-mix(in srgb, var(--accent) 15%, var(--rule));
+  border-radius: var(--r-xl);
+}
+
+.ctaSection h2 {
+  font-size: 1.75rem;
+  margin: 0 0 0.75rem;
+}
+
+.ctaSection p {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 600px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
+
 .accesoBanner {
   display: flex;
   align-items: center;
