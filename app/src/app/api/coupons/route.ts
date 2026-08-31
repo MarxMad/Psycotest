@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db/client";
+import { getDb } from "@/db/index";
 import { coupons } from "@/db/schema";
 import { eq } from "drizzle-orm";
+
+const db = getDb();
 
 export async function GET() {
   try {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Copy, KeyRound, Plus } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
-import s from "../admin.module.css";
+import s from "../../admin.module.css";
 import c from "./codigos.module.css";
 
 const INSTRUMENTOS: { id: Instrumento; label: string }[] = [

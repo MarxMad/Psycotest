@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { db } from "@/db/client";
+import { getDb } from "@/db/index";
 import { users } from "@/db/schema";
+
+const db = getDb();
 
 export async function GET() {
   try {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, Download, Users } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
-import s from "../../admin.module.css";
+import s from "../../../admin.module.css";
 import c from "../codigos.module.css";
 
 const ETIQUETAS: Record<Instrumento, string> = {
