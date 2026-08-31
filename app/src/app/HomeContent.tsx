@@ -9,9 +9,17 @@ import s from "./page.module.css";
 
 const servicios = [
   {
+    icon: Award,
+    titulo: "Certificaciones Profesionales",
+    descripcion: "Emita certificados digitales verificables para cursos, capacitaciones y evaluaciones.",
+    href: "/admin",
+    color: "var(--accent)",
+    badge: "Principal",
+  },
+  {
     icon: FlaskConical,
-    titulo: "Pruebas Psicométricas",
-    descripcion: "Aplique, califique e interprete PAPI, Hartman y MABE con motor integrado.",
+    titulo: "Evaluaciones Psicométricas",
+    descripcion: "Herramientas de evaluación de personalidad, valores y competencias con análisis detallado.",
     href: "/acceso",
     color: "var(--papi)",
     badge: "3 instrumentos",
@@ -19,10 +27,10 @@ const servicios = [
   {
     icon: GraduationCap,
     titulo: "Cursos Online",
-    descripcion: "Plataforma LMS completa con gestión de estudiantes, lecciones y certificaciones.",
+    descripcion: "Plataforma LMS completa con gestión de estudiantes, lecciones y progreso.",
     href: "/admin/cursos",
     color: "var(--hartman)",
-    badge: "Próximamente",
+    badge: "Disponible",
   },
   {
     icon: Video,
@@ -32,52 +40,44 @@ const servicios = [
     color: "var(--mabe)",
     badge: "Meet propio",
   },
-  {
-    icon: Award,
-    titulo: "Certificaciones",
-    descripcion: "Emita certificados digitales verificables para cursos y capacitaciones.",
-    href: "/admin",
-    color: "var(--accent)",
-    badge: "Próximamente",
-  },
 ];
 
-const pruebas = [
+const evaluaciones = [
   {
-    slug: "papi",
-    nombre: "PAPI",
-    tagline: "Personalidad en 20 factores",
-    sub: "Noventa pares de frases. En cada uno se elige la que describe mejor a la persona.",
+    slug: "personalidad",
+    nombre: "Evaluación de Personalidad",
+    tagline: "Rasgos y factores conductuales",
+    sub: "Evaluación profunda de características de personalidad, estilos de comportamiento y preferencias en el ámbito laboral y personal.",
     tint: "var(--papi)",
     facts: [
-      ["Ítems", "90 pares"],
-      ["Escala", "0–9"],
+      ["Áreas", "20 factores"],
+      ["Formato", "Pares comparativos"],
       ["Duración", "~20 min"],
     ],
     listo: true,
   },
   {
-    slug: "hartman",
-    nombre: "Hartman",
-    tagline: "Jerarquía de valores",
-    sub: "Dos partes de dieciocho enunciados, ordenados del que más valor tiene al que menos.",
+    slug: "valores",
+    nombre: "Jerarquía de Valores",
+    tagline: "Sistema axiológico personal",
+    sub: "Evaluación de la estructura de valores y prioridades personales mediante análisis de preferencias y jerarquización.",
     tint: "var(--hartman)",
     facts: [
-      ["Ítems", "2 × 18"],
-      ["Escala", "Niveles 1–7"],
+      ["Dimensiones", "3 niveles"],
+      ["Formato", "Ordenamiento"],
       ["Duración", "~15 min"],
     ],
     listo: true,
   },
   {
-    slug: "mabe",
-    nombre: "MABE",
-    tagline: "Persona vs. puesto",
-    sub: "Preferencias de pensamiento y valores, evaluadas tanto en la persona como en el puesto.",
+    slug: "competencias",
+    nombre: "Análisis de Competencias",
+    tagline: "Perfil profesional integral",
+    sub: "Evaluación comparativa entre perfil personal y requerimientos del puesto, con análisis de preferencias de pensamiento y valores aplicados.",
     tint: "var(--mabe)",
     facts: [
-      ["Bloques", "4 · 144"],
-      ["Escala", "1–5"],
+      ["Bloques", "4 áreas"],
+      ["Formato", "Comparativo"],
       ["Duración", "~30 min"],
     ],
     listo: true,
@@ -86,19 +86,19 @@ const pruebas = [
 
 const pilares = [
   { 
-    icon: Layers, 
-    title: "Plataforma integral", 
-    text: "Tests, cursos, clases en vivo y certificaciones en un solo lugar." 
+    icon: Award, 
+    title: "Certificaciones verificables", 
+    text: "Emita certificados digitales con validación y trazabilidad completa." 
   },
   { 
-    icon: Clock, 
-    title: "Guardado continuo", 
-    text: "Borradores automáticos; retome donde se quedó." 
+    icon: Layers, 
+    title: "Plataforma integral", 
+    text: "Evaluaciones, cursos, clases en vivo y certificaciones unificados." 
   },
   { 
     icon: Shield, 
     title: "Acceso controlado", 
-    text: "Código único por lote; cupos limitados y trazabilidad." 
+    text: "Gestión de accesos con códigos únicos y cupos limitados." 
   },
 ];
 
@@ -109,11 +109,11 @@ export function HomeContent() {
       <main className={s.main}>
         <div className="wrap">
           <FadeIn className={s.hero}>
-            <span className="eyebrow">Plataforma integral para psicólogos</span>
+            <span className="eyebrow">Plataforma integral de certificaciones</span>
             <h1>{APP_NAME}</h1>
             <p>
-              Plataforma todo-en-uno: aplique pruebas psicométricas, imparta cursos online,
-              realice clases en vivo y emita certificaciones profesionales.
+              Plataforma profesional para psicólogos: emita certificaciones, realice evaluaciones
+              psicométricas, imparta cursos online y conduzca clases en vivo desde un solo lugar.
             </p>
           </FadeIn>
 
@@ -161,48 +161,48 @@ export function HomeContent() {
           </div>
 
           <FadeIn className={s.sectionLabel} delay={0.2} style={{ marginTop: "4rem" }}>
-            Instrumentos psicométricos
+            Evaluaciones psicométricas disponibles
           </FadeIn>
 
           <FadeIn delay={0.24}>
             <Link href="/acceso" className={s.accesoBanner}>
               <KeyRound size={20} />
               <div>
-                <strong>Soy aplicante — tengo un código</strong>
-                <span>Ingresa tu código y datos para acceder a las pruebas autorizadas.</span>
+                <strong>Acceso con código de evaluación</strong>
+                <span>Si tiene un código autorizado, ingrese aquí para acceder a su evaluación.</span>
               </div>
               <span className={s.go}>Acceder →</span>
             </Link>
           </FadeIn>
 
           <div className={s.grid}>
-            {pruebas.map((p, i) => (
-              <StaggerItem key={p.slug} index={i}>
+            {evaluaciones.map((e, i) => (
+              <StaggerItem key={e.slug} index={i}>
                 <Link
                   href="/acceso"
                   className={s.card}
-                  data-soon={!p.listo}
-                  aria-disabled={!p.listo}
-                  style={{ ["--tint" as string]: p.tint }}
+                  data-soon={!e.listo}
+                  aria-disabled={!e.listo}
+                  style={{ ["--tint" as string]: e.tint }}
                 >
                   <div className={s.cardGlow} aria-hidden />
                   <div className={s.cardTop}>
                     <div>
-                      <span className={s.name}>{p.nombre}</span>
-                      <span className={s.tagline}>{p.tagline}</span>
+                      <span className={s.name}>{e.nombre}</span>
+                      <span className={s.tagline}>{e.tagline}</span>
                     </div>
-                    <span className="chip">{p.listo ? "Listo" : "Próximo"}</span>
+                    <span className="chip">{e.listo ? "Disponible" : "Próximo"}</span>
                   </div>
-                  <p className={s.sub}>{p.sub}</p>
+                  <p className={s.sub}>{e.sub}</p>
                   <div className={s.facts}>
-                    {p.facts.map(([k, v]) => (
+                    {e.facts.map(([k, v]) => (
                       <div key={k} className={s.fact}>
                         <span>{k}</span>
                         <span>{v}</span>
                       </div>
                     ))}
                   </div>
-                  <span className={s.go}>Requiere código →</span>
+                  <span className={s.go}>Requiere autorización →</span>
                 </Link>
               </StaggerItem>
             ))}
@@ -211,8 +211,8 @@ export function HomeContent() {
           <FadeIn className={s.ctaSection} delay={0.5}>
             <h2>Panel de administración profesional</h2>
             <p>
-              Gestione pruebas, cursos, clases en vivo y usuarios desde un panel unificado con
-              interpretaciones detalladas y reportes completos.
+              Gestione certificaciones, evaluaciones, cursos y clases en vivo desde un panel unificado
+              con interpretaciones detalladas, reportes completos y emisión de certificados verificables.
             </p>
             <Link href="/login" className="btn btn-primary btn-lg">
               Acceso profesional →
