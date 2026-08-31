@@ -25,9 +25,8 @@ export function resolveIsDark(mode: ThemeMode): boolean {
 }
 
 export function nextTheme(mode: ThemeMode): ThemeMode {
-  if (mode === "system") return "light";
   if (mode === "light") return "dark";
-  return "system";
+  return "light";
 }
 
 export const THEME_LABELS: Record<ThemeMode, string> = {
