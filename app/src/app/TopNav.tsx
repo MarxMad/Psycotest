@@ -67,12 +67,6 @@ export function TopNav() {
 
       {ready && user ? (
         <>
-          <NavLink href="/admin" active={enPanel}>
-            Panel
-          </NavLink>
-          <NavLink href="/admin/codigos" active={pathname.startsWith("/admin/codigos")}>
-            Códigos
-          </NavLink>
           <NavLink href="/participantes" active={enParticipantes}>
             Participantes
           </NavLink>

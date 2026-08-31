@@ -6,6 +6,7 @@ export const users = sqliteTable("users", {
   nombre: text("nombre").notNull(),
   passwordHash: text("password_hash").notNull(),
   rol: text("rol", { enum: ["admin", "psicologo", "aplicador"] }).notNull().default("psicologo"),
+  emailVerified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
   createdAt: text("created_at").notNull(),
 });
 
@@ -104,8 +105,171 @@ export const auditLog = sqliteTable("audit_log", {
   createdAt: text("created_at").notNull(),
 });
 
+// Cursos
+export const courses = sqliteTable("courses", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  price: integer("price").notNull(), // En centavos
+  thumbnailUrl: text("thumbnail_url"),
+  instructorId: text("instructor_id").references(() => users.id),
+  status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
+  inventoryLimit: integer("inventory_limit"), // null = ilimitado
+  soldCount: integer("sold_count").notNull().default(0),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// Módulos de curso
+export const courseModules = sqliteTable("course_modules", {
+  id: text("id").primaryKey(),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id),
+  title: text("title").notNull(),
+  order: integer("order").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
+// Lecciones
+export const lessons = sqliteTable("lessons", {
+  id: text("id").primaryKey(),
+  moduleId: text("module_id")
+    .notNull()
+    .references(() => courseModules.id),
+  title: text("title").notNull(),
+  type: text("type", { enum: ["video", "text", "quiz", "file"] }).notNull(),
+  contentUrl: text("content_url"),
+  durationMinutes: integer("duration_minutes"),
+  order: integer("order").notNull(),
+  isFreePreview: integer("is_free_preview", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull(),
+});
+
+// Inscripciones a cursos
+export const enrollments = sqliteTable("enrollments", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id),
+  status: text("status", { enum: ["active", "completed", "cancelled"] }).notNull().default("active"),
+  progressPercentage: integer("progress_percentage").notNull().default(0),
+  enrolledAt: text("enrolled_at").notNull(),
+  completedAt: text("completed_at"),
+});
+
+// Progreso por lección
+export const lessonProgress = sqliteTable("lesson_progress", {
+  id: text("id").primaryKey(),
+  enrollmentId: text("enrollment_id")
+    .notNull()
+    .references(() => enrollments.id),
+  lessonId: text("lesson_id")
+    .notNull()
+    .references(() => lessons.id),
+  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+  watchedSeconds: integer("watched_seconds"),
+  completedAt: text("completed_at"),
+});
+
+// Clases en vivo
+export const liveClasses = sqliteTable("live_classes", {
+  id: text("id").primaryKey(),
+  courseId: text("course_id").references(() => courses.id),
+  title: text("title").notNull(),
+  scheduledAt: text("scheduled_at").notNull(),
+  durationMinutes: integer("duration_minutes").notNull().default(60),
+  dailyRoomUrl: text("daily_room_url"),
+  recordingUrl: text("recording_url"),
+  status: text("status", { enum: ["scheduled", "live", "completed", "cancelled"] })
+    .notNull()
+    .default("scheduled"),
+  createdAt: text("created_at").notNull(),
+});
+
+// Asistencia a clases en vivo
+export const liveClassAttendances = sqliteTable("live_class_attendances", {
+  id: text("id").primaryKey(),
+  liveClassId: text("live_class_id")
+    .notNull()
+    .references(() => liveClasses.id),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  joinedAt: text("joined_at").notNull(),
+  leftAt: text("left_at"),
+  durationSeconds: integer("duration_seconds"),
+});
+
+// Cupones
+export const coupons = sqliteTable("coupons", {
+  id: text("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  type: text("type", { enum: ["percentage", "fixed"] }).notNull(),
+  value: integer("value").notNull(),
+  maxUses: integer("max_uses"),
+  currentUses: integer("current_uses").notNull().default(0),
+  expiresAt: text("expires_at"),
+  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").notNull(),
+});
+
+// Órdenes de compra
+export const orders = sqliteTable("orders", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  total: integer("total").notNull(), // En centavos
+  subtotal: integer("subtotal").notNull(),
+  discount: integer("discount").notNull().default(0),
+  status: text("status", { enum: ["pending", "completed", "cancelled", "refunded"] })
+    .notNull()
+    .default("pending"),
+  stripePaymentIntentId: text("stripe_payment_intent_id"),
+  couponId: text("coupon_id").references(() => coupons.id),
+  createdAt: text("created_at").notNull(),
+  completedAt: text("completed_at"),
+});
+
+// Items de orden
+export const orderItems = sqliteTable("order_items", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id")
+    .notNull()
+    .references(() => orders.id),
+  courseId: text("course_id")
+    .notNull()
+    .references(() => courses.id),
+  price: integer("price").notNull(), // Precio al momento de compra
+  createdAt: text("created_at").notNull(),
+});
+
+// Confirmación de emails
+export const emailVerifications = sqliteTable("email_verifications", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  token: text("token").notNull().unique(),
+  expiresAt: text("expires_at").notNull(),
+  verifiedAt: text("verified_at"),
+  createdAt: text("created_at").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Participant = typeof participants.$inferSelect;
 export type AccessCode = typeof accessCodes.$inferSelect;
 export type AccessRedemption = typeof accessRedemptions.$inferSelect;
 export type AssessmentSession = typeof assessmentSessions.$inferSelect;
+export type Course = typeof courses.$inferSelect;
+export type CourseModule = typeof courseModules.$inferSelect;
+export type Lesson = typeof lessons.$inferSelect;
+export type Enrollment = typeof enrollments.$inferSelect;
+export type LiveClass = typeof liveClasses.$inferSelect;
+export type Coupon = typeof coupons.$inferSelect;
+export type Order = typeof orders.$inferSelect;

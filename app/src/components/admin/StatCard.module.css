@@ -1,0 +1,82 @@
+.statCard {
+  background: var(--admin-card-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: var(--admin-text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--admin-text);
+  line-height: 1;
+}
+
+.statTrend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.trendUp {
+  color: var(--green-600, #16a34a);
+}
+
+.trendDown {
+  color: var(--red-600);
+}
+
+.statIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+
+.color-blue .statIcon {
+  background: color-mix(in srgb, var(--blue-600) 15%, transparent);
+  color: var(--blue-600);
+}
+
+.color-green .statIcon {
+  background: color-mix(in srgb, #16a34a 15%, transparent);
+  color: #16a34a;
+}
+
+.color-purple .statIcon {
+  background: color-mix(in srgb, #9333ea 15%, transparent);
+  color: #9333ea;
+}
+
+.color-orange .statIcon {
+  background: color-mix(in srgb, #ea580c 15%, transparent);
+  color: #ea580c;
+}

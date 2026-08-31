@@ -2,198 +2,219 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BarChart3, KeyRound, Users } from "lucide-react";
-import { FadeIn } from "@/components/motion";
 import {
-  dbSessionToMeta,
-  fetchSessions,
-} from "@/lib/api-client";
-import { listarSesiones, type Instrumento, type MetaSesion } from "@/lib/storage";
-import s from "./admin.module.css";
+  LayoutDashboard,
+  FlaskConical,
+  GraduationCap,
+  Video,
+  TrendingUp,
+  Users,
+  DollarSign,
+  ArrowRight,
+} from "lucide-react";
+import { PageHeader } from "@/components/admin/PageHeader";
+import { StatCard } from "@/components/admin/StatCard";
+import { Card, CardHeader } from "@/components/admin/Card";
+import { EmptyState } from "@/components/admin/EmptyState";
+import s from "./dashboard.module.css";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Hartman",
-  mabe: "MABE",
-};
-
-const COLORES: Record<Instrumento, string> = {
-  papi: "var(--papi)",
-  hartman: "var(--hartman)",
-  mabe: "var(--mabe)",
-};
-
-function fmt(iso: string) {
-  return new Date(iso).toLocaleString("es-MX", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+interface DashboardStats {
+  pruebas: { total: number; pendientes: number };
+  cursos: { total: number; estudiantes: number };
+  clasesVivo: { programadas: number; hoy: number };
+  ingresos: { mes: number; total: number };
 }
 
-function mergeSesiones(servidor: MetaSesion[], local: MetaSesion[]): MetaSesion[] {
-  const ids = new Set(servidor.map((x) => x.id));
-  const extra = local.filter((x) => !ids.has(x.id));
-  return [...servidor, ...extra].sort(
-    (a, b) => new Date(b.iniciada).getTime() - new Date(a.iniciada).getTime(),
-  );
-}
-
-export default function AdminPage() {
-  const [sesiones, setSesiones] = useState<MetaSesion[]>([]);
-  const [filtro, setFiltro] = useState<Instrumento | "">("");
-  const [fuente, setFuente] = useState<"servidor" | "local">("servidor");
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancel = false;
-    async function load() {
-      setLoading(true);
-      const rows = await fetchSessions(filtro || undefined);
-      if (cancel) return;
-      if (rows.length > 0) {
-        setSesiones(mergeSesiones(rows.map(dbSessionToMeta), listarSesiones(filtro || undefined)));
-        setFuente("servidor");
-      } else {
-        setSesiones(listarSesiones(filtro || undefined));
-        setFuente("local");
-      }
+    // Simulando carga de estadísticas
+    // TODO: Reemplazar con llamada real a API
+    setTimeout(() => {
+      setStats({
+        pruebas: { total: 45, pendientes: 8 },
+        cursos: { total: 0, estudiantes: 0 },
+        clasesVivo: { programadas: 0, hoy: 0 },
+        ingresos: { mes: 0, total: 0 },
+      });
       setLoading(false);
-    }
-    load();
-    return () => {
-      cancel = true;
-    };
-  }, [filtro]);
+    }, 500);
+  }, []);
 
-  const stats = {
-    total: sesiones.length,
-    terminadas: sesiones.filter((x) => x.terminada).length,
-  };
+  if (loading) {
+    return (
+      <div className={s.loading}>
+        <div className={s.spinner} />
+        <p>Cargando dashboard...</p>
+      </div>
+    );
+  }
 
   return (
-    <main className={s.main}>
-      <div className={s.wrap}>
-        <FadeIn>
-          <header className={s.head}>
-            <div>
-              <span className="eyebrow">Panel del psicólogo</span>
-              <h1>Sesiones de evaluación</h1>
-              <p>
-                {fuente === "servidor"
-                  ? "Sesiones guardadas en la base de datos del servidor."
-                  : "Mostrando sesiones locales de este navegador."}
-              </p>
-            </div>
-            <div className={s.headActions}>
-              <Link href="/admin/codigos" className="btn">
-                <KeyRound size={16} />
-                Códigos
-              </Link>
-              <Link href="/participantes" className="btn">
-                <Users size={16} />
-                Participantes
-              </Link>
-              <Link href="/" className="btn btn-primary">
-                Nueva aplicación
-              </Link>
-            </div>
-          </header>
-        </FadeIn>
+    <div className={s.dashboard}>
+      <PageHeader
+        title="Dashboard"
+        subtitle="Vista general de tu plataforma"
+        breadcrumbs={[{ label: "Dashboard" }]}
+      />
 
-        <FadeIn delay={0.08}>
-          <div className={s.stats}>
-            <div className={s.stat}>
-              <BarChart3 size={18} className={s.statIcon} />
-              <span className={s.statN}>{stats.total}</span>
-              <span>Sesiones</span>
-            </div>
-            <div className={s.stat}>
-              <span className={s.statN}>{stats.terminadas}</span>
-              <span>Completadas</span>
-            </div>
-          </div>
-        </FadeIn>
+      {/* Stats Grid */}
+      <div className={s.statsGrid}>
+        <StatCard
+          label="Pruebas Psicométricas"
+          value={stats?.pruebas.total || 0}
+          icon={<FlaskConical size={24} />}
+          color="blue"
+          trend={{
+            value: 12,
+            isPositive: true,
+          }}
+        />
+        <StatCard
+          label="Estudiantes Activos"
+          value={stats?.cursos.estudiantes || 0}
+          icon={<Users size={24} />}
+          color="green"
+        />
+        <StatCard
+          label="Clases Programadas"
+          value={stats?.clasesVivo.programadas || 0}
+          icon={<Video size={24} />}
+          color="purple"
+        />
+        <StatCard
+          label="Ingresos del Mes"
+          value={`$${((stats?.ingresos.mes || 0) / 100).toLocaleString()}`}
+          icon={<DollarSign size={24} />}
+          color="orange"
+          trend={{
+            value: 8,
+            isPositive: true,
+          }}
+        />
+      </div>
 
-        <div className={s.filters}>
-          <span>Filtrar:</span>
-          {(["", "papi", "hartman", "mabe"] as const).map((f) => (
-            <button
-              key={f || "all"}
-              type="button"
-              className={filtro === f ? s.filterOn : s.filter}
-              onClick={() => setFiltro(f)}
-            >
-              {f ? ETIQUETAS[f] : "Todas"}
-            </button>
-          ))}
-        </div>
-
-        {loading ? (
-          <div className={s.empty}>
-            <p>Cargando sesiones…</p>
-          </div>
-        ) : sesiones.length === 0 ? (
-          <div className={s.empty}>
-            <p>No hay sesiones guardadas todavía.</p>
-            <Link href="/" className="btn btn-primary">
-              Aplicar una prueba
+      {/* Quick Actions */}
+      <div className={s.sectionsGrid}>
+        <Card>
+          <CardHeader
+            title="Pruebas Psicométricas"
+            subtitle="Gestiona evaluaciones y resultados"
+            action={
+              <Link href="/admin/pruebas" className="btn btn-sm">
+                Ver todas
+                <ArrowRight size={16} />
+              </Link>
+            }
+          />
+          <div className={s.sectionContent}>
+            {stats?.pruebas.pendientes ? (
+              <div className={s.statRow}>
+                <div className={s.statLabel}>
+                  <FlaskConical size={16} />
+                  Pendientes de revisión
+                </div>
+                <div className={s.statValue}>{stats.pruebas.pendientes}</div>
+              </div>
+            ) : (
+              <p className={s.noData}>No hay pruebas pendientes</p>
+            )}
+            <Link href="/admin/pruebas/codigos" className={s.linkAction}>
+              Gestionar códigos de acceso →
             </Link>
           </div>
-        ) : (
-          <div className={s.tableShell}>
-            <table className={s.table}>
-              <thead>
-                <tr>
-                  <th>Instrumento</th>
-                  <th>Participante</th>
-                  <th>Puesto / contexto</th>
-                  <th>Fecha</th>
-                  <th>Estado</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {sesiones.map((ses) => (
-                  <tr key={ses.id}>
-                    <td>
-                      <span
-                        className={s.badge}
-                        style={{ ["--c" as string]: COLORES[ses.instrumento] }}
-                      >
-                        {ETIQUETAS[ses.instrumento]}
-                      </span>
-                    </td>
-                    <td>
-                      <strong>{ses.participante}</strong>
-                    </td>
-                    <td className={s.muted}>
-                      {[ses.puesto, ses.empresa].filter(Boolean).join(" · ") || "—"}
-                    </td>
-                    <td className={s.muted}>{fmt(ses.finalizadaEn ?? ses.iniciada)}</td>
-                    <td>
-                      {!ses.terminada ? (
-                        <span className={s.pending}>En curso</span>
-                      ) : ses.aprobada ? (
-                        <span className={s.validated}>Validada</span>
-                      ) : (
-                        <span className={s.review}>Pendiente revisión</span>
-                      )}
-                    </td>
-                    <td>
-                      <Link href={`/admin/${ses.id}`} className={s.link}>
-                        Ver detalle →
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Cursos"
+            subtitle="Plataforma de educación online"
+            action={
+              <Link href="/admin/cursos" className="btn btn-sm">
+                Ver todos
+                <ArrowRight size={16} />
+              </Link>
+            }
+          />
+          <div className={s.sectionContent}>
+            {stats?.cursos.total === 0 ? (
+              <EmptyState
+                icon={<GraduationCap size={32} />}
+                title="Sin cursos aún"
+                description="Crea tu primer curso para empezar"
+                action={
+                  <Link href="/admin/cursos/crear" className="btn btn-primary">
+                    Crear Curso
+                  </Link>
+                }
+              />
+            ) : (
+              <div className={s.statRow}>
+                <div className={s.statLabel}>
+                  <GraduationCap size={16} />
+                  Cursos publicados
+                </div>
+                <div className={s.statValue}>{stats.cursos.total}</div>
+              </div>
+            )}
           </div>
-        )}
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Clases en Vivo"
+            subtitle="Sistema de videoclases"
+            action={
+              <Link href="/admin/clases-vivo" className="btn btn-sm">
+                Ver todas
+                <ArrowRight size={16} />
+              </Link>
+            }
+          />
+          <div className={s.sectionContent}>
+            {stats?.clasesVivo.programadas === 0 ? (
+              <EmptyState
+                icon={<Video size={32} />}
+                title="Sin clases programadas"
+                description="Programa tu primera clase en vivo"
+                action={
+                  <Link href="/admin/clases-vivo/programar" className="btn btn-primary">
+                    Programar Clase
+                  </Link>
+                }
+              />
+            ) : (
+              <>
+                <div className={s.statRow}>
+                  <div className={s.statLabel}>
+                    <Video size={16} />
+                    Programadas
+                  </div>
+                  <div className={s.statValue}>{stats.clasesVivo.programadas}</div>
+                </div>
+                {stats.clasesVivo.hoy > 0 && (
+                  <div className={s.highlight}>
+                    <span className={s.highlightDot} />
+                    {stats.clasesVivo.hoy} clase{stats.clasesVivo.hoy > 1 ? "s" : ""} hoy
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </Card>
       </div>
-    </main>
+
+      {/* Activity Feed */}
+      <Card>
+        <CardHeader title="Actividad Reciente" subtitle="Últimas acciones en la plataforma" />
+        <EmptyState
+          icon={<TrendingUp size={32} />}
+          title="Sin actividad reciente"
+          description="La actividad aparecerá aquí cuando empieces a usar la plataforma"
+        />
+      </Card>
+    </div>
   );
 }

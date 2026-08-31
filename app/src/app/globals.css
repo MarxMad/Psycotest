@@ -33,6 +33,31 @@
   --shadow-lg: 0 4px 8px rgba(25, 27, 31, 0.04), 0 24px 56px -20px rgba(25, 27, 31, 0.16);
   --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent),
     0 12px 40px -12px color-mix(in srgb, var(--accent) 35%, transparent);
+
+  /* Admin Panel Variables */
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 80px;
+  --admin-header-height: 64px;
+  --admin-bg: #f4f4f0;
+  --admin-card-bg: #ffffff;
+  --admin-border: #dcdcd4;
+  --admin-text: #191b1f;
+  --admin-text-muted: #6d7278;
+  --admin-primary: #3e5a6e;
+  --admin-primary-hover: #2d4453;
+  
+  /* Color utilities */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --gray-950: #030712;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --red-500: #ef4444;
+  --red-600: #dc2626;
 }
 
 /* Oscuro: preferencia del sistema (día claro / noche oscuro) */
@@ -87,6 +112,13 @@
   --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.25), 0 24px 48px -16px rgba(0, 0, 0, 0.55);
   --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--accent) 25%, transparent),
     0 12px 40px -12px color-mix(in srgb, var(--accent) 40%, transparent);
+
+  /* Admin Panel Dark Mode */
+  --admin-bg: #131518;
+  --admin-card-bg: #22262b;
+  --admin-border: #33373d;
+  --admin-text: #e8e8e3;
+  --admin-text-muted: #8f9499;
 }
 
 *,
