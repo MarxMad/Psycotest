@@ -5,8 +5,9 @@ import { eq } from "drizzle-orm";
 
 const db = getDb();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     const [liveClass] = await db.select().from(liveClasses).where(eq(liveClasses.id, params.id));
 
     if (!liveClass) {
@@ -20,8 +21,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     const body = await request.json();
 
     await db.update(liveClasses).set(body).where(eq(liveClasses.id, params.id));
@@ -35,8 +37,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     await db.delete(liveClasses).where(eq(liveClasses.id, params.id));
 
     return NextResponse.json({ success: true });

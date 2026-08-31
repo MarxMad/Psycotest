@@ -5,8 +5,9 @@ import { eq } from "drizzle-orm";
 
 const db = getDb();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     const [course] = await db.select().from(courses).where(eq(courses.id, params.id));
 
     if (!course) {
@@ -20,8 +21,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     const body = await request.json();
     const now = new Date().toISOString();
 
@@ -39,8 +41,9 @@ export async function PATCH(request: Request, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const params = await props.params;
     await db.delete(courses).where(eq(courses.id, params.id));
 
     return NextResponse.json({ success: true });
