@@ -10,13 +10,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
-    let query = db.select().from(courses);
-
-    if (status && (status === "draft" || status === "published" || status === "archived")) {
-      query = query.where(eq(courses.status, status));
-    }
-
-    const allCourses = await query;
+    const allCourses =
+      status && (status === "draft" || status === "published" || status === "archived")
+        ? await db.select().from(courses).where(eq(courses.status, status))
+        : await db.select().from(courses);
 
     return NextResponse.json({ courses: allCourses });
   } catch (error) {

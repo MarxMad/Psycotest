@@ -10,16 +10,11 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
-    let query = db.select().from(liveClasses);
-
-    if (
+    const allClasses =
       status &&
       (status === "scheduled" || status === "live" || status === "completed" || status === "cancelled")
-    ) {
-      query = query.where(eq(liveClasses.status, status));
-    }
-
-    const allClasses = await query;
+        ? await db.select().from(liveClasses).where(eq(liveClasses.status, status))
+        : await db.select().from(liveClasses);
 
     return NextResponse.json({ classes: allClasses });
   } catch (error) {
