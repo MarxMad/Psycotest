@@ -84,23 +84,6 @@ const evaluaciones = [
   },
 ];
 
-const pilares = [
-  { 
-    icon: Award, 
-    title: "Certificaciones verificables", 
-    text: "Emita certificados digitales con validación y trazabilidad completa." 
-  },
-  { 
-    icon: Layers, 
-    title: "Plataforma integral", 
-    text: "Evaluaciones, cursos, clases en vivo y certificaciones unificados." 
-  },
-  { 
-    icon: Shield, 
-    title: "Acceso controlado", 
-    text: "Gestión de accesos con códigos únicos y cupos limitados." 
-  },
-];
 
 export function HomeContent() {
   return (
