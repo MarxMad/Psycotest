@@ -92,47 +92,6 @@
   }
 }
 
-.pilares {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-bottom: 48px;
-}
-
-.pilar {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 16px 18px;
-  background: color-mix(in srgb, var(--raised) 75%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--rule) 55%, transparent);
-  border-radius: var(--r-lg);
-}
-
-.pilarIcon {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--r);
-  background: color-mix(in srgb, var(--accent) 10%, var(--raised));
-  color: var(--accent);
-  flex: none;
-}
-
-.pilar strong {
-  display: block;
-  font-size: 0.88rem;
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-.pilar span:last-child {
-  font-size: 0.82rem;
-  color: var(--muted);
-  line-height: 1.45;
-}
 
 .sectionLabel {
   font-family: var(--mono);
@@ -393,18 +352,3 @@
   letter-spacing: 0.02em;
 }
 
-.note {
-  margin-top: 48px;
-  padding: 18px 22px;
-  border: 1px solid color-mix(in srgb, var(--rule) 60%, transparent);
-  border-radius: var(--r-lg);
-  background: color-mix(in srgb, var(--surface) 80%, transparent);
-  backdrop-filter: blur(8px);
-  font-size: 0.88rem;
-  color: var(--ink-soft);
-  max-width: 56ch;
-}
-
-.note strong {
-  color: var(--ink);
-}

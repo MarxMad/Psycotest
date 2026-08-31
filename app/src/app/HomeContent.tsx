@@ -12,7 +12,7 @@ const servicios = [
     icon: Award,
     titulo: "Certificaciones Profesionales",
     descripcion: "Emita certificados digitales verificables para cursos, capacitaciones y evaluaciones.",
-    href: "/admin",
+    href: "/login",
     color: "var(--accent)",
     badge: "Principal",
   },
@@ -28,7 +28,7 @@ const servicios = [
     icon: GraduationCap,
     titulo: "Cursos Online",
     descripcion: "Plataforma LMS completa con gestión de estudiantes, lecciones y progreso.",
-    href: "/admin/cursos",
+    href: "/login",
     color: "var(--hartman)",
     badge: "Disponible",
   },
@@ -36,7 +36,7 @@ const servicios = [
     icon: Video,
     titulo: "Clases en Vivo",
     descripcion: "Sistema propio de videoclases con pizarra interactiva, chat y grabación.",
-    href: "/admin/clases-vivo",
+    href: "/login",
     color: "var(--mabe)",
     badge: "Meet propio",
   },
@@ -91,28 +91,29 @@ export function HomeContent() {
       <AmbientBackground />
       <main className={s.main}>
         <div className="wrap">
-          <FadeIn className={s.hero}>
-            <span className="eyebrow">Plataforma integral de certificaciones</span>
-            <h1>{APP_NAME}</h1>
-            <p>
-              Plataforma profesional para psicólogos: emita certificaciones, realice evaluaciones
-              psicométricas, imparta cursos online y conduzca clases en vivo desde un solo lugar.
-            </p>
-          </FadeIn>
-
-          <FadeIn className={s.pilares} delay={0.08}>
-            {pilares.map(({ icon: Icon, title, text }) => (
-              <div key={title} className={s.pilar}>
-                <span className={s.pilarIcon}>
-                  <Icon size={18} strokeWidth={1.75} />
-                </span>
-                <div>
-                  <strong>{title}</strong>
-                  <span>{text}</span>
-                </div>
+          <div className={s.heroContainer}>
+            <FadeIn className={s.heroContent}>
+              <span className="eyebrow">Plataforma integral de certificaciones</span>
+              <h1>{APP_NAME}</h1>
+              <p>
+                Plataforma profesional para psicólogos: emita certificaciones, realice evaluaciones
+                psicométricas, imparta cursos online y conduzca clases en vivo desde un solo lugar.
+              </p>
+              <div className={s.heroActions}>
+                <Link href="/login" className="btn btn-primary btn-lg">
+                  Acceso profesional
+                </Link>
+                <Link href="/acceso" className="btn btn-secondary btn-lg">
+                  Tengo código de evaluación
+                </Link>
               </div>
-            ))}
-          </FadeIn>
+            </FadeIn>
+            <FadeIn className={s.heroVisual} delay={0.08}>
+              <div className={s.heroImage}>
+                <Award size={120} strokeWidth={1} />
+              </div>
+            </FadeIn>
+          </div>
 
           <FadeIn className={s.sectionLabel} delay={0.12}>
             Servicios disponibles
@@ -202,10 +203,6 @@ export function HomeContent() {
             </Link>
           </FadeIn>
 
-          <FadeIn className={s.note} delay={0.6}>
-            <strong>Plataforma en desarrollo activo.</strong> Algunos servicios están en fase de
-            implementación. Contacta para más información sobre disponibilidad.
-          </FadeIn>
         </div>
       </main>
     </>
