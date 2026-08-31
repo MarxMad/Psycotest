@@ -11,11 +11,11 @@ export function applyTheme(mode: ThemeMode): void {
 export function readStoredTheme(): ThemeMode {
   try {
     const value = localStorage.getItem(THEME_STORAGE_KEY);
-    if (value === "light" || value === "dark" || value === "system") return value;
+    if (value === "light" || value === "dark") return value;
   } catch {
     /* ignore */
   }
-  return "system";
+  return "light";
 }
 
 export function resolveIsDark(mode: ThemeMode): boolean {

@@ -19,7 +19,7 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>("system");
+  const [mode, setMode] = useState<ThemeMode>("light");
   const [isDark, setIsDark] = useState(false);
 
   const sync = useCallback((next: ThemeMode) => {
@@ -30,14 +30,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     sync(readStoredTheme());
-
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onSystemChange = () => {
-      const stored = readStoredTheme();
-      if (stored === "system") setIsDark(mq.matches);
-    };
-    mq.addEventListener("change", onSystemChange);
-    return () => mq.removeEventListener("change", onSystemChange);
   }, [sync]);
 
   const cycleTheme = useCallback(() => {
