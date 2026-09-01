@@ -12,7 +12,7 @@ const servicios = [
     icon: Award,
     titulo: "Certificaciones Profesionales",
     descripcion: "Emita certificados digitales verificables para cursos, capacitaciones y evaluaciones.",
-    href: "/login",
+    href: "/admin",
     color: "var(--accent)",
     badge: "Principal",
   },
@@ -20,7 +20,7 @@ const servicios = [
     icon: FlaskConical,
     titulo: "Evaluaciones Psicométricas",
     descripcion: "Herramientas de evaluación de personalidad, valores y competencias con análisis detallado.",
-    href: "/acceso",
+    href: "/psycotest/acceso",
     color: "var(--papi)",
     badge: "3 instrumentos",
   },
@@ -28,7 +28,7 @@ const servicios = [
     icon: GraduationCap,
     titulo: "Cursos Online",
     descripcion: "Plataforma LMS completa con gestión de estudiantes, lecciones y progreso.",
-    href: "/login",
+    href: "/admin/cursos",
     color: "var(--hartman)",
     badge: "Disponible",
   },
@@ -36,7 +36,7 @@ const servicios = [
     icon: Video,
     titulo: "Clases en Vivo",
     descripcion: "Sistema propio de videoclases con pizarra interactiva, chat y grabación.",
-    href: "/login",
+    href: "/admin/clases-vivo",
     color: "var(--mabe)",
     badge: "Meet propio",
   },
@@ -149,7 +149,7 @@ export function HomeContent() {
           </FadeIn>
 
           <FadeIn delay={0.24}>
-            <Link href="/acceso" className={s.accesoBanner}>
+            <Link href="/psycotest/acceso" className={s.accesoBanner}>
               <KeyRound size={20} />
               <div>
                 <strong>Acceso con código de evaluación</strong>
@@ -163,7 +163,7 @@ export function HomeContent() {
             {evaluaciones.map((e, i) => (
               <StaggerItem key={e.slug} index={i}>
                 <Link
-                  href="/acceso"
+                  href="/psycotest/acceso"
                   className={s.card}
                   data-soon={!e.listo}
                   aria-disabled={!e.listo}
@@ -198,7 +198,7 @@ export function HomeContent() {
               Gestione certificaciones, evaluaciones, cursos y clases en vivo desde un panel unificado
               con interpretaciones detalladas, reportes completos y emisión de certificados verificables.
             </p>
-            <Link href="/login" className="btn btn-primary btn-lg">
+            <Link href="/admin" className="btn btn-primary btn-lg">
               Acceso profesional →
             </Link>
           </FadeIn>
