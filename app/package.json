@@ -25,6 +25,7 @@
     "next": "^15.5.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "stripe": "^22.6.1",
     "three": "^0.185.1"
   },
   "devDependencies": {
