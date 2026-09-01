@@ -61,10 +61,6 @@ export function TopNav() {
 
   return (
     <nav className="topnav" aria-label="Navegación principal">
-      <NavLink href="/" active={pathname === "/"}>
-        Aplicación
-      </NavLink>
-
       {ready && user ? (
         <>
           <NavLink href="/participantes" active={enParticipantes}>
