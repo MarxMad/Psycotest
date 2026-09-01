@@ -261,15 +261,43 @@ export const emailVerifications = sqliteTable("email_verifications", {
   createdAt: text("created_at").notNull(),
 });
 
+// Tablas de cursos del consultorio (sistema CONOCER)
+export const courseCategories = sqliteTable("course_categories", {
+  id: text("id").primaryKey(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export const courseLessons = lessons; // Alias para compatibilidad
+export const courseEnrollments = enrollments; // Alias para compatibilidad
+
+export const courseLessonProgress = sqliteTable("course_lesson_progress", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  lessonId: text("lesson_id")
+    .notNull()
+    .references(() => lessons.id, { onDelete: "cascade" }),
+  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+  lastPositionSeconds: integer("last_position_seconds").notNull().default(0),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export type User = typeof users.$inferSelect;
 export type Participant = typeof participants.$inferSelect;
 export type AccessCode = typeof accessCodes.$inferSelect;
 export type AccessRedemption = typeof accessRedemptions.$inferSelect;
 export type AssessmentSession = typeof assessmentSessions.$inferSelect;
 export type Course = typeof courses.$inferSelect;
+export type CourseCategory = typeof courseCategories.$inferSelect;
 export type CourseModule = typeof courseModules.$inferSelect;
 export type Lesson = typeof lessons.$inferSelect;
+export type CourseLesson = typeof courseLessons.$inferSelect;
 export type Enrollment = typeof enrollments.$inferSelect;
+export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
 export type LiveClass = typeof liveClasses.$inferSelect;
 export type Coupon = typeof coupons.$inferSelect;
 export type Order = typeof orders.$inferSelect;

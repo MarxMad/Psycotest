@@ -97,3 +97,24 @@ export async function firstLessonId(courseId: string) {
   }
   return null;
 }
+
+export function formatDuration(minutes: number): string {
+  if (minutes < 60) return `${minutes}min`;
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return mins > 0 ? `${hours}h ${mins}min` : `${hours}h`;
+}
+
+export function formatLessonDuration(seconds: number): string {
+  const minutes = Math.ceil(seconds / 60);
+  return formatDuration(minutes);
+}
+
+export function levelLabel(level: string): string {
+  const labels: Record<string, string> = {
+    beginner: "Principiante",
+    intermediate: "Intermedio",
+    advanced: "Avanzado",
+  };
+  return labels[level] || level;
+}
