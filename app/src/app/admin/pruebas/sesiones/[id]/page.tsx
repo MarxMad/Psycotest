@@ -3,11 +3,11 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { MabeGraficas } from "@/app/mabe/MabeGraficas";
-import { MabeCalificacion } from "@/app/mabe/MabeCalificacion";
-import { PapiGraficas } from "@/app/papi/PapiGraficas";
-import { HartmanGraficas } from "@/app/hartman/HartmanGraficas";
-import { HartmanCalificacion } from "@/app/hartman/HartmanCalificacion";
+import { MabeGraficas } from "@/app/psycotest/mabe/MabeGraficas";
+import { MabeCalificacion } from "@/app/psycotest/mabe/MabeCalificacion";
+import { PapiGraficas } from "@/app/psycotest/papi/PapiGraficas";
+import { HartmanGraficas } from "@/app/psycotest/hartman/HartmanGraficas";
+import { HartmanCalificacion } from "@/app/psycotest/hartman/HartmanCalificacion";
 import { calificarPapi, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
