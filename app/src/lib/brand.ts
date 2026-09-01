@@ -1,4 +1,4 @@
-export const APP_NAME = "Sistema para conocer y prospectar la conducta";
+export const APP_NAME = "PsycoTest";
 
 export const APP_DESCRIPTION =
-  "Aplicación, calificación e interpretación de PAPI, Hartman y MABE para psicólogos.";
+  "Plataforma integral de certificaciones: evaluaciones psicométricas, cursos online y clases en vivo para psicólogos.";
