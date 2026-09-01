@@ -87,3 +87,23 @@ export async function getCourseProgress(userId: string, courseId: string) {
   const percentage = Math.round((completedInCourse.length / allLessonIds.length) * 100);
   return { completed: completedInCourse.length, total: allLessonIds.length, percentage };
 }
+
+export async function canAccessLesson(userId: string, courseId: string): Promise<boolean> {
+  const enrollment = await getEnrollment(userId, courseId);
+  return enrollment !== null && enrollment.status === "active";
+}
+
+export async function getPlayerState(userId: string, lessonId: string) {
+  const db = getDb();
+  const [progress] = await db
+    .select()
+    .from(schema.courseLessonProgress)
+    .where(
+      and(
+        eq(schema.courseLessonProgress.userId, userId),
+        eq(schema.courseLessonProgress.lessonId, lessonId),
+      ),
+    )
+    .limit(1);
+  return progress ?? null;
+}
