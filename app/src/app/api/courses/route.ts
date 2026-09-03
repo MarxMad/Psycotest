@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       title,
       slug,
       description: description || null,
-      price,
+      priceMxn: price,
       thumbnailUrl: null,
       instructorId: null,
       status: "draft",

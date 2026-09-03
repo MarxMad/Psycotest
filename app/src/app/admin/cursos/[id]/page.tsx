@@ -85,7 +85,7 @@ export default function CursoDetallePage() {
             <div className={s.detail}>
               <span className={s.detailLabel}>Precio:</span>
               <span className={s.detailValue}>
-                ${(curso.price / 100).toLocaleString("es-MX")} MXN
+                ${(curso.priceMxn / 100).toLocaleString("es-MX")} MXN
               </span>
             </div>
             <div className={s.detail}>
