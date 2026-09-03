@@ -88,8 +88,12 @@ export async function getCourseProgress(userId: string, courseId: string) {
   return { completed: completedInCourse.length, total: allLessonIds.length, percentage };
 }
 
-export async function canAccessLesson(userId: string, courseId: string): Promise<boolean> {
-  const enrollment = await getEnrollment(userId, courseId);
+export async function canAccessLesson(params: {
+  userId: string;
+  courseId: string;
+  lessonId: string;
+}): Promise<boolean> {
+  const enrollment = await getEnrollment(params.userId, params.courseId);
   return enrollment !== null && enrollment.status === "active";
 }
 
