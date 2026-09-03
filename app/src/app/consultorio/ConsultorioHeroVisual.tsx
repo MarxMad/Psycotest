@@ -12,7 +12,6 @@ import {
   ScrollText,
   Sparkles,
 } from "lucide-react";
-import { HeroThreeBackground } from "./HeroThreeBackground";
 import styles from "./consultorio.module.css";
 
 /** Íconos distribuidos simétricamente sobre la órbita (cada 60°). */
@@ -42,7 +41,7 @@ function OrbitIcon({
     <motion.div
       className={styles.orbitIconSlot}
       style={slotStyle}
-      animate={{ y: [0, -10, 0] }}
+      animate={{ y: [0, -8, 0] }}
       transition={{ duration, repeat: Infinity, ease: "easeInOut", delay }}
     >
       <div className={styles.floatIcon}>
@@ -55,24 +54,46 @@ function OrbitIcon({
 export function ConsultorioHeroVisual() {
   return (
     <div className={styles.heroVisual} aria-hidden>
-      <HeroThreeBackground />
       <div className={styles.heroOrbA} />
       <div className={styles.heroOrbB} />
+      <div className={styles.heroOrbC} />
 
-      <div className={styles.heroOrbitHub}>
-        <svg className={styles.heroRingsSvg} viewBox="0 0 200 200" aria-hidden>
-          <circle cx="100" cy="100" r="58" fill="none" stroke="rgba(147,197,253,0.28)" strokeWidth="0.75" strokeDasharray="4 6" />
-          <circle cx="100" cy="100" r="76" fill="none" stroke="rgba(201,162,39,0.22)" strokeWidth="0.75" strokeDasharray="3 7" />
-        </svg>
+      <div className={styles.heroOrbitAnchor}>
+        <motion.div
+          className={styles.heroOrbitSpin}
+          animate={{ rotate: [0, 360] }}
+          transition={{ duration: 48, repeat: Infinity, ease: "linear" }}
+        >
+          <svg className={styles.heroRingsSvg} viewBox="0 0 200 200" aria-hidden>
+            <circle
+              cx="100"
+              cy="100"
+              r="58"
+              fill="none"
+              stroke="rgba(45, 106, 159, 0.38)"
+              strokeWidth="0.75"
+              strokeDasharray="4 6"
+            />
+            <circle
+              cx="100"
+              cy="100"
+              r="76"
+              fill="none"
+              stroke="rgba(201, 162, 39, 0.32)"
+              strokeWidth="0.75"
+              strokeDasharray="3 7"
+            />
+          </svg>
 
-        {ORBIT.map(({ Icon, angle, duration, delay }) => (
-          <OrbitIcon key={angle} Icon={Icon} angle={angle} duration={duration} delay={delay} />
-        ))}
+          {ORBIT.map(({ Icon, angle, duration, delay }) => (
+            <OrbitIcon key={angle} Icon={Icon} angle={angle} duration={duration} delay={delay} />
+          ))}
+        </motion.div>
 
         <div className={styles.heroCoreAnchor}>
           <motion.div
             className={styles.heroCorePulse}
-            animate={{ scale: [1, 1.035, 1] }}
+            animate={{ scale: [1, 1.04, 1] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
           >
             <div className={styles.heroCore}>

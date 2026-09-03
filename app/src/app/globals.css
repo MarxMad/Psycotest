@@ -101,6 +101,19 @@
     --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.3), 0 24px 48px -16px rgba(0, 0, 0, 0.5);
     --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand-bright) 30%, transparent),
       0 12px 40px -12px color-mix(in srgb, var(--brand-bright) 35%, transparent);
+
+    --c-blue: var(--brand);
+    --c-blue-bright: var(--brand-bright);
+    --c-blue-soft: var(--brand-soft);
+    --c-gold: var(--gold);
+    --c-gold-soft: var(--gold-soft);
+    --c-ink: var(--ink);
+    --c-slate: var(--ink-soft);
+    --c-muted: var(--muted);
+    --c-paper: var(--paper);
+    --c-surface: var(--surface);
+    --c-border: var(--rule);
+    --c-dark: var(--brand-dark);
   }
 }
 
@@ -133,6 +146,19 @@
   --shadow-lg: 0 4px 6px rgba(0, 0, 0, 0.3), 0 24px 48px -16px rgba(0, 0, 0, 0.5);
   --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand-bright) 30%, transparent),
     0 12px 40px -12px color-mix(in srgb, var(--brand-bright) 35%, transparent);
+
+  --c-blue: var(--brand);
+  --c-blue-bright: var(--brand-bright);
+  --c-blue-soft: var(--brand-soft);
+  --c-gold: var(--gold);
+  --c-gold-soft: var(--gold-soft);
+  --c-ink: var(--ink);
+  --c-slate: var(--ink-soft);
+  --c-muted: var(--muted);
+  --c-paper: var(--paper);
+  --c-surface: var(--surface);
+  --c-border: var(--rule);
+  --c-dark: var(--brand-dark);
 
   /* Admin Panel Dark Mode */
   --admin-bg: #0c1929;

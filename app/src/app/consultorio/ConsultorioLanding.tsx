@@ -247,26 +247,6 @@ export async function ConsultorioLanding() {
         </div>
       </section>
 
-      <section className={styles.section} id="roadmap">
-        <div className={styles.wrap}>
-          <LandingReveal className={styles.sectionHead}>
-            <p className={styles.eyebrow}>Roadmap</p>
-            <h2>Hacia la plataforma certificadora completa</h2>
-            <p>Construcción sep–dic 2026 · Operación y refinamiento ene–abr 2027.</p>
-          </LandingReveal>
-          <LandingReveal delay={0.08}>
-            <ol className={styles.roadmap}>
-              {ROADMAP.map((step) => (
-                <li key={step.month} className={step.done ? styles.roadmapDone : undefined}>
-                  <span className={styles.roadmapMonth}>{step.month}</span>
-                  <span className={styles.roadmapLabel}>{step.label}</span>
-                </li>
-              ))}
-            </ol>
-          </LandingReveal>
-        </div>
-      </section>
-
       <section className={styles.ctaBand} id="contacto">
         <div className={styles.wrap}>
           <LandingReveal>

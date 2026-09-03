@@ -30,7 +30,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.92);
+  background: color-mix(in srgb, var(--c-paper) 92%, transparent);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--c-border);
 }
@@ -399,23 +399,14 @@
   aspect-ratio: 1 / 1;
   max-height: 420px;
   margin-inline: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, var(--c-gold) 22%, transparent);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.03);
+  background:
+    radial-gradient(ellipse 70% 55% at 75% 15%, color-mix(in srgb, var(--c-blue-bright) 28%, transparent), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 15% 85%, color-mix(in srgb, var(--c-gold) 18%, transparent), transparent 55%),
+    color-mix(in srgb, var(--c-dark) 88%, transparent);
   backdrop-filter: blur(8px);
   overflow: hidden;
-}
-
-.heroThree {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.85;
-}
-
-.heroThree canvas {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 .heroOrbA,
@@ -423,35 +414,36 @@
 .heroOrbC {
   position: absolute;
   border-radius: 50%;
-  filter: blur(40px);
+  filter: blur(48px);
   pointer-events: none;
+  z-index: 0;
 }
 
 .heroOrbA {
-  width: 180px;
-  height: 180px;
-  top: -40px;
-  right: -20px;
-  background: rgba(45, 106, 159, 0.45);
-  animation: orbDrift 8s ease-in-out infinite;
+  width: 200px;
+  height: 200px;
+  top: -50px;
+  right: -30px;
+  background: color-mix(in srgb, var(--c-blue-bright) 55%, transparent);
+  animation: orbDrift 9s ease-in-out infinite;
 }
 
 .heroOrbB {
-  width: 140px;
-  height: 140px;
-  bottom: -30px;
-  left: -20px;
-  background: rgba(201, 162, 39, 0.25);
-  animation: orbDrift 10s ease-in-out infinite reverse;
+  width: 160px;
+  height: 160px;
+  bottom: -40px;
+  left: -30px;
+  background: color-mix(in srgb, var(--c-gold) 40%, transparent);
+  animation: orbDrift 11s ease-in-out infinite reverse;
 }
 
 .heroOrbC {
-  width: 100px;
-  height: 100px;
-  top: 40%;
-  left: 30%;
-  background: rgba(147, 197, 253, 0.2);
-  animation: orbDrift 6s ease-in-out infinite 1s;
+  width: 120px;
+  height: 120px;
+  top: 38%;
+  left: 28%;
+  background: color-mix(in srgb, var(--c-blue) 35%, transparent);
+  animation: orbDrift 7s ease-in-out infinite 1.2s;
 }
 
 @keyframes orbDrift {
@@ -468,7 +460,7 @@
   display: none;
 }
 
-.heroOrbitHub {
+.heroOrbitAnchor {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -477,6 +469,12 @@
   transform: translate(-50%, -50%);
   z-index: 2;
   pointer-events: none;
+}
+
+.heroOrbitSpin {
+  position: absolute;
+  inset: 0;
+  transform-origin: center center;
 }
 
 .heroRingsSvg {
