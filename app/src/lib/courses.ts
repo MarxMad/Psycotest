@@ -24,9 +24,9 @@ export async function listPublishedCourses() {
       category: schema.courseCategories,
     })
     .from(schema.courses)
-    .innerJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
+    .leftJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
     .where(eq(schema.courses.published, true))
-    .orderBy(asc(schema.courseCategories.sortOrder), asc(schema.courses.sortOrder));
+    .orderBy(asc(schema.courses.sortOrder));
   return rows;
 }
 
@@ -38,7 +38,7 @@ export async function getCourseBySlug(slug: string) {
       category: schema.courseCategories,
     })
     .from(schema.courses)
-    .innerJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
+    .leftJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
     .where(eq(schema.courses.slug, slug))
     .limit(1);
   return row ?? null;
@@ -115,6 +115,9 @@ export function levelLabel(level: string): string {
     beginner: "Principiante",
     intermediate: "Intermedio",
     advanced: "Avanzado",
+    basico: "Básico",
+    intermedio: "Intermedio",
+    avanzado: "Avanzado",
   };
   return labels[level] || level;
 }

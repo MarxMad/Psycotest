@@ -27,7 +27,7 @@ export default async function CursosCatalogPage() {
 
   const byCategory = categories.map((cat) => ({
     category: cat,
-    courses: courses.filter((row) => row.category.id === cat.id),
+    courses: courses.filter((row) => row.category?.id === cat.id),
   }));
 
   const totalCourses = courses.length;

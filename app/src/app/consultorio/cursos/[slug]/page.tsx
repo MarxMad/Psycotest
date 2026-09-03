@@ -51,7 +51,7 @@ export default async function CourseDetailPage({ params }: Props) {
           <p className={c.detailBreadcrumb}>
             <Link href="/consultorio/cursos">Cursos</Link>
             <span>/</span>
-            <span>{category.name}</span>
+            <span>{category?.name ?? "Cursos"}</span>
           </p>
 
           <div className={c.detailGrid}>

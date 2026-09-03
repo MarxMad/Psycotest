@@ -50,64 +50,133 @@ export async function activateEnrollment(params: {
       })
       .where(eq(schema.courseEnrollments.id, existing.id));
     return existing.id;
-  } else {
-    const [inserted] = await db
-      .insert(schema.courseEnrollments)
-      .values({
-        userId: params.userId,
-        courseId: params.courseId,
-        status: "active",
-        stripeSessionId: params.stripeSessionId,
-        stripePaymentIntentId: params.stripePaymentIntentId ?? null,
-        enrolledAt: now,
-        updatedAt: now,
-      })
-      .returning();
-    return inserted.id;
   }
+
+  const id = crypto.randomUUID();
+  await db.insert(schema.courseEnrollments).values({
+    id,
+    userId: params.userId,
+    courseId: params.courseId,
+    status: "active",
+    stripeSessionId: params.stripeSessionId,
+    stripePaymentIntentId: params.stripePaymentIntentId ?? null,
+    progressPercent: 0,
+    enrolledAt: now,
+    createdAt: now,
+    updatedAt: now,
+  });
+  return id;
 }
 
-export async function getCourseProgress(userId: string, courseId: string) {
+export async function getLessonProgressMap(enrollmentId: string) {
   const db = getDb();
-  const curriculum = await getCourseCurriculum(courseId);
-  const allLessonIds = curriculum.flatMap((m) => m.lessons.map((l) => l.id));
-  if (allLessonIds.length === 0) return { completed: 0, total: 0, percentage: 0 };
+  const rows = await db
+    .select()
+    .from(schema.lessonProgress)
+    .where(eq(schema.lessonProgress.enrollmentId, enrollmentId));
+  return new Map(rows.map((r) => [r.lessonId, r]));
+}
+
+export async function recalculateProgress(enrollmentId: string, courseId: string) {
+  const db = getDb();
+  const total = await countCourseLessons(courseId);
+  if (total === 0) return 0;
 
   const completed = await db
-    .select()
-    .from(schema.courseLessonProgress)
+    .select({ id: schema.lessonProgress.id })
+    .from(schema.lessonProgress)
     .where(
       and(
-        eq(schema.courseLessonProgress.userId, userId),
-        eq(schema.courseLessonProgress.completed, true),
+        eq(schema.lessonProgress.enrollmentId, enrollmentId),
+        eq(schema.lessonProgress.completed, true),
       ),
     );
 
-  const completedInCourse = completed.filter((c) => allLessonIds.includes(c.lessonId));
-  const percentage = Math.round((completedInCourse.length / allLessonIds.length) * 100);
-  return { completed: completedInCourse.length, total: allLessonIds.length, percentage };
+  const percent = Math.round((completed.length / total) * 100);
+  const now = new Date().toISOString();
+  await db
+    .update(schema.courseEnrollments)
+    .set({
+      progressPercent: percent,
+      completedAt: percent >= 100 ? now : null,
+      updatedAt: now,
+    })
+    .where(eq(schema.courseEnrollments.id, enrollmentId));
+
+  return percent;
 }
 
-export async function canAccessLesson(params: {
-  userId: string;
-  courseId: string;
+export async function markLessonProgress(params: {
+  enrollmentId: string;
   lessonId: string;
-}): Promise<boolean> {
-  const enrollment = await getEnrollment(params.userId, params.courseId);
-  return enrollment !== null && enrollment.status === "active";
-}
-
-export async function getPlayerState(userId: string, lessonId: string) {
+  courseId: string;
+  completed?: boolean;
+  positionSeconds?: number;
+}) {
   const db = getDb();
-  const [progress] = await db
+  const now = new Date().toISOString();
+  const [existing] = await db
     .select()
-    .from(schema.courseLessonProgress)
+    .from(schema.lessonProgress)
     .where(
       and(
-        eq(schema.courseLessonProgress.userId, userId),
-        eq(schema.courseLessonProgress.lessonId, lessonId),
+        eq(schema.lessonProgress.enrollmentId, params.enrollmentId),
+        eq(schema.lessonProgress.lessonId, params.lessonId),
       ),
     )
     .limit(1);
-  return progress ?? null;
+
+  if (existing) {
+    await db
+      .update(schema.lessonProgress)
+      .set({
+        completed: params.completed ?? existing.completed,
+        lastPositionSeconds: params.positionSeconds ?? existing.lastPositionSeconds,
+        updatedAt: now,
+      })
+      .where(eq(schema.lessonProgress.id, existing.id));
+  } else {
+    await db.insert(schema.lessonProgress).values({
+      id: crypto.randomUUID(),
+      enrollmentId: params.enrollmentId,
+      lessonId: params.lessonId,
+      completed: params.completed ?? false,
+      lastPositionSeconds: params.positionSeconds ?? 0,
+      updatedAt: now,
+    });
+  }
+
+  return recalculateProgress(params.enrollmentId, params.courseId);
+}
+
+export async function canAccessLesson(params: {
+  userId: string | null;
+  courseId: string;
+  lessonId: string;
+  freePreview: boolean;
+}) {
+  if (params.freePreview) return true;
+  if (!params.userId) return false;
+  const enrollment = await getEnrollment(params.userId, params.courseId);
+  return Boolean(enrollment);
+}
+
+export async function getPlayerState(userId: string, courseSlug: string) {
+  const row = await getEnrollmentBySlug(userId, courseSlug);
+  if (!row) return null;
+
+  const curriculum = await getCourseCurriculum(row.course.id);
+  const progressMap = await getLessonProgressMap(row.enrollment.id);
+
+  return {
+    enrollment: row.enrollment,
+    course: row.course,
+    curriculum: curriculum.map((block) => ({
+      ...block,
+      lessons: block.lessons.map((lesson) => ({
+        lesson,
+        progress: progressMap.get(lesson.id) ?? null,
+      })),
+    })),
+  };
 }

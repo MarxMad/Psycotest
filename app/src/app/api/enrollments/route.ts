@@ -49,9 +49,11 @@ export async function POST(request: Request) {
       userId,
       courseId,
       status: "active",
-      progressPercentage: 0,
+      progressPercent: 0,
       enrolledAt: now,
       completedAt: null,
+      createdAt: now,
+      updatedAt: now,
     });
 
     const [enrollment] = await db
