@@ -7,14 +7,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Credenciales requeridas" }, { status: 400 });
   }
 
-  const user = await signIn(body.email, body.password);
-  if (!user) {
+  const result = await signIn(body.email, body.password);
+
+  if (!result.ok) {
+    if (result.reason === "db_error") {
+      return NextResponse.json(
+        { error: result.message, code: result.code },
+        { status: result.status },
+      );
+    }
     return NextResponse.json({ error: "Correo o contraseña incorrectos" }, { status: 401 });
   }
 
-  const token = await createSessionToken(user);
+  const token = await createSessionToken(result.user);
   await setSessionCookie(token);
-  return NextResponse.json({ user });
+  return NextResponse.json({ user: result.user });
 }
 
 export async function DELETE() {

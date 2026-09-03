@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "db:push": "mkdir -p data && drizzle-kit push --force",
-    "vercel-build": "next build"
+    "vercel-build": "npm run db:push && next build"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
@@ -17,6 +17,7 @@
     "@react-three/fiber": "^9.7.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^13.0.3",
+    "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^13.0.0",
     "jose": "^6.2.8",
@@ -34,7 +35,6 @@
     "@types/node": "^24.5.2",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
-    "drizzle-kit": "^0.31.10",
     "puppeteer-core": "^25.4.0",
     "sharp": "^0.35.3",
     "typescript": "^5.9.2"

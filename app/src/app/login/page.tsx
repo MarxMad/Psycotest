@@ -27,7 +27,8 @@ function LoginForm() {
     });
     setLoading(false);
     if (!res.ok) {
-      setError("Correo o contraseña incorrectos");
+      const data = (await res.json().catch(() => ({}))) as { error?: string };
+      setError(data.error ?? "Correo o contraseña incorrectos");
       return;
     }
     router.push(next);

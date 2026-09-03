@@ -2,7 +2,7 @@ import { mkdirSync } from "fs";
 import path from "path";
 import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
 import * as schema from "./schema";
-import { seedIfEmpty } from "./seed";
+import { ensureDbReadyOnce } from "./bootstrap";
 
 /** Tipo unificado para Drizzle; en runtime puede ser SQLite local o Turso. */
 export type AppDb = BetterSQLite3Database<typeof schema>;
@@ -50,8 +50,8 @@ function createDb(): AppDb {
 export function getDb(): AppDb {
   if (!globalForDb.__psycotestDb) {
     globalForDb.__psycotestDb = createDb();
-    void seedIfEmpty(globalForDb.__psycotestDb).catch((error) => {
-      console.error("[psycotest] seedIfEmpty falló (¿faltan tablas?):", error);
+    void ensureDbReadyOnce(globalForDb.__psycotestDb).catch((error) => {
+      console.error("[psycotest] ensureDbReady falló:", error);
     });
   }
   return globalForDb.__psycotestDb;

@@ -562,8 +562,8 @@
   justify-content: center;
   width: 100%;
   padding: 0.85rem 1rem;
-  background: var(--brand);
-  color: #fff;
+  background: var(--brand, #1e4a6f);
+  color: var(--on-accent, #ffffff);
   font-weight: 700;
   font-size: 0.88rem;
   border: none;
@@ -571,6 +571,11 @@
   cursor: pointer;
   text-decoration: none;
   transition: background 0.15s;
+}
+
+.authCard .btnPrimary {
+  background: var(--brand, #1e4a6f);
+  color: var(--on-accent, #ffffff);
 }
 
 .btnPrimary:hover {

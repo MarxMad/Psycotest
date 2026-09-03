@@ -2,6 +2,11 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
+import {
+  bootstrapAdminForLogin,
+  DbBootstrapError,
+  ensureDbReadyOnce,
+} from "@/db/bootstrap";
 import { getDb, schema } from "@/db";
 
 const COOKIE = "psycotest_session";
@@ -24,19 +29,56 @@ export interface AuthUser {
   rol: "admin" | "psicologo" | "aplicador";
 }
 
-export async function signIn(email: string, password: string): Promise<AuthUser | null> {
+export type SignInResult =
+  | { ok: true; user: AuthUser }
+  | { ok: false; reason: "invalid_credentials" }
+  | { ok: false; reason: "db_error"; code: string; message: string; status: number };
+
+export async function signIn(email: string, password: string): Promise<SignInResult> {
   const db = getDb();
+
+  try {
+    await ensureDbReadyOnce(db);
+    await bootstrapAdminForLogin(db, email, password);
+  } catch (error) {
+    if (error instanceof DbBootstrapError) {
+      return {
+        ok: false,
+        reason: "db_error",
+        code: error.code,
+        message: error.message,
+        status: error.status,
+      };
+    }
+    console.error("[psycotest] signIn bootstrap:", error);
+    return {
+      ok: false,
+      reason: "db_error",
+      code: "DB_UNAVAILABLE",
+      message: "No se pudo conectar con la base de datos.",
+      status: 503,
+    };
+  }
+
   const [user] = await db
     .select()
     .from(schema.users)
     .where(eq(schema.users.email, email.toLowerCase().trim()))
     .limit(1);
 
-  if (!user) return null;
+  if (!user) return { ok: false, reason: "invalid_credentials" };
   const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return null;
+  if (!ok) return { ok: false, reason: "invalid_credentials" };
 
-  return { id: user.id, email: user.email, nombre: user.nombre, rol: user.rol as AuthUser["rol"] };
+  return {
+    ok: true,
+    user: {
+      id: user.id,
+      email: user.email,
+      nombre: user.nombre,
+      rol: user.rol as AuthUser["rol"],
+    },
+  };
 }
 
 export async function createSessionToken(user: AuthUser): Promise<string> {
