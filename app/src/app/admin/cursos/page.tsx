@@ -107,7 +107,7 @@ export default function CursosPage() {
                 )}
                 <div className={s.cardFooter}>
                   <div className={s.cardPrice}>
-                    ${(curso.price / 100).toLocaleString("es-MX")} MXN
+                    ${(curso.priceMxn / 100).toLocaleString("es-MX")} MXN
                   </div>
                   <div className={s.cardStats}>
                     <span>{curso.soldCount} vendidos</span>
