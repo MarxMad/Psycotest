@@ -111,12 +111,21 @@ export const courses = sqliteTable("courses", {
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
   description: text("description"),
-  price: integer("price").notNull(), // En centavos
+  subtitle: text("subtitle"),
+  categoryId: text("category_id"),
+  priceMxn: integer("price_mxn").notNull().default(0), // En centavos MXN
+  stripePriceId: text("stripe_price_id"),
   thumbnailUrl: text("thumbnail_url"),
+  instructorName: text("instructor_name").notNull().default("Instructor"),
+  instructorBio: text("instructor_bio"),
   instructorId: text("instructor_id").references(() => users.id),
+  level: text("level", { enum: ["basico", "intermedio", "avanzado"] }).notNull().default("basico"),
+  durationMinutes: integer("duration_minutes").notNull().default(0),
+  published: integer("published", { mode: "boolean" }).notNull().default(true),
   status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
   inventoryLimit: integer("inventory_limit"), // null = ilimitado
   soldCount: integer("sold_count").notNull().default(0),
+  sortOrder: integer("sort_order").notNull().default(0),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
