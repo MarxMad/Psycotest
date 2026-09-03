@@ -39,7 +39,7 @@ export const PLATFORM_MODULES: PlatformModule[] = [
     title: "Clases en vivo",
     description: "Salas integradas con cámara, chat y pizarra — sin depender de Meet ni Zoom.",
     status: "proximo",
-    href: "#roadmap",
+    href: "/consultorio/cursos",
     features: ["Hasta ~30 participantes", "Grabación → replay", "Calendario por curso"],
   },
 ];

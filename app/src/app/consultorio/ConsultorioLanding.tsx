@@ -7,7 +7,6 @@ import {
   EVALUATION_DIMENSIONS,
   HERO_STATS,
   PLATFORM_MODULES,
-  ROADMAP,
   SERVICES,
   VISUAL_STORIES,
 } from "@/lib/consultorio-content";
