@@ -5,8 +5,16 @@ import * as schema from "./schema";
 type AppDb = BetterSQLite3Database<typeof schema>;
 
 export async function seedIfEmpty(db: AppDb) {
-  const existing = await db.select({ id: schema.users.id }).from(schema.users).limit(1);
-  if (existing.length > 0) return;
+  try {
+    const existing = await db.select({ id: schema.users.id }).from(schema.users).limit(1);
+    if (existing.length > 0) return;
+  } catch (error) {
+    console.error(
+      "[psycotest] No se pudo leer users (ejecuta db:push / configura Turso):",
+      error,
+    );
+    return;
+  }
 
   const now = new Date().toISOString();
   const email = process.env.DEFAULT_ADMIN_EMAIL ?? "admin@psycotest.local";

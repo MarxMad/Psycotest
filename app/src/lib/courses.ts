@@ -17,17 +17,22 @@ export async function listCategories() {
 }
 
 export async function listPublishedCourses() {
-  const db = getDb();
-  const rows = await db
-    .select({
-      course: schema.courses,
-      category: schema.courseCategories,
-    })
-    .from(schema.courses)
-    .leftJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
-    .where(eq(schema.courses.published, true))
-    .orderBy(asc(schema.courses.sortOrder));
-  return rows;
+  try {
+    const db = getDb();
+    const rows = await db
+      .select({
+        course: schema.courses,
+        category: schema.courseCategories,
+      })
+      .from(schema.courses)
+      .leftJoin(schema.courseCategories, eq(schema.courses.categoryId, schema.courseCategories.id))
+      .where(eq(schema.courses.published, true))
+      .orderBy(asc(schema.courses.sortOrder));
+    return rows;
+  } catch (error) {
+    console.error("[courses] listPublishedCourses falló:", error);
+    return [];
+  }
 }
 
 export async function getCourseBySlug(slug: string) {

@@ -9,6 +9,15 @@ export type AppDb = BetterSQLite3Database<typeof schema>;
 
 const globalForDb = globalThis as unknown as { __psycotestDb?: AppDb };
 
+function sqlitePath(): string {
+  if (process.env.DATABASE_PATH) return process.env.DATABASE_PATH;
+  // En Vercel el filesystem de la app es de solo lectura; usar /tmp.
+  if (process.env.VERCEL) {
+    return path.join("/tmp", "psycotest.db");
+  }
+  return path.join(process.cwd(), "data", "psycotest.db");
+}
+
 function createDb(): AppDb {
   const tursoUrl = process.env.TURSO_DATABASE_URL;
 
@@ -30,9 +39,8 @@ function createDb(): AppDb {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { drizzle } = require("drizzle-orm/better-sqlite3") as typeof import("drizzle-orm/better-sqlite3");
 
-  const dir = path.join(process.cwd(), "data");
-  mkdirSync(dir, { recursive: true });
-  const file = process.env.DATABASE_PATH ?? path.join(dir, "psycotest.db");
+  const file = sqlitePath();
+  mkdirSync(path.dirname(file), { recursive: true });
   const sqlite = new Database(file);
   sqlite.pragma("journal_mode = WAL");
   sqlite.pragma("foreign_keys = ON");
@@ -42,7 +50,9 @@ function createDb(): AppDb {
 export function getDb(): AppDb {
   if (!globalForDb.__psycotestDb) {
     globalForDb.__psycotestDb = createDb();
-    void seedIfEmpty(globalForDb.__psycotestDb);
+    void seedIfEmpty(globalForDb.__psycotestDb).catch((error) => {
+      console.error("[psycotest] seedIfEmpty falló (¿faltan tablas?):", error);
+    });
   }
   return globalForDb.__psycotestDb;
 }

@@ -30,8 +30,13 @@ const STATUS_LABEL = {
 } as const;
 
 export async function ConsultorioLanding() {
-  const published = await listPublishedCourses();
-  const featured = published[0]?.course ?? null;
+  let featured: Awaited<ReturnType<typeof listPublishedCourses>>[number]["course"] | null = null;
+  try {
+    const published = await listPublishedCourses();
+    featured = published[0]?.course ?? null;
+  } catch (error) {
+    console.error("[consultorio] No se pudieron cargar cursos para la landing:", error);
+  }
 
   return (
     <div className={styles.page}>
