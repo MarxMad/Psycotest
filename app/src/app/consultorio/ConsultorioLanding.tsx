@@ -15,6 +15,7 @@ import { psycotest } from "@/lib/routes";
 import { formatMxn } from "@/lib/stripe";
 import { ConsultorioHeroVisual } from "./ConsultorioHeroVisual";
 import { ConsultorioNav } from "./ConsultorioNav";
+import { HashScroll } from "./HashScroll";
 import { EvalShowcase } from "./EvalShowcase";
 import { ConocerSeal, LandingModuleIcon } from "./LandingIcons";
 import { LandingBannerStrip, LandingVisualStories } from "./LandingVisuals";
@@ -39,6 +40,7 @@ export async function ConsultorioLanding() {
 
   return (
     <div className={styles.page}>
+      <HashScroll />
       <ConsultorioNav />
 
       <section className={styles.hero}>
@@ -49,13 +51,13 @@ export async function ConsultorioLanding() {
             <h1>{CONSULTORIO.tagline}</h1>
             <p className={styles.heroLead}>{CONSULTORIO.heroLead}</p>
             <div className={styles.heroActions}>
-              <Link href="#conocer" className={styles.btnPrimary}>
+              <Link href="/#conocer" className={styles.btnPrimary}>
                 Certificación CONOCER
               </Link>
               <Link href="/consultorio/cursos" className={styles.btnSecondary}>
                 Ver cursos
               </Link>
-              <Link href="#evaluacion" className={styles.btnGhostHero}>
+              <Link href="/psycotest" className={styles.btnGhostHero}>
                 Evaluación en línea
               </Link>
             </div>
@@ -275,10 +277,10 @@ export async function ConsultorioLanding() {
               <p className={styles.footerSub}>{CONSULTORIO.practiceTitle}</p>
             </div>
             <div className={styles.footerLinks}>
-              <a href="#conocer">CONOCER</a>
+              <Link href="/#conocer">CONOCER</Link>
               <Link href="/consultorio/cursos">Cursos</Link>
-              <a href="#evaluacion">Evaluación</a>
-              <a href="#contacto">Contacto</a>
+              <Link href="/psycotest">Evaluación</Link>
+              <Link href="/#contacto">Contacto</Link>
             </div>
           </div>
           <p className={styles.footerCopy}>

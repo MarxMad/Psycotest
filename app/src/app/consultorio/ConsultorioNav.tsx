@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { CONSULTORIO } from "@/lib/consultorio-brand";
-import { psycotest } from "@/lib/routes";
-import { NAV_LINKS } from "@/lib/consultorio-content";
+import { NAV_ACTIONS, NAV_SCROLL } from "@/lib/consultorio-content";
 import styles from "./consultorio.module.css";
 
 export function ConsultorioNav() {
@@ -30,30 +30,21 @@ export function ConsultorioNav() {
           </span>
         </Link>
 
-        <nav className={styles.navDesktop} aria-label="Principal">
-          {NAV_LINKS.map((item) =>
-            item.href.startsWith("/") && !item.href.includes("#") ? (
-              <Link key={item.label} href={item.href} className={styles.navLink}>
-                {item.label}
-              </Link>
-            ) : (
-              <a key={item.label} href={item.href} className={styles.navLink}>
-                {item.label}
-              </a>
-            ),
-          )}
+        <nav className={styles.navDesktop} aria-label="Secciones">
+          {NAV_SCROLL.map((item) => (
+            <Link key={item.label} href={item.href} className={styles.navLink}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
         <div className={styles.headerActions}>
-          <Link href="/consultorio/ingreso" className={styles.navGhost}>
-            Acceder
-          </Link>
-          <Link href={psycotest.home} className={styles.navGhost}>
-            Panel evaluación
-          </Link>
-          <a href="#conocer" className={styles.btnPrimary}>
-            Certificarse
-          </a>
+          <ThemeToggle />
+          {NAV_ACTIONS.map((item) => (
+            <Link key={item.label} href={item.href} className={styles.navCta}>
+              {item.label}
+            </Link>
+          ))}
           <button
             type="button"
             className={styles.menuBtn}
@@ -67,23 +58,28 @@ export function ConsultorioNav() {
 
       {open ? (
         <div className={styles.mobileNav} role="dialog" aria-label="Menú">
-          {NAV_LINKS.map((item) =>
-            item.href.startsWith("/") && !item.href.includes("#") ? (
-              <Link key={item.label} href={item.href} className={styles.mobileLink} onClick={() => setOpen(false)}>
+          {NAV_SCROLL.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={styles.mobileLink}
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className={styles.mobileCtas}>
+            {NAV_ACTIONS.map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={styles.navCta}
+                onClick={() => setOpen(false)}
+              >
                 {item.label}
               </Link>
-            ) : (
-              <a key={item.label} href={item.href} className={styles.mobileLink} onClick={() => setOpen(false)}>
-                {item.label}
-              </a>
-            ),
-          )}
-          <Link href="/consultorio/ingreso" className={styles.mobileLink} onClick={() => setOpen(false)}>
-            Acceder a cursos
-          </Link>
-          <Link href={psycotest.home} className={styles.mobileLink} onClick={() => setOpen(false)}>
-            Panel de evaluación
-          </Link>
+            ))}
+          </div>
         </div>
       ) : null}
     </header>

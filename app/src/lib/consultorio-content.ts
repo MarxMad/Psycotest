@@ -127,13 +127,24 @@ export const ROADMAP = [
   { month: "Dic 2026", label: "Plataforma certificadora 100% operativa", done: false },
 ] as const;
 
-export const NAV_LINKS = [
-  { label: "CONOCER", href: "#conocer" },
-  { label: "Plataforma", href: "#plataforma" },
-  { label: "Experiencias", href: "#experiencias" },
+export const NAV_SCROLL = [
+  { label: "CONOCER", href: "/#conocer" },
+  { label: "Plataforma", href: "/#plataforma" },
+  { label: "Experiencias", href: "/#experiencias" },
+  { label: "Contacto", href: "/#contacto" },
+] as const;
+
+export const NAV_ACTIONS = [
+  { label: "Acceder", href: "/consultorio/ingreso" },
   { label: "Cursos", href: "/consultorio/cursos" },
-  { label: "Evaluación", href: "#evaluacion" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Evaluación", href: "/psycotest" },
+] as const;
+
+/** @deprecated Prefer NAV_SCROLL + NAV_ACTIONS */
+export const NAV_LINKS = [
+  ...NAV_SCROLL,
+  { label: "Cursos", href: "/consultorio/cursos" },
+  { label: "Evaluación", href: "/#evaluacion" },
 ] as const;
 
 export const HERO_STATS = [

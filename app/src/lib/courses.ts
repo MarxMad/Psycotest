@@ -12,8 +12,13 @@ export type LessonWithModule = {
 };
 
 export async function listCategories() {
-  const db = getDb();
-  return db.select().from(schema.courseCategories).orderBy(asc(schema.courseCategories.sortOrder));
+  try {
+    const db = getDb();
+    return db.select().from(schema.courseCategories).orderBy(asc(schema.courseCategories.sortOrder));
+  } catch (error) {
+    console.error("[courses] listCategories falló:", error);
+    return [];
+  }
 }
 
 export async function listPublishedCourses() {

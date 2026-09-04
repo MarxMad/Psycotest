@@ -139,6 +139,72 @@
   grid-template-columns: 1fr;
 }
 
+.emptyState {
+  max-width: 36rem;
+  margin: 2rem auto 3rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.emptyState h2 {
+  margin: 0 0 0.65rem;
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  color: var(--ink);
+}
+
+.emptyState p {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.emptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: center;
+}
+
+.emptyPrimary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 1.2rem;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.emptyPrimary:hover {
+  background: var(--brand-bright);
+  color: #fff;
+}
+
+.emptySecondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.emptySecondary:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
 .courseCard {
   display: flex;
   flex-direction: column;
