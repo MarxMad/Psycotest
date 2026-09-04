@@ -17,7 +17,7 @@ import { ConsultorioHeroVisual } from "./ConsultorioHeroVisual";
 import { ConsultorioNav } from "./ConsultorioNav";
 import { HashScroll } from "./HashScroll";
 import { EvalShowcase } from "./EvalShowcase";
-import { ConocerSeal, LandingModuleIcon } from "./LandingIcons";
+import { LandingModuleIcon } from "./LandingIcons";
 import { LandingBannerStrip, LandingVisualStories } from "./LandingVisuals";
 import { LandingReveal, LandingStagger, LandingStaggerItem } from "./LandingReveal";
 import { ServiceCards } from "./ServiceCards";
@@ -47,7 +47,6 @@ export async function ConsultorioLanding() {
         <div className={styles.heroMesh} aria-hidden />
         <div className={styles.heroGrid}>
           <LandingReveal className={styles.heroCopy}>
-            <ConocerSeal />
             <h1>{CONSULTORIO.tagline}</h1>
             <p className={styles.heroLead}>{CONSULTORIO.heroLead}</p>
             <div className={styles.heroActions}>

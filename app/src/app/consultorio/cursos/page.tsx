@@ -75,14 +75,14 @@ export default async function CursosCatalogPage() {
   const totalCourses = courses.length;
 
   return (
-    <>
+    <div className={c.catalogPage}>
       <section className={c.catalogHero}>
         <div className={c.catalogHeroInner}>
           <p className={c.catalogEyebrow}>Academy · Formación CONOCER</p>
           <h1>Aprende certificación y evaluación a tu ritmo</h1>
           <p className={c.catalogLead}>
-            Cursos grabados con clases en video, temario por módulos y seguimiento de avance integrado con
-            certificación CONOCER.
+            Rutas de aprendizaje con video, temario por módulos y avance por lección — estilo academy,
+            alineadas a certificación CONOCER.
           </p>
           {totalCourses > 0 ? <CourseSearchBar /> : null}
           <div className={c.catalogStats}>
@@ -97,21 +97,40 @@ export default async function CursosCatalogPage() {
 
       <div className={c.catalogBody}>
         {totalCourses === 0 ? (
-          <div className={c.emptyState}>
-            <h2>Próximamente en catálogo</h2>
-            <p>
-              Estamos preparando los programas de formación. Mientras tanto puedes acceder a tu cuenta o
-              conocer la certificación CONOCER en la página principal.
-            </p>
-            <div className={c.emptyActions}>
-              <Link href="/consultorio/ingreso" className={c.emptyPrimary}>
-                Acceder
-              </Link>
-              <Link href="/" className={c.emptySecondary}>
-                Volver al inicio
-              </Link>
+          <>
+            <div className={c.emptyState}>
+              <div className={c.emptyIcon} aria-hidden>
+                ▣
+              </div>
+              <h2>Catálogo en preparación</h2>
+              <p>
+                Pronto verás rutas de formación con clases en video, progreso y certificación. Mientras
+                tanto puedes entrar a tu cuenta o volver a la página principal.
+              </p>
+              <div className={c.emptyActions}>
+                <Link href="/consultorio/ingreso" className={c.emptyPrimary}>
+                  Acceder
+                </Link>
+                <Link href="/" className={c.emptySecondary}>
+                  Volver al inicio
+                </Link>
+              </div>
             </div>
-          </div>
+            <div className={c.comingRail} aria-hidden>
+              <div className={c.comingCard}>
+                <strong>Evaluación de competencias</strong>
+                <span>Ruta introductoria con módulos y prácticas.</span>
+              </div>
+              <div className={c.comingCard}>
+                <strong>Certificación CONOCER</strong>
+                <span>Preparación al estándar y expediente digital.</span>
+              </div>
+              <div className={c.comingCard}>
+                <strong>Desarrollo organizacional</strong>
+                <span>Diagnóstico, selección y capacitación aplicada.</span>
+              </div>
+            </div>
+          </>
         ) : (
           <>
             {byCategory.length > 0 ? (
@@ -171,6 +190,6 @@ export default async function CursosCatalogPage() {
           </>
         )}
       </div>
-    </>
+    </div>
   );
 }

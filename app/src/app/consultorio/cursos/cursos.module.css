@@ -1,14 +1,26 @@
-/* Catálogo y cursos — mismo sistema que consultorio (tokens globales) */
+/* Catálogo de cursos — estilo academy / Platzi */
+
+.catalogPage {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: clip;
+  min-height: calc(100vh - 72px);
+  background: var(--paper);
+}
 
 .catalogHero {
-  padding: 2.5rem var(--site-pad) 2rem;
-  background: linear-gradient(180deg, var(--brand-soft) 0%, var(--paper) 100%);
+  padding: 2rem var(--site-pad, 1.25rem) 1.75rem;
+  background:
+    radial-gradient(ellipse 80% 70% at 0% 0%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--brand-soft) 0%, var(--paper) 100%);
   border-bottom: 1px solid var(--rule);
 }
 
 .catalogHeroInner {
-  max-width: var(--site-max);
+  max-width: var(--site-max, 1180px);
   margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .catalogEyebrow {
@@ -23,11 +35,12 @@
 .catalogHero h1 {
   margin: 0 0 0.65rem;
   font-family: var(--serif);
-  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-size: clamp(1.55rem, 4.2vw, 2.55rem);
   font-weight: 700;
-  line-height: 1.08;
+  line-height: 1.1;
   max-width: 22ch;
   color: var(--ink);
+  word-wrap: break-word;
 }
 
 .catalogLead {
@@ -35,13 +48,14 @@
   color: var(--muted);
   max-width: 52ch;
   line-height: 1.6;
+  font-size: clamp(0.9rem, 2.2vw, 1rem);
 }
 
 .catalogStats {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
+  gap: 0.45rem 0.65rem;
+  margin-top: 1.15rem;
   font-size: 0.82rem;
   color: var(--muted);
 }
@@ -50,21 +64,25 @@
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  max-width: 520px;
+  width: 100%;
+  max-width: min(520px, 100%);
   padding: 0.65rem 1rem;
   background: var(--paper);
   border: 1px solid var(--rule);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 
 .searchIcon {
   color: var(--muted);
   font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
 .searchBar input {
   flex: 1;
+  min-width: 0;
   border: none;
   background: transparent;
   color: var(--ink);
@@ -78,21 +96,27 @@
 }
 
 .catalogBody {
-  max-width: var(--site-max);
+  max-width: var(--site-max, 1180px);
   margin: 0 auto;
-  padding: 1.5rem var(--site-pad) 4rem;
+  padding: 1.5rem var(--site-pad, 1.25rem) 4rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .schoolNav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--rule);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
 .schoolPill {
+  flex: 0 0 auto;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -102,6 +126,7 @@
   border: 1px solid var(--rule);
   text-decoration: none;
   transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
 }
 
 .schoolPill:hover {
@@ -111,17 +136,17 @@
 }
 
 .schoolSection {
-  margin-bottom: 2.75rem;
+  margin-bottom: 2.5rem;
 }
 
 .schoolHead {
-  margin-bottom: 1.15rem;
+  margin-bottom: 1rem;
 }
 
 .schoolHead h2 {
   margin: 0 0 0.35rem;
   font-family: var(--serif);
-  font-size: 1.35rem;
+  font-size: clamp(1.2rem, 3vw, 1.4rem);
   font-weight: 700;
   color: var(--brand);
 }
@@ -135,25 +160,166 @@
 
 .courseGrid {
   display: grid;
-  gap: 1.15rem;
+  gap: 1rem;
   grid-template-columns: 1fr;
+  width: 100%;
+}
+
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: var(--raised, var(--paper));
+  border: 1px solid var(--rule);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.courseCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--brand-bright);
+  box-shadow: var(--shadow-lg);
+}
+
+.cardThumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-bright) 100%);
+  overflow: hidden;
+}
+
+.cardImg {
+  object-fit: cover;
+}
+
+.cardFocus {
+  position: absolute;
+  left: 0.65rem;
+  bottom: 0.65rem;
+  max-width: calc(100% - 1.3rem);
+  padding: 0.25rem 0.55rem;
+  border-radius: 6px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+  background: var(--gold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardBody {
+  padding: 1rem 1.05rem 1.1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cardTeacher {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.cardBody h3 {
+  margin: 0 0 0.35rem;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+  word-wrap: break-word;
+}
+
+.cardSub {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.45;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.22rem 0.45rem;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--ink-soft);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.cardPrice {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--brand);
+  white-space: nowrap;
+}
+
+.cardCta {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--brand-bright);
+  white-space: nowrap;
 }
 
 .emptyState {
-  max-width: 36rem;
-  margin: 2rem auto 3rem;
-  padding: 2rem 1.5rem;
+  max-width: min(36rem, 100%);
+  margin: 1.5rem auto 2.5rem;
+  padding: 2rem 1.25rem;
   text-align: center;
-  background: var(--paper);
+  background: var(--raised, var(--paper));
   border: 1px solid var(--rule);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 1rem;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-size: 1.5rem;
 }
 
 .emptyState h2 {
   margin: 0 0 0.65rem;
   font-family: var(--serif);
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 3.5vw, 1.5rem);
   color: var(--ink);
 }
 
@@ -161,6 +327,7 @@
   margin: 0 0 1.5rem;
   color: var(--muted);
   line-height: 1.6;
+  font-size: 0.95rem;
 }
 
 .emptyActions {
@@ -205,129 +372,54 @@
   color: var(--brand);
 }
 
-.courseCard {
-  display: flex;
-  flex-direction: column;
+.comingRail {
+  display: grid;
+  gap: 0.85rem;
+  margin-top: 1.75rem;
+  grid-template-columns: 1fr;
+}
+
+.comingCard {
+  padding: 1.1rem 1.15rem;
   border-radius: var(--r-lg);
-  overflow: hidden;
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  text-decoration: none;
-  color: inherit;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  border: 1px dashed color-mix(in srgb, var(--brand) 35%, var(--rule));
+  background: color-mix(in srgb, var(--brand-soft) 55%, var(--paper));
+  text-align: left;
 }
 
-.courseCard:hover {
-  transform: translateY(-3px);
-  border-color: var(--brand-bright);
-  box-shadow: var(--shadow-lg);
+.comingCard strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--ink);
+  font-size: 0.92rem;
 }
 
-.cardThumb {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  background: var(--brand-soft);
-  overflow: hidden;
-}
-
-.cardImg {
-  object-fit: cover;
-}
-
-.cardFocus {
-  position: absolute;
-  left: 0.65rem;
-  bottom: 0.65rem;
-  padding: 0.25rem 0.55rem;
-  border-radius: 6px;
-  font-size: 0.62rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--brand-dark);
-  background: var(--gold);
-}
-
-.cardBody {
-  padding: 1rem 1.1rem 1.15rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.cardTeacher {
-  margin: 0 0 0.35rem;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.cardBody h3 {
-  margin: 0 0 0.35rem;
-  font-family: var(--serif);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.cardSub {
-  margin: 0 0 0.65rem;
-  font-size: 0.82rem;
+.comingCard span {
+  font-size: 0.8rem;
   color: var(--muted);
   line-height: 1.45;
-  flex: 1;
-}
-
-.cardMeta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin-bottom: 0.75rem;
-}
-
-.tag {
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.22rem 0.45rem;
-  border-radius: 4px;
-  background: var(--surface);
-  color: var(--ink-soft);
-}
-
-.cardFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 0.65rem;
-  border-top: 1px solid var(--rule);
-}
-
-.cardPrice {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--brand);
-}
-
-.cardCta {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--brand-bright);
 }
 
 @media (min-width: 640px) {
   .courseGrid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comingRail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (min-width: 1024px) {
   .courseGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .catalogHero {
+    padding-top: 2.75rem;
+    padding-bottom: 2.25rem;
   }
 }
-
 /* Detalle curso */
 .detailHero {
   padding: 1.5rem var(--site-pad) 2.5rem;

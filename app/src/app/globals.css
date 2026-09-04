@@ -50,6 +50,9 @@
   --c-border: var(--rule);
   --c-dark: var(--brand-dark);
 
+  --site-max: 1180px;
+  --site-pad: clamp(1rem, 3vw, 1.5rem);
+
   /* Admin Panel Variables */
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 80px;
