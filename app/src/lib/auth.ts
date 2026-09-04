@@ -65,25 +65,43 @@ export async function signIn(email: string, password: string): Promise<SignInRes
     };
   }
 
-  const [user] = await db
-    .select()
-    .from(schema.users)
-    .where(eq(schema.users.email, email.toLowerCase().trim()))
-    .limit(1);
+  try {
+    const [user] = await db
+      .select({
+        id: schema.users.id,
+        email: schema.users.email,
+        nombre: schema.users.nombre,
+        passwordHash: schema.users.passwordHash,
+        rol: schema.users.rol,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.email, email.toLowerCase().trim()))
+      .limit(1);
 
-  if (!user) return { ok: false, reason: "invalid_credentials" };
-  const ok = await bcrypt.compare(password, user.passwordHash);
-  if (!ok) return { ok: false, reason: "invalid_credentials" };
+    if (!user) return { ok: false, reason: "invalid_credentials" };
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) return { ok: false, reason: "invalid_credentials" };
 
-  return {
-    ok: true,
-    user: {
-      id: user.id,
-      email: user.email,
-      nombre: user.nombre,
-      rol: user.rol as AuthUser["rol"],
-    },
-  };
+    return {
+      ok: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        nombre: user.nombre,
+        rol: user.rol as AuthUser["rol"],
+      },
+    };
+  } catch (error) {
+    console.error("[psycotest] signIn query:", error);
+    return {
+      ok: false,
+      reason: "db_error",
+      code: "SCHEMA_BOOTSTRAP_FAILED",
+      message:
+        "No se pudo leer la tabla de usuarios. El esquema puede estar desactualizado; revise Turso o reinicie el despliegue.",
+      status: 503,
+    };
+  }
 }
 
 export async function createSessionToken(user: AuthUser): Promise<string> {

@@ -100,23 +100,131 @@ async function usersTableReadable(db: AppDb): Promise<boolean> {
   }
 }
 
-export async function ensureSchema(db: AppDb): Promise<void> {
-  if (await usersTableReadable(db)) return;
-
+/** Comprueba que el SELECT completo de users no falle (columnas alineadas al schema). */
+async function usersSchemaCompatible(db: AppDb): Promise<boolean> {
   try {
-    await pushSchema(db);
-  } catch (error) {
-    console.error("[psycotest] ensureSchema falló:", error);
-    throw new DbBootstrapError(
-      "SCHEMA_BOOTSTRAP_FAILED",
-      "No se pudo preparar la base de datos. Verifique Turso o ejecute npm run db:push.",
-    );
+    await db
+      .select({
+        id: schema.users.id,
+        email: schema.users.email,
+        nombre: schema.users.nombre,
+        passwordHash: schema.users.passwordHash,
+        rol: schema.users.rol,
+        emailVerified: schema.users.emailVerified,
+        createdAt: schema.users.createdAt,
+      })
+      .from(schema.users)
+      .limit(1);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Bases antiguas (p. ej. Turso) pueden tener `users` sin columnas nuevas.
+ * usersTableReadable solo mira `id` y deja pasar esquemas incompletos.
+ */
+async function repairUsersColumns(db: AppDb): Promise<void> {
+  const alters = [
+    `ALTER TABLE users ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`,
+  ];
+
+  for (const statement of alters) {
+    try {
+      await Promise.resolve(db.run(sql.raw(statement)));
+      console.info(`[psycotest] schema repair: ${statement}`);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      if (
+        msg.includes("duplicate column") ||
+        msg.includes("already exists") ||
+        msg.toLowerCase().includes("duplicate column name")
+      ) {
+        continue;
+      }
+      // Si la tabla no existe, pushSchema se encargará.
+      if (msg.toLowerCase().includes("no such table")) return;
+      console.warn(`[psycotest] schema repair omitido: ${msg}`);
+    }
+  }
+}
+
+/** Fallback sin drizzle-kit: suficiente para login admin en serverless. */
+async function ensureUsersTableRaw(db: AppDb): Promise<void> {
+  await Promise.resolve(
+    db.run(sql.raw(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY NOT NULL,
+        email TEXT NOT NULL UNIQUE,
+        nombre TEXT NOT NULL,
+        password_hash TEXT NOT NULL,
+        rol TEXT NOT NULL DEFAULT 'psicologo',
+        email_verified INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL
+      )
+    `)),
+  );
+  await repairUsersColumns(db);
+}
+
+export async function ensureSchema(db: AppDb): Promise<void> {
+  const tableExists = await usersTableReadable(db);
+
+  if (!tableExists) {
+    try {
+      await pushSchema(db);
+    } catch (error) {
+      console.error("[psycotest] ensureSchema pushSchema falló, intentando SQL raw:", error);
+      try {
+        await ensureUsersTableRaw(db);
+      } catch (rawError) {
+        console.error("[psycotest] ensureUsersTableRaw falló:", rawError);
+        throw new DbBootstrapError(
+          "SCHEMA_BOOTSTRAP_FAILED",
+          "No se pudo preparar la base de datos. Verifique Turso o ejecute npm run db:push.",
+        );
+      }
+    }
   }
 
   if (!(await usersTableReadable(db))) {
+    try {
+      await ensureUsersTableRaw(db);
+    } catch (error) {
+      console.error("[psycotest] ensureUsersTableRaw (tabla ausente) falló:", error);
+      throw new DbBootstrapError(
+        "SCHEMA_BOOTSTRAP_FAILED",
+        "La tabla de usuarios no existe tras la migración automática.",
+      );
+    }
+  }
+
+  if (!(await usersSchemaCompatible(db))) {
+    await repairUsersColumns(db);
+    // En Turso, intentar push incremental si el ALTER no bastó.
+    if (!(await usersSchemaCompatible(db)) && process.env.TURSO_DATABASE_URL) {
+      try {
+        await pushSchemaTurso(db);
+      } catch (error) {
+        console.error("[psycotest] pushSchemaTurso repair falló:", error);
+      }
+    }
+  }
+
+  if (!(await usersSchemaCompatible(db))) {
+    // Último recurso: recrear columnas mínimas vía raw (no borra datos existentes).
+    try {
+      await ensureUsersTableRaw(db);
+    } catch (error) {
+      console.error("[psycotest] ensureUsersTableRaw repair falló:", error);
+    }
+  }
+
+  if (!(await usersSchemaCompatible(db))) {
     throw new DbBootstrapError(
       "SCHEMA_BOOTSTRAP_FAILED",
-      "La tabla de usuarios no existe tras la migración automática.",
+      "El esquema de usuarios está incompleto (falta email_verified u otras columnas). Ejecute db:push o revise Turso.",
     );
   }
 }
