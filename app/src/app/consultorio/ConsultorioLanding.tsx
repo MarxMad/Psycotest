@@ -5,7 +5,6 @@ import {
   CONOCER_ORG_BENEFITS,
   CONOCER_PERSON_BENEFITS,
   EVALUATION_DIMENSIONS,
-  HERO_STATS,
   PLATFORM_MODULES,
   SERVICES,
   VISUAL_STORIES,
@@ -43,10 +42,11 @@ export async function ConsultorioLanding() {
       <HashScroll />
       <ConsultorioNav />
 
-      <section className={styles.hero}>
-        <div className={styles.heroMesh} aria-hidden />
+      <section className={styles.hero} aria-label="Inicio">
+        <ConsultorioHeroVisual />
         <div className={styles.heroGrid}>
-          <LandingReveal className={styles.heroCopy}>
+          <LandingReveal className={styles.heroCopy} y={36}>
+            <p className={styles.heroBrand}>{CONSULTORIO.practiceTitle}</p>
             <h1>{CONSULTORIO.tagline}</h1>
             <p className={styles.heroLead}>{CONSULTORIO.heroLead}</p>
             <div className={styles.heroActions}>
@@ -60,19 +60,10 @@ export async function ConsultorioLanding() {
                 Evaluación en línea
               </Link>
             </div>
-            <dl className={styles.heroStats}>
-              {HERO_STATS.map((stat) => (
-                <div key={stat.label}>
-                  <dt>{stat.value}</dt>
-                  <dd>{stat.label}</dd>
-                </div>
-              ))}
-            </dl>
           </LandingReveal>
-
-          <div className={styles.heroVisualWrap}>
-            <ConsultorioHeroVisual />
-          </div>
+        </div>
+        <div className={styles.heroScrollHint} aria-hidden>
+          <span />
         </div>
       </section>
 
