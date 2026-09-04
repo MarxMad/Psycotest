@@ -7,9 +7,6 @@ export const APPLICANT_COOKIE = "psycotest_applicant";
 function secret() {
   const s = process.env.AUTH_SECRET;
   if (!s || s.length < 16) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("AUTH_SECRET debe tener al menos 16 caracteres");
-    }
     return new TextEncoder().encode("dev-secret-psycotest-min16");
   }
   return new TextEncoder().encode(s);

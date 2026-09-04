@@ -19,8 +19,8 @@ export function LandingVisualStories({ stories }: { stories: readonly VisualStor
           <p className={styles.eyebrow}>Experiencias reales</p>
           <h2>Formación y certificación que conecta con las personas</h2>
           <p>
-            Capacitación presencial y en línea, diagnóstico organizacional y evaluación de competencias — con el
-            respaldo de un centro certificador CONOCER.
+            Capacitación presencial y en línea, diagnóstico organizacional y evaluación de competencias — con
+            respaldo oficial CONOCER y acompañamiento profesional cercano.
           </p>
         </LandingReveal>
 

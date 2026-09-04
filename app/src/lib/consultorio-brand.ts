@@ -2,9 +2,9 @@ export const CONSULTORIO = {
   professionalName: "Martín Hernández González",
   shortName: "Martín Hernández",
   practiceTitle: "Centro certificador CONOCER · Psicología organizacional",
-  tagline: "Certifica competencias laborales con la plataforma más completa de México",
+  tagline: "Formación, evaluación y certificación de competencias con respaldo oficial",
   heroLead:
-    "Capacitación en línea, evaluación confidencial de competencias y certificación CONOCER con respaldo de la SEP — todo integrado para que tu centro certificador escale sin perder rigor ni trazabilidad.",
+    "Acompañamos a personas y organizaciones en capacitación, diagnóstico psicométrico y certificación CONOCER reconocida por la SEP — con rutas claras hacia el desarrollo profesional.",
   email: "martintlax@gmail.com",
   phone: "5580413220",
   conocerUrl: "https://www.conocer.gob.mx",

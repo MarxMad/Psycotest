@@ -91,8 +91,7 @@ function LoginForm() {
       </motion.button>
 
       <p className={s.hint}>
-        Primera vez: use las credenciales por defecto del servidor (
-        <code>admin@psycotest.local</code>).
+        Acceso inicial: <code>admin@psycotest.local</code> / <code>psycotest2026</code>
       </p>
       <Link href="/" className={s.back}>
         ← Volver a aplicación

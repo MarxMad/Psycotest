@@ -87,8 +87,8 @@ export async function ConsultorioLanding() {
                 CONOCER
               </a>{" "}
               impulsa la profesionalización del capital humano mediante estándares de competencia, evaluación y
-              certificación reconocida por la SEP. Esta plataforma digitaliza todo el ciclo para tu centro
-              certificador.
+              certificación reconocida por la SEP. Aquí te acompañamos en esa ruta: formación, evaluación y
+              certificación con criterio profesional.
             </p>
           </LandingReveal>
 
@@ -132,11 +132,11 @@ export async function ConsultorioLanding() {
       <section className={styles.section} id="plataforma">
         <div className={styles.wrap}>
           <LandingReveal className={styles.sectionHead}>
-            <p className={styles.eyebrow}>Ecosistema digital</p>
-            <h2>Una plataforma, todo el ciclo formativo</h2>
+            <p className={styles.eyebrow}>Servicios integrados</p>
+            <h2>Todo el ciclo formativo en un solo lugar</h2>
             <p>
-              Desde la capacitación hasta la constancia CONOCER — evaluación confidencial, cursos grabados, clases en
-              vivo y cobro en línea bajo la marca de {CONSULTORIO.shortName}.
+              Desde la capacitación hasta la constancia CONOCER: evaluación confidencial, cursos grabados, clases en
+              vivo y acompañamiento profesional para personas y organizaciones.
             </p>
           </LandingReveal>
 
@@ -239,8 +239,8 @@ export async function ConsultorioLanding() {
         <div className={styles.wrap}>
           <LandingReveal className={styles.sectionHead}>
             <p className={styles.eyebrow}>Servicios</p>
-            <h2>Tu centro certificador, potenciado</h2>
-            <p>Evaluación, capacitación y certificación CONOCER para organizaciones públicas y privadas.</p>
+            <h2>Formación, evaluación y certificación</h2>
+            <p>Acompañamiento CONOCER para personas, equipos y organizaciones públicas y privadas.</p>
           </LandingReveal>
           <LandingStagger className={styles.serviceGrid}>
             <ServiceCards services={SERVICES} />
@@ -251,10 +251,10 @@ export async function ConsultorioLanding() {
       <section className={styles.ctaBand} id="contacto">
         <div className={styles.wrap}>
           <LandingReveal>
-            <h2>¿Listo para certificar competencias a escala?</h2>
+            <h2>¿Listo para dar el siguiente paso?</h2>
             <p>
-              Agenda una demo de la plataforma: cursos, evaluación confidencial y certificación CONOCER en un solo
-              ecosistema.
+              Escríbenos para conocer cursos, evaluación confidencial y el proceso de certificación CONOCER
+              adaptado a tu equipo o a tu desarrollo profesional.
             </p>
             <div className={styles.ctaActions}>
               <a href={`mailto:${CONSULTORIO.email}`} className={styles.btnPrimary}>
@@ -283,7 +283,7 @@ export async function ConsultorioLanding() {
             </div>
           </div>
           <p className={styles.footerCopy}>
-            © {new Date().getFullYear()} {CONSULTORIO.shortName} · Plataforma certificadora en desarrollo
+            © {new Date().getFullYear()} Centro certificador CONOCER · Psicología organizacional
           </p>
         </div>
       </footer>

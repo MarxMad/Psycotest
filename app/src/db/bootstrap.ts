@@ -122,20 +122,28 @@ export async function ensureSchema(db: AppDb): Promise<void> {
 }
 
 export async function ensureDefaultAdmin(db: AppDb): Promise<void> {
-  const existing = await db.select({ id: schema.users.id }).from(schema.users).limit(1);
-  if (existing.length > 0) return;
+  const [existing] = await db
+    .select({ id: schema.users.id })
+    .from(schema.users)
+    .where(eq(schema.users.email, DEFAULT_ADMIN_EMAIL))
+    .limit(1);
+
+  if (existing) return;
 
   const now = new Date().toISOString();
   const hash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, 10);
 
-  await db.insert(schema.users).values({
-    id: "user-admin",
-    email: DEFAULT_ADMIN_EMAIL,
-    nombre: "Administrador",
-    passwordHash: hash,
-    rol: "admin",
-    createdAt: now,
-  });
+  await db
+    .insert(schema.users)
+    .values({
+      id: "user-admin",
+      email: DEFAULT_ADMIN_EMAIL,
+      nombre: "Administrador",
+      passwordHash: hash,
+      rol: "admin",
+      createdAt: now,
+    })
+    .onConflictDoNothing();
 
   console.info(`[psycotest] Admin inicial creado: ${DEFAULT_ADMIN_EMAIL}`);
 }

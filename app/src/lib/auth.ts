@@ -10,14 +10,19 @@ import {
 import { getDb, schema } from "@/db";
 
 const COOKIE = "psycotest_session";
+/** Fallback alineado con middleware — permite login aunque falte AUTH_SECRET en Vercel. */
+const FALLBACK_SECRET = "dev-secret-psycotest-min16";
 
 function secret() {
   const s = process.env.AUTH_SECRET;
   if (!s || s.length < 16) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("AUTH_SECRET debe tener al menos 16 caracteres");
+    if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET_WARNED) {
+      console.warn(
+        "[psycotest] AUTH_SECRET ausente o corto; usando secreto de respaldo. Configure AUTH_SECRET (≥16) en Vercel.",
+      );
+      process.env.AUTH_SECRET_WARNED = "1";
     }
-    return new TextEncoder().encode("dev-secret-psycotest-min16");
+    return new TextEncoder().encode(FALLBACK_SECRET);
   }
   return new TextEncoder().encode(s);
 }

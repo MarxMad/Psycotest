@@ -78,7 +78,7 @@ export const BANNER_STRIP = {
   alt: "Profesionales en entorno de capacitación y certificación",
   title: "Competencias que el mercado reconoce",
   subtitle:
-    "Desde la formación hasta la constancia oficial: un recorrido digital pensado para certificadores, empresas y personas que buscan superación.",
+    "Formación, evaluación y acompañamiento hacia la constancia oficial — para personas, equipos y organizaciones que buscan superación.",
 } as const;
 
 /** Beneficios para personas certificadas — alineado al marco CONOCER / SEP. */
@@ -135,7 +135,7 @@ export const NAV_SCROLL = [
 ] as const;
 
 export const NAV_ACTIONS = [
-  { label: "Acceder", href: "/consultorio/ingreso" },
+  { label: "Acceder", href: "/login?next=/admin" },
   { label: "Cursos", href: "/consultorio/cursos" },
   { label: "Evaluación", href: "/psycotest" },
 ] as const;

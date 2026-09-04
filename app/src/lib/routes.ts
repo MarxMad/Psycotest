@@ -3,10 +3,12 @@ export const PSYCOTEST_BASE = "/psycotest";
 
 export const psycotest = {
   home: PSYCOTEST_BASE,
-  login: `${PSYCOTEST_BASE}/login`,
+  /** Panel profesional — ruta real en app/src/app/login */
+  login: "/login",
   acceso: `${PSYCOTEST_BASE}/acceso`,
-  admin: `${PSYCOTEST_BASE}/admin`,
-  codigos: `${PSYCOTEST_BASE}/admin/codigos`,
+  /** Dashboard admin — ruta real en app/src/app/admin */
+  admin: "/admin",
+  codigos: "/admin/pruebas/codigos",
   participantes: `${PSYCOTEST_BASE}/participantes`,
   papi: `${PSYCOTEST_BASE}/papi`,
   hartman: `${PSYCOTEST_BASE}/hartman`,
