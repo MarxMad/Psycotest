@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { courses } from "@/db/schema";
 
@@ -68,6 +68,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ course }, { status: 201 });
   } catch (error) {
     console.error("Error creating course:", error);
-    return NextResponse.json({ error: "Error al crear curso" }, { status: 500 });
+    const parts: string[] = [];
+    let cur: unknown = error;
+    for (let i = 0; i < 4 && cur; i++) {
+      if (cur instanceof Error) {
+        parts.push(cur.message);
+        cur = (cur as Error & { cause?: unknown }).cause;
+      } else {
+        parts.push(String(cur));
+        break;
+      }
+    }
+    let tableInfo: unknown = null;
+    try {
+      const db = await getReadyDb();
+      // libsql / better-sqlite3: result rows en .rows o array directo
+      const raw = await Promise.resolve(
+        (db as unknown as { all: (q: unknown) => unknown }).all(
+          sql.raw(`PRAGMA table_info(courses)`),
+        ),
+      );
+      tableInfo = raw;
+    } catch (pragmaError) {
+      tableInfo = {
+        pragmaError: pragmaError instanceof Error ? pragmaError.message : String(pragmaError),
+      };
+    }
+    return NextResponse.json(
+      { error: "Error al crear curso", detail: parts.join(" | "), tableInfo },
+      { status: 500 },
+    );
   }
 }
