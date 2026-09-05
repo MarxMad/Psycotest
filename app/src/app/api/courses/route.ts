@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       inventoryLimit: inventoryLimit || null,
       soldCount: 0,
       sortOrder: 0,
+      requireQuizPass: false,
       createdAt: now,
       updatedAt: now,
     });
@@ -67,7 +68,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ course }, { status: 201 });
   } catch (error) {
     console.error("Error creating course:", error);
-    const detail = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: "Error al crear curso", detail }, { status: 500 });
+    const parts: string[] = [];
+    let cur: unknown = error;
+    for (let i = 0; i < 4 && cur; i++) {
+      if (cur instanceof Error) {
+        parts.push(cur.message);
+        cur = (cur as Error & { cause?: unknown }).cause;
+      } else {
+        parts.push(String(cur));
+        break;
+      }
+    }
+    return NextResponse.json(
+      { error: "Error al crear curso", detail: parts.join(" | ") },
+      { status: 500 },
+    );
   }
 }

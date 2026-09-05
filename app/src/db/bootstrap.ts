@@ -221,6 +221,7 @@ async function repairCoursesColumns(db: AppDb): Promise<void> {
     `ALTER TABLE courses ADD COLUMN inventory_limit INTEGER`,
     `ALTER TABLE courses ADD COLUMN sold_count INTEGER NOT NULL DEFAULT 0`,
     `ALTER TABLE courses ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0`,
+    `ALTER TABLE courses ADD COLUMN require_quiz_pass INTEGER NOT NULL DEFAULT 0`,
   ];
   for (const statement of alters) {
     await runAlter(db, statement);

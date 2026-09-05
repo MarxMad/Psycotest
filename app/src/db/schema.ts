@@ -135,6 +135,8 @@ export const courses = sqliteTable("courses", {
   inventoryLimit: integer("inventory_limit"), // null = ilimitado
   soldCount: integer("sold_count").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
+  /** Compat con LMS quizzes: no desbloquear siguiente lección sin aprobar quiz */
+  requireQuizPass: integer("require_quiz_pass", { mode: "boolean" }).notNull().default(false),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
