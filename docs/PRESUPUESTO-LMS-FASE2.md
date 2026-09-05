@@ -40,14 +40,14 @@
 
 Para **30 participantes con A/V bidireccional**, la opción más madura y mantenible en self-hosted es:
 
-**Jitsi Meet (Docker) + Jibri (grabación) + coturn (TURN/STUN)**
+**BigBlueButton (self-host) + grabaciones + coturn (TURN/STUN)**
 
 | Componente | Función |
 |------------|---------|
 | **Next.js** | Portal LMS (catálogo, lecciones, pagos, calendario) |
 | **PostgreSQL** | Usuarios, cursos, progreso, inscripciones, sesiones en vivo |
 | **Object storage** | Videos VOD, PDFs, grabaciones (MinIO, R2 o S3) |
-| **Jitsi Meet** | Salas en vivo con cámara, micrófono y chat |
+| **BigBlueButton** | Aulas en vivo con cámara, micrófono, pizarra y chat |
 | **Jibri** | Grabación de la sesión → archivo de video |
 | **Worker / API** | Tras grabación: procesar, subir a storage, crear lección “Replay” |
 | **Stripe** | Cobro de cursos públicos; cupones / acceso manual para internos |
@@ -88,7 +88,7 @@ flowchart LR
 | **M2 — Video bajo demanda** | Subida de lecciones en video, reproductor, progreso por lección |
 | **M3 — Evaluaciones** | Cuestionarios por módulo (opción múltiple / verdadero-falso), nota mínima configurable |
 | **M4 — Inscripciones** | Interno: invitación / alta manual · Público: checkout Stripe (MXN) |
-| **M5 — En vivo (Jitsi)** | Calendario de sesiones, sala con A/V + chat, solo usuarios inscritos, máx. 30 |
+| **M5 — En vivo (BigBlueButton)** | Calendario de sesiones, aula con A/V + pizarra + chat, solo inscritos, máx. 30 |
 | **M6 — Grabación → LMS** | Jibri graba → worker publica “Replay” en el curso correspondiente |
 | **M7 — Panel instructor** | CRUD cursos, ver alumnos, iniciar/cerrar live, ver grabaciones |
 | **M8 — Panel admin** | Usuarios, cursos, pagos (lista), configuración básica |
