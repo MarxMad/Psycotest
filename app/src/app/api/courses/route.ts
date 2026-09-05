@@ -17,11 +17,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ courses: allCourses });
   } catch (error) {
     console.error("Error fetching courses:", error);
-    const detail = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      { error: "Error al cargar cursos", detail },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error al cargar cursos" }, { status: 500 });
   }
 }
 

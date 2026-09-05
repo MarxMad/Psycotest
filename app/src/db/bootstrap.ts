@@ -141,17 +141,8 @@ async function usersSchemaCompatible(db: AppDb): Promise<boolean> {
 
 async function coursesSchemaCompatible(db: AppDb): Promise<boolean> {
   try {
-    await db
-      .select({
-        id: schema.courses.id,
-        priceMxn: schema.courses.priceMxn,
-        instructorName: schema.courses.instructorName,
-        soldCount: schema.courses.soldCount,
-        inventoryLimit: schema.courses.inventoryLimit,
-        sortOrder: schema.courses.sortOrder,
-      })
-      .from(schema.courses)
-      .limit(1);
+    // SELECT completo: un check parcial marcaba OK aunque faltara `status`.
+    await db.select().from(schema.courses).limit(1);
     return true;
   } catch {
     return false;
@@ -160,16 +151,7 @@ async function coursesSchemaCompatible(db: AppDb): Promise<boolean> {
 
 async function liveClassesSchemaCompatible(db: AppDb): Promise<boolean> {
   try {
-    await db
-      .select({
-        id: schema.liveClasses.id,
-        provider: schema.liveClasses.provider,
-        roomUrl: schema.liveClasses.roomUrl,
-        dailyRoomUrl: schema.liveClasses.dailyRoomUrl,
-        status: schema.liveClasses.status,
-      })
-      .from(schema.liveClasses)
-      .limit(1);
+    await db.select().from(schema.liveClasses).limit(1);
     return true;
   } catch {
     return false;
@@ -183,12 +165,43 @@ async function repairUsersColumns(db: AppDb): Promise<void> {
   );
 }
 
-async function repairLiveClassesColumns(db: AppDb): Promise<void> {
+async function ensureLiveClassesTables(db: AppDb): Promise<void> {
+  await Promise.resolve(
+    db.run(sql.raw(`
+      CREATE TABLE IF NOT EXISTS live_classes (
+        id TEXT PRIMARY KEY NOT NULL,
+        course_id TEXT REFERENCES courses(id),
+        title TEXT NOT NULL,
+        scheduled_at TEXT NOT NULL,
+        duration_minutes INTEGER NOT NULL DEFAULT 60,
+        provider TEXT NOT NULL DEFAULT 'none',
+        room_url TEXT,
+        daily_room_url TEXT,
+        recording_url TEXT,
+        status TEXT NOT NULL DEFAULT 'scheduled',
+        created_at TEXT NOT NULL
+      )
+    `)),
+  );
+  await Promise.resolve(
+    db.run(sql.raw(`
+      CREATE TABLE IF NOT EXISTS live_class_attendances (
+        id TEXT PRIMARY KEY NOT NULL,
+        live_class_id TEXT NOT NULL REFERENCES live_classes(id),
+        user_id TEXT NOT NULL REFERENCES users(id),
+        joined_at TEXT NOT NULL,
+        left_at TEXT,
+        duration_seconds INTEGER
+      )
+    `)),
+  );
   await runAlter(
     db,
     `ALTER TABLE live_classes ADD COLUMN provider TEXT NOT NULL DEFAULT 'none'`,
   );
   await runAlter(db, `ALTER TABLE live_classes ADD COLUMN room_url TEXT`);
+  await runAlter(db, `ALTER TABLE live_classes ADD COLUMN daily_room_url TEXT`);
+  await runAlter(db, `ALTER TABLE live_classes ADD COLUMN recording_url TEXT`);
 }
 
 async function repairCoursesColumns(db: AppDb): Promise<void> {
@@ -204,6 +217,7 @@ async function repairCoursesColumns(db: AppDb): Promise<void> {
     `ALTER TABLE courses ADD COLUMN level TEXT NOT NULL DEFAULT 'basico'`,
     `ALTER TABLE courses ADD COLUMN duration_minutes INTEGER NOT NULL DEFAULT 0`,
     `ALTER TABLE courses ADD COLUMN published INTEGER NOT NULL DEFAULT 1`,
+    `ALTER TABLE courses ADD COLUMN status TEXT NOT NULL DEFAULT 'draft'`,
     `ALTER TABLE courses ADD COLUMN inventory_limit INTEGER`,
     `ALTER TABLE courses ADD COLUMN sold_count INTEGER NOT NULL DEFAULT 0`,
     `ALTER TABLE courses ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0`,
@@ -243,18 +257,24 @@ async function ensureLmsSchema(db: AppDb): Promise<void> {
   }
 
   if (!(await liveClassesSchemaCompatible(db))) {
-    await repairLiveClassesColumns(db);
+    await ensureLiveClassesTables(db);
   }
   if (!(await coursesSchemaCompatible(db))) {
     await repairCoursesColumns(db);
   }
 
-  // Crear tablas si no existían (ALTER no las crea).
+  // Último intento: migración fresh si aún falla.
   if (!(await coursesSchemaCompatible(db)) || !(await liveClassesSchemaCompatible(db))) {
     try {
       await pushSchemaFresh(db);
     } catch (error) {
       console.error("[psycotest] ensureLmsSchema pushSchemaFresh falló:", error);
+    }
+    if (!(await liveClassesSchemaCompatible(db))) {
+      await ensureLiveClassesTables(db);
+    }
+    if (!(await coursesSchemaCompatible(db))) {
+      await repairCoursesColumns(db);
     }
   }
 }

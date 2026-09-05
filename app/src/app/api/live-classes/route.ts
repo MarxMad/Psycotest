@@ -51,11 +51,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ classes: allClasses });
   } catch (error) {
     console.error("Error fetching live classes:", error);
-    const detail = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      { error: "Error al cargar clases", detail },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error al cargar clases" }, { status: 500 });
   }
 }
 
