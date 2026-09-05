@@ -3,14 +3,13 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { JitsiMeetEmbed } from "@/components/live/JitsiMeetEmbed";
+import { BbbMeetEmbed } from "@/components/live/BbbMeetEmbed";
 import styles from "../../clases-vivo.module.css";
 
 export default function AlumnoSalaPage() {
   const { id } = useParams<{ id: string }>();
-  const [roomUrl, setRoomUrl] = useState<string | null>(null);
+  const [joinUrl, setJoinUrl] = useState<string | null>(null);
   const [title, setTitle] = useState("Sala en vivo");
-  const [displayName, setDisplayName] = useState("Alumno");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,9 +30,8 @@ export default function AlumnoSalaPage() {
           return;
         }
         const data = await join.json();
-        setRoomUrl(data.roomUrl);
+        setJoinUrl(data.joinUrl || data.roomUrl);
         setTitle(data.title || "Sala en vivo");
-        if (data.displayName) setDisplayName(data.displayName);
       } catch {
         if (active) setError("Error de red al unirse.");
       } finally {
@@ -60,7 +58,7 @@ export default function AlumnoSalaPage() {
         </div>
       </div>
 
-      {loading && <p className={styles.muted}>Conectando…</p>}
+      {loading && <p className={styles.muted}>Conectando a BigBlueButton…</p>}
 
       {!loading && error && (
         <div className={styles.empty}>
@@ -71,7 +69,7 @@ export default function AlumnoSalaPage() {
         </div>
       )}
 
-      {!loading && roomUrl && <JitsiMeetEmbed roomUrl={roomUrl} displayName={displayName} />}
+      {!loading && joinUrl && <BbbMeetEmbed joinUrl={joinUrl} title={title} />}
     </main>
   );
 }

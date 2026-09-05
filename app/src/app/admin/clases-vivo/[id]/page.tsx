@@ -95,7 +95,7 @@ export default function LiveClassDetailPage() {
     <div className={s.container}>
       <PageHeader
         title={liveClass.title}
-        subtitle={`Estado: ${liveClass.status} · Provider: ${liveClass.provider ?? "jitsi"}`}
+        subtitle={`Estado: ${liveClass.status} · Aula: ${liveClass.provider === "bbb" ? "BigBlueButton" : liveClass.provider ?? "bbb"}`}
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },

@@ -1,0 +1,87 @@
+.shell {
+  width: 100%;
+  min-width: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0b1220;
+  border: 1px solid color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0.9rem;
+  background: color-mix(in srgb, #0b1220 88%, #fff);
+  border-bottom: 1px solid color-mix(in srgb, #fff 10%, transparent);
+}
+
+.badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #93c5fd;
+}
+
+.openBtn {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #e2e8f0;
+  text-decoration: none;
+}
+
+.openBtn:hover {
+  text-decoration: underline;
+}
+
+.frame {
+  width: 100%;
+  height: min(78vh, 820px);
+  min-height: 480px;
+  border: 0;
+  display: block;
+  background: #0b1220;
+}
+
+.fallback {
+  display: grid;
+  gap: 1rem;
+  place-items: center;
+  text-align: center;
+  padding: 2.5rem 1.25rem;
+  min-height: 320px;
+  color: #e2e8f0;
+}
+
+.fallback p {
+  max-width: 36rem;
+  margin: 0;
+  line-height: 1.5;
+  color: #cbd5e1;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cta:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .frame {
+    height: min(70vh, 640px);
+    min-height: 360px;
+  }
+}

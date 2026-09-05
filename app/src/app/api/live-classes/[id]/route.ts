@@ -5,12 +5,13 @@ import { liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
   authErrorResponse,
-  buildJitsiRoom,
   canTransitionStatus,
   listAttendances,
+  resolveMeetingId,
   resolveRoomUrl,
   userCanAccessLiveClass,
 } from "@/lib/live-classes";
+import { BbbApiError, BbbConfigError, ensureBbbMeeting } from "@/lib/bbb";
 
 export async function GET(_request: Request, props: { params: Promise<{ id: string }> }) {
   try {
@@ -110,10 +111,28 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
     }
 
     if (updates.status === "live" || body.ensureRoom) {
-      const room = resolveRoomUrl(existing) || buildJitsiRoom(existing.id).roomUrl;
-      updates.provider = "jitsi";
-      updates.roomUrl = room;
-      updates.dailyRoomUrl = room;
+      try {
+        const existingMeetingId = resolveMeetingId(existing);
+        const { meetingId } = await ensureBbbMeeting({
+          classId: existing.id,
+          title: existing.title,
+          durationMinutes: existing.durationMinutes,
+        });
+        updates.provider = "bbb";
+        updates.roomUrl = existingMeetingId || meetingId;
+        updates.dailyRoomUrl = existingMeetingId || meetingId;
+      } catch (error) {
+        if (error instanceof BbbConfigError || error instanceof BbbApiError) {
+          return NextResponse.json(
+            {
+              error: error.message,
+              detail: error instanceof BbbApiError ? error.details : undefined,
+            },
+            { status: 503 },
+          );
+        }
+        throw error;
+      }
     }
 
     if (Object.keys(updates).length === 0) {

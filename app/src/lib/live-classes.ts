@@ -11,17 +11,22 @@ import type { AuthUser } from "@/lib/auth";
 
 const JOIN_EARLY_MS = 15 * 60 * 1000;
 
-export function buildJitsiRoom(classId: string): { roomSlug: string; roomUrl: string } {
-  const base = (process.env.JITSI_BASE_URL?.trim() || "https://meet.jit.si").replace(/\/$/, "");
-  const slugBase = classId.replace(/[^a-zA-Z0-9]/g, "").slice(-16) || Date.now().toString(36);
-  const roomSlug = `psycotest-${slugBase}`;
-  return { roomSlug, roomUrl: `${base}/${roomSlug}` };
-}
-
 export function resolveRoomUrl(
   liveClass: Pick<LiveClass, "roomUrl" | "dailyRoomUrl">,
 ): string | null {
   return liveClass.roomUrl || liveClass.dailyRoomUrl || null;
+}
+
+/** meetingID BBB (o null si aún no hay sala / es URL legacy). */
+export function resolveMeetingId(
+  liveClass: Pick<LiveClass, "roomUrl" | "dailyRoomUrl" | "provider">,
+): string | null {
+  const stored = resolveRoomUrl(liveClass);
+  if (!stored) return null;
+  if (liveClass.provider === "bbb") return stored;
+  // Migración: si no es URL http, lo tratamos como meetingID
+  if (!/^https?:\/\//i.test(stored)) return stored;
+  return null;
 }
 
 export function isWithinJoinWindow(liveClass: LiveClass, now = Date.now()): boolean {

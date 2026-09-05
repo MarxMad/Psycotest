@@ -5,9 +5,9 @@ import { liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
   authErrorResponse,
-  buildJitsiRoom,
   listLiveClassesForUser,
 } from "@/lib/live-classes";
+import { BbbApiError, BbbConfigError, ensureBbbMeeting } from "@/lib/bbb";
 
 export async function GET(request: Request) {
   try {
@@ -88,7 +88,23 @@ export async function POST(request: Request) {
 
     const now = new Date().toISOString();
     const classId = `liveclass_${Date.now()}`;
-    const { roomUrl } = buildJitsiRoom(classId);
+
+    let meetingId: string;
+    try {
+      ({ meetingId } = await ensureBbbMeeting({
+        classId,
+        title: title.trim(),
+        durationMinutes: duration,
+      }));
+    } catch (error) {
+      if (error instanceof BbbConfigError || error instanceof BbbApiError) {
+        return NextResponse.json(
+          { error: error.message, detail: error instanceof BbbApiError ? error.details : undefined },
+          { status: 503 },
+        );
+      }
+      throw error;
+    }
 
     await db.insert(liveClasses).values({
       id: classId,
@@ -96,9 +112,9 @@ export async function POST(request: Request) {
       title: title.trim(),
       scheduledAt: scheduled.toISOString(),
       durationMinutes: duration,
-      provider: "jitsi",
-      roomUrl,
-      dailyRoomUrl: roomUrl,
+      provider: "bbb",
+      roomUrl: meetingId,
+      dailyRoomUrl: meetingId,
       recordingUrl: null,
       status: "scheduled",
       createdAt: now,
