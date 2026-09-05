@@ -119,9 +119,13 @@ export const courses = sqliteTable("courses", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
-  description: text("description"),
+  /** En Turso de producción es NOT NULL (sin default). */
+  description: text("description").notNull().default(""),
   subtitle: text("subtitle"),
-  categoryId: text("category_id").references(() => courseCategories.id),
+  /** En Turso de producción es NOT NULL. */
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => courseCategories.id),
   priceMxn: integer("price_mxn").notNull().default(0), // En centavos MXN
   stripePriceId: text("stripe_price_id"),
   thumbnailUrl: text("thumbnail_url"),

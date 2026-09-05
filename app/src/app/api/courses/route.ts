@@ -1,7 +1,42 @@
 import { NextResponse } from "next/server";
-import { eq, sql } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
-import { courses } from "@/db/schema";
+import { courseCategories, courses } from "@/db/schema";
+
+/** Turso exige category_id NOT NULL; usa la pedida, la primera existente o crea General. */
+async function resolveCategoryId(
+  db: Awaited<ReturnType<typeof getReadyDb>>,
+  requested?: string | null,
+): Promise<string> {
+  if (requested) {
+    const [found] = await db
+      .select({ id: courseCategories.id })
+      .from(courseCategories)
+      .where(eq(courseCategories.id, requested))
+      .limit(1);
+    if (found) return found.id;
+  }
+
+  const [first] = await db
+    .select({ id: courseCategories.id })
+    .from(courseCategories)
+    .orderBy(asc(courseCategories.sortOrder))
+    .limit(1);
+  if (first) return first.id;
+
+  await db
+    .insert(courseCategories)
+    .values({
+      id: "cat-general",
+      slug: "general",
+      name: "General",
+      description: "Cursos generales",
+      sortOrder: 0,
+    })
+    .onConflictDoNothing();
+
+  return "cat-general";
+}
 
 export async function GET(request: Request) {
   try {
@@ -25,7 +60,7 @@ export async function POST(request: Request) {
   try {
     const db = await getReadyDb();
     const body = await request.json();
-    const { title, slug, description, price, inventoryLimit } = body;
+    const { title, slug, description, price, inventoryLimit, categoryId } = body;
 
     if (!title || !slug) {
       return NextResponse.json({ error: "Título y slug requeridos" }, { status: 400 });
@@ -38,13 +73,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Precio inválido" }, { status: 400 });
     }
 
+    const resolvedCategoryId = await resolveCategoryId(db, categoryId);
+    // En Turso description es NOT NULL (sin default).
+    const resolvedDescription =
+      typeof description === "string" && description.trim() ? description.trim() : "";
+
     await db.insert(courses).values({
       id: courseId,
       title,
       slug,
-      description: description || null,
+      description: resolvedDescription,
       subtitle: null,
-      categoryId: null,
+      categoryId: resolvedCategoryId,
       priceMxn,
       stripePriceId: null,
       thumbnailUrl: null,
@@ -68,35 +108,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ course }, { status: 201 });
   } catch (error) {
     console.error("Error creating course:", error);
-    const parts: string[] = [];
-    let cur: unknown = error;
-    for (let i = 0; i < 4 && cur; i++) {
-      if (cur instanceof Error) {
-        parts.push(cur.message);
-        cur = (cur as Error & { cause?: unknown }).cause;
-      } else {
-        parts.push(String(cur));
-        break;
-      }
-    }
-    let tableInfo: unknown = null;
-    try {
-      const db = await getReadyDb();
-      // libsql / better-sqlite3: result rows en .rows o array directo
-      const raw = await Promise.resolve(
-        (db as unknown as { all: (q: unknown) => unknown }).all(
-          sql.raw(`PRAGMA table_info(courses)`),
-        ),
-      );
-      tableInfo = raw;
-    } catch (pragmaError) {
-      tableInfo = {
-        pragmaError: pragmaError instanceof Error ? pragmaError.message : String(pragmaError),
-      };
-    }
-    return NextResponse.json(
-      { error: "Error al crear curso", detail: parts.join(" | "), tableInfo },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Error al crear curso" }, { status: 500 });
   }
 }
