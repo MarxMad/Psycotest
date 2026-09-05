@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db/index";
+import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
 import {
@@ -11,8 +11,6 @@ import {
   userCanAccessLiveClass,
 } from "@/lib/live-classes";
 
-const db = getDb();
-
 export async function POST(_request: Request, props: { params: Promise<{ id: string }> }) {
   try {
     const user = await getSessionUser();
@@ -20,6 +18,7 @@ export async function POST(_request: Request, props: { params: Promise<{ id: str
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 
+    const db = await getReadyDb();
     const params = await props.params;
     const [liveClass] = await db.select().from(liveClasses).where(eq(liveClasses.id, params.id));
     if (!liveClass) {

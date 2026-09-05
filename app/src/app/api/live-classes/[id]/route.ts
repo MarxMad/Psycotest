@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db/index";
+import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
@@ -12,10 +12,9 @@ import {
   userCanAccessLiveClass,
 } from "@/lib/live-classes";
 
-const db = getDb();
-
 export async function GET(_request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const db = await getReadyDb();
     const params = await props.params;
     const user = await getSessionUser();
     if (!user) {
@@ -55,6 +54,7 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
       return NextResponse.json({ error: msg }, { status: code });
     }
 
+    const db = await getReadyDb();
     const params = await props.params;
     const body = await request.json();
 
@@ -140,6 +140,7 @@ export async function DELETE(_request: Request, props: { params: Promise<{ id: s
       return NextResponse.json({ error: msg }, { status: code });
     }
 
+    const db = await getReadyDb();
     const params = await props.params;
     await db.delete(liveClasses).where(eq(liveClasses.id, params.id));
 

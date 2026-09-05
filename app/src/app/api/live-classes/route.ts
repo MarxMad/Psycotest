@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
-import { getDb } from "@/db/index";
+import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
@@ -9,10 +9,9 @@ import {
   listLiveClassesForUser,
 } from "@/lib/live-classes";
 
-const db = getDb();
-
 export async function GET(request: Request) {
   try {
+    const db = await getReadyDb();
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
     const mine = searchParams.get("mine") === "1";
@@ -65,6 +64,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: msg }, { status: code });
     }
 
+    const db = await getReadyDb();
     const body = await request.json();
     const { title, scheduledAt, durationMinutes, courseId } = body;
 

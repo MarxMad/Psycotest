@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
-import { getDb } from "@/db/index";
-import { courses } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
-const db = getDb();
+import { getReadyDb } from "@/db/index";
+import { courses } from "@/db/schema";
 
 export async function GET(request: Request) {
   try {
+    const db = await getReadyDb();
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
@@ -24,23 +23,41 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const db = await getReadyDb();
     const body = await request.json();
     const { title, slug, description, price, inventoryLimit } = body;
 
+    if (!title || !slug) {
+      return NextResponse.json({ error: "Título y slug requeridos" }, { status: 400 });
+    }
+
     const now = new Date().toISOString();
     const courseId = `course_${Date.now()}`;
+    const priceMxn = Number(price);
+    if (!Number.isFinite(priceMxn) || priceMxn < 0) {
+      return NextResponse.json({ error: "Precio inválido" }, { status: 400 });
+    }
 
     await db.insert(courses).values({
       id: courseId,
       title,
       slug,
       description: description || null,
-      priceMxn: price,
+      subtitle: null,
+      categoryId: null,
+      priceMxn,
+      stripePriceId: null,
       thumbnailUrl: null,
+      instructorName: "Instructor",
+      instructorBio: null,
       instructorId: null,
+      level: "basico",
+      durationMinutes: 0,
+      published: false,
       status: "draft",
       inventoryLimit: inventoryLimit || null,
       soldCount: 0,
+      sortOrder: 0,
       createdAt: now,
       updatedAt: now,
     });

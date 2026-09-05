@@ -57,4 +57,11 @@ export function getDb(): AppDb {
   return globalForDb.__psycotestDb;
 }
 
+/** Espera a que el schema (users + LMS) esté listo antes de consultar. */
+export async function getReadyDb(): Promise<AppDb> {
+  const db = getDb();
+  await ensureDbReadyOnce(db);
+  return db;
+}
+
 export { schema };

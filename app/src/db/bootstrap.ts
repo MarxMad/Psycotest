@@ -91,6 +91,25 @@ async function pushSchema(db: AppDb) {
   await pushSchemaFresh(db);
 }
 
+async function runAlter(db: AppDb, statement: string): Promise<void> {
+  try {
+    await Promise.resolve(db.run(sql.raw(statement)));
+    console.info(`[psycotest] schema repair: ${statement}`);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    const lower = msg.toLowerCase();
+    if (
+      lower.includes("duplicate column") ||
+      lower.includes("already exists") ||
+      lower.includes("duplicate column name")
+    ) {
+      return;
+    }
+    if (lower.includes("no such table")) return;
+    console.warn(`[psycotest] schema repair omitido: ${msg}`);
+  }
+}
+
 async function usersTableReadable(db: AppDb): Promise<boolean> {
   try {
     await db.select({ id: schema.users.id }).from(schema.users).limit(1);
@@ -100,7 +119,6 @@ async function usersTableReadable(db: AppDb): Promise<boolean> {
   }
 }
 
-/** Comprueba que el SELECT completo de users no falle (columnas alineadas al schema). */
 async function usersSchemaCompatible(db: AppDb): Promise<boolean> {
   try {
     await db
@@ -121,36 +139,80 @@ async function usersSchemaCompatible(db: AppDb): Promise<boolean> {
   }
 }
 
-/**
- * Bases antiguas (p. ej. Turso) pueden tener `users` sin columnas nuevas.
- * usersTableReadable solo mira `id` y deja pasar esquemas incompletos.
- */
-async function repairUsersColumns(db: AppDb): Promise<void> {
-  const alters = [
-    `ALTER TABLE users ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`,
-  ];
-
-  for (const statement of alters) {
-    try {
-      await Promise.resolve(db.run(sql.raw(statement)));
-      console.info(`[psycotest] schema repair: ${statement}`);
-    } catch (error) {
-      const msg = error instanceof Error ? error.message : String(error);
-      if (
-        msg.includes("duplicate column") ||
-        msg.includes("already exists") ||
-        msg.toLowerCase().includes("duplicate column name")
-      ) {
-        continue;
-      }
-      // Si la tabla no existe, pushSchema se encargará.
-      if (msg.toLowerCase().includes("no such table")) return;
-      console.warn(`[psycotest] schema repair omitido: ${msg}`);
-    }
+async function coursesSchemaCompatible(db: AppDb): Promise<boolean> {
+  try {
+    await db
+      .select({
+        id: schema.courses.id,
+        priceMxn: schema.courses.priceMxn,
+        instructorName: schema.courses.instructorName,
+        soldCount: schema.courses.soldCount,
+        inventoryLimit: schema.courses.inventoryLimit,
+        sortOrder: schema.courses.sortOrder,
+      })
+      .from(schema.courses)
+      .limit(1);
+    return true;
+  } catch {
+    return false;
   }
 }
 
-/** Fallback sin drizzle-kit: suficiente para login admin en serverless. */
+async function liveClassesSchemaCompatible(db: AppDb): Promise<boolean> {
+  try {
+    await db
+      .select({
+        id: schema.liveClasses.id,
+        provider: schema.liveClasses.provider,
+        roomUrl: schema.liveClasses.roomUrl,
+        dailyRoomUrl: schema.liveClasses.dailyRoomUrl,
+        status: schema.liveClasses.status,
+      })
+      .from(schema.liveClasses)
+      .limit(1);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function repairUsersColumns(db: AppDb): Promise<void> {
+  await runAlter(
+    db,
+    `ALTER TABLE users ADD COLUMN email_verified INTEGER NOT NULL DEFAULT 0`,
+  );
+}
+
+async function repairLiveClassesColumns(db: AppDb): Promise<void> {
+  await runAlter(
+    db,
+    `ALTER TABLE live_classes ADD COLUMN provider TEXT NOT NULL DEFAULT 'none'`,
+  );
+  await runAlter(db, `ALTER TABLE live_classes ADD COLUMN room_url TEXT`);
+}
+
+async function repairCoursesColumns(db: AppDb): Promise<void> {
+  const alters = [
+    `ALTER TABLE courses ADD COLUMN subtitle TEXT`,
+    `ALTER TABLE courses ADD COLUMN category_id TEXT`,
+    `ALTER TABLE courses ADD COLUMN price_mxn INTEGER NOT NULL DEFAULT 0`,
+    `ALTER TABLE courses ADD COLUMN stripe_price_id TEXT`,
+    `ALTER TABLE courses ADD COLUMN thumbnail_url TEXT`,
+    `ALTER TABLE courses ADD COLUMN instructor_name TEXT NOT NULL DEFAULT 'Instructor'`,
+    `ALTER TABLE courses ADD COLUMN instructor_bio TEXT`,
+    `ALTER TABLE courses ADD COLUMN instructor_id TEXT`,
+    `ALTER TABLE courses ADD COLUMN level TEXT NOT NULL DEFAULT 'basico'`,
+    `ALTER TABLE courses ADD COLUMN duration_minutes INTEGER NOT NULL DEFAULT 0`,
+    `ALTER TABLE courses ADD COLUMN published INTEGER NOT NULL DEFAULT 1`,
+    `ALTER TABLE courses ADD COLUMN inventory_limit INTEGER`,
+    `ALTER TABLE courses ADD COLUMN sold_count INTEGER NOT NULL DEFAULT 0`,
+    `ALTER TABLE courses ADD COLUMN sort_order INTEGER NOT NULL DEFAULT 0`,
+  ];
+  for (const statement of alters) {
+    await runAlter(db, statement);
+  }
+}
+
 async function ensureUsersTableRaw(db: AppDb): Promise<void> {
   await Promise.resolve(
     db.run(sql.raw(`
@@ -166,6 +228,35 @@ async function ensureUsersTableRaw(db: AppDb): Promise<void> {
     `)),
   );
   await repairUsersColumns(db);
+}
+
+/** Asegura tablas LMS (cursos / vivo) alineadas; Turso suele quedar atrás del schema. */
+async function ensureLmsSchema(db: AppDb): Promise<void> {
+  const coursesOk = await coursesSchemaCompatible(db);
+  const liveOk = await liveClassesSchemaCompatible(db);
+  if (coursesOk && liveOk) return;
+
+  try {
+    await pushSchema(db);
+  } catch (error) {
+    console.error("[psycotest] ensureLmsSchema pushSchema falló:", error);
+  }
+
+  if (!(await liveClassesSchemaCompatible(db))) {
+    await repairLiveClassesColumns(db);
+  }
+  if (!(await coursesSchemaCompatible(db))) {
+    await repairCoursesColumns(db);
+  }
+
+  // Crear tablas si no existían (ALTER no las crea).
+  if (!(await coursesSchemaCompatible(db)) || !(await liveClassesSchemaCompatible(db))) {
+    try {
+      await pushSchemaFresh(db);
+    } catch (error) {
+      console.error("[psycotest] ensureLmsSchema pushSchemaFresh falló:", error);
+    }
+  }
 }
 
 export async function ensureSchema(db: AppDb): Promise<void> {
@@ -202,7 +293,6 @@ export async function ensureSchema(db: AppDb): Promise<void> {
 
   if (!(await usersSchemaCompatible(db))) {
     await repairUsersColumns(db);
-    // En Turso, intentar push incremental si el ALTER no bastó.
     if (!(await usersSchemaCompatible(db)) && process.env.TURSO_DATABASE_URL) {
       try {
         await pushSchemaTurso(db);
@@ -213,7 +303,6 @@ export async function ensureSchema(db: AppDb): Promise<void> {
   }
 
   if (!(await usersSchemaCompatible(db))) {
-    // Último recurso: recrear columnas mínimas vía raw (no borra datos existentes).
     try {
       await ensureUsersTableRaw(db);
     } catch (error) {
@@ -227,6 +316,8 @@ export async function ensureSchema(db: AppDb): Promise<void> {
       "El esquema de usuarios está incompleto (falta email_verified u otras columnas). Ejecute db:push o revise Turso.",
     );
   }
+
+  await ensureLmsSchema(db);
 }
 
 export async function ensureDefaultAdmin(db: AppDb): Promise<void> {
