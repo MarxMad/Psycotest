@@ -40,14 +40,14 @@
 
 Para **30 participantes con A/V bidireccional**, la opción más madura y mantenible en self-hosted es:
 
-**Jitsi Meet (Docker) + Jibri (grabación) + coturn (TURN/STUN)**
+**BigBlueButton (self-host) + grabaciones + coturn (TURN/STUN)**
 
 | Componente | Función |
 |------------|---------|
 | **Next.js** | Portal LMS (catálogo, lecciones, pagos, calendario) |
 | **PostgreSQL** | Usuarios, cursos, progreso, inscripciones, sesiones en vivo |
 | **Object storage** | Videos VOD, PDFs, grabaciones (MinIO, R2 o S3) |
-| **Jitsi Meet** | Salas en vivo con cámara, micrófono y chat |
+| **BigBlueButton** | Aulas en vivo con cámara, micrófono, pizarra y chat |
 | **Jibri** | Grabación de la sesión → archivo de video |
 | **Worker / API** | Tras grabación: procesar, subir a storage, crear lección “Replay” |
 | **Stripe** | Cobro de cursos públicos; cupones / acceso manual para internos |
@@ -59,8 +59,7 @@ flowchart LR
     API[API + Auth]
   end
   subgraph live [Self-hosted]
-    JITSI[Jitsi Meet]
-    JIBRI[Jibri]
+    BBB[BigBlueButton]
     TURN[coturn]
   end
   subgraph store [Datos y media]
@@ -68,9 +67,9 @@ flowchart LR
     OBJ[Object storage]
   end
   WEB --> API --> DB
-  WEB -->|token sala| JITSI
-  JITSI --> TURN
-  JIBRI -->|grabación| OBJ
+  WEB -->|join firmado| BBB
+  BBB --> TURN
+  BBB -->|grabación| OBJ
   API -->|replay como lección| OBJ
 ```
 
@@ -88,7 +87,7 @@ flowchart LR
 | **M2 — Video bajo demanda** | Subida de lecciones en video, reproductor, progreso por lección |
 | **M3 — Evaluaciones** | Cuestionarios por módulo (opción múltiple / verdadero-falso), nota mínima configurable |
 | **M4 — Inscripciones** | Interno: invitación / alta manual · Público: checkout Stripe (MXN) |
-| **M5 — En vivo (Jitsi)** | Calendario de sesiones, sala con A/V + chat, solo usuarios inscritos, máx. 30 |
+| **M5 — En vivo (BigBlueButton)** | Calendario de sesiones, aula con A/V + pizarra + chat, solo inscritos, máx. 30 |
 | **M6 — Grabación → LMS** | Jibri graba → worker publica “Replay” en el curso correspondiente |
 | **M7 — Panel instructor** | CRUD cursos, ver alumnos, iniciar/cerrar live, ver grabaciones |
 | **M8 — Panel admin** | Usuarios, cursos, pagos (lista), configuración básica |
@@ -116,7 +115,7 @@ flowchart LR
 | M2 | Video VOD + storage + reproductor | 32 | 320 |
 | M3 | Quizzes + reglas de aprobación | 24 | 240 |
 | M4 | Stripe (pago + acceso interno sin pago) | 28 | 280 |
-| M5 | Jitsi self-hosted + integración token + calendario | 44 | 440 |
+| M5 | BigBlueButton self-hosted + integración API + calendario | 44 | 440 |
 | M6 | Jibri + pipeline grabación → lección replay | 36 | 360 |
 | M7 | Panel instructor | 28 | 280 |
 | M8 | Panel admin + despliegue + docs operación | 32 | 320 |
@@ -154,7 +153,7 @@ Desarrollo **no incluye** hosting mensual. Estimación para **30 usuarios en viv
 
 | Recurso | Especificación orientativa | USD/mes |
 |---------|---------------------------|--------:|
-| **VPS Jitsi + Jibri** | 8 vCPU, 16 GB RAM, 200 GB SSD, 1 Gbps | 80 – 150 |
+| **VPS BigBlueButton** | 8 vCPU, 16 GB RAM, 200 GB SSD, 1 Gbps | 80 – 150 |
 | **VPS app + BD** | 2 vCPU, 4 GB (o Postgres gestionado) | 20 – 40 |
 | **Object storage + egress** | Grabaciones y videos (100–300 GB) | 15 – 60 |
 | **Dominio + SSL** | Let's Encrypt incluido | ~2 |
@@ -186,7 +185,7 @@ Alternativa en **4 mensualidades de ~848 USD** si el cliente prefiere flujo mens
 | # | Entregable | Cuándo |
 |---|------------|--------|
 | 1 | Marca: logo, colores, nombre de la plataforma | Antes de M1 |
-| 2 | Dominio(s) para LMS y subdominio Jitsi (ej. `learn.` / `live.`) | Antes de M5 |
+| 2 | Dominio(s) para LMS y subdominio BBB (ej. `learn.` / `live.`) | Antes de M5 |
 | 3 | Cuenta Stripe México verificada | Antes de M4 |
 | 4 | Contenido piloto: 1 curso (outline + 3 lecciones + 1 sesión en vivo de prueba) | Antes de M2 |
 | 5 | Decisión sobre certificados (sí/no) | Antes de ampliación post-MVP |
@@ -221,7 +220,7 @@ Alternativa en **4 mensualidades de ~848 USD** si el cliente prefiere flujo mens
 
 | Concepto | Valor |
 |----------|------:|
-| **Alcance** | LMS propio + clases en vivo self-hosted (Jitsi) hasta 30 personas + grabación automática + cursos pagos e internos |
+| **Alcance** | LMS propio + clases en vivo self-hosted (BigBlueButton) hasta 30 personas + grabación automática + cursos pagos e internos |
 | **No incluye** | PsycoTest, certificados (por ahora), app móvil |
 | **Horas** | 339 h (con reserva) |
 | **Precio desarrollo** | **3 390 USD** (~59 000 MXN) |

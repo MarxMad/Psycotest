@@ -77,7 +77,7 @@ function ProgramarClaseForm() {
     <div className={s.container}>
       <PageHeader
         title="Programar Clase en Vivo"
-        subtitle="Crea la sesión y genera automáticamente la sala Meet (Jitsi)"
+        subtitle="Crea la sesión y prepara el aula virtual en BigBlueButton"
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },

@@ -4,12 +4,17 @@ import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
 import {
-  buildJitsiRoom,
   isWithinJoinWindow,
   recordJoin,
-  resolveRoomUrl,
+  resolveMeetingId,
   userCanAccessLiveClass,
 } from "@/lib/live-classes";
+import {
+  BbbApiError,
+  BbbConfigError,
+  buildBbbJoinUrl,
+  ensureBbbMeeting,
+} from "@/lib/bbb";
 
 export async function POST(_request: Request, props: { params: Promise<{ id: string }> }) {
   try {
@@ -37,23 +42,63 @@ export async function POST(_request: Request, props: { params: Promise<{ id: str
       );
     }
 
-    let roomUrl = resolveRoomUrl(liveClass);
-    if (!roomUrl) {
-      roomUrl = buildJitsiRoom(liveClass.id).roomUrl;
-      await db
-        .update(liveClasses)
-        .set({ provider: "jitsi", roomUrl, dailyRoomUrl: roomUrl })
-        .where(eq(liveClasses.id, liveClass.id));
+    let meetingId = resolveMeetingId(liveClass);
+    try {
+      if (!meetingId) {
+        ({ meetingId } = await ensureBbbMeeting({
+          classId: liveClass.id,
+          title: liveClass.title,
+          durationMinutes: liveClass.durationMinutes,
+        }));
+        await db
+          .update(liveClasses)
+          .set({ provider: "bbb", roomUrl: meetingId, dailyRoomUrl: meetingId })
+          .where(eq(liveClasses.id, liveClass.id));
+      } else {
+        // Asegura que la reunión exista en el servidor BBB (idempotente)
+        await ensureBbbMeeting({
+          classId: liveClass.id,
+          title: liveClass.title,
+          durationMinutes: liveClass.durationMinutes,
+        });
+        if (liveClass.provider !== "bbb") {
+          await db
+            .update(liveClasses)
+            .set({ provider: "bbb", roomUrl: meetingId, dailyRoomUrl: meetingId })
+            .where(eq(liveClasses.id, liveClass.id));
+        }
+      }
+    } catch (error) {
+      if (error instanceof BbbConfigError || error instanceof BbbApiError) {
+        return NextResponse.json(
+          { error: error.message, detail: error instanceof BbbApiError ? error.details : undefined },
+          { status: 503 },
+        );
+      }
+      throw error;
     }
+
+    const role = user.rol === "admin" ? "moderator" : "viewer";
+    const joinUrl = buildBbbJoinUrl({
+      meetingId,
+      fullName: user.nombre || user.email,
+      role,
+      userId: user.id,
+    });
 
     const attendance = await recordJoin(liveClass.id, user.id);
 
     return NextResponse.json({
-      roomUrl,
+      provider: "bbb",
+      meetingId,
+      joinUrl,
+      /** @deprecated usar joinUrl — se mantiene por compatibilidad temporal */
+      roomUrl: joinUrl,
       title: liveClass.title,
       status: liveClass.status,
       attendance,
       displayName: user.nombre,
+      role,
     });
   } catch (error) {
     console.error("Error joining live class:", error);

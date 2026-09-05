@@ -211,14 +211,16 @@ export const lessonProgress = sqliteTable("lesson_progress", {
   updatedAt: text("updated_at").notNull(),
 });
 
-// Clases en vivo (provider-agnostic: jitsi | daily | none)
+// Clases en vivo (provider-agnostic: bbb | jitsi legacy | none)
 export const liveClasses = sqliteTable("live_classes", {
   id: text("id").primaryKey(),
   courseId: text("course_id").references(() => courses.id),
   title: text("title").notNull(),
   scheduledAt: text("scheduled_at").notNull(),
   durationMinutes: integer("duration_minutes").notNull().default(60),
-  provider: text("provider", { enum: ["jitsi", "daily", "none"] }).notNull().default("none"),
+  /** bbb = BigBlueButton (actual). jitsi se mantiene solo por lecturas legacy. */
+  provider: text("provider", { enum: ["bbb", "jitsi", "daily", "none"] }).notNull().default("none"),
+  /** Para BBB: meetingID. (Legacy Jitsi: URL completa.) */
   roomUrl: text("room_url"),
   /** @deprecated Usar roomUrl; se mantiene por compatibilidad de lecturas antiguas */
   dailyRoomUrl: text("daily_room_url"),
