@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable("users", {
   id: text("id").primaryKey(),
@@ -135,6 +135,8 @@ export const courses = sqliteTable("courses", {
   inventoryLimit: integer("inventory_limit"), // null = ilimitado
   soldCount: integer("sold_count").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
+  /** Si true, no se desbloquea la siguiente lección hasta aprobar el quiz del módulo */
+  requireQuizPass: integer("require_quiz_pass", { mode: "boolean" }).notNull().default(false),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
@@ -149,7 +151,7 @@ export const courseModules = sqliteTable("course_modules", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
-// Lecciones (nombre principal del consultorio CONOCER)
+// Lecciones (video | quiz | live_replay)
 export const courseLessons = sqliteTable("course_lessons", {
   id: text("id").primaryKey(),
   moduleId: text("module_id")
@@ -158,7 +160,9 @@ export const courseLessons = sqliteTable("course_lessons", {
   slug: text("slug").notNull(),
   title: text("title").notNull(),
   description: text("description"),
+  type: text("type", { enum: ["video", "quiz", "live_replay"] }).notNull().default("video"),
   videoUrl: text("video_url"),
+  contentMarkdown: text("content_markdown"),
   durationSeconds: integer("duration_seconds").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
   freePreview: integer("free_preview", { mode: "boolean" }).notNull().default(false),
@@ -168,50 +172,110 @@ export const courseLessons = sqliteTable("course_lessons", {
 export const lessons = courseLessons;
 
 // Inscripciones a cursos
-export const courseEnrollments = sqliteTable("course_enrollments", {
-  id: text("id").primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
-  courseId: text("course_id")
-    .notNull()
-    .references(() => courses.id),
-  status: text("status", { enum: ["pending", "active", "refunded", "completed", "cancelled"] })
-    .notNull()
-    .default("pending"),
-  stripeSessionId: text("stripe_session_id").unique(),
-  stripePaymentIntentId: text("stripe_payment_intent_id"),
-  progressPercent: integer("progress_percent").notNull().default(0),
-  enrolledAt: text("enrolled_at"),
-  completedAt: text("completed_at"),
-  createdAt: text("created_at").notNull(),
-  updatedAt: text("updated_at").notNull(),
-});
+export const courseEnrollments = sqliteTable(
+  "course_enrollments",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id),
+    courseId: text("course_id")
+      .notNull()
+      .references(() => courses.id),
+    status: text("status", { enum: ["pending", "active", "refunded", "completed", "cancelled"] })
+      .notNull()
+      .default("pending"),
+    stripeSessionId: text("stripe_session_id").unique(),
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    progressPercent: integer("progress_percent").notNull().default(0),
+    enrolledAt: text("enrolled_at"),
+    completedAt: text("completed_at"),
+    createdAt: text("created_at").notNull(),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => ({
+    userCourseUq: uniqueIndex("course_enrollments_user_course_uq").on(t.userId, t.courseId),
+  }),
+);
 
 /** Alias para APIs del panel admin */
 export const enrollments = courseEnrollments;
 
 // Progreso por lección
-export const lessonProgress = sqliteTable("lesson_progress", {
+export const lessonProgress = sqliteTable(
+  "lesson_progress",
+  {
+    id: text("id").primaryKey(),
+    enrollmentId: text("enrollment_id")
+      .notNull()
+      .references(() => courseEnrollments.id, { onDelete: "cascade" }),
+    lessonId: text("lesson_id")
+      .notNull()
+      .references(() => courseLessons.id, { onDelete: "cascade" }),
+    completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+    lastPositionSeconds: integer("last_position_seconds").notNull().default(0),
+    updatedAt: text("updated_at").notNull(),
+  },
+  (t) => ({
+    enrollmentLessonUq: uniqueIndex("lesson_progress_enrollment_lesson_uq").on(
+      t.enrollmentId,
+      t.lessonId,
+    ),
+  }),
+);
+
+/** Cuestionario 1:1 con una lección tipo quiz */
+export const courseQuizzes = sqliteTable("course_quizzes", {
+  id: text("id").primaryKey(),
+  lessonId: text("lesson_id")
+    .notNull()
+    .unique()
+    .references(() => courseLessons.id, { onDelete: "cascade" }),
+  passScore: integer("pass_score").notNull().default(70),
+  maxAttempts: integer("max_attempts").notNull().default(3),
+  shuffleQuestions: integer("shuffle_questions", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+export const quizQuestions = sqliteTable("quiz_questions", {
+  id: text("id").primaryKey(),
+  quizId: text("quiz_id")
+    .notNull()
+    .references(() => courseQuizzes.id, { onDelete: "cascade" }),
+  prompt: text("prompt").notNull(),
+  type: text("type", { enum: ["single", "multiple", "true_false"] }).notNull().default("single"),
+  options: text("options", { mode: "json" }).$type<Array<{ key: string; label: string }>>().notNull(),
+  correctKeys: text("correct_keys", { mode: "json" }).$type<string[]>().notNull(),
+  explanation: text("explanation"),
+  sortOrder: integer("sort_order").notNull().default(0),
+});
+
+export const quizAttempts = sqliteTable("quiz_attempts", {
   id: text("id").primaryKey(),
   enrollmentId: text("enrollment_id")
     .notNull()
     .references(() => courseEnrollments.id, { onDelete: "cascade" }),
-  lessonId: text("lesson_id")
+  quizId: text("quiz_id")
     .notNull()
-    .references(() => courseLessons.id, { onDelete: "cascade" }),
-  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
-  lastPositionSeconds: integer("last_position_seconds").notNull().default(0),
-  updatedAt: text("updated_at").notNull(),
+    .references(() => courseQuizzes.id, { onDelete: "cascade" }),
+  answers: text("answers", { mode: "json" }).$type<Record<string, string[]>>().notNull(),
+  score: integer("score").notNull(),
+  passed: integer("passed", { mode: "boolean" }).notNull().default(false),
+  attemptNumber: integer("attempt_number").notNull().default(1),
+  createdAt: text("created_at").notNull(),
 });
 
-// Clases en vivo
+// Clases en vivo (provider-agnostic: jitsi | daily | none)
 export const liveClasses = sqliteTable("live_classes", {
   id: text("id").primaryKey(),
   courseId: text("course_id").references(() => courses.id),
   title: text("title").notNull(),
   scheduledAt: text("scheduled_at").notNull(),
   durationMinutes: integer("duration_minutes").notNull().default(60),
+  provider: text("provider", { enum: ["jitsi", "daily", "none"] }).notNull().default("none"),
+  roomUrl: text("room_url"),
+  /** @deprecated Usar roomUrl; se mantiene por compatibilidad de lecturas antiguas */
   dailyRoomUrl: text("daily_room_url"),
   recordingUrl: text("recording_url"),
   status: text("status", { enum: ["scheduled", "live", "completed", "cancelled"] })
@@ -303,5 +367,8 @@ export type CourseLesson = typeof courseLessons.$inferSelect;
 export type Enrollment = typeof enrollments.$inferSelect;
 export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
 export type LiveClass = typeof liveClasses.$inferSelect;
+export type CourseQuiz = typeof courseQuizzes.$inferSelect;
+export type QuizQuestion = typeof quizQuestions.$inferSelect;
+export type QuizAttempt = typeof quizAttempts.$inferSelect;
 export type Coupon = typeof coupons.$inferSelect;
 export type Order = typeof orders.$inferSelect;

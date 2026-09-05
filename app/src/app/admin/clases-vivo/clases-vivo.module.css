@@ -178,3 +178,8 @@
     width: 100%;
   }
 }
+
+.muted { color: var(--admin-text-muted, #64748b); }
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.roomStub { display: grid; gap: 0.75rem; max-width: 640px; }
+.attendanceStub { margin: 0.5rem 0 0; padding-left: 1.1rem; color: var(--admin-text-muted, #64748b); }
