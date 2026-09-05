@@ -308,6 +308,12 @@ export async function ensureDbReady(db: AppDb): Promise<DbReadyState> {
   await probeDb(db);
   await ensureSchema(db);
   await ensureDefaultAdmin(db);
+  try {
+    const { seedDemoCourse } = await import("./seed-lms");
+    await seedDemoCourse(db);
+  } catch (error) {
+    console.error("[psycotest] seedDemoCourse falló:", error);
+  }
 
   return {
     backend: dbBackend(),

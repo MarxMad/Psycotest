@@ -176,3 +176,87 @@
     width: 100%;
   }
 }
+
+.adminPage {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.adminHeader h1 {
+  margin: 0.35rem 0;
+}
+
+.adminCard {
+  background: var(--admin-surface, #fff);
+  border: 1px solid var(--admin-border, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+}
+
+.adminCard h2 {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.formGrid {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.formGrid label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.formGrid input,
+.formGrid select,
+.formGrid textarea,
+.formRow input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--admin-border, #cbd5e1);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: var(--admin-primary, #1e4a6f);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.errorText {
+  color: #b91c1c;
+  margin: 0;
+}
+
+.muted {
+  color: var(--admin-text-muted, #64748b);
+  font-weight: 500;
+}
+
+.curriculumBlock {
+  margin-bottom: 1rem;
+}
+
+.curriculumBlock ul {
+  margin: 0.35rem 0 0;
+  padding-left: 1.1rem;
+}

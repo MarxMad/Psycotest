@@ -37,6 +37,8 @@ export async function POST(request: Request) {
       title,
       scheduledAt: new Date(scheduledAt).toISOString(),
       durationMinutes,
+      provider: "none",
+      roomUrl: null,
       dailyRoomUrl: null,
       recordingUrl: null,
       status: "scheduled",
