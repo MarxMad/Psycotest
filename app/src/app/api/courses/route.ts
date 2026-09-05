@@ -67,6 +67,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ course }, { status: 201 });
   } catch (error) {
     console.error("Error creating course:", error);
-    return NextResponse.json({ error: "Error al crear curso" }, { status: 500 });
+    const detail = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ error: "Error al crear curso", detail }, { status: 500 });
   }
 }
