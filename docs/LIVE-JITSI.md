@@ -15,19 +15,38 @@
 
 - Hasta **~30** participantes con cámara, micrófono y chat.
 - Grabación opcional → `recording_url` → lección `live_replay`.
-- Provider agnóstico: `jitsi` | `daily` | `none`.
+- Provider agnóstico: `jitsi` | `daily` | `none` (y en el futuro otros OSS).
+
+## Alternativas open source (sin depender de Jitsi)
+
+Si quieres salir de Jitsi / 8x8, estas opciones son self-host primero:
+
+| Opción | Licencia | Encaje con ~30 alumnos | Notas |
+|--------|----------|------------------------|-------|
+| **Galène** | AGPL-3.0 | Excelente | SFU minimalista, un binario, sin “empresa SaaS” detrás. Ideal para clases pequeñas. |
+| **BigBlueButton** | LGPL | Muy bueno (educación) | Hecho para docencia: pizarra, breakouts, grabación. Comunidad fuerte; Blindside Networks existe pero el core es OSS. |
+| **mediasoup** | ISC | Excelente (DIY) | Librería SFU, no producto cerrado. Tú controlas la UI y el backend. Más trabajo de ingeniería. |
+| **Janus Gateway** | GPL | Bueno | Gateway WebRTC maduro (Meetecho). Flexible; hay que armar la sala/UI. |
+| **LiveKit** (self-host) | Apache-2.0 | Excelente | Muy buen DX y SDKs. Hay empresa/cloud, pero el server OSS se self-hostea sin su cloud. |
+| **Element Call** (Matrix) | AGPL | Bueno | Videollamadas sobre Matrix; encaja si quieres identidad federada. |
+
+**Recomendación práctica para Psycotest:**
+
+1. Corto plazo: dejar Jitsi self-hosted (Docker) si ya funciona el embed.
+2. Mejor “sin vendor”: **Galène** (simple) o **BigBlueButton** (si priorizas herramientas de clase).
+3. Si quieren producto propio a largo plazo: **mediasoup** o **LiveKit self-host** + nuestro provider agnóstico (`room_url` / `provider`).
 
 ## Siguiente (self-hosted)
 
 | Pieza | Rol |
 |-------|-----|
-| **Jitsi Meet** (Docker) | Sala WebRTC propia |
-| **Jibri** | Grabación |
+| **Jitsi Meet** (Docker) *o alternativa de arriba* | Sala WebRTC propia |
+| **Grabación** (Jibri / BBB record / egress LiveKit) | Replay |
 | **coturn** | TURN/STUN |
 | **Object storage** | Replay |
-| **JWT** | `/api/live-classes/[id]/token` firmado solo para inscritos |
+| **JWT / token de sala** | `/api/live-classes/[id]/token` solo para inscritos |
 
-Pasos: provisionar VM → set `JITSI_BASE_URL` (+ secretos JWT) → webhook Jibri →
+Pasos: provisionar VM → set `JITSI_BASE_URL` (o URL del provider) → webhook de grabación →
 publicar replay como lección.
 
 ## Archivos clave
