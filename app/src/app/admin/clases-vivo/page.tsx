@@ -144,18 +144,19 @@ export default function ClasesVivoPage() {
                       )}
                     </td>
                     <td>
-                      {clase.status === "live" ? (
-                        <Link
-                          href={`/admin/clases-vivo/${clase.id}/sala`}
-                          className={`btn btn-sm ${s.btnLive}`}
-                        >
-                          Entrar a la Sala →
-                        </Link>
-                      ) : (
+                      <div className={s.actions}>
                         <Link href={`/admin/clases-vivo/${clase.id}`} className="btn btn-sm">
-                          Ver Detalles
+                          Detalles
                         </Link>
-                      )}
+                        {(clase.status === "live" || clase.status === "scheduled") && (
+                          <Link
+                            href={`/admin/clases-vivo/${clase.id}/sala`}
+                            className={`btn btn-sm ${clase.status === "live" ? s.btnLive : ""}`}
+                          >
+                            Abrir sala
+                          </Link>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}

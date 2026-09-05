@@ -137,6 +137,7 @@ export const NAV_SCROLL = [
 export const NAV_ACTIONS = [
   { label: "Acceder", href: "/login?next=/admin" },
   { label: "Cursos", href: "/consultorio/cursos" },
+  { label: "En vivo", href: "/consultorio/clases-vivo" },
   { label: "Evaluación", href: "/psycotest" },
 ] as const;
 

@@ -1,21 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
+import type { Course } from "@/db/schema";
 import s from "./programar.module.css";
 
-export default function ProgramarClasePage() {
+function ProgramarClaseForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [form, setForm] = useState({
     title: "",
     scheduledAt: "",
     durationMinutes: "60",
-    courseId: "",
+    courseId: searchParams.get("courseId") || "",
   });
+
+  useEffect(() => {
+    const prefill = searchParams.get("courseId");
+    if (prefill) {
+      setForm((f) => ({ ...f, courseId: prefill }));
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const res = await fetch("/api/courses");
+        if (res.ok) {
+          const data = await res.json();
+          setCourses(data.courses || []);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    void loadCourses();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,8 +51,9 @@ export default function ProgramarClasePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
-          durationMinutes: parseInt(form.durationMinutes),
+          title: form.title,
+          scheduledAt: form.scheduledAt,
+          durationMinutes: parseInt(form.durationMinutes, 10),
           courseId: form.courseId || null,
         }),
       });
@@ -36,7 +62,8 @@ export default function ProgramarClasePage() {
         const data = await res.json();
         router.push(`/admin/clases-vivo/${data.liveClass.id}`);
       } else {
-        alert("Error al programar la clase");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Error al programar la clase");
       }
     } catch (error) {
       console.error(error);
@@ -50,7 +77,7 @@ export default function ProgramarClasePage() {
     <div className={s.container}>
       <PageHeader
         title="Programar Clase en Vivo"
-        subtitle="Configura una nueva sesión de videoclase"
+        subtitle="Crea la sesión y genera automáticamente la sala Meet (Jitsi)"
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },
@@ -109,7 +136,7 @@ export default function ProgramarClasePage() {
 
           <div className={s.field}>
             <label htmlFor="courseId" className={s.label}>
-              Curso asociado (opcional)
+              Curso asociado
             </label>
             <select
               id="courseId"
@@ -118,9 +145,14 @@ export default function ProgramarClasePage() {
               className={s.input}
             >
               <option value="">Sin curso asociado</option>
+              {courses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.title}
+                </option>
+              ))}
             </select>
             <small className={s.hint}>
-              Puedes asociar esta clase a un curso específico
+              Los alumnos inscritos en este curso podrán entrar a la sala desde el consultorio.
             </small>
           </div>
 
@@ -129,11 +161,19 @@ export default function ProgramarClasePage() {
               Cancelar
             </Link>
             <button type="submit" disabled={loading} className="btn btn-primary">
-              {loading ? "Programando..." : "Programar Clase"}
+              {loading ? "Creando sala…" : "Programar y crear sala"}
             </button>
           </div>
         </form>
       </Card>
     </div>
+  );
+}
+
+export default function ProgramarClasePage() {
+  return (
+    <Suspense fallback={<p className={s.hint}>Cargando formulario…</p>}>
+      <ProgramarClaseForm />
+    </Suspense>
   );
 }

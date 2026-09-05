@@ -205,13 +205,16 @@ export const lessonProgress = sqliteTable("lesson_progress", {
   updatedAt: text("updated_at").notNull(),
 });
 
-// Clases en vivo
+// Clases en vivo (provider-agnostic: jitsi | daily | none)
 export const liveClasses = sqliteTable("live_classes", {
   id: text("id").primaryKey(),
   courseId: text("course_id").references(() => courses.id),
   title: text("title").notNull(),
   scheduledAt: text("scheduled_at").notNull(),
   durationMinutes: integer("duration_minutes").notNull().default(60),
+  provider: text("provider", { enum: ["jitsi", "daily", "none"] }).notNull().default("none"),
+  roomUrl: text("room_url"),
+  /** @deprecated Usar roomUrl; se mantiene por compatibilidad de lecturas antiguas */
   dailyRoomUrl: text("daily_room_url"),
   recordingUrl: text("recording_url"),
   status: text("status", { enum: ["scheduled", "live", "completed", "cancelled"] })

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Edit, Users, BookOpen, Settings } from "lucide-react";
+import { Edit, Users, BookOpen, Settings, Video } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card, CardHeader } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
@@ -117,6 +117,13 @@ export default function CursoDetallePage() {
           <Link href={`/admin/cursos/${id}/estudiantes`} className={s.actionCard}>
             <Users size={24} />
             <span>Ver Estudiantes</span>
+          </Link>
+          <Link
+            href={`/admin/clases-vivo/programar?courseId=${id}`}
+            className={s.actionCard}
+          >
+            <Video size={24} />
+            <span>Programar clase en vivo</span>
           </Link>
           <Link href={`/admin/cursos/${id}/editar`} className={s.actionCard}>
             <Settings size={24} />

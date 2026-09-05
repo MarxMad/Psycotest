@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
+import { eq } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { getSessionUser, requireUser } from "@/lib/auth";
+import {
+  authErrorResponse,
+  buildJitsiRoom,
+  listLiveClassesForUser,
+} from "@/lib/live-classes";
 
 const db = getDb();
 
@@ -9,10 +15,37 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
+    const mine = searchParams.get("mine") === "1";
+
+    if (mine) {
+      const user = await getSessionUser();
+      if (!user) {
+        return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+      }
+      let classes = await listLiveClassesForUser(user.id);
+      if (
+        status === "scheduled" ||
+        status === "live" ||
+        status === "completed" ||
+        status === "cancelled"
+      ) {
+        classes = classes.filter((c) => c.status === status);
+      }
+      return NextResponse.json({ classes });
+    }
+
+    try {
+      await requireUser(["admin"]);
+    } catch (error) {
+      const { error: msg, status: code } = authErrorResponse(error);
+      return NextResponse.json({ error: msg }, { status: code });
+    }
 
     const allClasses =
-      status &&
-      (status === "scheduled" || status === "live" || status === "completed" || status === "cancelled")
+      status === "scheduled" ||
+      status === "live" ||
+      status === "completed" ||
+      status === "cancelled"
         ? await db.select().from(liveClasses).where(eq(liveClasses.status, status))
         : await db.select().from(liveClasses);
 
@@ -25,19 +58,47 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    try {
+      await requireUser(["admin"]);
+    } catch (error) {
+      const { error: msg, status: code } = authErrorResponse(error);
+      return NextResponse.json({ error: msg }, { status: code });
+    }
+
     const body = await request.json();
     const { title, scheduledAt, durationMinutes, courseId } = body;
 
+    if (!title || typeof title !== "string" || !title.trim()) {
+      return NextResponse.json({ error: "Título requerido" }, { status: 400 });
+    }
+    if (!scheduledAt) {
+      return NextResponse.json({ error: "Fecha y hora requeridas" }, { status: 400 });
+    }
+    const scheduled = new Date(scheduledAt);
+    if (Number.isNaN(scheduled.getTime())) {
+      return NextResponse.json({ error: "Fecha inválida" }, { status: 400 });
+    }
+    const duration = Number(durationMinutes);
+    if (!Number.isFinite(duration) || duration < 15) {
+      return NextResponse.json(
+        { error: "Duración mínima de 15 minutos" },
+        { status: 400 },
+      );
+    }
+
     const now = new Date().toISOString();
     const classId = `liveclass_${Date.now()}`;
+    const { roomUrl } = buildJitsiRoom(classId);
 
     await db.insert(liveClasses).values({
       id: classId,
       courseId: courseId || null,
-      title,
-      scheduledAt: new Date(scheduledAt).toISOString(),
-      durationMinutes,
-      dailyRoomUrl: null,
+      title: title.trim(),
+      scheduledAt: scheduled.toISOString(),
+      durationMinutes: duration,
+      provider: "jitsi",
+      roomUrl,
+      dailyRoomUrl: roomUrl,
       recordingUrl: null,
       status: "scheduled",
       createdAt: now,
