@@ -1,0 +1,225 @@
+{
+  "fuente": "Prueba PAPI.docx + informe Jorge Hdez Galvez (factor P)",
+  "factores": {
+    "N": {
+      "titulo": "NECESIDAD DE FINALIZAR PERSONALMENTE UNA TAREA",
+      "notaAlta": {
+        "positiva": "Deseo imperioso de terminar un trabajo comenzado.\n\nPerseverancia y tenacidad.\n\nConciencia profesional.\n\nCapacidad para concentrar toda su energía en un aspecto determinado.\n\nImplicación personal de acuerdo con la labor de que se trate.",
+        "negativa": "Incapacidad para realizar varias tareas al mismo tiempo: sólo puede pensar en una cosa a la vez.\n\nRiesgo de ver sólo lo que quiere y de ser algo rígido.\n\nAunque las circunstancias exijan cambiar o suspender la acción, tendencia a querer continuar a toda costa; tolera mal las interrupciones cuando está trabajando.\n\nDificultad para soltar la presa: rehace todo el trabajo que ya había realizado.\n\nIncapacidad para delegar."
+      },
+      "notaBaja": {
+        "positiva": "Capacidad para hacer varias cosas a la vez.\n\nVisión global de los problemas.\n\nAptitud para la delegación.",
+        "negativa": "No termina lo que empieza: riesgo de dispersión y superficialidad.\n\nSe implica poco en la tarea. Riesgo de inestabilidad profesional.\n\nSe deja distraer fácilmente."
+      }
+    },
+    "G": {
+      "titulo": "ROL DE TRABAJADOR DURO",
+      "notaAlta": {
+        "positiva": "Le gusta trabajar de firme.\n\nConcede mucha importancia al trabajo.\n\nNinguna tarea es demasiado difícil para él.\n\nBusca que se le felicite por el trabajo que ha realizado.",
+        "negativa": "Más interesado por el trabajo en sí que por los resultados. Puede buscarse trabajo de manera gratuita.\n\nSe siente culpable cuando no hace nada.\n\nAgobiado de trabajo: no tiene tiempo para dedicarse a otros problemas.\n\nPuede buscarse trabajo de manera gratuita (si además  es baja trabaja a borbotones)."
+      },
+      "notaBaja": {
+        "positiva": "Puede ser muy mañoso cuando se trata de dar con métodos que le permitan cumplir los objetivos previstos con el mínimo esfuerzo por su parte.\n\nDisponible para dedicarse a nuevas tareas.",
+        "negativa": "Riesgo de evitar cualquier tarea difícil.\n\nLos demás pueden considerarle perezoso.\n\nNo le gusta que le consideren un gran trabajador."
+      }
+    },
+    "A": {
+      "titulo": "NECESIDAD DE TRIUNFAR",
+      "notaAlta": {
+        "positiva": "Ambicioso, avanza sin reparar en obstáculos: necesidad imperiosa de triunfar.\n\nLe gusta el trabajo que implique un desafío.\n\nSe fija y fija para los demás niveles muy altos de prestaciones.\n\nLe gusta competir: quiere ser el mejor.\n\nEstá capacitado para marcarse objetivos a largo plazo.",
+        "negativa": "Se fija objetivos demasiado elevados para él: riesgo de desaliento e insatisfacción.\n\nPerfeccionista.\n\nPuede acabar irritando a los demás con sus ilusiones irreales y por su deseo de que se le reconozca su valía constantemente.\n\nPuede aplastar a los demás para demostrar que es el más fuerte."
+      },
+      "notaBaja": {
+        "positiva": "El deseo de ascender en la jerarquía no es dominante o ha quedado satisfecho.\n\nBusca menos el éxito social que la satisfacción personal.\n\nNo desea competir con nadie.\n\nSatisfecho con su puesto dentro de la empresa.",
+        "negativa": "No aprovecha al máximo sus capacidades.\n\nRechaza en ocasiones las iniciativas.\n\nSe implica poco en su trabajo en relación con el objetivo fijado.\n\nEstático: nivel bajo de exigencias.\n\nSe contenta con desempeñar papeles de segunda fila."
+      }
+    },
+    "L": {
+      "titulo": "ROL DE LÍDER",
+      "notaAlta": {
+        "positiva": "Actitud dominante dentro del grupo. (Si  es alta)\n\nAsume espontáneamente un papel de dirigente.\n\nImportancia de la situación y la imagen relacionada con el mando.",
+        "negativa": "Le interesa más su propia imagen y su situación que la eficacia del grupo: egocéntrico.\n\nDemasiado seguro de sí mismo.\n\nAutoritario."
+      },
+      "notaBaja": {
+        "positiva": "No es competitivo.\n\nNo se compromete.\n\nSatisfecho con su situación de subordinado.\n\nNo pretende dominar a los demás.",
+        "negativa": "Falta de confianza en si mismo.\n\nPuede corresponder a un complejo de inferioridad."
+      }
+    },
+    "I": {
+      "titulo": "ROL: APTITUD PARA TOMAR DECISIONES",
+      "notaAlta": {
+        "positiva": "Toma decisiones rápidamente, con entusiasmo.\n\nAcepta asumir riesgos.\n\nConfía en su intuición a la hora de decidirse.",
+        "negativa": "Impaciente, quiere pasar enseguida a las conclusiones (con baja T)\n\nImpulsivo: puede tomar decisiones irreflexivas.\n\nTiende a conceder mayor importancia a la rapidez que a la precisión."
+      },
+      "notaBaja": {
+        "positiva": "Muy prudente y riguroso.\n\nDetesta las conclusiones precipitadas: analiza detenidamente la situación antes de emprender cualquier acción.",
+        "negativa": "Titubea demasiado.\n\nTeme comprometerse.\n\nLentitud excesiva a la hora de tomar una decisión."
+      }
+    },
+    "V": {
+      "titulo": "ROL DE TIPO VIGOROSO",
+      "notaAlta": {
+        "positiva": "Buena energía física le sobra vigor.\n\nPuede realizar trabajos penosos y que requieran gran  resistencia.\n\nSe expresa físicamente.\n\nLe gusta desplazarse frecuentemente.",
+        "negativa": "Difícilmente consigue estarse quieto.\n\nSe concentra con dificultad.\n\nInadaptado para trabajos sedentarios."
+      },
+      "notaBaja": {
+        "positiva": "Puede adaptarse a trabajos sedentarios.",
+        "negativa": "Tiene poca resistencia física: se cansa pronto.\n\nEscaso vigor físico."
+      }
+    },
+    "T": {
+      "titulo": "ROL DE TRABAJADOR DE RITMO RAPIDO",
+      "notaAlta": {
+        "positiva": "Trabaja rápido.\n\nCumple los plazos.\n\nCapaz de pasar a la velocidad superior en caso necesario: puede trabajar a presión.\n\nRealizador y eficaz.\n\nLe gusta tener mucho trabajo pendiente.\n\nNo necesita que le estimulen.",
+        "negativa": "Personalidad en tensión permanente.\n\nIrritable.\n\nActúa a un ritmo tan rápido que puede cometer errores."
+      },
+      "notaBaja": {
+        "positiva": "Personalidad más bien tranquila.\n\nPausado.\n\nTrabaja con esmero.",
+        "negativa": "No le interesan los detalles.\n\nNo tiene el sentido de lo urgente.\n\nTrabaja a un ritmo lento, independientemente de las circunstancias."
+      }
+    },
+    "R": {
+      "titulo": "ROL DE TIPO TEORICO",
+      "notaAlta": {
+        "positiva": "Planificador a largo plazo.\n\nReflexivo.\n\nInteresado por las ideas, los conceptos, las teorías.\n\nLe gusta planificar.\n\nCapaz de dominar la situación desde cierta altura, de ver la realidad desde cierta perspectiva.\n\nCapaz de analizar las situaciones y sacar deducciones lógicas.",
+        "negativa": "Soñador. Está en las nubes.\n\nCarece del sentido de la realidad.\n\nDemasiado teórico."
+      },
+      "notaBaja": {
+        "positiva": "Práctico y pragmático.\n\nRealizador más que creador.\n\nHombre de acción.\n\nSentido común concreto.\n\nActúa por intuición.",
+        "negativa": "Actúa sin haber preparado su acción.\n\nSe ciñe demasiado al terreno, a la acción inmediata.\n\nPiensa a corto plazo."
+      }
+    },
+    "C": {
+      "titulo": "ROL DE TIPO ORGANIZADO",
+      "notaAlta": {
+        "positiva": "Preciso y ordenado.\n\nEstructurado.\n\nAdministra bien su tiempo.\n\nConcede gran importancia a su organización le gusta que cada cosa esté en su sitio.",
+        "negativa": "Organizador a ultranza, tal vez en perjuicio de su eficacia.\n\nRígido y maniático: falta de flexibilidad.\n\nEsta rigidez puede dificultar su creatividad."
+      },
+      "notaBaja": {
+        "positiva": "Flexible y adaptable, incluso en un contexto no estructurado.\n\nSe acomoda y tolera la falta de orden y ambigüedad.\n\nNo rígidamente metódico.",
+        "negativa": "Carece de orden y claridad.\n\nDescuidado.\n\nAdministra mal su tiempo."
+      }
+    },
+    "D": {
+      "titulo": "ROL DE INTERESADO EN TRABAJAR AL DETALLE",
+      "notaAlta": {
+        "positiva": "Se siente responsable de la exactitud y de la cantidad suficiente de los datos facilitados.\n\nLe gusta trabajar de manera detallada, minuciosamente.\n\nDisfruta trabajando con detalles.",
+        "negativa": "Se pierde en detalles: el árbol le oculta el bosque.\n\nNo sabe definir prioridades.\n\nPuede tratarse de una huida ante el mando y las responsabilidades."
+      },
+      "notaBaja": {
+        "positiva": "Un buen delegador.\n\nSabe esperar lo importante de lo que no lo es.\n\nMuy competente en temas generales.\n\nPrescinde gustosamente de los detalles.\n\nBuena mentalidad de síntesis.",
+        "negativa": "Puede actuar a partir de datos inexactos o insuficientes.\n\nPuede analizar precipitadamente algo que requeriría un estudio detallado."
+      }
+    },
+    "X": {
+      "titulo": "NECESIDAD DE LLAMAR",
+      "notaAlta": {
+        "positiva": "Satisfecho de sí mismo y de su manera de ser.\n\nPresencia muy notada en los grupos.\n\nSe siente a gusto en las situaciones en que es preciso dar la cara: no le asustan las luces de candilejas.\n\nSe esfuerza en merecer la atención y la aprobación ajenas.\n\nTiene orgullo de sí mismo y de su propio estilo.",
+        "negativa": "Actúa más por el efecto que produce que por la eficacia.\n\nMitómano, carga las tintas y pretende a toda costa llamar la atención sobre su persona."
+      },
+      "notaBaja": {
+        "positiva": "Sincero y auténtico, poco propenso a tergiversar la realidad o a actuar de mala fe.\n\nModesto y discreto: no finge delante de los demás.\n\nPresunciones de honradez.",
+        "negativa": "Tímido, de personalidad apagada.\n\nPuede carecer de seguridad en sí mismo.\n\nSe subestima.\n\nRiesgo de que no “venda” su imagen suficientemente."
+      }
+    },
+    "S": {
+      "titulo": "ROL EXTENSIÓN SOCIAL",
+      "notaAlta": {
+        "positiva": "Amable y de carácter abierto; establece contactos consistentes con muy diversos interlocutores.\n\nCrea un buen ambiente a su alrededor.\n\nFacilidad de comunicación.\n\nLos contactos con los demás le producen satisfacción.\n\nSeguridad en sí mismo en lo que se refiere a las relaciones con los demás.\n\nExtrovertido.",
+        "negativa": "Puede perder el tiempo en charlas ociosas.\n\nDemasiado preocupado por los aspectos sociales."
+      },
+      "notaBaja": {
+        "positiva": "Trabaja, a gusto sólo.\n\nSerio, más motivado por su trabajo que por los contactos.\n\nSelectivos en sus primeros contactos.",
+        "negativa": "Recogido en sí mismo: Poco dado a la comunicación.\n\nFalta de tacto y de saber estar: torpe.\n\nFalta de seguridad en sí mismo y en sus relaciones con los demás.\n\nSe siente más a gusto en una relación formal."
+      }
+    },
+    "B": {
+      "titulo": "NECESIDAD DE PERTENECER A GRUPOS",
+      "notaAlta": {
+        "positiva": "Espíritu de equipo.\n\nConsciente de las actitudes del grupo y de las necesidades de éste.\n\nLe gusta trabajar con los demás.\n\nEs naturalmente benévolo con los demás.\n\nSensible a las presiones del grupo.\n\nNo quiere que el grupo le rechace.\n\nCree que el interés colectivo tiene prelación sobre el interés individual.",
+        "negativa": "Dependiente del grupo.\n\nSe fusiona con el grupo.\n\nPoca personalidad.\n\nSe deja influir por el grupo.\n\nEsta puntuación puede reflejar falta de madurez.\n\nSu excesiva lealtad puede ser un impedimento en su trabajo."
+      },
+      "notaBaja": {
+        "positiva": "Independiente: no hace lo que hace la gente.\n\nPoco sensible a las presiones del grupo: anticonformista.\n\nSeguro de sí mismo.",
+        "negativa": "Solitario.\n\nNo comparte las necesidades del grupo y puede cometer errores de apreciación.\n\nPuede tener problemas de integración.\n\nEscaso espíritu de equipo.\n\nIndividualista."
+      }
+    },
+    "O": {
+      "titulo": "NECESIDAD DE INTIMIDAD Y AFECTO",
+      "notaAlta": {
+        "positiva": "Es capaz de establecer relaciones cálidas y sinceras.\n\nComprensivo y abierto a los problemas humanos.\n\nSensible al ambiente del medio de trabajo.",
+        "negativa": "Vulnerable frente a los demás.\n\nSe angustia cuando no le quieren.\n\nRiesgo de carecer de objetividad.\n\nPuede implicarse personalmente demasiado en un contexto profesional.\n\nSe angustia cuando no lo quieren (valora todo en términos de si le quieren o no)"
+      },
+      "notaBaja": {
+        "positiva": "Objetivo e imparcial.\n\nPoco vulnerable.\n\nEmocionalmente autoconfiado.",
+        "negativa": "Parece frío y distante.\n\nIncapaz de comunicar afectivamente con los demás: se siente a disgusto en situaciones interpersonales.\n\nIgnora los sentimientos de los demás.\n\nPoco sensible a los problemas humanos."
+      }
+    },
+    "Z": {
+      "titulo": "NECESIDAD DE CAMBIO – IGUALDAD",
+      "notaAlta": {
+        "positiva": "Le gusta el cambio. \n\nAbierto a las ideas nuevas, a la variedad, innovador.\n\nAdaptable a muy diversas situaciones: mente ágil.",
+        "negativa": "Agitado e inestable: se aburre con facilidad.\n\nIncapaz de adaptarse a la rutina. Inquieto.\n\nPuede no mantenerse en una situación durante el tiempo suficiente para aprovecharla al máximo.\n\nPuede sentirse insatisfecho o frustrado con su trabajo.\n\nHuida hacia delante."
+      },
+      "notaBaja": {
+        "positiva": "Se adapta con facilidad a la rutina sin aburrirse.\n\nConservador.\n\nEstable.",
+        "negativa": "Se resiste al cambio: escasa capacidad de adaptación a situaciones nuevas y diversas.\n\nPasivo e inactivo, en la medida en que rechaza cualquier innovación."
+      }
+    },
+    "E": {
+      "titulo": "ROL DEL TIPO EMOCIONALMENTE CONTROLADO",
+      "notaAlta": {
+        "positiva": "Tranquilo.\n\nDomina sus emociones: no se deja impresionar fácilmente y conserva su sangre fría.\n\nFiable.\n\nMaduro.\n\nNo aburre a los demás con problemas personales.",
+        "negativa": "Pasivo en el aspecto emocional.\n\nPuede parecer gris y aburrido insensible.\n\nNunca se sabe lo que piensa de verdad."
+      },
+      "notaBaja": {
+        "positiva": "Espontaneo, animado y expresivo: siempre se sabe lo que piensa.\n\nSe implica emocionalmente en su trabajo.\n\nAbierto sobre sus sentimientos.",
+        "negativa": "Humor inestable.\n\nFalta de ponderación y de sangre fría: tendencia a la exageración y a la dramatización.\n\nVulnerable."
+      }
+    },
+    "K": {
+      "titulo": "NECESIDAD DE AGRESIVIDAD DEFENSIVA",
+      "notaAlta": {
+        "positiva": "No se deja pisotear.\n\nNo rehuye los conflictos corta por lo sano.\n\nNo oculta sus pensamientos; franqueza.\n\nEs propenso a la persuasión.\n\nCarácter lanzado; tiene energías sobradas.",
+        "negativa": "Propenso a las confrontaciones.\n\nSusceptible; soporta mal la crítica adversa.\n\nAgresivo; puede llegar a ser violento (sí V+).\n\nAtiza los conflictos.\n\nEn ocasiones le cuesta escuchar a los demás.\n\nEs defensivamente agresivo."
+      },
+      "notaBaja": {
+        "positiva": "Conciliador, evita los enfrentamientos y lima asperezas.\n\nPaciente.",
+        "negativa": "Pasivo, se deja llevar.\n\nTendencia a evitar todo lo que pudiera ser conflictivo; política del avestruz.\n\nTendencia a cambiar de opinión con facilidad con tal de evitar conflictos; influenciable."
+      }
+    },
+    "F": {
+      "titulo": "NECESIDAD DE APOYO EN SUS SUPERIORES",
+      "notaAlta": {
+        "positiva": "Colaborador eficaz. Es un buen “reporting”.\n\nMentalidad de la casa.\n\nConsciente de lo que se espera de él.\n\nDesea mantener buenas relaciones con sus superiores.\n\nSe adapta bien a la empresa.\n\nPersona leal a la organización.",
+        "negativa": "Tendencia a comportarse como alguien que dice amén a todo.\n\nNunca dice lo que piensa por miedo a disgustar a su jefe.\n\nCede ante sus superiores.\n\nRara vez adopta posiciones personales.\n\nMás bien conservador.\n\nFalta de independencia."
+      },
+      "notaBaja": {
+        "positiva": "No necesita que su jefe le anime para triunfar.\n\nMotivado por el trabajo, no por los elogios.\n\nIndependiente con respecto a la autoridad.",
+        "negativa": "Propenso a discutir.\n\nNo respeta mucho la jerarquía.\n\nCrítico."
+      }
+    },
+    "W": {
+      "titulo": "NECESIDAD DE NORMAS Y SUPERVISIÓN",
+      "notaAlta": {
+        "positiva": "Se adhiere a la política interna, los reglamentos y la estructura de la empresa, obedece al pié de la letra lo que se le ordena.\n\nNecesita basarse en sus competencias para poder trabajar.",
+        "negativa": "Rígido, esclavo de las normas, dependiente de la empresa.\n\nQuiere que le digan lo que tiene que hacer, pero también como debe hacerlo, necesidad de instrucciones detalladas.\n\nPocas iniciativas y escasa autonomía.\n\nFalta de creatividad."
+      },
+      "notaBaja": {
+        "positiva": "Prefiere guiarse por objetivos y no por tareas, quiere saber lo que tiene que hacer y no como tiene que hacerlo.\n\nAutónomo: en general prefiere trabajar de forma independiente.\n\nPuede arrancar de cero, crearlo todo otra vez.\n\nInconformista y Emprendedor.",
+        "negativa": "Sigue sus propias reglas, que pueden eventualmente chocar con las de los demás.\n\nNo respeta las reglas."
+      }
+    },
+    "P": {
+      "titulo": "NECESIDAD DE CONTROLAR A OTROS",
+      "notaAlta": {
+        "positiva": "Capacidad de influencia y de asumir responsabilidad sobre el trabajo de otros.\n\nSe implica en la dirección del equipo.\n\nQuiere intervenir en las decisiones que afectan al grupo.",
+        "negativa": "Puede resultar autoritario o controlador.\n\nDificultad para respetar la autonomía de los demás.\n\nRiesgo de no hacerse cargo de forma equilibrada de la responsabilidad sobre otros (y a veces sobre sí mismo)."
+      },
+      "notaBaja": {
+        "positiva": "Respeta la libertad de los demás.\n\nNo impone su voluntad sobre el equipo.\n\nPrefiere influir por competencia más que por control.",
+        "negativa": "No se hace fácilmente responsable de los demás y posiblemente ni de sí mismo.\n\nEvita roles de supervisión.\n\nPuede dejar vacíos de liderazgo."
+      }
+    }
+  }
+}
