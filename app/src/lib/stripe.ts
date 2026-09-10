@@ -11,6 +11,9 @@ export function isStripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
+/** `cents` está en centavos MXN (p. ej. 149900 → $1,499.00). */
 export function formatMxn(cents: number) {
-  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(cents);
+  return new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN" }).format(
+    (Number(cents) || 0) / 100,
+  );
 }

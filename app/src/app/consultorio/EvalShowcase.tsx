@@ -23,7 +23,7 @@ export function EvalShowcase({ image, dimensions }: { image: string; dimensions:
           ))}
         </ul>
         <div className={styles.evalMiniChart} aria-hidden>
-          {[72, 58, 81, 65].map((h, i) => (
+          {[72, 58, 81, 65, 74].map((h, i) => (
             <span key={i} style={{ height: `${h}%` }} />
           ))}
         </div>
