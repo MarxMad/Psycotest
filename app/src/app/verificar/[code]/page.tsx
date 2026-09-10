@@ -3,7 +3,10 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import styles from "./verificar.module.css";
+import { APP_NAME } from "@/lib/brand";
+import { ConsultorioNav } from "@/app/consultorio/ConsultorioNav";
+import { BrandShell } from "@/app/consultorio/BrandShell";
+import styles from "@/app/consultorio/conocer-pages.module.css";
 
 type Result = {
   valid: boolean;
@@ -28,37 +31,52 @@ export default function VerificarPage() {
   }, [code]);
 
   return (
-    <main className={styles.page}>
-      <p className={styles.brand}>PsycoTest · Verificación CONOCER</p>
-      <h1>Constancia</h1>
-      {!result && <p className={styles.muted}>Verificando…</p>}
-      {result && !result.valid && (
-        <div className={styles.cardBad}>
-          <p>No se encontró una constancia válida con ese código.</p>
-          <Link href="/consultorio">Ir al consultorio</Link>
-        </div>
-      )}
-      {result?.valid && (
-        <div className={styles.card}>
-          <p className={styles.ok}>Constancia válida</p>
-          <h2>{result.participant}</h2>
-          <p>{result.course}</p>
-          <p className={styles.meta}>Folio {result.folio}</p>
-          <p className={styles.meta}>
-            Emitida{" "}
-            {result.issuedAt
-              ? new Date(result.issuedAt).toLocaleDateString("es-MX", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })
-              : "—"}
-          </p>
-          <a className={styles.cta} href={`/api/certificates/${code}/pdf`}>
-            Descargar PDF
-          </a>
-        </div>
-      )}
-    </main>
+    <BrandShell>
+      <ConsultorioNav />
+      <div className={styles.shell} data-anime="page">
+        <main className={styles.main}>
+          <header className={styles.hero} data-anime="hero">
+            <p className={styles.eyebrow}>{APP_NAME} · Verificación CONOCER</p>
+            <h1>Constancia</h1>
+          </header>
+
+          {!result && <p className={styles.muted}>Verificando…</p>}
+          {result && !result.valid && (
+            <div className={styles.card}>
+              <p>No se encontró una constancia válida con ese código.</p>
+              <Link href="/consultorio/constancias" className={styles.btnPrimary}>
+                Ir a constancias
+              </Link>
+            </div>
+          )}
+          {result?.valid && (
+            <div className={styles.card} data-anime="section">
+              <p className={styles.ok}>Constancia válida</p>
+              <h2>{result.participant}</h2>
+              <p>{result.course}</p>
+              <p className={styles.meta}>Folio {result.folio}</p>
+              <p className={styles.meta}>
+                Emitida{" "}
+                {result.issuedAt
+                  ? new Date(result.issuedAt).toLocaleDateString("es-MX", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "—"}
+              </p>
+              <div className={styles.ctaRow}>
+                <a className={styles.btnPrimary} href={`/api/certificates/${code}/pdf`}>
+                  Descargar PDF
+                </a>
+                <Link href="/consultorio/constancias" className={styles.btnSecondary}>
+                  Más información
+                </Link>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    </BrandShell>
   );
 }

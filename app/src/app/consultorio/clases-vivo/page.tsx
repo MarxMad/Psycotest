@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { LiveClass } from "@/db/schema";
+import { ConsultorioNav } from "../ConsultorioNav";
+import { BrandShell } from "../BrandShell";
 import styles from "./clases-vivo.module.css";
 
 function fmt(iso: string) {

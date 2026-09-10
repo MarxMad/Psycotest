@@ -4,9 +4,9 @@ import type { AppDb } from "./index";
 import * as schema from "./schema";
 
 export const DEFAULT_ADMIN_EMAIL = (
-  process.env.DEFAULT_ADMIN_EMAIL ?? "admin@psycotest.local"
+  process.env.DEFAULT_ADMIN_EMAIL ?? "admin@sistemapsic.local"
 ).toLowerCase();
-export const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD ?? "psycotest2026";
+export const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD ?? "sistemapsic2026";
 
 export type DbErrorCode = "DB_UNAVAILABLE" | "TURSO_MISCONFIGURED" | "SCHEMA_BOOTSTRAP_FAILED";
 
@@ -573,7 +573,12 @@ export async function bootstrapAdminForLogin(
   password: string,
 ): Promise<void> {
   const normalized = email.toLowerCase().trim();
-  if (normalized !== DEFAULT_ADMIN_EMAIL || password !== DEFAULT_ADMIN_PASSWORD) return;
+  const legacyEmail = "admin@psycotest.local";
+  const legacyPass = "psycotest2026";
+  const isDefault =
+    (normalized === DEFAULT_ADMIN_EMAIL && password === DEFAULT_ADMIN_PASSWORD) ||
+    (normalized === legacyEmail && password === legacyPass);
+  if (!isDefault) return;
 
   const [user] = await db
     .select({ id: schema.users.id })
@@ -584,13 +589,13 @@ export async function bootstrapAdminForLogin(
   if (user) return;
 
   const now = new Date().toISOString();
-  const hash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, 10);
+  const hash = await bcrypt.hash(password, 10);
 
   await db
     .insert(schema.users)
     .values({
       id: "user-admin",
-      email: DEFAULT_ADMIN_EMAIL,
+      email: normalized,
       nombre: "Administrador",
       passwordHash: hash,
       rol: "admin",
@@ -598,7 +603,7 @@ export async function bootstrapAdminForLogin(
     })
     .onConflictDoNothing();
 
-  console.info(`[psycotest] Admin bootstrap en login: ${DEFAULT_ADMIN_EMAIL}`);
+  console.info(`[sistemapsic] Admin bootstrap en login: ${normalized}`);
 }
 
 export async function probeDb(db: AppDb): Promise<void> {

@@ -132,6 +132,92 @@
   flex-shrink: 0;
 }
 
+.navDropdown {
+  position: relative;
+}
+
+.navDropdownDesktop {
+  display: none;
+}
+
+.navDropdownBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--c-border);
+  background: var(--c-paper);
+  color: var(--c-ink);
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.navDropdownBtn:hover,
+.navDropdownBtn[aria-expanded="true"] {
+  border-color: var(--c-blue);
+  color: var(--c-blue);
+}
+
+.navDropdownCaret {
+  font-size: 0.65rem;
+  opacity: 0.7;
+}
+
+.navDropdownPanel {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  min-width: 11.5rem;
+  padding: 0.35rem;
+  background: var(--c-paper);
+  border: 1px solid var(--c-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  z-index: 60;
+}
+
+.navDropdownItem {
+  padding: 0.55rem 0.75rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--c-ink);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.navDropdownItem:hover {
+  background: var(--brand-soft);
+  color: var(--brand);
+}
+
+.mobileAccordionBtn {
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.65rem 0;
+  border: none;
+  border-bottom: 1px solid var(--c-border);
+  background: transparent;
+  color: var(--c-ink);
+  cursor: pointer;
+}
+
+.mobileLinkNested {
+  padding: 0.55rem 0 0.55rem 0.85rem;
+  color: var(--c-slate);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-border);
+  font-size: 0.9rem;
+}
+
 .navCta {
   display: none;
   align-items: center;
@@ -145,6 +231,17 @@
   border-radius: 8px;
   white-space: nowrap;
   transition: background 0.15s;
+}
+
+.navCtaAlt {
+  background: transparent;
+  color: var(--c-blue);
+  border: 1px solid var(--c-blue);
+}
+
+.navCtaAlt:hover {
+  background: var(--brand-soft);
+  color: var(--c-blue);
 }
 
 .navCta:hover {
@@ -229,6 +326,9 @@
     justify-content: flex-start;
     min-width: 0;
   }
+  .navDropdownDesktop {
+    display: block;
+  }
   .navCta {
     display: inline-flex;
   }
@@ -258,8 +358,17 @@
   .brandText small {
     display: none;
   }
-  .navCta {
+  /* En móvil: solo Acceder visible en header; Cursos va en el menú */
+  .navCtaAlt {
     display: none;
+  }
+  .navCta {
+    display: inline-flex;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.72rem;
+  }
+  .navDropdownDesktop {
+    display: none !important;
   }
 }
 

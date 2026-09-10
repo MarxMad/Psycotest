@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import styles from "./expediente.module.css";
+import { ConsultorioNav } from "../ConsultorioNav";
+import { BrandShell } from "../BrandShell";
+import styles from "../conocer-pages.module.css";
 
 type Exp = {
   id: string;
@@ -70,113 +72,134 @@ export default function MiExpedientePage() {
   }
 
   return (
-    <main className={styles.page}>
-      <Link href="/consultorio" className={styles.back}>
-        ← Consultorio
-      </Link>
-      <h1>Mi expediente CONOCER</h1>
-      <p className={styles.lead}>
-        Diagnóstico, evaluaciones, portafolio y seguimiento de aprovechamiento.
-      </p>
+    <BrandShell>
+      <ConsultorioNav />
+      <div className={styles.shell} data-anime="page">
+        <main className={styles.main}>
+          <header className={styles.hero} data-anime="hero">
+            <p className={styles.eyebrow}>CONOCER · Expediente</p>
+            <h1>Mi expediente</h1>
+            <p className={styles.lead}>
+              Diagnóstico, evaluaciones, portafolio y seguimiento de aprovechamiento.
+            </p>
+          </header>
 
-      {rows.length === 0 && (
-        <p className={styles.muted}>
-          No tienes expedientes abiertos. Inscríbete a un curso y solicita apertura, o pide a un
-          administrador que cree tu expediente.
-        </p>
-      )}
+          {rows.length === 0 && (
+            <p className={styles.muted}>
+              No tienes expedientes abiertos. Inscríbete a un curso o pide a un administrador que
+              abra tu expediente.
+            </p>
+          )}
 
-      <ul className={styles.list}>
-        {rows.map((r) => (
-          <li key={r.id}>
-            <button type="button" onClick={() => void openDetail(r.id)}>
-              <strong>{r.program?.code || "Programa"}</strong>
-              <span>
-                {r.status} · aprov. {r.aprovechamientoPercent}% · presencia {r.presencePercentAvg}%
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      {msg && <p className={styles.msg}>{msg}</p>}
-
-      {detail && (
-        <section className={styles.detail}>
-          <h2>Evaluaciones</h2>
-          <div className={styles.form}>
-            <label>
-              ¿Qué esperas del programa?
-              <input
-                value={answers.q1}
-                onChange={(e) => setAnswers((a) => ({ ...a, q1: e.target.value }))}
-              />
-            </label>
-            <label>
-              Nivel percibido actual (1-5)
-              <input
-                value={answers.q2}
-                onChange={(e) => setAnswers((a) => ({ ...a, q2: e.target.value }))}
-              />
-            </label>
-            <label>
-              Comentarios
-              <input
-                value={answers.q3}
-                onChange={(e) => setAnswers((a) => ({ ...a, q3: e.target.value }))}
-              />
-            </label>
-            <div className={styles.row}>
-              <button type="button" onClick={() => void submitEval("diagnostico")}>
-                Diagnóstico
-              </button>
-              <button type="button" onClick={() => void submitEval("inicial")}>
-                Eval. inicial
-              </button>
-              <button type="button" onClick={() => void submitEval("final")}>
-                Eval. final
-              </button>
-              <button type="button" onClick={() => void submitEval("satisfaccion")}>
-                Satisfacción
-              </button>
-            </div>
-          </div>
-
-          <h2>Portafolio</h2>
-          <div className={styles.form}>
-            <input
-              placeholder="Título de evidencia"
-              value={evidenceTitle}
-              onChange={(e) => setEvidenceTitle(e.target.value)}
-            />
-            <input
-              placeholder="URL (opcional)"
-              value={evidenceUrl}
-              onChange={(e) => setEvidenceUrl(e.target.value)}
-            />
-            <button type="button" onClick={() => void submitEvidence()}>
-              Agregar evidencia
-            </button>
-          </div>
-
-          <ul>
-            {((detail.evidences as Array<{ id: string; title: string }>) || []).map((e) => (
-              <li key={e.id}>{e.title}</li>
+          <ul className={styles.list}>
+            {rows.map((r) => (
+              <li key={r.id}>
+                <button type="button" onClick={() => void openDetail(r.id)}>
+                  <strong>{r.program?.code || "Programa"}</strong>
+                  <span>
+                    {r.status} · aprov. {r.aprovechamientoPercent}% · presencia{" "}
+                    {r.presencePercentAvg}%
+                  </span>
+                </button>
+              </li>
             ))}
           </ul>
 
-          <h2>Historial de evaluaciones</h2>
-          <ul>
-            {((detail.evaluations as Array<{ id: string; type: string; submittedAt: string }>) || []).map(
-              (e) => (
-                <li key={e.id}>
-                  {e.type} · {new Date(e.submittedAt).toLocaleString("es-MX")}
-                </li>
-              ),
-            )}
-          </ul>
-        </section>
-      )}
-    </main>
+          {msg && <p className={styles.msg}>{msg}</p>}
+
+          {detail && (
+            <section className={styles.section} data-anime="section">
+              <div className={styles.card}>
+                <h2>Evaluaciones</h2>
+                <div className={styles.form}>
+                  <label>
+                    ¿Qué esperas del programa?
+                    <input
+                      value={answers.q1}
+                      onChange={(e) => setAnswers((a) => ({ ...a, q1: e.target.value }))}
+                    />
+                  </label>
+                  <label>
+                    Nivel percibido actual (1-5)
+                    <input
+                      value={answers.q2}
+                      onChange={(e) => setAnswers((a) => ({ ...a, q2: e.target.value }))}
+                    />
+                  </label>
+                  <label>
+                    Comentarios
+                    <input
+                      value={answers.q3}
+                      onChange={(e) => setAnswers((a) => ({ ...a, q3: e.target.value }))}
+                    />
+                  </label>
+                  <div className={styles.row}>
+                    <button type="button" onClick={() => void submitEval("diagnostico")}>
+                      Diagnóstico
+                    </button>
+                    <button type="button" onClick={() => void submitEval("inicial")}>
+                      Eval. inicial
+                    </button>
+                    <button type="button" onClick={() => void submitEval("final")}>
+                      Eval. final
+                    </button>
+                    <button type="button" onClick={() => void submitEval("satisfaccion")}>
+                      Satisfacción
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.card}>
+                <h2>Portafolio</h2>
+                <div className={styles.form}>
+                  <input
+                    placeholder="Título de evidencia"
+                    value={evidenceTitle}
+                    onChange={(e) => setEvidenceTitle(e.target.value)}
+                  />
+                  <input
+                    placeholder="URL (opcional)"
+                    value={evidenceUrl}
+                    onChange={(e) => setEvidenceUrl(e.target.value)}
+                  />
+                  <button type="button" onClick={() => void submitEvidence()}>
+                    Agregar evidencia
+                  </button>
+                </div>
+                <ul>
+                  {((detail.evidences as Array<{ id: string; title: string }>) || []).map((e) => (
+                    <li key={e.id}>{e.title}</li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className={styles.card}>
+                <h2>Historial</h2>
+                <ul>
+                  {(
+                    (detail.evaluations as Array<{
+                      id: string;
+                      type: string;
+                      submittedAt: string;
+                    }>) || []
+                  ).map((e) => (
+                    <li key={e.id}>
+                      {e.type} · {new Date(e.submittedAt).toLocaleString("es-MX")}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          )}
+
+          <p className={styles.muted} style={{ marginTop: "2rem" }}>
+            <Link href="/consultorio/constancias">Ver constancias</Link>
+            {" · "}
+            <Link href="/consultorio/legal">Documentos legales</Link>
+          </p>
+        </main>
+      </div>
+    </BrandShell>
   );
 }

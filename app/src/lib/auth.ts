@@ -152,6 +152,24 @@ export async function requireUser(roles?: AuthUser["rol"][]): Promise<AuthUser> 
   return user;
 }
 
+/** Destino post-login: admin → panel; resto → consultorio alumno. */
+export function homePathForUser(user: Pick<AuthUser, "rol">): string {
+  return user.rol === "admin" ? "/admin" : "/consultorio/cursos";
+}
+
+/** Resuelve `?next=` de forma segura según el rol. */
+export function resolvePostLoginPath(
+  user: Pick<AuthUser, "rol">,
+  next: string | null | undefined,
+): string {
+  const fallback = homePathForUser(user);
+  if (!next || !next.startsWith("/") || next.startsWith("//")) return fallback;
+  if (next.startsWith("/admin") || next.startsWith("/participantes")) {
+    return user.rol === "admin" ? next : fallback;
+  }
+  return next;
+}
+
 export async function logAudit(
   userId: string | null,
   action: string,

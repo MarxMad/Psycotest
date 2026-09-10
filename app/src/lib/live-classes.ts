@@ -14,7 +14,7 @@ const JOIN_EARLY_MS = 15 * 60 * 1000;
 export function buildJitsiRoom(classId: string): { roomSlug: string; roomUrl: string } {
   const base = (process.env.JITSI_BASE_URL?.trim() || "https://meet.jit.si").replace(/\/$/, "");
   const slugBase = classId.replace(/[^a-zA-Z0-9]/g, "").slice(-16) || Date.now().toString(36);
-  const roomSlug = `psycotest-${slugBase}`;
+  const roomSlug = `sistemapsic-${slugBase}`;
   return { roomSlug, roomUrl: `${base}/${roomSlug}` };
 }
 

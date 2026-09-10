@@ -1,16 +1,20 @@
-/** Ruta base del módulo clínico (PAPI, Hartman, MABE, panel). */
-export const PSYCOTEST_BASE = "/psycotest";
+/** Ruta pública del módulo de evaluación (antes /psycotest). */
+export const EVAL_BASE = "/evaluacion";
 
-export const psycotest = {
-  home: PSYCOTEST_BASE,
-  /** Panel profesional — ruta real en app/src/app/login */
+/** @deprecated Usar EVAL_BASE */
+export const PSYCOTEST_BASE = EVAL_BASE;
+
+export const evaluacion = {
+  home: EVAL_BASE,
   login: "/login",
-  acceso: `${PSYCOTEST_BASE}/acceso`,
-  /** Dashboard admin — ruta real en app/src/app/admin */
+  acceso: `${EVAL_BASE}/acceso`,
   admin: "/admin",
   codigos: "/admin/pruebas/codigos",
-  participantes: `${PSYCOTEST_BASE}/participantes`,
-  papi: `${PSYCOTEST_BASE}/papi`,
-  hartman: `${PSYCOTEST_BASE}/hartman`,
-  mabe: `${PSYCOTEST_BASE}/mabe`,
+  participantes: `${EVAL_BASE}/participantes`,
+  papi: `${EVAL_BASE}/papi`,
+  hartman: `${EVAL_BASE}/hartman`,
+  mabe: `${EVAL_BASE}/mabe`,
 } as const;
+
+/** @deprecated Prefer `evaluacion` */
+export const psycotest = evaluacion;

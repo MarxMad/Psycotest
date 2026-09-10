@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import styles from "./legal.module.css";
+import { ConsultorioNav } from "../ConsultorioNav";
+import { BrandShell } from "../BrandShell";
+import styles from "../conocer-pages.module.css";
 
 type Doc = {
   id: string;
@@ -39,25 +41,35 @@ export default function LegalDocsPage() {
   }
 
   return (
-    <main className={styles.page}>
-      <Link href="/consultorio" className={styles.back}>
-        ← Consultorio
-      </Link>
-      <h1>Documentos legales</h1>
-      <p className={styles.lead}>
-        Finiquito, liquidación y avisos compartidos del programa de certificación.
-      </p>
-      {docs.map((d) => (
-        <article key={d.id} className={styles.doc}>
-          <h2>
-            {d.title} <span>v{d.version}</span>
-          </h2>
-          <pre className={styles.body}>{d.bodyMarkdown}</pre>
-          <button type="button" onClick={() => void ack(d.id)} disabled={acked[d.id]}>
-            {acked[d.id] ? "Acuse registrado" : "Registrar acuse de lectura"}
-          </button>
-        </article>
-      ))}
-    </main>
+    <BrandShell>
+      <ConsultorioNav />
+      <div className={styles.shell} data-anime="page">
+        <main className={styles.main}>
+          <header className={styles.hero} data-anime="hero">
+            <p className={styles.eyebrow}>Legal</p>
+            <h1>Documentos legales</h1>
+            <p className={styles.lead}>
+              Finiquito, liquidación y avisos compartidos del programa de certificación.
+            </p>
+          </header>
+
+          {docs.map((d) => (
+            <article key={d.id} className={styles.card} data-anime="section">
+              <h2>
+                {d.title} <span>v{d.version}</span>
+              </h2>
+              <pre className={styles.body}>{d.bodyMarkdown}</pre>
+              <button type="button" onClick={() => void ack(d.id)} disabled={acked[d.id]}>
+                {acked[d.id] ? "Acuse registrado" : "Registrar acuse de lectura"}
+              </button>
+            </article>
+          ))}
+
+          <p className={styles.muted}>
+            <Link href="/consultorio/expediente">Mi expediente</Link>
+          </p>
+        </main>
+      </div>
+    </BrandShell>
   );
 }
