@@ -1,0 +1,269 @@
+/* Páginas CONOCER — design system del consultorio */
+
+.shell {
+  min-height: 100vh;
+  background: var(--paper, #f8fafc);
+  color: var(--ink, #0f172a);
+  font-family: var(--sans);
+}
+
+.main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--site-pad, 1.25rem) 4rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hero {
+  padding: 2.5rem 0 1.75rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--rule, #e2e8f0);
+  background: radial-gradient(
+    ellipse 70% 80% at 0% 0%,
+    color-mix(in srgb, var(--brand, #1e4a6f) 14%, transparent),
+    transparent 55%
+  );
+}
+
+.eyebrow {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand, #1e4a6f);
+}
+
+.hero h1 {
+  margin: 0 0 0.65rem;
+  font-family: var(--serif);
+  font-size: clamp(1.75rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.lead {
+  margin: 0;
+  max-width: 36rem;
+  color: var(--muted, #64748b);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.25rem;
+}
+
+.btnPrimary,
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.15rem;
+  font-family: var(--sans);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.btnPrimary {
+  background: var(--c-blue, #1e4a6f);
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  filter: brightness(1.08);
+  color: #fff;
+}
+
+.btnSecondary {
+  background: transparent;
+  color: var(--c-blue, #1e4a6f);
+  border-color: var(--c-blue, #1e4a6f);
+}
+
+.btnSecondary:hover {
+  background: var(--brand-soft, #e8f1f8);
+}
+
+.section {
+  margin-top: 1.75rem;
+}
+
+.section h2 {
+  margin: 0 0 0.75rem;
+  font-family: var(--serif);
+  font-size: 1.35rem;
+}
+
+.card {
+  border: 1px solid var(--rule, #e2e8f0);
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.15rem;
+  font-family: var(--serif);
+}
+
+.card h2 span {
+  font-size: 0.78rem;
+  color: var(--muted, #64748b);
+  font-family: var(--sans);
+  font-weight: 600;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.list button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--rule, #e2e8f0);
+  background: #fff;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  display: grid;
+  gap: 0.2rem;
+  border-radius: 10px;
+  font: inherit;
+  color: inherit;
+}
+
+.list button:hover {
+  border-color: var(--brand, #1e4a6f);
+  background: var(--brand-soft, #e8f1f8);
+}
+
+.list span {
+  font-size: 0.85rem;
+  color: var(--muted, #64748b);
+}
+
+.form {
+  display: grid;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+}
+
+.form label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.92rem;
+}
+
+.form input,
+.card input {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--rule, #e2e8f0);
+  border-radius: 8px;
+  font: inherit;
+  background: #fff;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.form button,
+.row button,
+.card > button {
+  background: var(--c-blue, #1e4a6f);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.form button:disabled,
+.card > button:disabled {
+  opacity: 0.65;
+  cursor: default;
+}
+
+.muted,
+.msg {
+  color: var(--muted, #64748b);
+}
+
+.ok {
+  color: var(--brand, #1e4a6f);
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.meta {
+  color: var(--muted, #64748b);
+  font-size: 0.95rem;
+}
+
+.body {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+}
+
+.verifyForm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  max-width: 32rem;
+}
+
+.verifyForm input {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--rule, #e2e8f0);
+  background: #fff;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.verifyForm button {
+  background: var(--c-blue, #1e4a6f);
+  color: #fff;
+  border: none;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 700;
+  border-radius: 8px;
+}
+
+.benefits {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.6;
+  max-width: 36rem;
+}

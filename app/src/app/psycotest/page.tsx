@@ -1,5 +1,5 @@
 import { HomeContent } from "./HomeContent";
 
-export default function PsycoTestPage() {
+export default function EvaluacionHomePage() {
   return <HomeContent />;
 }

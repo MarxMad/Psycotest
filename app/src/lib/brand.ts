@@ -1,4 +1,4 @@
-export const APP_NAME = "PsycoTest";
+export const APP_NAME = "Sistema Psic";
 
 export const APP_DESCRIPTION =
-  "Plataforma integral de certificaciones: evaluaciones psicométricas, cursos online y clases en vivo para psicólogos.";
+  "Plataforma de certificación CONOCER: evaluación psicométrica, cursos en línea, clases en vivo y expediente digital.";

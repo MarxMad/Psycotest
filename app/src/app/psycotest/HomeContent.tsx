@@ -20,7 +20,7 @@ const servicios = [
     icon: FlaskConical,
     titulo: "Evaluaciones Psicométricas",
     descripcion: "Herramientas de evaluación de personalidad, valores y competencias con análisis detallado.",
-    href: "/psycotest/acceso",
+    href: "/evaluacion/acceso",
     color: "var(--papi)",
     badge: "3 instrumentos",
   },
@@ -101,7 +101,7 @@ export function HomeContent() {
               </p>
               <div className={s.heroActions}>
                 <Link href="/login" className="btn btn-primary btn-lg">
-                  Acceso profesional
+                  Iniciar sesión
                 </Link>
                 <Link href="/acceso" className="btn btn-secondary btn-lg">
                   Tengo código de evaluación
@@ -149,7 +149,7 @@ export function HomeContent() {
           </FadeIn>
 
           <FadeIn delay={0.24}>
-            <Link href="/psycotest/acceso" className={s.accesoBanner}>
+            <Link href="/evaluacion/acceso" className={s.accesoBanner}>
               <KeyRound size={20} />
               <div>
                 <strong>Acceso con código de evaluación</strong>
@@ -163,7 +163,7 @@ export function HomeContent() {
             {evaluaciones.map((e, i) => (
               <StaggerItem key={e.slug} index={i}>
                 <Link
-                  href="/psycotest/acceso"
+                  href="/evaluacion/acceso"
                   className={s.card}
                   data-soon={!e.listo}
                   aria-disabled={!e.listo}
@@ -198,8 +198,8 @@ export function HomeContent() {
               Gestione certificaciones, evaluaciones, cursos y clases en vivo desde un panel unificado
               con interpretaciones detalladas, reportes completos y emisión de certificados verificables.
             </p>
-            <Link href="/admin" className="btn btn-primary btn-lg">
-              Acceso profesional →
+            <Link href="/login" className="btn btn-primary btn-lg">
+              Iniciar sesión →
             </Link>
           </FadeIn>
 

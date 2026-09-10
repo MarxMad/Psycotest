@@ -23,7 +23,7 @@ export const PLATFORM_MODULES: PlatformModule[] = [
     description:
       "Baterías psicométricas aplicadas con códigos de acceso, calificación automática e informes PDF — sin revelar instrumentos al evaluado.",
     status: "operativo",
-    href: "/psycotest",
+    href: "/evaluacion",
     features: ["Acceso por código", "Panel del evaluador", "Informe trazable"],
   },
   {
@@ -134,12 +134,22 @@ export const NAV_SCROLL = [
   { label: "Contacto", href: "/#contacto" },
 ] as const;
 
-export const NAV_ACTIONS = [
-  { label: "Acceder", href: "/login?next=/admin" },
+/** Botones siempre visibles en el header */
+export const NAV_PRIMARY = [
+  { label: "Acceder", href: "/login" },
   { label: "Cursos", href: "/consultorio/cursos" },
-  { label: "En vivo", href: "/consultorio/clases-vivo" },
-  { label: "Evaluación", href: "/psycotest" },
 ] as const;
+
+/** Ítems del desplegable «Plataforma» */
+export const NAV_MORE = [
+  { label: "En vivo", href: "/consultorio/clases-vivo" },
+  { label: "Constancias", href: "/consultorio/constancias" },
+  { label: "Expediente", href: "/consultorio/expediente" },
+  { label: "Evaluación", href: "/evaluacion" },
+] as const;
+
+/** @deprecated Prefer NAV_PRIMARY + NAV_MORE */
+export const NAV_ACTIONS = [...NAV_PRIMARY, ...NAV_MORE] as const;
 
 /** @deprecated Prefer NAV_SCROLL + NAV_ACTIONS */
 export const NAV_LINKS = [

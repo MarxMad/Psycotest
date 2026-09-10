@@ -1,0 +1,115 @@
+.page {
+  min-height: 100vh;
+  color: #14201c;
+  background:
+    linear-gradient(180deg, rgba(15, 61, 62, 0.55), rgba(20, 32, 28, 0.72)),
+    url("https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1800&q=80")
+      center / cover no-repeat;
+  font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem 1.25rem 3.5rem;
+  max-width: 40rem;
+}
+
+.brand {
+  font-family: system-ui, sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: #e7f2ec;
+  margin: 0 0 0.75rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  line-height: 1.05;
+  color: #f7faf8;
+  font-weight: 600;
+}
+
+.lead {
+  margin: 0.85rem 0 1.25rem;
+  color: #d7e4dc;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  max-width: 28rem;
+}
+
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.primary,
+.secondary {
+  text-decoration: none;
+  padding: 0.65rem 1.1rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+
+.primary {
+  background: #f4f7f5;
+  color: #0f3d3e;
+}
+
+.secondary {
+  border: 1px solid #d7e4dc;
+  color: #f4f7f5;
+}
+
+.verify,
+.benefits {
+  background: #f4f7f5;
+  padding: 2.5rem 1.25rem;
+}
+
+.verify {
+  border-top: 1px solid #d0d7d2;
+}
+
+.verify h2,
+.benefits h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  max-width: 32rem;
+}
+
+.form input {
+  flex: 1;
+  min-width: 12rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #b8c0ba;
+  background: #fff;
+}
+
+.form button {
+  background: #0f3d3e;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+  font-family: system-ui, sans-serif;
+}
+
+.benefits ul {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  line-height: 1.6;
+  max-width: 36rem;
+}

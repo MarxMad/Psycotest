@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import { JitsiMeetEmbed } from "@/components/live/JitsiMeetEmbed";
+import { LiveSessionTools } from "@/components/live/LiveSessionTools";
 import s from "../../clases-vivo.module.css";
 
 export default function AdminLiveRoomPage() {
   const { id } = useParams<{ id: string }>();
-  const [roomUrl, setRoomUrl] = useState<string | null>(null);
+  const [mainRoomUrl, setMainRoomUrl] = useState<string | null>(null);
+  const [activeRoomUrl, setActiveRoomUrl] = useState<string | null>(null);
   const [title, setTitle] = useState("Sala en vivo");
   const [displayName, setDisplayName] = useState("Instructor");
   const [error, setError] = useState<string | null>(null);
@@ -32,7 +34,8 @@ export default function AdminLiveRoomPage() {
           return;
         }
         const data = await join.json();
-        setRoomUrl(data.roomUrl);
+        setMainRoomUrl(data.roomUrl);
+        setActiveRoomUrl(data.roomUrl);
         setTitle(data.title || "Sala en vivo");
         if (data.displayName) setDisplayName(data.displayName);
       } catch {
@@ -52,7 +55,7 @@ export default function AdminLiveRoomPage() {
     <div className={s.container}>
       <PageHeader
         title={title}
-        subtitle="Transmisión embebida (Jitsi)"
+        subtitle="Jitsi + pizarra, breakouts y presencia CONOCER"
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },
@@ -81,7 +84,17 @@ export default function AdminLiveRoomPage() {
         </Card>
       )}
 
-      {!loading && roomUrl && <JitsiMeetEmbed roomUrl={roomUrl} displayName={displayName} />}
+      {!loading && activeRoomUrl && (
+        <>
+          <JitsiMeetEmbed roomUrl={activeRoomUrl} displayName={displayName} />
+          <LiveSessionTools
+            liveClassId={id}
+            isAdmin
+            mainRoomUrl={mainRoomUrl}
+            onRoomUrlChange={(url) => setActiveRoomUrl(url || mainRoomUrl)}
+          />
+        </>
+      )}
     </div>
   );
 }

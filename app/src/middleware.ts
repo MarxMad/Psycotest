@@ -71,7 +71,12 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    await jwtVerify(token, secret());
+    const { payload } = await jwtVerify(token, secret());
+    const rol = payload.rol as string | undefined;
+    // Solo el rol admin entra al panel profesional / participantes
+    if (rol !== "admin") {
+      return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
+    }
     return NextResponse.next();
   } catch {
     const login = new URL("/login", request.url);

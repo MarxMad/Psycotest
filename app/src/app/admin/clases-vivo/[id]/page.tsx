@@ -14,6 +14,8 @@ type AttendanceRow = {
   joinedAt: string;
   leftAt: string | null;
   durationSeconds: number | null;
+  connectedSeconds?: number | null;
+  presencePercent?: number | null;
   nombre: string | null;
   email: string | null;
 };
@@ -173,6 +175,10 @@ export default function LiveClassDetailPage() {
                     {row.durationSeconds != null
                       ? ` · ${Math.round(row.durationSeconds / 60)} min`
                       : ""}
+                    {row.connectedSeconds != null
+                      ? ` · conectado ${Math.round(row.connectedSeconds / 60)} min`
+                      : ""}
+                    {row.presencePercent != null ? ` · presencia ${row.presencePercent}%` : ""}
                   </span>
                 </li>
               ))}

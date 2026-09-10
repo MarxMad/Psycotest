@@ -14,7 +14,7 @@ const JOIN_EARLY_MS = 15 * 60 * 1000;
 export function buildJitsiRoom(classId: string): { roomSlug: string; roomUrl: string } {
   const base = (process.env.JITSI_BASE_URL?.trim() || "https://meet.jit.si").replace(/\/$/, "");
   const slugBase = classId.replace(/[^a-zA-Z0-9]/g, "").slice(-16) || Date.now().toString(36);
-  const roomSlug = `psycotest-${slugBase}`;
+  const roomSlug = `sistemapsic-${slugBase}`;
   return { roomSlug, roomUrl: `${base}/${roomSlug}` };
 }
 
@@ -112,6 +112,9 @@ export async function recordJoin(liveClassId: string, userId: string) {
     joinedAt: now,
     leftAt: null,
     durationSeconds: null,
+    connectedSeconds: 0,
+    presencePercent: 0,
+    lastHeartbeatAt: now,
   });
 
   const [row] = await db
@@ -165,6 +168,9 @@ export async function listAttendances(liveClassId: string) {
       joinedAt: liveClassAttendances.joinedAt,
       leftAt: liveClassAttendances.leftAt,
       durationSeconds: liveClassAttendances.durationSeconds,
+      connectedSeconds: liveClassAttendances.connectedSeconds,
+      presencePercent: liveClassAttendances.presencePercent,
+      lastHeartbeatAt: liveClassAttendances.lastHeartbeatAt,
       nombre: users.nombre,
       email: users.email,
     })

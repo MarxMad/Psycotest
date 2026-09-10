@@ -42,7 +42,7 @@ export async function ConsultorioLanding() {
       <HashScroll />
       <ConsultorioNav />
 
-      <section className={styles.hero} aria-label="Inicio">
+      <section className={styles.hero} aria-label="Inicio" data-anime="hero">
         <ConsultorioHeroVisual />
         <div className={styles.heroGrid}>
           <LandingReveal className={styles.heroCopy} y={36}>
@@ -56,7 +56,7 @@ export async function ConsultorioLanding() {
               <Link href="/consultorio/cursos" className={styles.btnSecondary}>
                 Ver cursos
               </Link>
-              <Link href="/psycotest" className={styles.btnGhostHero}>
+              <Link href="/evaluacion" className={styles.btnGhostHero}>
                 Evaluación en línea
               </Link>
             </div>
@@ -269,7 +269,7 @@ export async function ConsultorioLanding() {
             <div className={styles.footerLinks}>
               <Link href="/#conocer">CONOCER</Link>
               <Link href="/consultorio/cursos">Cursos</Link>
-              <Link href="/psycotest">Evaluación</Link>
+              <Link href="/evaluacion">Evaluación</Link>
               <Link href="/#contacto">Contacto</Link>
             </div>
           </div>

@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { LiveClass } from "@/db/schema";
+import { ConsultorioNav } from "../ConsultorioNav";
+import { BrandShell } from "../BrandShell";
 import styles from "./clases-vivo.module.css";
 
 function fmt(iso: string) {
@@ -51,8 +53,10 @@ export default function AlumnoClasesVivoPage() {
   }, []);
 
   return (
-    <main className={styles.page}>
-      <header className={styles.header}>
+    <BrandShell>
+      <ConsultorioNav />
+      <main className={styles.page} data-anime="page">
+      <header className={styles.header} data-anime="hero">
         <p className={styles.eyebrow}>Consultorio</p>
         <h1>Clases en vivo</h1>
         <p className={styles.lead}>
@@ -79,7 +83,7 @@ export default function AlumnoClasesVivoPage() {
       )}
 
       {!loading && !error && classes.length > 0 && (
-        <ul className={styles.list}>
+        <ul className={styles.list} data-anime-stagger>
           {classes.map((clase) => {
             const canJoin = clase.status === "live" || clase.status === "scheduled";
             return (
@@ -106,5 +110,6 @@ export default function AlumnoClasesVivoPage() {
         </ul>
       )}
     </main>
+    </BrandShell>
   );
 }
