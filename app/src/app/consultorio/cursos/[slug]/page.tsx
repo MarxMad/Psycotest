@@ -90,6 +90,7 @@ export default async function CourseDetailPage({ params }: Props) {
                 <CourseCheckout
                   courseSlug={course.slug}
                   priceLabel={formatMxn(course.priceMxn)}
+                  priceMxn={course.priceMxn}
                   stripeReady={isStripeConfigured()}
                   hasPriceId={Boolean(course.stripePriceId)}
                   enrolled={enrolled}

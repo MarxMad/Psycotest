@@ -168,17 +168,16 @@ export async function ConsultorioLanding() {
         <div className={styles.wrap}>
           <div className={styles.split}>
             <LandingReveal>
-              <p className={styles.eyebrowLight}>Evaluación · Operativo</p>
-              <h2>Diagnóstico psicométrico en línea</h2>
+              <p className={styles.eyebrowLight}>Pruebas · Operativo</p>
+              <h2>Batería psicológica en línea</h2>
               <p className={styles.leadLight}>
-                Aplicamos baterías validadas para medir perfil, valores, aptitudes y competencias — con calificación
-                automática, gráficas e informes PDF. El evaluado no conoce el instrumento; tú interpretas con criterio
-                profesional.
+                Hartman, PAPI, MABE, Cleaver y LIFO — aplicación controlada, calificación e informes
+                para selección, desarrollo y expediente CONOCER.
               </p>
               <ul className={styles.checkListLight}>
+                <li>5 instrumentos del consultorio</li>
                 <li>Códigos de acceso confidenciales</li>
-                <li>Validación de protocolo y puntajes automáticos</li>
-                <li>Informes trazables para expediente CONOCER</li>
+                <li>Informes trazables para certificación</li>
               </ul>
               <Link href={psycotest.home} className={styles.btnOnDark}>
                 Acceder al panel de evaluación
@@ -229,9 +228,12 @@ export async function ConsultorioLanding() {
       <section className={`${styles.section} ${styles.sectionMuted}`} id="servicios">
         <div className={styles.wrap}>
           <LandingReveal className={styles.sectionHead}>
-            <p className={styles.eyebrow}>Servicios</p>
-            <h2>Formación, evaluación y certificación</h2>
-            <p>Acompañamiento CONOCER para personas, equipos y organizaciones públicas y privadas.</p>
+            <p className={styles.eyebrow}>Servicios en línea</p>
+            <h2>Cursos, pruebas, certificación y consultoría</h2>
+            <p>
+              Todo el portafolio del PPTX de servicios: pruebas, cursos en vivo y grabados, CONOCER,
+              coaching, mediación y terapia.
+            </p>
           </LandingReveal>
           <LandingStagger className={styles.serviceGrid}>
             <ServiceCards services={SERVICES} />

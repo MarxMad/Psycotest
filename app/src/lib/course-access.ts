@@ -29,6 +29,32 @@ export async function getEnrollmentBySlug(userId: string, courseSlug: string) {
   return row ?? null;
 }
 
+/** Inscripción directa (curso gratis, cupón 100% o entorno de prueba). */
+export async function enrollUserInCourse(params: {
+  userId: string;
+  courseId: string;
+  stripeSessionId?: string | null;
+}) {
+  const db = getDb();
+  const now = new Date().toISOString();
+  const existing = await getEnrollment(params.userId, params.courseId);
+  if (existing) return existing.id;
+
+  const id = crypto.randomUUID();
+  await db.insert(schema.courseEnrollments).values({
+    id,
+    userId: params.userId,
+    courseId: params.courseId,
+    status: "active",
+    stripeSessionId: params.stripeSessionId ?? null,
+    progressPercent: 0,
+    enrolledAt: now,
+    createdAt: now,
+    updatedAt: now,
+  });
+  return id;
+}
+
 export async function activateEnrollment(params: {
   userId: string;
   courseId: string;

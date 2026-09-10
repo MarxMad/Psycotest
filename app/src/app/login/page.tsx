@@ -112,8 +112,9 @@ function LoginForm() {
       </motion.button>
 
       <p className={s.hint}>
-        ¿Primera vez? Usa la cuenta que te asignó el administrador. Admin inicial:{" "}
-        <code>admin@sistemapsic.local</code>
+        Admin: <code>admin@sistemapsic.local</code> / <code>sistemapsic2026</code>
+        <br />
+        Alumno demo: <code>alumno@sistemapsic.local</code> / <code>alumno2026</code>
       </p>
       <Link href="/" className={s.back}>
         ← Volver al inicio

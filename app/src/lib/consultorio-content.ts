@@ -12,62 +12,65 @@ export const PLATFORM_MODULES: PlatformModule[] = [
     id: "certificacion",
     title: "Certificación CONOCER",
     description:
-      "Gestión de estándares de competencia, evaluación, expedientes y constancias con trazabilidad alineada al Sistema Nacional de Competencias.",
-    status: "construccion",
-    href: "#conocer",
-    features: ["Estándares por sector", "Expediente digital", "Constancia SEP"],
+      "Expedientes formales, evidencias, % de presencia y aprovechamiento, dictamen y constancia verificable con QR.",
+    status: "operativo",
+    href: "/consultorio/expediente",
+    features: ["Expediente digital", "Portafolio de evidencias", "Constancia con QR"],
   },
   {
     id: "evaluacion",
-    title: "Evaluación en línea",
+    title: "Pruebas psicológicas en línea",
     description:
-      "Baterías psicométricas aplicadas con códigos de acceso, calificación automática e informes PDF — sin revelar instrumentos al evaluado.",
+      "Batería Hartman, PAPI, MABE, Cleaver y LIFO con acceso controlado, informes y trazabilidad para el consultorio.",
     status: "operativo",
     href: "/evaluacion",
-    features: ["Acceso por código", "Panel del evaluador", "Informe trazable"],
+    features: ["5 instrumentos", "Acceso por código", "Informe profesional"],
   },
   {
     id: "formacion",
-    title: "Formación y cursos",
-    description: "Catálogo estilo Platzi, progreso por lección, landings de venta e inscripción con Stripe México.",
-    status: "construccion",
+    title: "Cursos en vivo y grabados",
+    description:
+      "Sala asíncrona, clases en vivo, pizarra, portafolio, evaluaciones diagnóstica/sumaria/final y constancias.",
+    status: "operativo",
     href: "/consultorio/cursos",
-    features: ["Video bajo demanda", "Seguimiento de avance", "Cobro en línea"],
+    features: ["Catálogo completo", "Progreso por lección", "Cupón DEMO100"],
   },
   {
     id: "clases",
-    title: "Clases en vivo",
-    description: "Salas integradas con cámara, chat y pizarra — sin depender de Meet ni Zoom.",
-    status: "proximo",
-    href: "/consultorio/cursos",
-    features: ["Hasta ~30 participantes", "Grabación → replay", "Calendario por curso"],
+    title: "Sala virtual y dinámicas",
+    description:
+      "Clases con Jitsi, breakouts, pizarra colaborativa, icebreakers, heartbeats de presencia y grabación → VOD.",
+    status: "operativo",
+    href: "/consultorio/clases-vivo",
+    features: ["Salas en vivo", "Pizarra + breakouts", "% de presencia"],
   },
 ];
 
-/** Dimensiones evaluadas — enfoque comercial sin nombrar instrumentos. */
+/** Dimensiones / instrumentos del PPTX de servicios en línea. */
 export const EVALUATION_DIMENSIONS = [
-  { label: "Perfil conductual", desc: "Estilo de trabajo y relación interpersonal" },
-  { label: "Valores y motivación", desc: "Alineación con la cultura organizacional" },
-  { label: "Aptitudes cognitivas", desc: "Razonamiento y toma de decisiones" },
-  { label: "Competencias laborales", desc: "Habilidades aplicadas al puesto" },
+  { label: "Hartman", desc: "Axiología de valores" },
+  { label: "PAPI", desc: "Personalidad y estilo de trabajo" },
+  { label: "MABE", desc: "Pensamiento y valores" },
+  { label: "Cleaver", desc: "Compatibilidad puesto–persona" },
+  { label: "LIFO", desc: "Liderazgo y toma de decisiones" },
 ] as const;
 
 export const VISUAL_STORIES = [
   {
-    title: "Capacitación que transforma",
-    text: "Programas presenciales y en línea para equipos del sector público y privado, con ruta clara hacia la certificación.",
+    title: "Cursos en vivo",
+    text: "Liderazgo, NOM-035, inteligencia emocional, negociación, ciberseguridad, IA y más — con salas, pizarra y dinámicas.",
     image: "/ige/serv1.png",
     alt: "Grupo en sesión de capacitación profesional",
   },
   {
-    title: "Diagnóstico organizacional",
-    text: "Identificamos áreas de oportunidad en desarrollo humano antes de evaluar y certificar competencias.",
+    title: "Cursos grabados",
+    text: "Técnicas de diagnóstico, clima laboral, DNC, marco lógico, TKJ y evaluación de desempeño bajo demanda.",
     image: "/ige/serv2.png",
     alt: "Consultoría y diagnóstico con equipo directivo",
   },
   {
-    title: "Selección con criterio",
-    text: "Vinculamos candidatos y organizaciones con evaluación confidencial y resultados interpretados por especialistas.",
+    title: "Certificación CONOCER",
+    text: "Atención al ciudadano, comensales, huésped y adicciones — expediente, evidencias y constancia verificable.",
     image: "/ige/serv3.png",
     alt: "Proceso de selección y evaluación de personal",
   },
@@ -76,9 +79,9 @@ export const VISUAL_STORIES = [
 export const BANNER_STRIP = {
   image: "/ige/banner.png",
   alt: "Profesionales en entorno de capacitación y certificación",
-  title: "Competencias que el mercado reconoce",
+  title: "Servicios en línea del consultorio",
   subtitle:
-    "Formación, evaluación y acompañamiento hacia la constancia oficial — para personas, equipos y organizaciones que buscan superación.",
+    "Pruebas, cursos en vivo y grabados, certificaciones CONOCER, consultoría, coaching, mediación y terapia — en una sola plataforma.",
 } as const;
 
 /** Beneficios para personas certificadas — alineado al marco CONOCER / SEP. */
@@ -99,32 +102,69 @@ export const CONOCER_ORG_BENEFITS = [
 
 export const SERVICES = [
   {
-    title: "Certificación de competencias",
-    text: "Evaluación y certificación CONOCER para trabajadores, docentes y equipos organizacionales bajo estándares sectoriales.",
+    title: "Pruebas psicológicas",
+    text: "Hartman, PAPI, MABE, Cleaver y LIFO aplicadas en línea con informes para selección y desarrollo.",
     image: "/ige/download.jpg",
   },
   {
-    title: "Diagnóstico organizacional",
-    text: "Clasificación de empresas, escalas Likert y técnicas para identificar áreas de oportunidad en desarrollo humano.",
+    title: "Cursos y certificaciones",
+    text: "Catálogo en vivo y grabado, programas CONOCER, % de aprovechamiento/presencia y constancias digitales.",
     image: "/ige/Imagen-1.png",
   },
   {
-    title: "Selección de personal",
-    text: "Vinculación organización–candidato con evaluación confidencial integrada al flujo de selección.",
+    title: "Consultoría y coaching",
+    text: "Acompañamiento organizacional, mediación, terapia y coaching empresarial para equipos y líderes.",
     image: "/ige/download-1.jpg",
   },
   {
-    title: "Capacitación y consultoría",
-    text: "Cursos en línea, talleres, diplomados y coaching empresarial para sector público e iniciativa privada.",
+    title: "Sala virtual integrada",
+    text: "Una sala para cursos asíncronos, clases en vivo, chat, pizarra, portafolio y seguimiento por correo.",
     image: "/ige/1.png",
   },
 ] as const;
 
+/** Destacados del catálogo sembrado desde el PPTX de servicios en línea. */
+export const CATALOG_HIGHLIGHTS = {
+  live: [
+    "Liderazgo",
+    "Inteligencia Emocional",
+    "Comunicación efectiva",
+    "Trabajo en equipo",
+    "Resolución de conflictos",
+    "Negociación",
+    "NOM-035",
+    "Aspectos legales en RH",
+    "Marketing digital",
+    "Ciberseguridad",
+    "Inteligencia Artificial",
+    "Primeros auxilios",
+    "Seguridad e higiene",
+  ],
+  recorded: [
+    "Técnicas de diagnóstico",
+    "Clima laboral",
+    "Evaluación de desempeño",
+    "Evaluación de servicio",
+    "DNC",
+    "Manejo de conflictos",
+    "Campo de fuerzas",
+    "Método TKJ",
+    "Marco lógico",
+  ],
+  conocer: [
+    "Atención al ciudadano",
+    "Atención a comensales",
+    "Recepción y atención al huésped",
+    "Atención en adicciones",
+  ],
+  tests: ["Hartman", "PAPI", "MABE", "Cleaver", "LIFO"],
+} as const;
+
 export const ROADMAP = [
-  { month: "Sep 2026", label: "Landing profesional + catálogo de cursos + evaluación en línea", done: true },
-  { month: "Oct 2026", label: "Expediente digital CONOCER + clases en vivo", done: false },
-  { month: "Nov 2026", label: "Cobro Stripe + inscripción automática a certificación", done: false },
-  { month: "Dic 2026", label: "Plataforma certificadora 100% operativa", done: false },
+  { month: "Sep 2026", label: "Landing + catálogo completo + evaluación + clases en vivo", done: true },
+  { month: "Oct 2026", label: "Expediente CONOCER + constancias + legales", done: true },
+  { month: "Nov 2026", label: "Cobro Stripe + price_id por curso en producción", done: false },
+  { month: "Dic 2026", label: "Contenido VOD propio y campañas de promoción", done: false },
 ] as const;
 
 export const NAV_SCROLL = [
@@ -159,7 +199,7 @@ export const NAV_LINKS = [
 ] as const;
 
 export const HERO_STATS = [
-  { value: "CONOCER", label: "Certificación oficial SEP" },
-  { value: "4", label: "Dimensiones evaluadas" },
-  { value: "24/7", label: "Formación en línea" },
+  { value: "5", label: "Pruebas en línea" },
+  { value: "CONOCER", label: "Certificación oficial" },
+  { value: "24/7", label: "Cursos grabados" },
 ] as const;

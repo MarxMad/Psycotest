@@ -624,6 +624,13 @@ export async function ensureDbReady(db: AppDb): Promise<DbReadyState> {
   await ensureSchema(db);
   await ensureDefaultAdmin(db);
 
+  try {
+    const { seedPlatformCatalog } = await import("./seed-catalog");
+    await seedPlatformCatalog(db);
+  } catch (error) {
+    console.error("[sistemapsic] seedPlatformCatalog falló (no bloquea arranque):", error);
+  }
+
   return {
     backend: dbBackend(),
     schemaReady: true,
