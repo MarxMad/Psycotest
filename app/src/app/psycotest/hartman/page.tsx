@@ -391,9 +391,9 @@ function Parte({
 
   /** Los indicadores del axiograma que el motor ya calcula. */
   const filas: { clave: string; sigla: string; valor: number; columna: string }[] = [
-    { clave: "DIM_I", sigla: "DIM I", valor: p.ejes.I.balance, columna: "DIM" },
-    { clave: "DIM_E", sigla: "DIM E", valor: p.ejes.E.balance, columna: "DIM" },
-    { clave: "DIM_S", sigla: "DIM S", valor: p.ejes.S.balance, columna: "DIM" },
+    { clave: "DIM_I", sigla: "DIM I", valor: p.ejes.I.balance, columna: "DIM_EJE" },
+    { clave: "DIM_E", sigla: "DIM E", valor: p.ejes.E.balance, columna: "DIM_EJE" },
+    { clave: "DIM_S", sigla: "DIM S", valor: p.ejes.S.balance, columna: "DIM_EJE" },
     { clave: "DIM", sigla: "DIM", valor: p.DIM, columna: "DIM" },
     { clave: "DIM_PCT", sigla: "DIM %", valor: p.DIMpct, columna: "DIM_PCT" },
     { clave: "INT_I", sigla: "INT I", valor: p.ejes.I.INT, columna: "INT_EJE" },
@@ -401,7 +401,8 @@ function Parte({
     { clave: "INT_S", sigla: "INT S", valor: p.ejes.S.INT, columna: "INT_EJE" },
     { clave: "INT", sigla: "INT", valor: p.INT, columna: "INT" },
     { clave: "INT_PCT", sigla: "INT %", valor: p.INTpct, columna: "INT_PCT" },
-    { clave: "DIS", sigla: "DIS", valor: p.DIS, columna: "DI" },
+    { clave: "DIF", sigla: "DIF", valor: p.DIFperfil, columna: "DIF" },
+    { clave: "DIS", sigla: "DIS", valor: p.DIS, columna: "DIS" },
   ];
 
   return (

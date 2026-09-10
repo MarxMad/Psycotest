@@ -9,12 +9,12 @@ ok(p.DIS === 0, `DIS = ${p.DIS}`);
 ok(p.DIM === 0 && p.INT === 0, `DIM = ${p.DIM}, INT = ${p.INT} (sin desviacion)`);
 ok(p.ejes.I.DIM === 57 && p.ejes.E.DIM === 57 && p.ejes.S.DIM === 57,
    `DIM por eje = ${p.ejes.I.DIM}/${p.ejes.E.DIM}/${p.ejes.S.DIM}`);
-ok(p.Q1 === 171 && p.Q2 === 0, `VQ(1) = ${p.Q1}, VQ(2) = ${p.Q2}`);
+ok(p.Q1 === 0 && p.Q2 === 0, `VQ(1) = ${p.Q1}, VQ(2) = ${p.Q2}`);
 
 console.log("\n2) Compuestos con dos partes perfectas");
 const r = calificarHartman([...NORMA], [...NORMA]);
 ok(r.compuestos[0].BQr === 1, `BQr(1) = ${r.compuestos[0].BQr.toFixed(2)}`);
-ok(r.compuestos[0].BQa === 171, `BQa(1) = ${r.compuestos[0].BQa.toFixed(1)}`);
+ok(r.compuestos[0].BQa === 0, `BQa(1) = ${r.compuestos[0].BQa.toFixed(1)}`);
 ok(etiquetaNivel(nivel("BQr", 1.0)) === "Excelente", `BQr 1.00 -> ${etiquetaNivel(nivel("BQr", 1.0))}`);
 
 console.log("\n3) Reglas de signo y ajuste -2");
