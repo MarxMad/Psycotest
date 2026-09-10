@@ -1,0 +1,52 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 420px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.toolbar button {
+  border: 1px solid #9aa49e;
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.status {
+  font-size: 0.8rem;
+  color: #0f3d3e;
+}
+
+.badge {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: #66726c;
+}
+
+.canvas {
+  height: 480px;
+  border: 1px solid #cfd6d1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading {
+  font-size: 0.85rem;
+  color: #66726c;
+}
+
+@media (max-width: 640px) {
+  .canvas {
+    height: 360px;
+  }
+}

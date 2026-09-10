@@ -13,6 +13,7 @@ import {
   Users,
   ChevronLeft,
   LogOut,
+  FolderOpen,
 } from "lucide-react";
 import { useAdminSidebar } from "@/hooks/useAdmin";
 import s from "./Sidebar.module.css";
@@ -121,6 +122,12 @@ export function Sidebar({ user, onLogout }: SidebarProps) {
             href="/admin/clases-vivo"
             icon={<Video size={20} />}
             label="Clases en Vivo"
+            isCollapsed={isCollapsed}
+          />
+          <SidebarItem
+            href="/admin/expedientes"
+            icon={<FolderOpen size={20} />}
+            label="Expedientes"
             isCollapsed={isCollapsed}
           />
           <SidebarItem

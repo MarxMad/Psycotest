@@ -112,6 +112,9 @@ export async function recordJoin(liveClassId: string, userId: string) {
     joinedAt: now,
     leftAt: null,
     durationSeconds: null,
+    connectedSeconds: 0,
+    presencePercent: 0,
+    lastHeartbeatAt: now,
   });
 
   const [row] = await db
@@ -165,6 +168,9 @@ export async function listAttendances(liveClassId: string) {
       joinedAt: liveClassAttendances.joinedAt,
       leftAt: liveClassAttendances.leftAt,
       durationSeconds: liveClassAttendances.durationSeconds,
+      connectedSeconds: liveClassAttendances.connectedSeconds,
+      presencePercent: liveClassAttendances.presencePercent,
+      lastHeartbeatAt: liveClassAttendances.lastHeartbeatAt,
       nombre: users.nombre,
       email: users.email,
     })

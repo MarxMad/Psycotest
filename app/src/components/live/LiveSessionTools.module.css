@@ -1,0 +1,169 @@
+.wrap {
+  margin-top: 1rem;
+  border-top: 1px solid color-mix(in srgb, var(--admin-border, #d4d4d8) 80%, transparent);
+  padding-top: 1rem;
+}
+
+.presenceBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: color-mix(in srgb, #0f3d3e 80%, #111);
+  margin-bottom: 0.75rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.tab,
+.tabActive {
+  border: 1px solid #c5c9c7;
+  background: #f7f8f6;
+  color: #1c2422;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.tabActive {
+  background: #0f3d3e;
+  border-color: #0f3d3e;
+  color: #f4f7f5;
+}
+
+.panel {
+  background: color-mix(in srgb, #e8eee9 40%, #fff);
+  border: 1px solid #d0d7d2;
+  border-radius: 8px;
+  padding: 0.85rem;
+}
+
+.adminRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.adminRow input {
+  width: 4rem;
+  margin-left: 0.25rem;
+  padding: 0.25rem 0.4rem;
+}
+
+.primary,
+.ghost,
+.linkBtn {
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.primary {
+  background: #0f3d3e;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 0.75rem;
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid #9aa49e;
+  color: #1c2422;
+  padding: 0.35rem 0.7rem;
+}
+
+.linkBtn {
+  background: none;
+  border: none;
+  color: #0f3d3e;
+  text-decoration: underline;
+  padding: 0;
+  font: inherit;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e5e1;
+}
+
+.muted {
+  color: #66726c;
+  font-size: 0.85rem;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: #3a4540;
+  line-height: 1.45;
+}
+
+.msg {
+  font-size: 0.85rem;
+  color: #0f3d3e;
+  margin-bottom: 0.5rem;
+}
+
+.iceType {
+  text-transform: capitalize;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: #66726c;
+  margin: 0 0 0.25rem;
+}
+
+.icePrompt {
+  font-size: 1.05rem;
+  margin: 0 0 0.75rem;
+  color: #14201c;
+}
+
+.iceForm {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.iceForm input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #b8c0ba;
+  border-radius: 4px;
+}
+
+.responses {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .list li {
+    flex-direction: column;
+  }
+  .iceForm {
+    flex-direction: column;
+  }
+}

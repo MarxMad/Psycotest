@@ -191,7 +191,10 @@ async function ensureLiveClassesTables(db: AppDb): Promise<void> {
         user_id TEXT NOT NULL REFERENCES users(id),
         joined_at TEXT NOT NULL,
         left_at TEXT,
-        duration_seconds INTEGER
+        duration_seconds INTEGER,
+        connected_seconds INTEGER NOT NULL DEFAULT 0,
+        presence_percent INTEGER NOT NULL DEFAULT 0,
+        last_heartbeat_at TEXT
       )
     `)),
   );
@@ -202,6 +205,200 @@ async function ensureLiveClassesTables(db: AppDb): Promise<void> {
   await runAlter(db, `ALTER TABLE live_classes ADD COLUMN room_url TEXT`);
   await runAlter(db, `ALTER TABLE live_classes ADD COLUMN daily_room_url TEXT`);
   await runAlter(db, `ALTER TABLE live_classes ADD COLUMN recording_url TEXT`);
+  await runAlter(
+    db,
+    `ALTER TABLE live_class_attendances ADD COLUMN connected_seconds INTEGER NOT NULL DEFAULT 0`,
+  );
+  await runAlter(
+    db,
+    `ALTER TABLE live_class_attendances ADD COLUMN presence_percent INTEGER NOT NULL DEFAULT 0`,
+  );
+  await runAlter(db, `ALTER TABLE live_class_attendances ADD COLUMN last_heartbeat_at TEXT`);
+}
+
+async function ensureConocerTables(db: AppDb): Promise<void> {
+  const statements = [
+    `CREATE TABLE IF NOT EXISTS live_breakout_rooms (
+      id TEXT PRIMARY KEY NOT NULL,
+      live_class_id TEXT NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE,
+      name TEXT NOT NULL,
+      room_slug TEXT NOT NULL,
+      room_url TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'open',
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS live_breakout_assignments (
+      id TEXT PRIMARY KEY NOT NULL,
+      breakout_room_id TEXT NOT NULL REFERENCES live_breakout_rooms(id) ON DELETE CASCADE,
+      user_id TEXT NOT NULL REFERENCES users(id),
+      assigned_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS live_whiteboard_docs (
+      id TEXT PRIMARY KEY NOT NULL,
+      live_class_id TEXT NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE,
+      breakout_room_id TEXT REFERENCES live_breakout_rooms(id) ON DELETE CASCADE,
+      document_json TEXT,
+      updated_by TEXT REFERENCES users(id),
+      updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS live_whiteboard_snapshots (
+      id TEXT PRIMARY KEY NOT NULL,
+      live_class_id TEXT NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE,
+      breakout_room_id TEXT REFERENCES live_breakout_rooms(id) ON DELETE SET NULL,
+      label TEXT NOT NULL DEFAULT 'Captura',
+      image_data TEXT NOT NULL,
+      created_by TEXT REFERENCES users(id),
+      created_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS live_icebreaker_sessions (
+      id TEXT PRIMARY KEY NOT NULL,
+      live_class_id TEXT NOT NULL REFERENCES live_classes(id) ON DELETE CASCADE,
+      type TEXT NOT NULL,
+      prompt TEXT NOT NULL,
+      state_json TEXT NOT NULL DEFAULT '{}',
+      status TEXT NOT NULL DEFAULT 'active',
+      created_by TEXT REFERENCES users(id),
+      created_at TEXT NOT NULL,
+      closed_at TEXT
+    )`,
+    `CREATE TABLE IF NOT EXISTS vod_events (
+      id TEXT PRIMARY KEY NOT NULL,
+      enrollment_id TEXT NOT NULL REFERENCES course_enrollments(id) ON DELETE CASCADE,
+      lesson_id TEXT NOT NULL REFERENCES course_lessons(id) ON DELETE CASCADE,
+      event_type TEXT NOT NULL,
+      position_seconds INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS course_quizzes (
+      id TEXT PRIMARY KEY NOT NULL,
+      lesson_id TEXT NOT NULL UNIQUE REFERENCES course_lessons(id) ON DELETE CASCADE,
+      pass_score INTEGER NOT NULL DEFAULT 70,
+      max_attempts INTEGER NOT NULL DEFAULT 3,
+      shuffle_questions INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS quiz_questions (
+      id TEXT PRIMARY KEY NOT NULL,
+      quiz_id TEXT NOT NULL REFERENCES course_quizzes(id) ON DELETE CASCADE,
+      prompt TEXT NOT NULL,
+      type TEXT NOT NULL DEFAULT 'single',
+      options TEXT NOT NULL DEFAULT '[]',
+      correct_keys TEXT NOT NULL DEFAULT '[]',
+      explanation TEXT,
+      sort_order INTEGER NOT NULL DEFAULT 0
+    )`,
+    `CREATE TABLE IF NOT EXISTS quiz_attempts (
+      id TEXT PRIMARY KEY NOT NULL,
+      enrollment_id TEXT NOT NULL REFERENCES course_enrollments(id) ON DELETE CASCADE,
+      quiz_id TEXT NOT NULL REFERENCES course_quizzes(id) ON DELETE CASCADE,
+      answers TEXT NOT NULL DEFAULT '{}',
+      score INTEGER NOT NULL DEFAULT 0,
+      passed INTEGER NOT NULL DEFAULT 0,
+      attempt_number INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS certification_programs (
+      id TEXT PRIMARY KEY NOT NULL,
+      course_id TEXT NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
+      code TEXT NOT NULL,
+      title TEXT NOT NULL,
+      version TEXT NOT NULL DEFAULT '1.0',
+      description TEXT,
+      min_presence_percent INTEGER NOT NULL DEFAULT 80,
+      min_aprovechamiento_percent INTEGER NOT NULL DEFAULT 70,
+      active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS student_expedientes (
+      id TEXT PRIMARY KEY NOT NULL,
+      user_id TEXT NOT NULL REFERENCES users(id),
+      program_id TEXT NOT NULL REFERENCES certification_programs(id),
+      enrollment_id TEXT REFERENCES course_enrollments(id),
+      status TEXT NOT NULL DEFAULT 'abierto',
+      aprovechamiento_percent INTEGER NOT NULL DEFAULT 0,
+      presence_percent_avg INTEGER NOT NULL DEFAULT 0,
+      notes TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS expediente_evaluations (
+      id TEXT PRIMARY KEY NOT NULL,
+      expediente_id TEXT NOT NULL REFERENCES student_expedientes(id) ON DELETE CASCADE,
+      type TEXT NOT NULL,
+      answers_json TEXT NOT NULL DEFAULT '{}',
+      score INTEGER,
+      submitted_at TEXT NOT NULL,
+      reviewed_by TEXT REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS portfolio_evidences (
+      id TEXT PRIMARY KEY NOT NULL,
+      expediente_id TEXT NOT NULL REFERENCES student_expedientes(id) ON DELETE CASCADE,
+      title TEXT NOT NULL,
+      description TEXT,
+      evidence_type TEXT NOT NULL DEFAULT 'documento',
+      file_url TEXT,
+      meta_json TEXT,
+      created_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS course_certificates (
+      id TEXT PRIMARY KEY NOT NULL,
+      expediente_id TEXT REFERENCES student_expedientes(id),
+      user_id TEXT NOT NULL REFERENCES users(id),
+      course_id TEXT NOT NULL REFERENCES courses(id),
+      folio TEXT NOT NULL UNIQUE,
+      verification_code TEXT NOT NULL UNIQUE,
+      dictamen_json TEXT,
+      issued_at TEXT NOT NULL,
+      revoked_at TEXT
+    )`,
+    `CREATE TABLE IF NOT EXISTS legal_documents (
+      id TEXT PRIMARY KEY NOT NULL,
+      type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      body_markdown TEXT NOT NULL,
+      version TEXT NOT NULL DEFAULT '1.0',
+      active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    )`,
+    `CREATE TABLE IF NOT EXISTS legal_acknowledgements (
+      id TEXT PRIMARY KEY NOT NULL,
+      user_id TEXT NOT NULL REFERENCES users(id),
+      document_id TEXT NOT NULL REFERENCES legal_documents(id),
+      acknowledged_at TEXT NOT NULL,
+      ip_hash TEXT
+    )`,
+  ];
+
+  for (const statement of statements) {
+    try {
+      await Promise.resolve(db.run(sql.raw(statement)));
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      if (!msg.toLowerCase().includes("already exists")) {
+        console.warn(`[psycotest] ensureConocerTables: ${msg}`);
+      }
+    }
+  }
+
+  await runAlter(db, `ALTER TABLE course_lessons ADD COLUMN type TEXT NOT NULL DEFAULT 'video'`);
+  await runAlter(db, `ALTER TABLE course_lessons ADD COLUMN content_markdown TEXT`);
+  await runAlter(
+    db,
+    `ALTER TABLE lesson_progress ADD COLUMN watched_seconds INTEGER NOT NULL DEFAULT 0`,
+  );
+  await runAlter(
+    db,
+    `ALTER TABLE lesson_progress ADD COLUMN permanence_percent INTEGER NOT NULL DEFAULT 0`,
+  );
+  await runAlter(
+    db,
+    `ALTER TABLE coupons ADD COLUMN grant_on_course_complete INTEGER NOT NULL DEFAULT 0`,
+  );
+  await runAlter(db, `ALTER TABLE coupons ADD COLUMN source_enrollment_id TEXT`);
 }
 
 async function repairCoursesColumns(db: AppDb): Promise<void> {
@@ -339,6 +536,7 @@ export async function ensureSchema(db: AppDb): Promise<void> {
   }
 
   await ensureLmsSchema(db);
+  await ensureConocerTables(db);
 }
 
 export async function ensureDefaultAdmin(db: AppDb): Promise<void> {

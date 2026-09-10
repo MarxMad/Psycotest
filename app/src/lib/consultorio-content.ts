@@ -138,6 +138,8 @@ export const NAV_ACTIONS = [
   { label: "Acceder", href: "/login?next=/admin" },
   { label: "Cursos", href: "/consultorio/cursos" },
   { label: "En vivo", href: "/consultorio/clases-vivo" },
+  { label: "Constancias", href: "/consultorio/constancias" },
+  { label: "Expediente", href: "/consultorio/expediente" },
   { label: "Evaluación", href: "/psycotest" },
 ] as const;
 

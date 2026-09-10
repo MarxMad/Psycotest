@@ -33,6 +33,8 @@ export async function POST(request: Request) {
       currentUses: 0,
       expiresAt: expiresAt || null,
       active: true,
+      grantOnCourseComplete: false,
+      sourceEnrollmentId: null,
       createdAt: now,
     });
 

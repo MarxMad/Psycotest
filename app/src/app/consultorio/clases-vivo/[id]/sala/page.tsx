@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { JitsiMeetEmbed } from "@/components/live/JitsiMeetEmbed";
+import { LiveSessionTools } from "@/components/live/LiveSessionTools";
 import styles from "../../clases-vivo.module.css";
 
 export default function AlumnoSalaPage() {
   const { id } = useParams<{ id: string }>();
-  const [roomUrl, setRoomUrl] = useState<string | null>(null);
+  const [mainRoomUrl, setMainRoomUrl] = useState<string | null>(null);
+  const [activeRoomUrl, setActiveRoomUrl] = useState<string | null>(null);
   const [title, setTitle] = useState("Sala en vivo");
   const [displayName, setDisplayName] = useState("Alumno");
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +33,8 @@ export default function AlumnoSalaPage() {
           return;
         }
         const data = await join.json();
-        setRoomUrl(data.roomUrl);
+        setMainRoomUrl(data.roomUrl);
+        setActiveRoomUrl(data.roomUrl);
         setTitle(data.title || "Sala en vivo");
         if (data.displayName) setDisplayName(data.displayName);
       } catch {
@@ -71,7 +74,17 @@ export default function AlumnoSalaPage() {
         </div>
       )}
 
-      {!loading && roomUrl && <JitsiMeetEmbed roomUrl={roomUrl} displayName={displayName} />}
+      {!loading && activeRoomUrl && (
+        <>
+          <JitsiMeetEmbed roomUrl={activeRoomUrl} displayName={displayName} />
+          <LiveSessionTools
+            liveClassId={id}
+            isAdmin={false}
+            mainRoomUrl={mainRoomUrl}
+            onRoomUrlChange={(url) => setActiveRoomUrl(url || mainRoomUrl)}
+          />
+        </>
+      )}
     </main>
   );
 }
