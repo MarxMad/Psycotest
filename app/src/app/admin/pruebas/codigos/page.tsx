@@ -11,6 +11,7 @@ const INSTRUMENTOS: { id: Instrumento; label: string }[] = [
   { id: "papi", label: "PAPI" },
   { id: "hartman", label: "Hartman" },
   { id: "mabe", label: "MABE" },
+  { id: "cleaver", label: "Cleaver (DISC)" },
 ];
 
 interface CodeRow {
@@ -41,7 +42,7 @@ export default function CodigosPage() {
   const [label, setLabel] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [maxUses, setMaxUses] = useState(30);
-  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe"]);
+  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe", "cleaver"]);
   const [nuevoCodigo, setNuevoCodigo] = useState<string | null>(null);
   const [error, setError] = useState("");
 

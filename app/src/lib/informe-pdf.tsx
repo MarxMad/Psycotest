@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
 const INSTRUMENTO_LABEL: Record<string, string> = {
   papi: "PAPI — Personality and Preference Inventory",
   hartman: "Inventario de Valores Hartman",
+  cleaver: "Cleaver — Autodescripción (DISC)",
   mabe: "MABE — Managerial Behavior Evaluation",
 };
 

@@ -3,6 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { CleaverGraficas } from "@/app/psycotest/cleaver/CleaverGraficas";
 import { MabeGraficas } from "@/app/psycotest/mabe/MabeGraficas";
 import { MabeCalificacion } from "@/app/psycotest/mabe/MabeCalificacion";
 import { PapiGraficas } from "@/app/psycotest/papi/PapiGraficas";
@@ -11,6 +12,7 @@ import { HartmanCalificacion } from "@/app/psycotest/hartman/HartmanCalificacion
 import { calificarPapi, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
+import { calificarCleaver, type RespuestasCleaver, type ResultadoCleaver } from "@/lib/cleaver";
 import { dbSessionToSesion, fetchSession } from "@/lib/api-client";
 import { actualizarSesionServidor } from "@/lib/persist-server";
 import {
@@ -216,6 +218,17 @@ function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
           combinaciones={cal.combinaciones}
         />
         <MabeCalificacion resultado={cal} />
+      </div>
+    );
+  }
+
+  if (sesion.instrumento === "cleaver") {
+    const resp = sesion.respuestas as RespuestasCleaver;
+    const cal =
+      (sesion.calificacion as ResultadoCleaver) ?? calificarCleaver(resp);
+    return (
+      <div>
+        <CleaverGraficas cal={cal} />
       </div>
     );
   }

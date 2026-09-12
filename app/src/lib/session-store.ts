@@ -2,6 +2,7 @@ import { desc, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import type { Instrumento } from "@/lib/storage";
 import { calificarHartman } from "@/lib/hartman";
+import type { ResultadoCleaver } from "@/lib/cleaver";
 
 export function computeValidityFlags(
   instrumento: Instrumento,
@@ -17,6 +18,18 @@ export function computeValidityFlags(
     if (r.SQ.DIS % 2 !== 0) flags.push(`SQ: número impar de disimilitudes (${r.SQ.DIS})`);
     if (r.VQ.DIF !== 171) flags.push(`VQ: suma rankings ${r.VQ.DIF} ≠ 171`);
     if (r.SQ.DIF !== 171) flags.push(`SQ: suma rankings ${r.SQ.DIF} ≠ 171`);
+  }
+  if (instrumento === "cleaver" && calificacion) {
+    const r = calificacion as ResultadoCleaver;
+    if (!r.completo) flags.push(`Cleaver incompleto (${r.respondidas}/24)`);
+    if (r.validezEtiqueta === "sospechosa") {
+      flags.push(`Cleaver validez sospechosa ΣT=${r.validez}`);
+    }
+    if (r.validezEtiqueta === "invalida") {
+      flags.push(`Cleaver validez inválida ΣT=${r.validez}`);
+    }
+    if (r.aplanado?.T) flags.push("Cleaver gráfica T aplanada (40–60)");
+    for (const a of r.alertas ?? []) flags.push(`Cleaver: ${a}`);
   }
   return flags;
 }

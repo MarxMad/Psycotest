@@ -30,6 +30,8 @@ export const jobProfiles = sqliteTable("job_profiles", {
   empresa: text("empresa"),
   /** Respuestas MABE del bloque puesto (proc + valores) */
   mabePuesto: text("mabe_puesto", { mode: "json" }).$type<Record<string, number>>(),
+  /** Perfil Cleaver Factor Humano del puesto (R/A/D%/gráfica) */
+  cleaverPuesto: text("cleaver_puesto", { mode: "json" }).$type<Record<string, unknown>>(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
@@ -43,7 +45,7 @@ export const accessCodes = sqliteTable("access_codes", {
   /** Últimos 4 caracteres para identificación en panel (no secretos) */
   codeSuffix: text("code_suffix").notNull(),
   allowedInstruments: text("allowed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull(),
   maxUses: integer("max_uses").notNull(),
   usedCount: integer("used_count").notNull().default(0),
@@ -64,7 +66,7 @@ export const accessRedemptions = sqliteTable("access_redemptions", {
   puesto: text("puesto"),
   /** Instrumentos ya completados por esta persona */
   completedInstruments: text("completed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull()
     .default([]),
   ipHash: text("ip_hash"),
@@ -73,7 +75,7 @@ export const accessRedemptions = sqliteTable("access_redemptions", {
 
 export const assessmentSessions = sqliteTable("assessment_sessions", {
   id: text("id").primaryKey(),
-  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe"] }).notNull(),
+  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe", "cleaver"] }).notNull(),
   estado: text("estado", { enum: ["borrador", "calificada", "aprobada"] }).notNull().default("calificada"),
   participantId: text("participant_id").references(() => participants.id),
   participantNombre: text("participant_nombre").notNull(),

@@ -5,6 +5,7 @@ import hartmanJson from "@/data/hartman-items.json";
 import { CLAVE, NOMBRES, type Respuestas } from "@/lib/papi";
 import { MabeRespuestas } from "@/app/psycotest/mabe/MabeRespuestas";
 import type { RespuestasMabe } from "@/lib/mabe";
+import { SERIES_CLEAVER, type RespuestasCleaver } from "@/lib/cleaver";
 import type { Sesion } from "@/lib/storage";
 import s from "./RespuestasPanel.module.css";
 
@@ -88,6 +89,54 @@ export function RespuestasPanel({ sesion }: { sesion: Sesion<unknown, unknown> }
             </table>
           </section>
         ))}
+      </div>
+    );
+  }
+
+  if (sesion.instrumento === "cleaver") {
+    const resp = sesion.respuestas as RespuestasCleaver;
+    return (
+      <div className={s.wrap}>
+        <p className={s.meta}>{Object.keys(resp).length}/24 series · MÁS / MENOS</p>
+        <table className={s.table}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Adjetivos</th>
+              <th>MÁS</th>
+              <th>MENOS</th>
+            </tr>
+          </thead>
+          <tbody>
+            {SERIES_CLEAVER.map((serie) => {
+              const r = resp[serie.id];
+              return (
+                <tr key={serie.id} className={!r ? s.faltante : undefined}>
+                  <td className={s.num}>{serie.id}</td>
+                  <td>
+                    {serie.adjetivos.map((a, idx) => (
+                      <span key={idx}>
+                        {idx > 0 ? " · " : ""}
+                        {a.texto}
+                        <span className={s.mono}> ({a.factor})</span>
+                      </span>
+                    ))}
+                  </td>
+                  <td className={s.mono}>
+                    {r
+                      ? `${serie.adjetivos[r.mas]?.texto ?? "?"} (${serie.adjetivos[r.mas]?.factor})`
+                      : "—"}
+                  </td>
+                  <td className={s.mono}>
+                    {r
+                      ? `${serie.adjetivos[r.menos]?.texto ?? "?"} (${serie.adjetivos[r.menos]?.factor})`
+                      : "—"}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     );
   }

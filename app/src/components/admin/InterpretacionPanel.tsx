@@ -4,10 +4,12 @@ import { MabeInterpretacion } from "@/app/psycotest/mabe/MabeInterpretacion";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
 import { calificarPapi, DIADAS, banda, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
+import { calificarCleaver, type RespuestasCleaver, type ResultadoCleaver } from "@/lib/cleaver";
 import {
   interpretarHartman,
   interpretarMabe,
   interpretarPapi,
+  interpretarCleaver,
 } from "@/lib/informes";
 import type { Sesion } from "@/lib/storage";
 import { ExportarPdfButton } from "./ExportarPdfButton";
@@ -50,7 +52,12 @@ export function InterpretacionPanel({
               sesion.participante,
               sesion.puesto,
             )
-          : "Sin interpretación generada.");
+          : sesion.instrumento === "cleaver"
+            ? interpretarCleaver(
+                (sesion.calificacion as ResultadoCleaver) ??
+                  calificarCleaver(sesion.respuestas as RespuestasCleaver),
+              )
+            : "Sin interpretación generada.");
 
   return (
     <div className={s.wrap}>
@@ -86,6 +93,16 @@ export function InterpretacionPanel({
                   (sesion.respuestas as { parteI: number[]; parteII: number[] }).parteI,
                   (sesion.respuestas as { parteI: number[]; parteII: number[] }).parteII,
                 )
+          }
+          texto={texto}
+        />
+      )}
+
+      {sesion.instrumento === "cleaver" && (
+        <CleaverInterpretacionResumen
+          cal={
+            (sesion.calificacion as ResultadoCleaver) ??
+            calificarCleaver(sesion.respuestas as RespuestasCleaver)
           }
           texto={texto}
         />
@@ -179,6 +196,32 @@ function HartmanInterpretacionResumen({
         <p className={s.sub}>
           V.Q. DIS {cal.VQ.DIS} · S.Q. DIS {cal.SQ.DIS}
         </p>
+      </header>
+      <pre className={s.pre}>{texto}</pre>
+    </div>
+  );
+}
+
+function CleaverInterpretacionResumen({
+  cal,
+  texto,
+}: {
+  cal: ResultadoCleaver;
+  texto: string;
+}) {
+  return (
+    <div className={s.resumen}>
+      <header className={s.hero}>
+        <span className={s.eyebrow}>Cleaver — Autodescripción / DISC</span>
+        <p>
+          Validez ΣT=<strong>{cal.validez}</strong> ({cal.validezEtiqueta}) ·{" "}
+          {cal.completo ? "completo" : `incompleto ${cal.respondidas}/24`}
+        </p>
+        {cal.estiloClasico && (
+          <p className={s.sub}>
+            Estilo #{cal.estiloClasico.id} {cal.estiloClasico.nombre} — {cal.estiloClasico.segmento}
+          </p>
+        )}
       </header>
       <pre className={s.pre}>{texto}</pre>
     </div>

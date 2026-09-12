@@ -1004,3 +1004,134 @@
   border-color: var(--brand);
   color: var(--brand);
 }
+
+/* Quiz panel (player) */
+.quizPanel {
+  padding: 1.25rem 1.5rem 2rem;
+  color: #e2e8f0;
+}
+
+.quizTitle {
+  margin: 0 0 0.75rem;
+  font-family: var(--serif);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  color: #fff;
+}
+
+.quizHint,
+.quizMeta {
+  margin: 0 0 1rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.quizError {
+  margin: 0 0 1rem;
+  color: #fca5a5;
+  font-size: 0.9rem;
+}
+
+.quizList {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1.15rem;
+}
+
+.quizItem {
+  padding: 1rem;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.quizPrompt {
+  margin: 0 0 0.75rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.quizOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.quizOption {
+  border: 1px solid #475569;
+  background: transparent;
+  color: #e2e8f0;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.88rem;
+}
+
+.quizOption:hover {
+  border-color: var(--gold);
+}
+
+.quizOptionActive {
+  background: color-mix(in srgb, var(--gold) 22%, transparent);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.quizResult {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid #334155;
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.quizPass {
+  color: #86efac;
+  font-weight: 700;
+}
+
+.quizFail {
+  color: #fca5a5;
+  font-weight: 700;
+}
+
+.quizBreakdown {
+  margin: 0.85rem 0 1rem;
+  padding-left: 1.1rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.backLink:hover {
+  color: #fff;
+}
+
+.moduleBlock {
+  margin-bottom: 1rem;
+}
+
+.moduleTitle {
+  margin: 0 0 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.moduleBlock ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.2rem;
+}
