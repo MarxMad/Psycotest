@@ -1,8 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
-import { canAccessLesson, getPlayerState } from "@/lib/course-access";
-import { getCourseCurriculum, getLessonInCourse } from "@/lib/courses";
-import { getQuizByLessonId } from "@/lib/quizzes";
+import { canAccessLesson, getEnrollmentBySlug, getPlayerState } from "@/lib/course-access";
+import { getLessonInCourse } from "@/lib/courses";
 import { CoursePlayer } from "../../../CoursePlayer";
 
 type Props = { params: Promise<{ slug: string; lessonId: string }> };
@@ -35,8 +34,6 @@ export default async function LessonPage({ params }: Props) {
     redirect(`/consultorio/cursos/${slug}`);
   }
 
-  const quiz = lessonRow.lesson.type === "quiz" ? await getQuizByLessonId(lessonId) : null;
-
   let curriculum;
   if (state) {
     curriculum = state.curriculum.map((block) => ({
@@ -45,7 +42,6 @@ export default async function LessonPage({ params }: Props) {
         id: lesson.id,
         slug: lesson.slug,
         title: lesson.title,
-        type: lesson.type,
         durationSeconds: lesson.durationSeconds,
         freePreview: lesson.freePreview,
         progress: progress
@@ -54,6 +50,7 @@ export default async function LessonPage({ params }: Props) {
       })),
     }));
   } else {
+    const { getCourseCurriculum } = await import("@/lib/courses");
     const raw = await getCourseCurriculum(lessonRow.course.id);
     curriculum = raw.map((block) => ({
       module: block.module,
@@ -61,7 +58,6 @@ export default async function LessonPage({ params }: Props) {
         id: lesson.id,
         slug: lesson.slug,
         title: lesson.title,
-        type: lesson.type,
         durationSeconds: lesson.durationSeconds,
         freePreview: lesson.freePreview,
         progress: null,
@@ -71,14 +67,12 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <CoursePlayer
-      courseSlug={slug}
-      courseTitle={lessonRow.course.title}
-      currentLessonId={lessonId}
-      lessonType={lessonRow.lesson.type}
-      curriculum={curriculum}
-      videoUrl={lessonRow.lesson.videoUrl}
-      quizId={quiz?.id ?? null}
-      progressPercent={state?.enrollment.progressPercent ?? 0}
-    />
+        courseSlug={slug}
+        courseTitle={lessonRow.course.title}
+        currentLessonId={lessonId}
+        curriculum={curriculum}
+        videoUrl={lessonRow.lesson.videoUrl}
+        progressPercent={state?.enrollment.progressPercent ?? 0}
+      />
   );
 }
