@@ -8,6 +8,8 @@ import type { ResultadoPapi } from "./papi";
 import { NOMBRES, DIADAS, banda } from "./papi";
 import type { ResultadoHartman } from "./hartman";
 import { etiquetaNivel, nivel } from "./hartman";
+import type { ResultadoCleaver } from "./cleaver";
+import { FACTORES_CLEAVER, NOMBRES_FACTOR, factorDominante } from "./cleaver";
 
 function topEntries<T extends string>(
   record: Record<T, number>,
@@ -137,4 +139,30 @@ export function interpretarMabe(r: ResultadoMabe, participante: string, puesto?:
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+export function interpretarCleaver(r: ResultadoCleaver): string {
+  const dom = factorDominante(r.T);
+  const lineas = [
+    "Informe borrador — Cleaver (Autodescripción / DISC)",
+    "",
+    `Protocolo: ${r.completo ? "completo" : `incompleto (${r.respondidas}/24)`} · Validez ΣT=${r.validez} (${r.validezEtiqueta})`,
+    "",
+    "Conteos M (motivado) / L (presión) / T (cotidiano):",
+    ...FACTORES_CLEAVER.map(
+      (f) => `· ${f} ${NOMBRES_FACTOR[f]}: M=${r.M[f]}  L=${r.L[f]}  T=${r.T[f] >= 0 ? "+" : ""}${r.T[f]}`,
+    ),
+    "",
+    `Factor dominante en T: ${dom} (${NOMBRES_FACTOR[dom]}).`,
+    "",
+    "Gráficas a revisar con el manual:",
+    "· M — estilo motivado / deseos básicos",
+    "· L — limitaciones bajo presión",
+    "· T — conducta cotidiana observable",
+    "",
+    ...(r.alertas.length ? ["Alertas:", ...r.alertas.map((a) => `· ${a}`), ""] : []),
+    "Completar interpretación con Manual Cleaver (estilos altos/bajos y patrones clásicos).",
+    "Comparar con Análisis del Trabajo (Factor Humano del puesto) cuando esté disponible.",
+  ];
+  return lineas.join("\n");
 }

@@ -13,4 +13,5 @@ export const psycotest = {
   papi: `${PSYCOTEST_BASE}/papi`,
   hartman: `${PSYCOTEST_BASE}/hartman`,
   mabe: `${PSYCOTEST_BASE}/mabe`,
+  cleaver: `${PSYCOTEST_BASE}/cleaver`,
 } as const;

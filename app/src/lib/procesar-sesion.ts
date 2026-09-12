@@ -7,7 +7,8 @@ import type { Instrumento } from "./storage";
 import { calificarHartman } from "./hartman";
 import { calificarMabe, type RespuestasMabe } from "./mabe";
 import { calificarPapi, type Respuestas } from "./papi";
-import { interpretarHartman, interpretarMabe, interpretarPapi } from "./informes";
+import { calificarCleaver, type RespuestasCleaver } from "./cleaver";
+import { interpretarHartman, interpretarMabe, interpretarPapi, interpretarCleaver } from "./informes";
 
 export function procesarSesion(
   instrumento: Instrumento,
@@ -31,6 +32,10 @@ export function procesarSesion(
         calificacion: cal,
         interpretacion: interpretarMabe(cal, participante, puesto),
       };
+    }
+    case "cleaver": {
+      const cal = calificarCleaver(respuestas as RespuestasCleaver);
+      return { calificacion: cal, interpretacion: interpretarCleaver(cal) };
     }
     default:
       throw new Error(`Instrumento no soportado: ${instrumento}`);

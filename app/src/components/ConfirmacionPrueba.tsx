@@ -9,6 +9,7 @@ const ETIQUETAS: Record<Instrumento, string> = {
   papi: "PAPI",
   hartman: "Inventario de Valores Hartman",
   mabe: "MABE",
+  cleaver: "Cleaver — Autodescripción (DISC)",
 };
 
 function fmt(iso: string) {

@@ -1,4 +1,4 @@
-import { calificarHartman, calificarParte, NORMA, nivel, etiquetaNivel } from "./hartman.ts";
+import { calificarHartman, calificarParte, NORMA, nivel, etiquetaNivel } from "./hartman";
 
 const ok = (c: boolean, m: string) => console.log(`  ${c ? "OK   " : "FALLA"} ${m}`);
 

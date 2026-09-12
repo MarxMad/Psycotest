@@ -7,13 +7,15 @@ import { KeyRound } from "lucide-react";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { FadeIn } from "@/components/motion";
 import type { Instrumento } from "@/lib/storage";
+import { psycotest } from "@/lib/routes";
 import { useApplicantSession } from "@/lib/applicant-client";
 import s from "./acceso.module.css";
 
-const PRUEBAS: Record<Instrumento, { nombre: string; tint: string }> = {
-  papi: { nombre: "PAPI", tint: "var(--papi)" },
-  hartman: { nombre: "Hartman", tint: "var(--hartman)" },
-  mabe: { nombre: "MABE", tint: "var(--mabe)" },
+const PRUEBAS: Record<Instrumento, { nombre: string; tint: string; href: string }> = {
+  papi: { nombre: "PAPI", tint: "var(--papi)", href: psycotest.papi },
+  hartman: { nombre: "Hartman", tint: "var(--hartman)", href: psycotest.hartman },
+  mabe: { nombre: "MABE", tint: "var(--mabe)", href: psycotest.mabe },
+  cleaver: { nombre: "Cleaver (DISC)", tint: "var(--cleaver)", href: psycotest.cleaver },
 };
 
 const ERRORES: Record<string, string> = {
@@ -109,7 +111,7 @@ function AccesoInner() {
               return (
                 <Link
                   key={slug}
-                  href={done ? "#" : `/${slug}`}
+                  href={done ? "#" : p.href}
                   className={s.testCard}
                   data-done={done}
                   style={{ ["--tint" as string]: p.tint }}

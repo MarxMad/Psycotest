@@ -17,12 +17,14 @@ const ETIQUETAS: Record<Instrumento, string> = {
   papi: "PAPI",
   hartman: "Hartman",
   mabe: "MABE",
+  cleaver: "Cleaver (DISC)",
 };
 
 const COLORES: Record<Instrumento, string> = {
   papi: "var(--papi)",
   hartman: "var(--hartman)",
   mabe: "var(--mabe)",
+  cleaver: "var(--cleaver)",
 };
 
 function fmt(iso: string) {
@@ -106,7 +108,7 @@ export default function PruebasPage() {
 
       <div className={s.filters}>
         <span>Filtrar:</span>
-        {(["", "papi", "hartman", "mabe"] as const).map((f) => (
+        {(["", "papi", "hartman", "mabe", "cleaver"] as const).map((f) => (
           <button
             key={f || "all"}
             type="button"

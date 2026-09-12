@@ -4,10 +4,12 @@ import { MabeInterpretacion } from "@/app/psycotest/mabe/MabeInterpretacion";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
 import { calificarPapi, DIADAS, banda, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
+import { calificarCleaver, type RespuestasCleaver, type ResultadoCleaver } from "@/lib/cleaver";
 import {
   interpretarHartman,
   interpretarMabe,
   interpretarPapi,
+  interpretarCleaver,
 } from "@/lib/informes";
 import type { Sesion } from "@/lib/storage";
 import { ExportarPdfButton } from "./ExportarPdfButton";
@@ -50,7 +52,12 @@ export function InterpretacionPanel({
               sesion.participante,
               sesion.puesto,
             )
-          : "Sin interpretación generada.");
+          : sesion.instrumento === "cleaver"
+            ? interpretarCleaver(
+                (sesion.calificacion as ResultadoCleaver) ??
+                  calificarCleaver(sesion.respuestas as RespuestasCleaver),
+              )
+            : "Sin interpretación generada.");
 
   return (
     <div className={s.wrap}>

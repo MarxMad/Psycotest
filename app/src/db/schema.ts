@@ -43,7 +43,7 @@ export const accessCodes = sqliteTable("access_codes", {
   /** Últimos 4 caracteres para identificación en panel (no secretos) */
   codeSuffix: text("code_suffix").notNull(),
   allowedInstruments: text("allowed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull(),
   maxUses: integer("max_uses").notNull(),
   usedCount: integer("used_count").notNull().default(0),
@@ -64,7 +64,7 @@ export const accessRedemptions = sqliteTable("access_redemptions", {
   puesto: text("puesto"),
   /** Instrumentos ya completados por esta persona */
   completedInstruments: text("completed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull()
     .default([]),
   ipHash: text("ip_hash"),
@@ -73,7 +73,7 @@ export const accessRedemptions = sqliteTable("access_redemptions", {
 
 export const assessmentSessions = sqliteTable("assessment_sessions", {
   id: text("id").primaryKey(),
-  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe"] }).notNull(),
+  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe", "cleaver"] }).notNull(),
   estado: text("estado", { enum: ["borrador", "calificada", "aprobada"] }).notNull().default("calificada"),
   participantId: text("participant_id").references(() => participants.id),
   participantNombre: text("participant_nombre").notNull(),

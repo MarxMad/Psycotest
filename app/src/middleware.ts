@@ -3,9 +3,21 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
+import { psycotest } from "@/lib/routes";
 
 const COOKIE = "psycotest_session";
-const TEST_PATHS = ["/papi", "/hartman", "/mabe"] as const;
+
+/** Rutas cortas legacy + rutas bajo /psycotest */
+const TEST_PATHS = [
+  "/papi",
+  "/hartman",
+  "/mabe",
+  "/cleaver",
+  "/psycotest/papi",
+  "/psycotest/hartman",
+  "/psycotest/mabe",
+  "/psycotest/cleaver",
+] as const;
 
 function secret() {
   const s = process.env.AUTH_SECRET;
@@ -17,7 +29,12 @@ function secret() {
 
 function instrumentFromPath(pathname: string): Instrumento | null {
   for (const p of TEST_PATHS) {
-    if (pathname === p || pathname.startsWith(`${p}/`)) return p.slice(1) as Instrumento;
+    if (pathname === p || pathname.startsWith(`${p}/`)) {
+      const slug = p.split("/").pop();
+      if (slug === "papi" || slug === "hartman" || slug === "mabe" || slug === "cleaver") {
+        return slug;
+      }
+    }
   }
   return null;
 }
@@ -29,14 +46,14 @@ export async function middleware(request: NextRequest) {
   if (instrumento) {
     const token = request.cookies.get(APPLICANT_COOKIE)?.value;
     if (!token) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("next", pathname);
       return NextResponse.redirect(acceso);
     }
 
     const session = await verifyApplicantToken(token);
     if (!session) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("next", pathname);
       acceso.searchParams.set("error", "sesion");
       const res = NextResponse.redirect(acceso);
@@ -45,13 +62,13 @@ export async function middleware(request: NextRequest) {
     }
 
     if (!session.allowed.includes(instrumento)) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("error", "prueba");
       return NextResponse.redirect(acceso);
     }
 
     if (session.completed.includes(instrumento)) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("error", "completada");
       return NextResponse.redirect(acceso);
     }
@@ -59,7 +76,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!pathname.startsWith("/admin") && !pathname.startsWith("/participantes")) {
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/participantes") && !pathname.startsWith("/psycotest/participantes")) {
     return NextResponse.next();
   }
 
@@ -84,11 +101,22 @@ export const config = {
   matcher: [
     "/admin/:path*",
     "/participantes/:path*",
+    "/psycotest/participantes/:path*",
     "/papi",
     "/papi/:path*",
     "/hartman",
     "/hartman/:path*",
     "/mabe",
     "/mabe/:path*",
+    "/cleaver",
+    "/cleaver/:path*",
+    "/psycotest/papi",
+    "/psycotest/papi/:path*",
+    "/psycotest/hartman",
+    "/psycotest/hartman/:path*",
+    "/psycotest/mabe",
+    "/psycotest/mabe/:path*",
+    "/psycotest/cleaver",
+    "/psycotest/cleaver/:path*",
   ],
 };

@@ -1,0 +1,510 @@
+{
+  "fuente": "Manual Cleaver + Plantilla Autodescripción (SPA)",
+  "instrumento": "cleaver",
+  "series": [
+    {
+      "id": 1,
+      "adjetivos": [
+        {
+          "texto": "PERSUASIVO",
+          "factor": "I"
+        },
+        {
+          "texto": "GENTIL",
+          "factor": "S"
+        },
+        {
+          "texto": "HUMILDE",
+          "factor": "C"
+        },
+        {
+          "texto": "ORIGINAL",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "adjetivos": [
+        {
+          "texto": "FUERZA DE VOLUNTAD",
+          "factor": "D"
+        },
+        {
+          "texto": "MENTE ABIERTA",
+          "factor": "C"
+        },
+        {
+          "texto": "COMPLACIENTE",
+          "factor": "S"
+        },
+        {
+          "texto": "ANIMOSO",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "adjetivos": [
+        {
+          "texto": "OBEDIENTE",
+          "factor": "S"
+        },
+        {
+          "texto": "QUISQUILLOSO",
+          "factor": "C"
+        },
+        {
+          "texto": "INCONQUISTABLE",
+          "factor": "D"
+        },
+        {
+          "texto": "JUGUETÓN",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "adjetivos": [
+        {
+          "texto": "AVENTURERO",
+          "factor": "D"
+        },
+        {
+          "texto": "RECEPTIVO",
+          "factor": "C"
+        },
+        {
+          "texto": "CORDIAL",
+          "factor": "I"
+        },
+        {
+          "texto": "MODERADO",
+          "factor": "S"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "adjetivos": [
+        {
+          "texto": "AGRESIVO",
+          "factor": "D"
+        },
+        {
+          "texto": "ALMA DE LA FIESTA",
+          "factor": "I"
+        },
+        {
+          "texto": "COMODINO",
+          "factor": "S"
+        },
+        {
+          "texto": "TEMEROSO",
+          "factor": "C"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "adjetivos": [
+        {
+          "texto": "CONFIADO",
+          "factor": "I"
+        },
+        {
+          "texto": "SIMPATIZANTE",
+          "factor": "S"
+        },
+        {
+          "texto": "TOLERANTE",
+          "factor": "C"
+        },
+        {
+          "texto": "AFIRMATIVO",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "adjetivos": [
+        {
+          "texto": "RESPETUOSO",
+          "factor": "C"
+        },
+        {
+          "texto": "EMPRENDEDOR",
+          "factor": "D"
+        },
+        {
+          "texto": "OPTIMISTA",
+          "factor": "I"
+        },
+        {
+          "texto": "SERVICIAL",
+          "factor": "S"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "adjetivos": [
+        {
+          "texto": "INDULGENTE",
+          "factor": "S"
+        },
+        {
+          "texto": "CAPAZ DE VER BELLEZA",
+          "factor": "C"
+        },
+        {
+          "texto": "VIGOROSO",
+          "factor": "D"
+        },
+        {
+          "texto": "SOCIABLE",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "adjetivos": [
+        {
+          "texto": "AGRADABLE",
+          "factor": "S"
+        },
+        {
+          "texto": "TEMEROSO DE DIOS",
+          "factor": "C"
+        },
+        {
+          "texto": "TENAZ",
+          "factor": "D"
+        },
+        {
+          "texto": "ATRACTIVO",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "adjetivos": [
+        {
+          "texto": "ECUÁNIME",
+          "factor": "S"
+        },
+        {
+          "texto": "PRECISO",
+          "factor": "C"
+        },
+        {
+          "texto": "NERVIOSO",
+          "factor": "D"
+        },
+        {
+          "texto": "JOVIAL",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "adjetivos": [
+        {
+          "texto": "VALIENTE",
+          "factor": "D"
+        },
+        {
+          "texto": "INSPIRADOR",
+          "factor": "I"
+        },
+        {
+          "texto": "SUMISO",
+          "factor": "S"
+        },
+        {
+          "texto": "TÍMIDO",
+          "factor": "C"
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "adjetivos": [
+        {
+          "texto": "PARLANCHÍN",
+          "factor": "I"
+        },
+        {
+          "texto": "CONTROLADO",
+          "factor": "S"
+        },
+        {
+          "texto": "CONVENCIONAL",
+          "factor": "C"
+        },
+        {
+          "texto": "DECISIVO",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "adjetivos": [
+        {
+          "texto": "CAUTELOSO",
+          "factor": "C"
+        },
+        {
+          "texto": "DETERMINADO",
+          "factor": "D"
+        },
+        {
+          "texto": "CONVINCENTE",
+          "factor": "I"
+        },
+        {
+          "texto": "BONACHÓN",
+          "factor": "S"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "adjetivos": [
+        {
+          "texto": "DISCIPLINADO",
+          "factor": "C"
+        },
+        {
+          "texto": "GENEROSO",
+          "factor": "S"
+        },
+        {
+          "texto": "ANIMOSO",
+          "factor": "I"
+        },
+        {
+          "texto": "PERSISTENTE",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "adjetivos": [
+        {
+          "texto": "ADAPTABLE",
+          "factor": "C"
+        },
+        {
+          "texto": "CONTRARIADOR",
+          "factor": "D"
+        },
+        {
+          "texto": "INDIFERENTE",
+          "factor": "S"
+        },
+        {
+          "texto": "CAER BIEN",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "adjetivos": [
+        {
+          "texto": "COHIBIDO",
+          "factor": "S"
+        },
+        {
+          "texto": "EXACTO",
+          "factor": "C"
+        },
+        {
+          "texto": "FRANCO",
+          "factor": "D"
+        },
+        {
+          "texto": "BUEN COMPAÑERO",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "adjetivos": [
+        {
+          "texto": "DÓCIL",
+          "factor": "C"
+        },
+        {
+          "texto": "ATREVIDO",
+          "factor": "D"
+        },
+        {
+          "texto": "LEAL",
+          "factor": "S"
+        },
+        {
+          "texto": "ENCANTADOR",
+          "factor": "I"
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "adjetivos": [
+        {
+          "texto": "COMPETITIVO",
+          "factor": "D"
+        },
+        {
+          "texto": "ALEGRE",
+          "factor": "I"
+        },
+        {
+          "texto": "CONSIDERADO",
+          "factor": "S"
+        },
+        {
+          "texto": "ARMONIOSO",
+          "factor": "C"
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "adjetivos": [
+        {
+          "texto": "AMIGUERO",
+          "factor": "I"
+        },
+        {
+          "texto": "PACIENTE",
+          "factor": "S"
+        },
+        {
+          "texto": "CONFIANZA EN SÍ MISMO",
+          "factor": "D"
+        },
+        {
+          "texto": "PRUDENTE AL HABLAR",
+          "factor": "C"
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "adjetivos": [
+        {
+          "texto": "DIPLOMÁTICO",
+          "factor": "C"
+        },
+        {
+          "texto": "AUDAZ",
+          "factor": "D"
+        },
+        {
+          "texto": "REFINADO",
+          "factor": "I"
+        },
+        {
+          "texto": "SATISFECHO",
+          "factor": "S"
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "adjetivos": [
+        {
+          "texto": "DISPUESTO",
+          "factor": "S"
+        },
+        {
+          "texto": "DESEOSO",
+          "factor": "I"
+        },
+        {
+          "texto": "CONGRUENTE",
+          "factor": "C"
+        },
+        {
+          "texto": "ENTUSIASTA",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "adjetivos": [
+        {
+          "texto": "ADMIRABLE",
+          "factor": "I"
+        },
+        {
+          "texto": "BONDADOSO",
+          "factor": "S"
+        },
+        {
+          "texto": "RESIGNADO",
+          "factor": "C"
+        },
+        {
+          "texto": "CARÁCTER FIRME",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "adjetivos": [
+        {
+          "texto": "CONFORME",
+          "factor": "S"
+        },
+        {
+          "texto": "CONFIABLE",
+          "factor": "I"
+        },
+        {
+          "texto": "PACÍFICO",
+          "factor": "C"
+        },
+        {
+          "texto": "POSITIVO",
+          "factor": "D"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "adjetivos": [
+        {
+          "texto": "INQUIETO",
+          "factor": "D"
+        },
+        {
+          "texto": "POPULAR",
+          "factor": "I"
+        },
+        {
+          "texto": "BUEN VECINO",
+          "factor": "S"
+        },
+        {
+          "texto": "DEVOTO",
+          "factor": "C"
+        }
+      ]
+    }
+  ]
+}

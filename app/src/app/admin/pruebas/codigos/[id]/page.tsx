@@ -12,6 +12,7 @@ const ETIQUETAS: Record<Instrumento, string> = {
   papi: "PAPI",
   hartman: "Hartman",
   mabe: "MABE",
+  cleaver: "Cleaver (DISC)",
 };
 
 interface CodeInfo {
