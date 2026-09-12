@@ -98,6 +98,16 @@ export function InterpretacionPanel({
         />
       )}
 
+      {sesion.instrumento === "cleaver" && (
+        <CleaverInterpretacionResumen
+          cal={
+            (sesion.calificacion as ResultadoCleaver) ??
+            calificarCleaver(sesion.respuestas as RespuestasCleaver)
+          }
+          texto={texto}
+        />
+      )}
+
       <section className={s.notasBlock}>
         <label className={s.notasLabel}>
           Notas del psicólogo
@@ -186,6 +196,32 @@ function HartmanInterpretacionResumen({
         <p className={s.sub}>
           V.Q. DIS {cal.VQ.DIS} · S.Q. DIS {cal.SQ.DIS}
         </p>
+      </header>
+      <pre className={s.pre}>{texto}</pre>
+    </div>
+  );
+}
+
+function CleaverInterpretacionResumen({
+  cal,
+  texto,
+}: {
+  cal: ResultadoCleaver;
+  texto: string;
+}) {
+  return (
+    <div className={s.resumen}>
+      <header className={s.hero}>
+        <span className={s.eyebrow}>Cleaver — Autodescripción / DISC</span>
+        <p>
+          Validez ΣT=<strong>{cal.validez}</strong> ({cal.validezEtiqueta}) ·{" "}
+          {cal.completo ? "completo" : `incompleto ${cal.respondidas}/24`}
+        </p>
+        {cal.estiloClasico && (
+          <p className={s.sub}>
+            Estilo #{cal.estiloClasico.id} {cal.estiloClasico.nombre} — {cal.estiloClasico.segmento}
+          </p>
+        )}
       </header>
       <pre className={s.pre}>{texto}</pre>
     </div>

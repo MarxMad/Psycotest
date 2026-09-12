@@ -1,0 +1,87 @@
+{
+  "fuente": "Manual Cleaver §4.3 — descripción genérica, combinaciones básicas y 8 estilos clásicos",
+  "alto": {
+    "D": "Orientación a resultados, decisión rápida, afronta oposición y asume riesgos. Busca autoridad y retos.",
+    "I": "Persuasivo, sociable, optimista; motiva e involucra a otros. Prefiere reconocimiento y variedad.",
+    "S": "Constante, paciente, leal al ritmo establecido. Prefiere estabilidad y profundizar en una tarea.",
+    "C": "Preciso, apegado a normas y calidad. Evita errores; decide con datos y procedimientos."
+  },
+  "bajo": {
+    "D": "Cauteloso ante el riesgo; sopesa antes de actuar. Prefiere ambientes previsibles y menos confrontación.",
+    "I": "Más reservado en lo social; menos necesidad de persuadir o de exposición pública.",
+    "S": "Más móvil ante el cambio; menos apego a la rutina o a un solo ritmo de trabajo.",
+    "C": "Más flexible con reglas; tolera ambigüedad y prioriza avance sobre perfeccionismo."
+  },
+  "combinaciones": [
+    { "id": "DI", "nombre": "Creatividad", "regla": "D>I", "texto": "Enfoque lógico e incisivo a metas; original ante problemas; crítico con la gente." },
+    { "id": "DS", "nombre": "Empuje", "regla": "D>S", "texto": "Responde rápido a retos; móvil y versátil; inicia y compite." },
+    { "id": "DC", "nombre": "Individualidad", "regla": "D>C", "texto": "Directo y positivo ante oposición; sostiene su posición; asume riesgos." },
+    { "id": "ID", "nombre": "Buena voluntad", "regla": "I>D", "texto": "Equilibrado y cordial; agresividad social en contextos favorables." },
+    { "id": "IS", "nombre": "Habilidad de contacto", "regla": "I>S", "texto": "Busca gente con entusiasmo; persuación y cercanía emotiva." },
+    { "id": "IC", "nombre": "Confianza en sí mismo", "regla": "I>C", "texto": "Seguro al tratar con otros; no cede fácilmente su punto de vista." },
+    { "id": "SD", "nombre": "Paciencia", "regla": "S>D", "texto": "Constante; una tarea a la vez; estabiliza el entorno y resiste cambios bruscos." },
+    { "id": "SI", "nombre": "Reflexión / concentración", "regla": "S>I", "texto": "Controlado y premeditado; actúa con cuidado y foco." },
+    { "id": "SC", "nombre": "Persistencia", "regla": "S>C", "texto": "Perseverante; una vez decide, no se desvía con facilidad." },
+    { "id": "CD", "nombre": "Adaptabilidad", "regla": "C>D", "texto": "Cuidadoso y conservador; cede posición para lograr objetivos; observa políticas." },
+    { "id": "CI", "nombre": "Perfeccionismo", "regla": "C>I", "texto": "Orden y sistemas; decide con hechos y estándares." },
+    { "id": "CS", "nombre": "Sensibilidad", "regla": "C>S", "texto": "Evita riesgos; busca certeza; tensión si hay presión por resultados." }
+  ],
+  "estilosClasicos": [
+    {
+      "id": 1,
+      "nombre": "Desarrollista",
+      "segmento": "Desarrollo",
+      "patronT": "D alto, I bajo-medio, S bajo, C variable",
+      "resumen": "Individualista, orientado a metas, curioso e incisivo. Busca libertad de controles y retos nuevos."
+    },
+    {
+      "id": 2,
+      "nombre": "Administrador",
+      "segmento": "Administración",
+      "patronT": "D alto, I medio, S bajo-medio, C medio",
+      "resumen": "Agresivo práctico; toma ideas y las hace funcionar. Orientado a resultados medibles y prestigio."
+    },
+    {
+      "id": 3,
+      "nombre": "Vendedor",
+      "segmento": "Ventas",
+      "patronT": "D medio-alto, I alto, S medio, C bajo-medio",
+      "resumen": "Lidera con y a través de la gente; persuación y coordinación. Quiere contacto y reconocimiento."
+    },
+    {
+      "id": 4,
+      "nombre": "Promotor",
+      "segmento": "Promoción",
+      "patronT": "D bajo-medio, I alto, S medio-alto, C bajo",
+      "resumen": "Abierto y amigable; genera entusiasmo y contactos. Prefiere libertad de controles y detalle."
+    },
+    {
+      "id": 5,
+      "nombre": "Investigador",
+      "segmento": "Investigación",
+      "patronT": "D medio, I bajo, S medio-alto, C alto",
+      "resumen": "Persistente y analítico; profundiza datos. Prefiere precisión y menos presión social."
+    },
+    {
+      "id": 6,
+      "nombre": "Especialista",
+      "segmento": "Especialización",
+      "patronT": "D bajo, I bajo-medio, S alto, C alto",
+      "resumen": "Constante y técnico; calidad y procedimiento. Ambiente estable y roles claros."
+    },
+    {
+      "id": 7,
+      "nombre": "Logístico / realizador",
+      "segmento": "Operación",
+      "patronT": "D medio, I bajo, S alto, C medio-alto",
+      "resumen": "Cumple y sostiene sistemas; ritmo constante. Menos interés en persuasión o riesgos."
+    },
+    {
+      "id": 8,
+      "nombre": "Consejero / facilitador",
+      "segmento": "Apoyo",
+      "patronT": "D bajo, I medio-alto, S alto, C medio",
+      "resumen": "Apoya y armoniza; paciente con la gente. Prefiere cooperación a confrontación."
+    }
+  ]
+}

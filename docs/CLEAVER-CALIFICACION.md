@@ -1,71 +1,91 @@
-# Especificación de calificación — Técnica Cleaver (Autodescripción)
+# Especificación de calificación — Técnica Cleaver
 
 Fuentes en `app/src/data/referencias/cleaver/`:
 
 | Archivo | Uso |
 |---------|-----|
-| `Manual_Cleaver.pdf` | Marco teórico DISC, aplicación, calificación, gráficas T/M/L |
-| `Hoja_de_calificacion.pdf` | Cuestionario Autodescripción (24 series × 4 adjetivos, columnas M/L) |
+| `Manual_Cleaver.pdf` | Marco teórico DISC, Autodescripción, Factor Humano, estilos |
+| `Hoja_de_calificacion.pdf` | Cuestionario Autodescripción (24×4, columnas M/L) |
 | `Plantilla_de_calificacion.pdf` | Clave color → factor D/I/S/C |
-| `Analisis_del_Trabajo.pdf` | Formato Job Analysis / Factor Humano del puesto (**fase 2**) |
+| `Analisis_del_Trabajo.pdf` | Plantilla de calificación Factor Humano del puesto |
 
-## 1. Instrumento digitalizado (fase 1)
+## 1. Autodescripción (fase 1) — digitalizada
 
-**Autodescripción (Self Description)** — 24 series de 4 adjetivos.
-
-En cada serie el evaluado marca:
+24 series × 4 adjetivos. En cada serie:
 
 - **M** (Más): la palabra que mejor lo describe
 - **L** (Menos): la que menos lo describe
 
-Exactamente una M y una L por serie; no pueden ser la misma palabra.
+Exactamente una M y una L; no la misma palabra.
 
-## 2. Factores
+### Factores
 
-| Código | Nombre (manual) |
-|--------|-----------------|
+| Código | Nombre |
+|--------|--------|
 | **D** | Dominio |
 | **I** | Influencia |
 | **S** | Constancia (Steadiness) |
 | **C** | Apego / Cumplimiento |
 
-Cada adjetivo pertenece a un único factor (plantilla).
+### Calificación
 
-## 3. Calificación
+1. Contar M por factor → `M.D…M.C` (suma = 24)
+2. Contar L por factor → `L.D…L.C` (suma = 24)
+3. `T.f = M.f − L.f`
+4. **Validez** `ΣT`: válida |ΣT|≤3 · sospechosa 4–5 · inválida ≥6
 
-1. Contar Xs de **M** por factor → `M.D … M.C` (suma = 24 si completo).
-2. Contar Xs de **L** por factor → `L.D … L.C` (suma = 24).
-3. `T.f = M.f − L.f` para cada factor.
-4. **Validez:** `Σ T` debe ser ≈ 0 (rango útil −6…+6; el manual marca válida / sospechosa / inválida).
+Ejemplo del manual: M 7,1,6,6 / L 5,8,4,3 → T 2,−7,2,3 · ΣT=0
 
-Ejemplo del manual:
+### Gráficas y baremo
 
-| | D | I | S | C |
-|---|---|---|---|---|
-| M | 7 | 1 | 6 | 6 |
-| L | 5 | 8 | 4 | 3 |
-| T | 2 | −7 | 2 | 3 |
+| Gráfica | Origen | Lectura |
+|---------|--------|---------|
+| **M** | Conteos M | Motivado / deseos |
+| **L** | Conteos L | Bajo presión |
+| **T** | M−L | Cotidiano / observable |
 
-`Σ T = 0` → protocolo válido.
+Conversión a intensidad 0–100: `app/src/data/cleaver-baremo.json`.  
+**Aplanado** = los 4 factores entre 40 y 60 (manual).
 
-## 4. Gráficas
+### Interpretación
 
-| Gráfica | Origen | Lectura clínica |
-|---------|--------|-----------------|
-| **M** | Conteos M | Estilo motivado / deseos |
-| **L** | Conteos L | Bajo presión / limitaciones |
-| **T** | Totales T = M−L | Estilo cotidiano / observable |
+Banco en `cleaver-interpretacion.json`: genéricos alto/bajo, 12 combinaciones básicas, 8 estilos clásicos.
 
-La conversión a intensidad gráfica normativa (baremo de la hoja) queda **pendiente de digitalizar celda a celda** desde la plantilla impresa; el motor entrega conteos crudos M/L/T listos para graficar.
+## 2. Factor Humano / Análisis del Trabajo (fase 2) — digitalizado
 
-## 5. Fase 2 (no incluida aún)
+24 ítems (6 por factor), rating 1–5 de importancia en el puesto.
 
-- **Análisis del Trabajo / Job Analysis (Factor Humano del puesto)** — perfil ideal D/I/S/C del puesto para comparar persona–puesto.
-- Bancos de interpretación de estilos altos/bajos y los 8 patrones clásicos (manual §4.3).
-- Baremo de conversión a puntos de gráfica.
+1. `R` = suma por factor  
+2. `A` = promedio de R (redondeo Cleaver: .25↓ · .50= · .75↑)  
+3. `D = R − A`  
+4. `D% = D × X(A)` según tabla del manual (12–28 → 8…3.5)  
+5. Graficar `50 + D%`  
+6. Aplanado puesto si 40–60 en los cuatro
 
-## 6. Implementación
+Datos: `cleaver-job-items.json` · Motor: `lib/cleaver-job.ts`  
+Persistencia: `job_profiles.cleaver_puesto` (JSON).
 
-- Datos: `app/src/data/cleaver-items.json`
-- Motor: `app/src/lib/cleaver.ts` → `calificarCleaver`
-- Prueba: `app/src/lib/cleaver.test.ts`
+## 3. Persistencia (DB)
+
+Tabla genérica `assessment_sessions`:
+
+- `instrumento = "cleaver"`
+- `respuestas` JSON `{ [serie]: { mas, menos } }`
+- `calificacion` JSON (`ResultadoCleaver`: M/L/T, gráfica, aplanado, estilo, combinaciones, validez)
+- `interpretacion` texto
+- `validity_flags` derivados (incompleto, ΣT sospechosa/inválida, T aplanada, alertas)
+
+Perfil de puesto: `job_profiles.cleaver_puesto` con resultado Factor Humano.
+
+## 4. Implementación
+
+| Pieza | Path |
+|-------|------|
+| Ítems Autodescripción | `app/src/data/cleaver-items.json` |
+| Baremo | `app/src/data/cleaver-baremo.json` |
+| Interpretación | `app/src/data/cleaver-interpretacion.json` |
+| Ítems Factor Humano | `app/src/data/cleaver-job-items.json` |
+| Motor persona | `app/src/lib/cleaver.ts` |
+| Motor puesto | `app/src/lib/cleaver-job.ts` |
+| UI | `app/src/app/psycotest/cleaver/` |
+| Tests | `app/src/lib/cleaver.test.ts` |

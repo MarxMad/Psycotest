@@ -30,6 +30,8 @@ export const jobProfiles = sqliteTable("job_profiles", {
   empresa: text("empresa"),
   /** Respuestas MABE del bloque puesto (proc + valores) */
   mabePuesto: text("mabe_puesto", { mode: "json" }).$type<Record<string, number>>(),
+  /** Perfil Cleaver Factor Humano del puesto (R/A/D%/gráfica) */
+  cleaverPuesto: text("cleaver_puesto", { mode: "json" }).$type<Record<string, unknown>>(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
