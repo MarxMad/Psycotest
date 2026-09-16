@@ -23,10 +23,12 @@
 
 .cardHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .cardTitle {
