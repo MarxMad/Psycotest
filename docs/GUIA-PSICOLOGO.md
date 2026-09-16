@@ -1,174 +1,157 @@
-# Guía del psicólogo — PsycoTest
-## Resumen ejecutivo de uso del panel profesional
+# Guía ejecutiva del psicólogo
+## Operación integral de la plataforma profesional
 
-Documento operativo para el profesional que aplica, califica e interpreta pruebas psicométricas en la plataforma. Flujo cubierto: **acceso → panel → códigos → revisión de sesión (calificación / respuestas / interpretación)**.
+> **PDF para lectura/impresión:** [`GUIA-PSICOLOGO.pdf`](./GUIA-PSICOLOGO.pdf)
 
-Instrumentos disponibles en el panel: **PAPI**, **Hartman** y **MABE**.
-
-> **PDF para lectura/impresión:** [`GUIA-PSICOLOGO.pdf`](./GUIA-PSICOLOGO.pdf) (mismas capturas e índice operativo).
+Documento operativo para la persona psicóloga y/o coordinación clínica que administra aplicación de pruebas, revisión de resultados, cursos, clases en vivo y ventas.
 
 ---
 
-## 1. Acceso al panel
+## 1) Estado actual de instrumentos
 
-1. Abrir la plataforma y entrar a **Acceso profesional** (`/login`).
-2. Iniciar sesión con las credenciales del consultorio.
-3. Pulsar **Entrar al panel**.
+### Instrumentos activos en esta rama
+- **PAPI**
+- **Hartman**
+- **MABE**
 
-> Credenciales de demo iniciales (entorno de prueba): `admin@psycotest.local` / `psycotest2026`.
+### Prueba Cleaver (nueva)
+En esta rama no se detectan rutas ni componentes activos de Cleaver para operación clínica en panel. Se recomienda habilitarla como cuarto instrumento en el mismo flujo de:
 
-![Acceso al panel del psicólogo](assets/guia-psicologo/guia_psicologo_01_login.png)
-
-**Resultado:** acceso al área interna para revisar calificaciones e interpretaciones.
-
----
-
-## 2. Dashboard — vista general
-
-Tras el login se muestra el **Dashboard** (`/admin`): resumen de pruebas, estudiantes, clases en vivo e ingresos, con atajos a lo más usado.
-
-![Dashboard del panel admin](assets/guia-psicologo/guia_psicologo_02_dashboard.png)
-
-Acciones frecuentes desde aquí:
-
-| Acción | Dónde |
-|--------|--------|
-| Ver evaluaciones | **Pruebas** → *Ver todas* |
-| Generar códigos de acceso | **Gestionar códigos de acceso** |
-| Salir del panel | **Salir** (barra superior o pie del menú) |
+1. Código de acceso
+2. Aplicación
+3. Calificación
+4. Interpretación
+5. Seguimiento
 
 ---
 
-## 3. Pruebas psicométricas
+## 2) Flujo clínico principal (pruebas)
 
-En **Pruebas** (`/admin/pruebas`) se concentran las sesiones aplicadas.
+Ruta de operación:
 
-![Listado de pruebas psicométricas](assets/guia-psicologo/guia_psicologo_03_pruebas.png)
+1. Entrar al panel profesional.
+2. Abrir **Pruebas**.
+3. Crear/gestionar **códigos de acceso**.
+4. Esperar aplicación por participante.
+5. Revisar sesión en:
+   - **Calificación**
+   - **Respuestas**
+   - **Interpretación**
 
-Qué puede hacer el psicólogo:
-
-- Filtrar por instrumento (**Todas / PAPI / Hartman / MABE**).
-- Abrir **Códigos** para lotes de aplicación masiva.
-- Iniciar una **Nueva evaluación** / **Aplicar prueba**.
-- Cuando existan sesiones, abrir el detalle de cada una para calificar e interpretar.
-
-Las evaluaciones aparecen en esta lista **después de que el participante las complete**.
-
----
-
-## 4. Códigos de acceso (aplicación masiva)
-
-Ruta: `/admin/pruebas/codigos`.
-
-Los códigos permiten entregar a una empresa o grupo un lote con cupos limitados. Cada código define **qué pruebas** puede aplicar el participante.
-
-### 4.1 Crear un lote
-
-1. Pulsar **+ Nuevo código**.
-2. Completar:
-   - **Nombre del lote** (obligatorio)
-   - **Empresa** (opcional)
-   - **Cupos** (número de personas)
-   - **Pruebas incluidas** (PAPI, Hartman, MABE)
-3. Pulsar **Generar código**.
-
-![Formulario para crear lote de códigos](assets/guia-psicologo/guia_psicologo_05_crear_codigo.png)
-
-### 4.2 Código generado
-
-Al generar el lote, la plataforma muestra el **código en claro una sola vez**. Debe copiarse y entregarse a la empresa o al responsable de aplicación.
-
-![Código generado con éxito](assets/guia-psicologo/guia_psicologo_06_codigo_creado.png)
-
-### 4.3 Listado de lotes
-
-La tabla muestra nombre, empresa, cupos usados/disponibles, pruebas incluidas y estado. Desde aquí se puede **desactivar** un código o ver su detalle.
-
-![Listado de códigos de acceso](assets/guia-psicologo/guia_psicologo_10_codigos_lista.png)
+![Módulo de pruebas](assets/guia-plataforma/guia_plataforma_01_pruebas.png)
 
 ---
 
-## 5. Revisar una sesión completada
+## 3) Códigos de acceso (aplicación masiva)
 
-Cuando un participante termina una prueba, la sesión aparece en **Pruebas**. Al abrirla, el psicólogo dispone de tres pestañas:
+### 3.1 Crear código
+Completar lote, empresa, cupos y pruebas incluidas.
 
-| Pestaña | Uso clínico |
-|---------|-------------|
-| **Calificación** | Índices automáticos, alertas de validez y gráficas |
-| **Respuestas** | Auditoría ítem por ítem |
-| **Interpretación** | Borrador clínico + notas del psicólogo |
+![Crear código](assets/guia-plataforma/guia_plataforma_02_crear_codigo.png)
 
-Ejemplo de sesión demo: **Hartman — María Demo López** (Analista administrativo · Acme Consultores).
+### 3.2 Confirmación de código
+Copiar y resguardar el código al momento de generarlo.
 
-### 5.1 Calificación
+![Código generado](assets/guia-plataforma/guia_plataforma_03_codigo_generado.png)
 
-![Calificación Hartman](assets/guia-psicologo/guia_psicologo_07_calificacion.png)
+### 3.3 Seguimiento de lotes
+Validar consumo de cupos y estado de cada lote.
 
-En Hartman se muestran, entre otros:
-
-- Validez / interpretabilidad (p. ej. disimilitudes **DIS**).
-- Sumatorias de rankings (**Σ RANKINGS**).
-- Separación **Parte I (V.Q.)** y **Parte II (S.Q.)**.
-- Controles de gráfica (**Ejes / Radar / Ítems / Índices**).
-
-Si el protocolo **no es interpretable**, el sistema lo marca de forma explícita (p. ej. seis o más disimilitudes) para evitar un informe inválido.
-
-### 5.2 Interpretación
-
-![Interpretación Hartman](assets/guia-psicologo/guia_psicologo_08_interpretacion.png)
-
-La pestaña ofrece:
-
-1. Estado de interpretabilidad.
-2. **Borrador clínico** generado por el motor (índices, alertas).
-3. Campo **Notas del psicólogo** para observaciones y ajustes al informe final.
-
-El borrador es apoyo técnico; la firma clínica permanece en el profesional.
-
-### 5.3 Respuestas
-
-![Respuestas del protocolo](assets/guia-psicologo/guia_psicologo_09_respuestas.png)
-
-Sirve para contrastar el protocolo original, resolver dudas de captura o documentar reaplicación.
+![Listado de códigos](assets/guia-plataforma/guia_plataforma_04_codigos_lista.png)
 
 ---
 
-## 6. Flujo recomendado (checklist)
+## 4) Revisión de sesión clínica
 
-```
-1. Entrar al panel profesional
-2. Crear lote de códigos (empresa, cupos, pruebas)
-3. Entregar el código al responsable de aplicación
-4. Esperar a que el participante complete la(s) prueba(s)
-5. Abrir la sesión en Pruebas
-6. Revisar Calificación (validez primero)
-7. Si es interpretable → revisar Interpretación y completar notas
-8. Si NO es interpretable → reaplicar o documentar revisión manual
-9. Usar Respuestas solo para auditoría cuando haga falta
-```
+### 4.1 Calificación
+Verificar primero validez del protocolo antes de interpretar.
 
----
+![Calificación](assets/guia-plataforma/guia_plataforma_05_calificacion.png)
 
-## 7. Buenas prácticas
+### 4.2 Interpretación
+Usar el borrador como apoyo técnico y completar notas profesionales.
 
-- **Validez antes que narrativa:** si el motor marca no interpretable, no forzar perfil clínico.
-- **Códigos de un solo uso operativo:** copiar el código al generarlo; no se vuelve a mostrar en claro.
-- **Un lote por campaña:** nombre claro (empresa + grupo + año) facilita el seguimiento de cupos.
-- **Notas del psicólogo:** registrar contexto laboral, observaciones de aplicación y decisiones de retest.
-- **Filtros por instrumento:** en listados mixtos, filtrar PAPI / Hartman / MABE acelera la revisión.
+![Interpretación](assets/guia-plataforma/guia_plataforma_06_interpretacion.png)
+
+### 4.3 Respuestas
+Auditar ítem por ítem cuando haya dudas de consistencia o captura.
+
+![Respuestas](assets/guia-plataforma/guia_plataforma_07_respuestas.png)
 
 ---
 
-## 8. Mapa rápido de rutas
+## 5) Cursos y catálogo académico
 
-| Pantalla | Ruta |
-|----------|------|
-| Login profesional | `/login` |
-| Dashboard | `/admin` |
-| Pruebas / sesiones | `/admin/pruebas` |
-| Códigos de acceso | `/admin/pruebas/codigos` |
-| Detalle de sesión | `/admin/pruebas/sesiones/[id]` |
+El módulo de **Cursos** permite:
+- Crear cursos
+- Gestionar categorías
+- Organizar catálogo/inventario
+- Preparar publicación comercial
+
+![Cursos y catálogo](assets/guia-plataforma/guia_plataforma_08_cursos_catalogo.png)
 
 ---
 
-*PsycoTest — uso profesional. Esta guía describe el flujo del psicólogo en el panel admin; no sustituye los manuales técnicos de calificación de cada instrumento.*
+## 6) Plataforma de meet propia (clases en vivo)
+
+El módulo de **Clases en Vivo** centraliza:
+- Programación
+- Seguimiento de sesiones
+- Trazabilidad de operación sin depender de enlaces dispersos
+
+![Clases en vivo](assets/guia-plataforma/guia_plataforma_09_clases_vivo.png)
+
+---
+
+## 7) Sistema de ventas y cobros
+
+El módulo de **Pagos** concentra:
+- Ingresos
+- Transacciones
+- Reportes financieros
+- Control comercial por servicio
+
+![Ventas y pagos](assets/guia-plataforma/guia_plataforma_10_ventas_pagos.png)
+
+Complemento de conversión/comunicación comercial:
+
+![Marketing](assets/guia-plataforma/guia_plataforma_11_marketing.png)
+
+---
+
+## 8) Checklist ejecutivo recomendado
+
+1. Definir campaña (empresa, población objetivo, instrumento).
+2. Generar lote de códigos y vigencia operativa.
+3. Monitorear consumo de cupos y avance de aplicaciones.
+4. Revisar validez de protocolos antes de interpretar.
+5. Emitir nota clínica con respaldo de calificación y respuestas.
+6. Convertir resultados a ruta de formación (cursos/catálogo).
+7. Programar intervención sincrónica en clases en vivo.
+8. Dar seguimiento a venta/cobro y reportes.
+
+---
+
+## 9) Mapa de rutas
+
+- `/admin/pruebas`
+- `/admin/pruebas/codigos`
+- `/admin/pruebas/sesiones/[id]`
+- `/admin/cursos`
+- `/admin/clases-vivo`
+- `/admin/pagos`
+- `/admin/marketing`
+
+---
+
+## 10) Recomendación para habilitar Cleaver
+
+Para incorporar la nueva prueba dentro del mismo manual operativo:
+
+1. Alta de instrumento en catálogo de pruebas.
+2. Motor de calificación con reglas y baremos de Cleaver.
+3. Plantilla de interpretación y alertas de validez.
+4. Inclusión en selector de códigos de acceso.
+5. Vista de sesión con pestañas de calificación/respuestas/interpretación.
+
+Con eso, Cleaver quedará integrada al flujo descrito en este documento.
