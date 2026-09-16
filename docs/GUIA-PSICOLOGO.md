@@ -5,6 +5,8 @@ Documento operativo para el profesional que aplica, califica e interpreta prueba
 
 Instrumentos disponibles en el panel: **PAPI**, **Hartman** y **MABE**.
 
+> **PDF para lectura/impresión:** [`GUIA-PSICOLOGO.pdf`](./GUIA-PSICOLOGO.pdf) (mismas capturas e índice operativo).
+
 ---
 
 ## 1. Acceso al panel
