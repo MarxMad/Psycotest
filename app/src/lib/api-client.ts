@@ -22,6 +22,7 @@ export function dbSessionToMeta(row: AssessmentSession): MetaSesion {
     participante: row.participantNombre,
     puesto: row.puesto ?? undefined,
     empresa: row.empresa ?? undefined,
+    jobProfileId: row.jobProfileId ?? undefined,
     iniciada: row.iniciada,
     actualizada: row.actualizada,
     finalizadaEn: row.terminada ? row.actualizada : undefined,
@@ -40,6 +41,29 @@ export function dbSessionToSesion(row: AssessmentSession): Sesion {
     aprobada: row.aprobada,
     validityFlags: row.validityFlags ?? undefined,
   };
+}
+
+export interface JobProfileRow {
+  id: string;
+  titulo: string;
+  empresa: string | null;
+  cleaverPuesto: unknown;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function fetchJobProfiles(): Promise<JobProfileRow[]> {
+  const res = await fetch("/api/job-profiles");
+  if (!res.ok) return [];
+  const data = (await res.json()) as { profiles: JobProfileRow[] };
+  return data.profiles;
+}
+
+export async function fetchJobProfile(id: string): Promise<JobProfileRow | null> {
+  const res = await fetch(`/api/job-profiles/${id}`);
+  if (!res.ok) return null;
+  const data = (await res.json()) as { profile: JobProfileRow };
+  return data.profile;
 }
 
 export async function fetchSessions(instrumento?: Instrumento): Promise<AssessmentSession[]> {

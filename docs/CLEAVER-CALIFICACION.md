@@ -51,7 +51,7 @@ Conversión a intensidad 0–100: `app/src/data/cleaver-baremo.json`.
 
 Banco en `cleaver-interpretacion.json`: genéricos alto/bajo, 12 combinaciones básicas, 8 estilos clásicos.
 
-## 2. Factor Humano / Análisis del Trabajo (fase 2) — digitalizado
+## 2. Factor Humano / Análisis del Trabajo (fase 2) — digitalizado end-to-end
 
 24 ítems (6 por factor), rating 1–5 de importancia en el puesto.
 
@@ -63,7 +63,18 @@ Banco en `cleaver-interpretacion.json`: genéricos alto/bajo, 12 combinaciones b
 6. Aplanado puesto si 40–60 en los cuatro
 
 Datos: `cleaver-job-items.json` · Motor: `lib/cleaver-job.ts`  
-Persistencia: `job_profiles.cleaver_puesto` (JSON).
+Persistencia: `job_profiles.cleaver_puesto` (JSON con respuestas + resultado).
+
+### UI y API
+
+| Pieza | Path |
+|-------|------|
+| CRUD perfiles | `/api/job-profiles`, `/api/job-profiles/[id]` |
+| Formulario Análisis del Trabajo | `/admin/pruebas/perfiles` |
+| Vincular a sesión Cleaver | select en `/admin/pruebas/sesiones/[id]` |
+| Brecha persona−puesto | `CleaverGraficas` + `brechaPersonaPuesto` |
+
+Flujo: crear Factor Humano → abrir sesión Cleaver → vincular perfil → ver gráfica de puesto y brecha vs gráfica T.
 
 ## 3. Persistencia (DB)
 
@@ -87,5 +98,8 @@ Perfil de puesto: `job_profiles.cleaver_puesto` con resultado Factor Humano.
 | Ítems Factor Humano | `app/src/data/cleaver-job-items.json` |
 | Motor persona | `app/src/lib/cleaver.ts` |
 | Motor puesto | `app/src/lib/cleaver-job.ts` |
-| UI | `app/src/app/psycotest/cleaver/` |
+| Store perfiles | `app/src/lib/job-profiles-store.ts` |
+| API perfiles | `app/src/app/api/job-profiles/` |
+| UI Autodescripción | `app/src/app/psycotest/cleaver/` |
+| UI Análisis del Trabajo | `app/src/app/admin/pruebas/perfiles/` |
 | Tests | `app/src/lib/cleaver.test.ts` |

@@ -58,6 +58,7 @@ export async function saveSession(input: {
   instrumento: Instrumento;
   participantNombre: string;
   participantId?: string;
+  jobProfileId?: string | null;
   puesto?: string;
   empresa?: string;
   respuestas: unknown;
@@ -84,7 +85,10 @@ export async function saveSession(input: {
     estado,
     participantId: input.participantId ?? null,
     participantNombre: input.participantNombre,
-    jobProfileId: null,
+    jobProfileId:
+      input.jobProfileId !== undefined
+        ? input.jobProfileId
+        : (existing?.jobProfileId ?? null),
     puesto: input.puesto ?? null,
     empresa: input.empresa ?? null,
     respuestas: input.respuestas,

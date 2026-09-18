@@ -338,6 +338,36 @@
   font-size: 0.88rem;
 }
 
+.jobLinkBox {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: end;
+  margin: 0 0 1.25rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--raised);
+}
+
+.jobLinkBox label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  flex: 1;
+  min-width: 220px;
+}
+
+.jobLinkBox select {
+  font-weight: 400;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--surface, #fff);
+}
+
 .alertBox strong {
   display: block;
   margin-bottom: 0.5rem;

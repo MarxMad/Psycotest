@@ -35,6 +35,7 @@ export async function PATCH(request: Request, { params }: Params) {
     notasPsicologo?: string;
     interpretacion?: string;
     aprobada?: boolean;
+    jobProfileId?: string | null;
   };
 
   const aprobada = body.aprobada ?? existing.aprobada;
@@ -43,6 +44,8 @@ export async function PATCH(request: Request, { params }: Params) {
     instrumento: existing.instrumento,
     participantNombre: existing.participantNombre,
     participantId: existing.participantId ?? undefined,
+    jobProfileId:
+      body.jobProfileId !== undefined ? body.jobProfileId : existing.jobProfileId,
     puesto: existing.puesto ?? undefined,
     empresa: existing.empresa ?? undefined,
     respuestas: existing.respuestas,
@@ -52,6 +55,8 @@ export async function PATCH(request: Request, { params }: Params) {
     aprobada,
     estado: aprobada ? "aprobada" : existing.estado === "borrador" ? "borrador" : "calificada",
     createdById: existing.createdById ?? undefined,
+    accessCodeId: existing.accessCodeId ?? undefined,
+    accessRedemptionId: existing.accessRedemptionId ?? undefined,
     iniciada: existing.iniciada,
     terminada: existing.terminada,
   });

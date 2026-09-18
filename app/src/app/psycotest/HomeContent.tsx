@@ -22,7 +22,7 @@ const servicios = [
     descripcion: "Herramientas de evaluación de personalidad, valores y competencias con análisis detallado.",
     href: "/evaluacion/acceso",
     color: "var(--papi)",
-    badge: "3 instrumentos",
+    badge: "4 instrumentos",
   },
   {
     icon: GraduationCap,
@@ -79,6 +79,19 @@ const evaluaciones = [
       ["Bloques", "4 áreas"],
       ["Formato", "Comparativo"],
       ["Duración", "~30 min"],
+    ],
+    listo: true,
+  },
+  {
+    slug: "cleaver",
+    nombre: "Cleaver (DISC)",
+    tagline: "Autodescripción + Factor Humano",
+    sub: "Perfil motivacional D-I-S-C (gráficas M/L/T) confrontable con el Análisis del Trabajo del puesto.",
+    tint: "var(--cleaver, #2a6f97)",
+    facts: [
+      ["Series", "24×4"],
+      ["Formato", "Más / Menos"],
+      ["Duración", "~12 min"],
     ],
     listo: true,
   },

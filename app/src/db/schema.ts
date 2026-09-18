@@ -575,6 +575,7 @@ export type User = typeof users.$inferSelect;
 export type Participant = typeof participants.$inferSelect;
 export type AccessCode = typeof accessCodes.$inferSelect;
 export type AccessRedemption = typeof accessRedemptions.$inferSelect;
+export type JobProfile = typeof jobProfiles.$inferSelect;
 export type AssessmentSession = typeof assessmentSessions.$inferSelect;
 export type Course = typeof courses.$inferSelect;
 export type CourseCategory = typeof courseCategories.$inferSelect;

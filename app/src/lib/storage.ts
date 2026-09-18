@@ -10,6 +10,7 @@ export interface MetaSesion {
   participante: string;
   puesto?: string;
   empresa?: string;
+  jobProfileId?: string;
   iniciada: string;
   actualizada: string;
   finalizadaEn?: string;

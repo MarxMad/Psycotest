@@ -121,3 +121,15 @@ export function brechaPersonaPuesto(
     C: graficaPersonaT.C - graficaPuesto.C,
   };
 }
+
+export type CleaverPuestoPayload = {
+  respuestas: RespuestasCleaverJob;
+  resultado: ResultadoCleaverJob;
+};
+
+export function asCleaverPuesto(raw: unknown): CleaverPuestoPayload | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Partial<CleaverPuestoPayload>;
+  if (!obj.resultado || typeof obj.resultado !== "object") return null;
+  return obj as CleaverPuestoPayload;
+}

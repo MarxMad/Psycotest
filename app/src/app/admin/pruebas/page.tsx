@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FlaskConical, Plus, KeyRound } from "lucide-react";
+import { FlaskConical, Plus, KeyRound, Briefcase } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
@@ -82,6 +82,10 @@ export default function PruebasPage() {
         breadcrumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Pruebas" }]}
         action={
           <div className={s.actions}>
+            <Link href="/admin/pruebas/perfiles" className="btn">
+              <Briefcase size={16} />
+              Perfiles
+            </Link>
             <Link href="/admin/pruebas/codigos" className="btn">
               <KeyRound size={16} />
               Códigos
