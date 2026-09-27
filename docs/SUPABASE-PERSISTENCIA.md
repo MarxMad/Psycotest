@@ -60,8 +60,22 @@ npm run dev
 
 ## Variables que ya no se usan
 
-- `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` (legacy)
-- `DATABASE_PATH` SQLite (solo referencia histórica)
+- ~~Turso~~ eliminado del runtime
+- ~~SQLite / better-sqlite3~~ eliminado del runtime
+- Persistencia única: **Supabase Postgres vía `DATABASE_URL`**
+
+## Carpeta Supabase CLI
+
+- `app/supabase/config.toml`
+- `app/supabase/migrations/20260927220000_init.sql` (misma init que `docs/supabase_init.sql`)
+
+Con token:
+
+```bash
+export SUPABASE_ACCESS_TOKEN=...
+npx supabase link --project-ref <REF>
+npx supabase db push
+```
 
 ## Verificación rápida
 
