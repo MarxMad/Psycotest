@@ -1,22 +1,18 @@
 import type { Config } from "drizzle-kit";
 
-const tursoUrl = process.env.TURSO_DATABASE_URL;
+const databaseUrl = process.env.DATABASE_URL;
 
-export default (tursoUrl
-  ? {
-      schema: "./src/db/schema.ts",
-      out: "./drizzle",
-      dialect: "turso",
-      dbCredentials: {
-        url: tursoUrl,
-        authToken: process.env.TURSO_AUTH_TOKEN,
-      },
-    }
-  : {
-      schema: "./src/db/schema.ts",
-      out: "./drizzle",
-      dialect: "sqlite",
-      dbCredentials: {
-        url: process.env.DATABASE_PATH ?? "./data/psycotest.db",
-      },
-    }) satisfies Config;
+if (!databaseUrl) {
+  console.warn(
+    "[drizzle.config] DATABASE_URL no definida. Use Supabase URI o postgres local antes de db:push.",
+  );
+}
+
+export default {
+  schema: "./src/db/schema.ts",
+  out: "./drizzle",
+  dialect: "postgresql",
+  dbCredentials: {
+    url: databaseUrl ?? "postgresql://postgres:postgres@localhost:5432/sistemapsic",
+  },
+} satisfies Config;

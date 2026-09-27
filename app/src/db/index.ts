@@ -1,67 +1,69 @@
 import { mkdirSync } from "fs";
 import path from "path";
-import type { BetterSQLite3Database } from "drizzle-orm/better-sqlite3";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import * as schema from "./schema";
 import { ensureDbReadyOnce } from "./bootstrap";
 
-/** Tipo unificado para Drizzle; en runtime puede ser SQLite local o Turso. */
-export type AppDb = BetterSQLite3Database<typeof schema>;
+/** Tipo unificado Drizzle (Postgres / Supabase). */
+export type AppDb = PostgresJsDatabase<typeof schema>;
 
-const globalForDb = globalThis as unknown as { __psycotestDb?: AppDb };
+const globalForDb = globalThis as unknown as {
+  __sistemapsicDb?: AppDb;
+  __sistemapsicPg?: ReturnType<typeof import("postgres")>;
+};
 
-function sqlitePath(): string {
-  if (process.env.DATABASE_PATH) return process.env.DATABASE_PATH;
-  // En Vercel el filesystem de la app es de solo lectura; usar /tmp.
-  if (process.env.VERCEL) {
-    return path.join("/tmp", "psycotest.db");
-  }
-  return path.join(process.cwd(), "data", "psycotest.db");
+function requireDatabaseUrl(): string {
+  const url = process.env.DATABASE_URL?.trim();
+  if (url) return url;
+  throw new Error(
+    "Falta DATABASE_URL. Use la connection string de Supabase (Project Settings → Database) " +
+      "o el Postgres local de docker compose (postgresql://postgres:postgres@localhost:5432/sistemapsic).",
+  );
 }
 
 function createDb(): AppDb {
-  const tursoUrl = process.env.TURSO_DATABASE_URL;
-
-  if (tursoUrl) {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { createClient } = require("@libsql/client") as typeof import("@libsql/client");
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { drizzle } = require("drizzle-orm/libsql") as typeof import("drizzle-orm/libsql");
-
-    const client = createClient({
-      url: tursoUrl,
-      authToken: process.env.TURSO_AUTH_TOKEN,
-    });
-    return drizzle(client, { schema }) as unknown as AppDb;
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const Database = require("better-sqlite3") as typeof import("better-sqlite3");
+  const postgres = require("postgres") as typeof import("postgres");
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { drizzle } = require("drizzle-orm/better-sqlite3") as typeof import("drizzle-orm/better-sqlite3");
+  const { drizzle } = require("drizzle-orm/postgres-js") as typeof import("drizzle-orm/postgres-js");
 
-  const file = sqlitePath();
-  mkdirSync(path.dirname(file), { recursive: true });
-  const sqlite = new Database(file);
-  sqlite.pragma("journal_mode = WAL");
-  sqlite.pragma("foreign_keys = ON");
-  return drizzle(sqlite, { schema });
+  const connectionString = requireDatabaseUrl();
+  // Prepare opcional: en pooler de Supabase (6543 / transaction mode) prepare=false es más estable.
+  const isPooler = connectionString.includes(":6543") || connectionString.includes("pooler");
+  const client = postgres(connectionString, {
+    max: process.env.VERCEL ? 1 : 5,
+    prepare: !isPooler,
+    idle_timeout: 20,
+    connect_timeout: 30,
+    ssl: connectionString.includes("localhost") ? false : "require",
+  });
+  globalForDb.__sistemapsicPg = client;
+  return drizzle(client, { schema });
 }
 
 export function getDb(): AppDb {
-  if (!globalForDb.__psycotestDb) {
-    globalForDb.__psycotestDb = createDb();
-    void ensureDbReadyOnce(globalForDb.__psycotestDb).catch((error) => {
-      console.error("[psycotest] ensureDbReady falló:", error);
+  if (!globalForDb.__sistemapsicDb) {
+    globalForDb.__sistemapsicDb = createDb();
+    void ensureDbReadyOnce(globalForDb.__sistemapsicDb).catch((error) => {
+      console.error("[sistemapsic] ensureDbReady falló:", error);
     });
   }
-  return globalForDb.__psycotestDb;
+  return globalForDb.__sistemapsicDb;
 }
 
-/** Espera a que el schema (users + LMS) esté listo antes de consultar. */
+/** Espera a que el schema esté listo antes de consultar. */
 export async function getReadyDb(): Promise<AppDb> {
   const db = getDb();
   await ensureDbReadyOnce(db);
   return db;
+}
+
+/** Ruta SQLite legacy (solo referencia; la persistencia activa es Postgres/Supabase). */
+export function legacySqlitePath(): string {
+  if (process.env.DATABASE_PATH) return process.env.DATABASE_PATH;
+  if (process.env.VERCEL) return path.join("/tmp", "psycotest.db");
+  mkdirSync(path.join(process.cwd(), "data"), { recursive: true });
+  return path.join(process.cwd(), "data", "psycotest.db");
 }
 
 export { schema };
