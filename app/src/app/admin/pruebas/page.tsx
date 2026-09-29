@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FlaskConical, Plus, KeyRound, Briefcase } from "lucide-react";
+import { FlaskConical, Plus, KeyRound, Briefcase, Download } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
@@ -11,6 +11,7 @@ import {
   fetchSessions,
 } from "@/lib/api-client";
 import { listarSesiones, type Instrumento, type MetaSesion } from "@/lib/storage";
+import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
 import s from "./pruebas.module.css";
 
 const ETIQUETAS: Record<Instrumento, string> = {
@@ -82,6 +83,14 @@ export default function PruebasPage() {
         breadcrumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Pruebas" }]}
         action={
           <div className={s.actions}>
+            <a
+              href={MANUAL_GUIA_PSICOLOGO.apiHref}
+              className="btn"
+              download={MANUAL_GUIA_PSICOLOGO.filename}
+            >
+              <Download size={16} />
+              Manual PDF
+            </a>
             <Link href="/admin/pruebas/perfiles" className="btn">
               <Briefcase size={16} />
               Perfiles

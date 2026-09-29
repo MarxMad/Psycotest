@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, KeyRound, Layers, Shield, GraduationCap, Video, Award, FlaskConical } from "lucide-react";
+import { Clock, KeyRound, Layers, Shield, GraduationCap, Video, Award, FlaskConical, Download } from "lucide-react";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { FadeIn, StaggerItem } from "@/components/motion";
 import { APP_NAME } from "@/lib/brand";
+import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
 import s from "./page.module.css";
 
 const servicios = [
@@ -170,6 +171,24 @@ export function HomeContent() {
               </div>
               <span className={s.go}>Acceder →</span>
             </Link>
+          </FadeIn>
+
+          <FadeIn delay={0.28}>
+            <a
+              href={MANUAL_GUIA_PSICOLOGO.apiHref}
+              className={s.accesoBanner}
+              download={MANUAL_GUIA_PSICOLOGO.filename}
+            >
+              <Download size={20} />
+              <div>
+                <strong>{MANUAL_GUIA_PSICOLOGO.title}</strong>
+                <span>
+                  Descarga el instructivo ejecutivo en PDF: pruebas, códigos, Cleaver, cursos, meet y
+                  ventas.
+                </span>
+              </div>
+              <span className={s.go}>Descargar PDF →</span>
+            </a>
           </FadeIn>
 
           <div className={s.grid}>

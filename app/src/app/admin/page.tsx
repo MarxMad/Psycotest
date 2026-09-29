@@ -11,11 +11,13 @@ import {
   Users,
   DollarSign,
   ArrowRight,
+  Download,
 } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
 import { Card, CardHeader } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
+import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
 import s from "./dashboard.module.css";
 
 interface DashboardStats {
@@ -58,6 +60,16 @@ export default function AdminDashboard() {
         title="Dashboard"
         subtitle="Vista general de tu plataforma"
         breadcrumbs={[{ label: "Dashboard" }]}
+        action={
+          <a
+            href={MANUAL_GUIA_PSICOLOGO.apiHref}
+            className="btn"
+            download={MANUAL_GUIA_PSICOLOGO.filename}
+          >
+            <Download size={16} />
+            Descargar manual
+          </a>
+        }
       />
 
       {/* Stats Grid */}
