@@ -1,0 +1,95 @@
+.shell {
+  min-height: 100vh;
+  background: var(--ch-bg);
+  color: var(--ch-ink);
+  font-family: var(--ch-font-body);
+  --ch-pad: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.shell :global(h1),
+.shell :global(h2),
+.shell :global(h3),
+.brand strong {
+  font-family: var(--ch-font-display);
+  letter-spacing: -0.02em;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.9rem var(--ch-pad);
+  background: color-mix(in srgb, var(--ch-bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--ch-rule);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brandMark {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ch-accent);
+}
+
+.brand strong {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+}
+
+.links a {
+  color: var(--ch-muted);
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--ch-ink);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 2.5rem var(--ch-pad) 2rem;
+  border-top: 1px solid var(--ch-rule);
+  margin-top: 4rem;
+}
+
+.footer p {
+  color: var(--ch-muted);
+  max-width: 36rem;
+  margin: 0.35rem 0 0;
+  line-height: 1.5;
+}
+
+.copy {
+  font-size: 0.85rem;
+  align-self: end;
+}
+
+@media (max-width: 720px) {
+  .nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

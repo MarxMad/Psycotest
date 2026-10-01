@@ -8,7 +8,11 @@ import { APP_NAME } from "@/lib/brand";
 import { BrandDot, TopNav } from "./TopNav";
 
 function hideGlobalTopbar(pathname: string) {
-  return pathname === "/" || pathname.startsWith("/consultorio");
+  return (
+    pathname === "/" ||
+    pathname.startsWith("/consultorio") ||
+    pathname.startsWith("/sites")
+  );
 }
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {

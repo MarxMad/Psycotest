@@ -1,0 +1,254 @@
+/**
+ * Multi-canal por subdominio.
+ * Host examples: martin.localhost:3000, ceduct.sistemapsic.com
+ */
+
+export type ChannelId = "martin" | "ceduct" | "psicologia" | "ige";
+
+export type ChannelTheme = {
+  /** CSS variables injected on the site shell */
+  vars: Record<string, string>;
+  fontDisplay: string;
+  fontBody: string;
+};
+
+export type ChannelDef = {
+  id: ChannelId;
+  hostPrefix: string;
+  name: string;
+  legalName: string;
+  tagline: string;
+  description: string;
+  accentLabel: string;
+  theme: ChannelTheme;
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+  nav: Array<{ label: string; href: string }>;
+};
+
+const ROOT = () => (process.env.ROOT_DOMAIN || "localhost").replace(/^www\./, "");
+
+export const CHANNELS: Record<ChannelId, ChannelDef> = {
+  martin: {
+    id: "martin",
+    hostPrefix: "martin",
+    name: "Martín Hernández",
+    legalName: "Martín Hernández González",
+    tagline: "Consultor · Valuador · Certificador",
+    description:
+      "Portafolio profesional: consultoría organizacional, valuación de competencias y certificación CONOCER.",
+    accentLabel: "Portafolio",
+    theme: {
+      fontDisplay: '"Fraunces", "Libre Baskerville", Georgia, serif',
+      fontBody: '"DM Sans", "Segoe UI", sans-serif',
+      vars: {
+        "--ch-bg": "#0c1222",
+        "--ch-surface": "#141c2e",
+        "--ch-ink": "#f2efe8",
+        "--ch-muted": "#9aa3b5",
+        "--ch-accent": "#d4a24c",
+        "--ch-accent-2": "#3d7ea6",
+        "--ch-rule": "rgba(242,239,232,0.12)",
+        "--ch-hero-overlay": "linear-gradient(120deg, rgba(12,18,34,0.92) 0%, rgba(12,18,34,0.55) 55%, rgba(12,18,34,0.2) 100%)",
+      },
+    },
+    primaryCta: { label: "Ver credenciales", href: "#credenciales" },
+    secondaryCta: { label: "Canales de servicio", href: "#canales" },
+    nav: [
+      { label: "Inicio", href: "/" },
+      { label: "Credenciales", href: "#credenciales" },
+      { label: "Canales", href: "#canales" },
+      { label: "Contacto", href: "#contacto" },
+    ],
+  },
+  ceduct: {
+    id: "ceduct",
+    hostPrefix: "ceduct",
+    name: "CEDUCT",
+    legalName: "Centro de Educación y Capacitación para los Trabajadores, A.C.",
+    tagline: "Entidad certificadora ECE 002-10",
+    description:
+      "Certificación de competencias laborales con respaldo del Sistema Nacional de Competencias.",
+    accentLabel: "ECE 002-10",
+    theme: {
+      fontDisplay: '"Libre Baskerville", "Fraunces", Georgia, serif',
+      fontBody: '"Source Sans 3", "DM Sans", sans-serif',
+      vars: {
+        "--ch-bg": "#071a2e",
+        "--ch-surface": "#0d2740",
+        "--ch-ink": "#f7f4ec",
+        "--ch-muted": "#b7c4d4",
+        "--ch-accent": "#c6a35a",
+        "--ch-accent-2": "#1f6b8a",
+        "--ch-rule": "rgba(198,163,90,0.28)",
+        "--ch-hero-overlay": "linear-gradient(105deg, rgba(7,26,46,0.95) 0%, rgba(7,26,46,0.7) 50%, rgba(7,26,46,0.25) 100%)",
+      },
+    },
+    primaryCta: { label: "Estándares CONOCER", href: "#estandares" },
+    secondaryCta: { label: "Expedientes", href: "/consultorio/expediente" },
+    nav: [
+      { label: "Inicio", href: "/" },
+      { label: "Estándares", href: "#estandares" },
+      { label: "Expedientes", href: "/consultorio/expediente" },
+      { label: "Constancias", href: "/consultorio/constancias" },
+    ],
+  },
+  psicologia: {
+    id: "psicologia",
+    hostPrefix: "psicologia",
+    name: "Psicología Aplicada",
+    legalName: "Psicología Aplicada — Evaluación y desarrollo organizacional",
+    tagline: "Pruebas · Selección · Diplomados · Socioeconómicos",
+    description:
+      "Batería psicológica, elección de personal, diplomados de 90 horas y estudios socioeconómicos.",
+    accentLabel: "Evaluación",
+    theme: {
+      fontDisplay: '"Space Grotesk", "DM Sans", sans-serif',
+      fontBody: '"IBM Plex Sans", "DM Sans", sans-serif',
+      vars: {
+        "--ch-bg": "#12151c",
+        "--ch-surface": "#1a1f2a",
+        "--ch-ink": "#eef1f6",
+        "--ch-muted": "#9aa3b2",
+        "--ch-accent": "#c47a4a",
+        "--ch-accent-2": "#5b7c99",
+        "--ch-rule": "rgba(196,122,74,0.25)",
+        "--ch-hero-overlay": "linear-gradient(115deg, rgba(18,21,28,0.94) 0%, rgba(18,21,28,0.65) 55%, rgba(18,21,28,0.2) 100%)",
+      },
+    },
+    primaryCta: { label: "Aplicar evaluación", href: "/evaluacion" },
+    secondaryCta: { label: "Ver servicios", href: "#servicios" },
+    nav: [
+      { label: "Inicio", href: "/" },
+      { label: "Servicios", href: "#servicios" },
+      { label: "Diplomados", href: "#diplomados" },
+      { label: "Acceso", href: "/evaluacion" },
+    ],
+  },
+  ige: {
+    id: "ige",
+    hostPrefix: "ige",
+    name: "Ingeniería de Grupos Efectivos",
+    legalName: "Ingeniería de Grupos Efectivos",
+    tagline: "Cursos · Capacitación · Consultoría",
+    description:
+      "Formación de equipos y consultoría para resultados medibles en organizaciones.",
+    accentLabel: "Capacitación",
+    theme: {
+      fontDisplay: '"Outfit", "Space Grotesk", sans-serif',
+      fontBody: '"Manrope", "DM Sans", sans-serif',
+      vars: {
+        "--ch-bg": "#0a0d10",
+        "--ch-surface": "#12171c",
+        "--ch-ink": "#f3f6f8",
+        "--ch-muted": "#93a1ad",
+        "--ch-accent": "#22d3ee",
+        "--ch-accent-2": "#f97316",
+        "--ch-rule": "rgba(34,211,238,0.22)",
+        "--ch-hero-overlay": "linear-gradient(100deg, rgba(10,13,16,0.92) 0%, rgba(10,13,16,0.55) 50%, rgba(10,13,16,0.15) 100%)",
+      },
+    },
+    primaryCta: { label: "Ver cursos", href: "/consultorio/cursos" },
+    secondaryCta: { label: "Clases en vivo", href: "/consultorio/clases-vivo" },
+    nav: [
+      { label: "Inicio", href: "/" },
+      { label: "Cursos", href: "/consultorio/cursos" },
+      { label: "Consultoría", href: "#consultoria" },
+      { label: "En vivo", href: "/consultorio/clases-vivo" },
+    ],
+  },
+};
+
+export const CHANNEL_IDS = Object.keys(CHANNELS) as ChannelId[];
+
+export function getChannel(id: string | null | undefined): ChannelDef | null {
+  if (!id) return null;
+  return CHANNELS[id as ChannelId] ?? null;
+}
+
+/** Extract channel prefix from Host header. */
+export function getChannelFromHost(hostHeader: string | null): ChannelDef | null {
+  if (!hostHeader) return null;
+  const host = hostHeader.toLowerCase().split(":")[0];
+  if (!host) return null;
+
+  // *.localhost or subdomain.ROOT_DOMAIN
+  const parts = host.split(".");
+  if (parts.length < 2) return null;
+
+  // martin.localhost → martin
+  // ceduct.sistemapsic.com → ceduct
+  // www.sistemapsic.com → null (apex/www)
+  const first = parts[0];
+  if (first === "www" || first === "admin" || first === "app") return null;
+
+  // vercel preview: ignore hash-like hosts
+  if (host.includes("vercel.app") && parts.length <= 3 && first !== "martin" && first !== "ceduct" && first !== "psicologia" && first !== "ige") {
+    return null;
+  }
+
+  return getChannel(first);
+}
+
+export function channelPublicUrl(channelId: ChannelId, path = "/"): string {
+  const root = ROOT();
+  const ch = CHANNELS[channelId];
+  const p = path.startsWith("/") ? path : `/${path}`;
+  if (root === "localhost") {
+    return `http://${ch.hostPrefix}.localhost:3000${p}`;
+  }
+  return `https://${ch.hostPrefix}.${root}${p}`;
+}
+
+/** Deep links a motores compartidos (evaluación, CONOCER, cursos). */
+export function getChannelPlatformCtas(
+  channelId: ChannelId,
+): Array<{ label: string; href: string; hint: string }> {
+  const map: Record<ChannelId, Array<{ label: string; href: string; hint: string }>> = {
+    martin: [
+      { label: "CEDUCT", href: channelPublicUrl("ceduct"), hint: "Certificación ECE 002-10" },
+      {
+        label: "Psicología Aplicada",
+        href: channelPublicUrl("psicologia"),
+        hint: "Evaluación y diplomados",
+      },
+      { label: "IGE", href: channelPublicUrl("ige"), hint: "Cursos y consultoría" },
+    ],
+    ceduct: [
+      { label: "Expedientes", href: "/consultorio/expediente", hint: "Seguimiento del candidato" },
+      { label: "Constancias", href: "/consultorio/constancias", hint: "Emisión y consulta" },
+      { label: "Verificar", href: "/consultorio/constancias", hint: "Validar una constancia" },
+    ],
+    psicologia: [
+      { label: "Evaluación", href: "/evaluacion", hint: "Acceso con código" },
+      { label: "Catálogo de pruebas", href: "/psycotest", hint: "Batería e instrumentos" },
+      { label: "Diplomados / cursos", href: "/consultorio/cursos", hint: "Formación 90 h" },
+    ],
+    ige: [
+      { label: "Catálogo de cursos", href: "/consultorio/cursos", hint: "Inscripción en línea" },
+      { label: "Clases en vivo", href: "/consultorio/clases-vivo", hint: "Sesiones sincrónicas" },
+      { label: "Consultoría", href: "#consultoria", hint: "Diagnóstico de equipos" },
+    ],
+  };
+  return map[channelId];
+}
+
+export function isPlatformPath(pathname: string): boolean {
+  const skip = [
+    "/admin",
+    "/api",
+    "/login",
+    "/evaluacion",
+    "/psycotest",
+    "/consultorio",
+    "/participantes",
+    "/verificar",
+    "/sites",
+    "/_next",
+    "/manuales",
+    "/ige/",
+    "/media/",
+    "/favicon",
+  ];
+  return skip.some((p) => pathname === p || pathname.startsWith(`${p}/`) || pathname.startsWith(p));
+}
