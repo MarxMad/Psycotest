@@ -394,16 +394,30 @@
 /* —— Responsive —— */
 @media (max-width: 900px) {
   .hero {
-    min-height: auto;
-    padding-top: clamp(4.75rem, 10vh, 6rem);
-    padding-bottom: clamp(2.5rem, 6vh, 3.5rem);
+    min-height: 100svh;
+    min-height: 100dvh;
+    align-items: flex-end;
+    padding-top: clamp(5.25rem, 14vh, 7rem);
+    padding-bottom: clamp(2rem, 5vh, 3rem);
+  }
+
+  .heroMedia {
+    position: absolute;
+    inset: 0;
+    min-height: 100%;
+  }
+
+  .heroPoster,
+  .heroVideo {
+    min-height: 100%;
   }
 
   .heroGrid {
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    gap: 1.5rem;
+    gap: 1.15rem;
+    width: 100%;
   }
 
   .copyCol {
@@ -414,17 +428,28 @@
   }
 
   .copyCol h1 {
-    max-width: 18ch;
+    max-width: 16ch;
+    font-size: clamp(1.7rem, 7.2vw, 2.35rem);
+  }
+
+  .lead {
+    max-width: 34ch;
+    font-size: 0.98rem;
+  }
+
+  .kicker {
+    margin-bottom: 0.45rem;
   }
 
   .eceCode {
     justify-content: center;
-    text-align: left;
+    margin-bottom: 0.75rem;
   }
 
   .actions {
     justify-content: center;
     width: 100%;
+    margin-top: 1.25rem;
   }
 
   .btnPrimary,
@@ -434,16 +459,24 @@
   }
 
   .logoPlate {
-    width: min(78vw, 300px);
+    width: min(62vw, 220px);
+    padding: 0.55rem 0.65rem;
+    border-radius: 0.65rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  }
+
+  .sealCaption {
+    font-size: 0.65rem;
   }
 
   .heroScrim {
     background:
       linear-gradient(
         180deg,
-        rgba(8, 8, 36, 0.78) 0%,
-        rgba(13, 13, 61, 0.88) 45%,
-        rgba(8, 8, 36, 0.94) 100%
+        rgba(8, 8, 36, 0.55) 0%,
+        rgba(13, 13, 61, 0.72) 38%,
+        rgba(8, 8, 36, 0.92) 100%
       );
   }
 }
@@ -455,8 +488,7 @@
   }
 
   .logoPlate {
-    width: min(88vw, 280px);
-    border-radius: 0.7rem;
+    width: min(58vw, 200px);
   }
 
   .actions {
