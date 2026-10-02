@@ -4,10 +4,13 @@ import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
+import {
+  getChannelFromHost,
+  isPlatformPath,
+} from "@/lib/channels";
 
 const COOKIE = "psycotest_session";
 
-/** Rutas cortas legacy + rutas bajo /psycotest */
 const TEST_PATHS = [
   "/papi",
   "/hartman",
@@ -41,6 +44,20 @@ function instrumentFromPath(pathname: string): Instrumento | null {
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get("host");
+
+  // --- Multi-canal: rewrite por subdominio ---
+  if (!isPlatformPath(pathname) && !pathname.includes(".")) {
+    const channel = getChannelFromHost(host);
+    if (channel) {
+      const url = request.nextUrl.clone();
+      const suffix = pathname === "/" ? "" : pathname;
+      url.pathname = `/sites/${channel.id}${suffix}`;
+      const res = NextResponse.rewrite(url);
+      res.headers.set("x-channel", channel.id);
+      return res;
+    }
+  }
 
   const instrumento = instrumentFromPath(pathname);
   if (instrumento) {
@@ -76,7 +93,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!pathname.startsWith("/admin") && !pathname.startsWith("/participantes") && !pathname.startsWith("/psycotest/participantes")) {
+  if (
+    !pathname.startsWith("/admin") &&
+    !pathname.startsWith("/participantes") &&
+    !pathname.startsWith("/psycotest/participantes")
+  ) {
     return NextResponse.next();
   }
 
@@ -90,7 +111,6 @@ export async function middleware(request: NextRequest) {
   try {
     const { payload } = await jwtVerify(token, secret());
     const rol = payload.rol as string | undefined;
-    // Solo el rol admin entra al panel profesional / participantes
     if (rol !== "admin") {
       return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
     }
@@ -104,24 +124,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/participantes/:path*",
-    "/psycotest/participantes/:path*",
-    "/papi",
-    "/papi/:path*",
-    "/hartman",
-    "/hartman/:path*",
-    "/mabe",
-    "/mabe/:path*",
-    "/cleaver",
-    "/cleaver/:path*",
-    "/psycotest/papi",
-    "/psycotest/papi/:path*",
-    "/psycotest/hartman",
-    "/psycotest/hartman/:path*",
-    "/psycotest/mabe",
-    "/psycotest/mabe/:path*",
-    "/psycotest/cleaver",
-    "/psycotest/cleaver/:path*",
+    /*
+     * Host rewrites + auth. Excluye estáticos.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|pdf|ico|mp4|webm)$).*)",
   ],
 };

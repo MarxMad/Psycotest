@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   LogOut,
   FolderOpen,
+  Globe2,
   X,
 } from "lucide-react";
 import s from "./Sidebar.module.css";
@@ -154,6 +155,13 @@ export function Sidebar({
             href="/admin/pagos"
             icon={<CreditCard size={20} />}
             label="Pagos"
+            compact={compact}
+            onNavigate={onCloseMobile}
+          />
+          <SidebarItem
+            href="/admin/canales"
+            icon={<Globe2 size={20} />}
+            label="Canales"
             compact={compact}
             onNavigate={onCloseMobile}
           />

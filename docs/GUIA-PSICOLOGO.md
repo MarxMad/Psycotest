@@ -3,6 +3,8 @@
 
 > **PDF para lectura/impresión:** [`GUIA-PSICOLOGO.pdf`](./GUIA-PSICOLOGO.pdf)
 
+> **Descarga desde la plataforma:** `/api/manuales/guia-psicologo` (también en Dashboard y Pruebas del panel admin, y en la home como “Descargar PDF”).
+
 Documento operativo para la persona psicóloga y/o coordinación clínica que administra aplicación de pruebas, revisión de resultados, cursos, clases en vivo y ventas.
 
 ---
