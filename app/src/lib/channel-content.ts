@@ -72,7 +72,7 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
         items: [
           {
             title: "CEDUCT",
-            text: "Entidad certificadora ECE 002-10 — estándares, evaluación y constancias.",
+            text: "ECE 002-10 — diplomados y certificación de competencias CONOCER.",
           },
           {
             title: "Psicología Aplicada",
@@ -98,56 +98,70 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
   },
   ceduct: {
     channelId: "ceduct",
-    seoTitle: "CEDUCT — ECE 002-10 | Centro de Educación y Capacitación para los Trabajadores, A.C.",
+    seoTitle: "CEDUCT ECE 002-10 — Diplomados y certificación de competencias",
     seoDescription:
-      "Entidad certificadora CEDUCT ECE 002-10. Certificación de competencias laborales CONOCER.",
+      "CEDUCT A.C., Entidad de Certificación y Evaluación ECE 002-10. Diplomados y certificaciones CONOCER con validez oficial.",
     published: true,
     updatedAt: new Date().toISOString(),
     hero: {
-      brand: "CEDUCT A.C.",
-      headline: "Certificación de competencias con respaldo oficial",
-      lead: "Centro de Educación y Capacitación para los Trabajadores, A.C. — Entidad de Certificación y Evaluación ECE 002-10.",
-      image: "/ige/serv1.png",
-      primaryCta: { label: "Ver estándares", href: "#estandares" },
-      secondaryCta: { label: "Ir a expedientes", href: "/consultorio/expediente" },
+      brand: "CEDUCT A.C. · ECE 002-10",
+      headline: "Diplomados y certificaciones con clave ECE 002-10",
+      lead: "Centro de Educación y Capacitación para los Trabajadores, A.C. Gestionamos formación y certificación de competencias bajo el Sistema Nacional de Competencias.",
+      image: "/ceduct/hqdefault.jpg",
+      primaryCta: { label: "Explorar diplomados", href: "#diplomados" },
+      secondaryCta: { label: "Proceso de certificación", href: "#certificaciones" },
     },
     sections: [
       {
-        id: "estandares",
+        id: "diplomados",
+        eyebrow: "Formación",
+        title: "Diplomados con ruta hacia la certificación",
+        body: "Diseñamos y operamos diplomados orientados a estándares de competencia: avance medible, evidencias y acompañamiento hasta el dictamen.",
+        items: [
+          {
+            title: "Diseño por competencias",
+            text: "Programas alineados a estándares RENEC / CONOCER aplicables.",
+          },
+          {
+            title: "Seguimiento del avance",
+            text: "Inscripción, materiales y control de evidencias en la plataforma.",
+          },
+          {
+            title: "Puente a certificación",
+            text: "Quien completa el diplomado puede continuar al proceso ECE 002-10.",
+          },
+        ],
+      },
+      {
+        id: "certificaciones",
         eyebrow: "ECE 002-10",
-        title: "Estándares de competencia",
-        body: "Operamos bajo el Sistema Nacional de Competencias para evaluar y certificar con trazabilidad completa.",
+        title: "Certificación oficial de competencias",
+        body: "Como Entidad de Certificación y Evaluación acreditada, evaluamos y certificamos con trazabilidad completa ante CONOCER.",
         items: [
           {
             title: "Evaluación",
-            text: "Instrumentos y evidencias alineados al estándar aplicable.",
+            text: "Instrumentos y evidencias conforme al estándar de competencia.",
           },
           {
             title: "Expediente digital",
-            text: "Seguimiento del candidato desde el diagnóstico hasta la constancia.",
+            text: "Del diagnóstico al dictamen, con expediente en un solo lugar.",
           },
           {
             title: "Constancia",
-            text: "Documento con validez oficial en el marco CONOCER / SEP.",
+            text: "Documento verificable con validez en el marco CONOCER / SEP.",
           },
         ],
       },
       {
         id: "proceso",
-        eyebrow: "Ruta",
-        title: "Proceso claro, sin fricción",
-        body: "Tres momentos: alineación al estándar, evaluación con evidencias y dictamen / constancia.",
+        eyebrow: "Ruta ECE",
+        title: "De la formación al certificado",
+        body: "Una secuencia clara: diplomado o alineación, evaluación con evidencias y emisión de constancia cuando el dictamen es favorable.",
         items: [
-          { title: "1. Alineación", text: "Definimos el estándar y la ruta de evidencias." },
-          { title: "2. Evaluación", text: "Aplicamos y documentamos el desempeño." },
-          { title: "3. Certificación", text: "Emitimos constancia cuando el dictamen es favorable." },
+          { title: "1. Alineación", text: "Elegimos estándar y ruta de evidencias." },
+          { title: "2. Evaluación", text: "Aplicamos, documentamos y dictaminamos." },
+          { title: "3. Certificación", text: "Emitimos y registramos la constancia." },
         ],
-      },
-      {
-        id: "constancias",
-        eyebrow: "Resultado",
-        title: "Constancias verificables",
-        body: "Consulta expedientes, emite constancias y verifica códigos en la plataforma compartida.",
       },
     ],
   },

@@ -20,6 +20,8 @@ export type ChannelDef = {
   tagline: string;
   description: string;
   accentLabel: string;
+  /** Logo público opcional (p. ej. /ceduct/hqdefault.jpg) */
+  logo?: string;
   theme: ChannelTheme;
   primaryCta: { label: string; href: string };
   secondaryCta: { label: string; href: string };
@@ -66,31 +68,33 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     hostPrefix: "ceduct",
     name: "CEDUCT",
     legalName: "Centro de Educación y Capacitación para los Trabajadores, A.C.",
-    tagline: "Entidad certificadora ECE 002-10",
+    tagline: "ECE 002-10 · Diplomados y certificación CONOCER",
     description:
-      "Certificación de competencias laborales con respaldo del Sistema Nacional de Competencias.",
+      "Entidad de Certificación y Evaluación ECE 002-10. Gestionamos diplomados y certificaciones de competencias laborales con validez oficial.",
     accentLabel: "ECE 002-10",
+    logo: "/ceduct/hqdefault.jpg",
     theme: {
       fontDisplay: '"Libre Baskerville", "Fraunces", Georgia, serif',
       fontBody: '"Source Sans 3", "DM Sans", sans-serif',
       vars: {
-        "--ch-bg": "#071a2e",
-        "--ch-surface": "#0d2740",
-        "--ch-ink": "#f7f4ec",
-        "--ch-muted": "#b7c4d4",
-        "--ch-accent": "#c6a35a",
-        "--ch-accent-2": "#1f6b8a",
-        "--ch-rule": "rgba(198,163,90,0.28)",
-        "--ch-hero-overlay": "linear-gradient(105deg, rgba(7,26,46,0.95) 0%, rgba(7,26,46,0.7) 50%, rgba(7,26,46,0.25) 100%)",
+        "--ch-bg": "#eef3f6",
+        "--ch-surface": "#ffffff",
+        "--ch-ink": "#102a43",
+        "--ch-muted": "#5a7184",
+        "--ch-accent": "#0f766e",
+        "--ch-accent-2": "#b45309",
+        "--ch-rule": "rgba(16,42,67,0.12)",
+        "--ch-hero-overlay":
+          "linear-gradient(118deg, rgba(238,243,246,0.97) 0%, rgba(238,243,246,0.82) 42%, rgba(238,243,246,0.35) 100%)",
       },
     },
-    primaryCta: { label: "Estándares CONOCER", href: "#estandares" },
-    secondaryCta: { label: "Expedientes", href: "/consultorio/expediente" },
+    primaryCta: { label: "Ver diplomados", href: "#diplomados" },
+    secondaryCta: { label: "Certificaciones", href: "#certificaciones" },
     nav: [
       { label: "Inicio", href: "/" },
-      { label: "Estándares", href: "#estandares" },
+      { label: "Diplomados", href: "#diplomados" },
+      { label: "Certificaciones", href: "#certificaciones" },
       { label: "Expedientes", href: "/consultorio/expediente" },
-      { label: "Constancias", href: "/consultorio/constancias" },
     ],
   },
   psicologia: {
@@ -215,9 +219,9 @@ export function getChannelPlatformCtas(
       { label: "IGE", href: channelPublicUrl("ige"), hint: "Cursos y consultoría" },
     ],
     ceduct: [
-      { label: "Expedientes", href: "/consultorio/expediente", hint: "Seguimiento del candidato" },
-      { label: "Constancias", href: "/consultorio/constancias", hint: "Emisión y consulta" },
-      { label: "Verificar", href: "/consultorio/constancias", hint: "Validar una constancia" },
+      { label: "Diplomados", href: "/consultorio/cursos", hint: "Formación con seguimiento" },
+      { label: "Expedientes", href: "/consultorio/expediente", hint: "Gestión del candidato ECE" },
+      { label: "Constancias", href: "/consultorio/constancias", hint: "Emisión y verificación" },
     ],
     psicologia: [
       { label: "Evaluación", href: "/evaluacion", hint: "Acceso con código" },

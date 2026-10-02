@@ -30,10 +30,26 @@
 
 .brand {
   display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7rem;
   text-decoration: none;
   color: inherit;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.brandLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid color-mix(in srgb, var(--ch-accent) 55%, transparent);
 }
 
 .brandMark {
@@ -46,6 +62,21 @@
 .brand strong {
   font-size: 1.05rem;
   font-weight: 700;
+}
+
+.navLight {
+  background: color-mix(in srgb, #eef3f6 88%, transparent);
+}
+
+.footerLight {
+  background: #e8eef2;
+}
+
+.eceFooter {
+  margin-top: 0.65rem !important;
+  font-weight: 700;
+  color: var(--ch-accent) !important;
+  letter-spacing: 0.04em;
 }
 
 .links {

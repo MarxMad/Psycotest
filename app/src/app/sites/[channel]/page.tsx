@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { CeductLanding } from "@/components/channels/CeductLanding";
 import { ChannelLanding } from "@/components/channels/ChannelLanding";
 import { ChannelShell } from "@/components/channels/ChannelShell";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
@@ -28,7 +29,11 @@ export default async function ChannelSitePage({ params }: Props) {
   const content = getChannelPage(channel.id);
   return (
     <ChannelShell channel={channel}>
-      <ChannelLanding channel={channel} content={content} />
+      {channel.id === "ceduct" ? (
+        <CeductLanding channel={channel} content={content} />
+      ) : (
+        <ChannelLanding channel={channel} content={content} />
+      )}
     </ChannelShell>
   );
 }

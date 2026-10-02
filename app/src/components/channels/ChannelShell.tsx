@@ -18,10 +18,21 @@ export function ChannelShell({
   return (
     <div className={s.shell} style={style} data-channel={channel.id}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700&family=Outfit:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap');`}</style>
-      <header className={s.nav}>
+      <header className={`${s.nav} ${channel.id === "ceduct" ? s.navLight : ""}`}>
         <a href="/" className={s.brand}>
-          <span className={s.brandMark}>{channel.accentLabel}</span>
-          <strong>{channel.name}</strong>
+          {channel.logo ? (
+            <img
+              src={channel.logo}
+              alt=""
+              className={s.brandLogo}
+              width={40}
+              height={40}
+            />
+          ) : null}
+          <span className={s.brandText}>
+            <span className={s.brandMark}>{channel.accentLabel}</span>
+            <strong>{channel.name}</strong>
+          </span>
         </a>
         <nav className={s.links} aria-label="Principal">
           {channel.nav.map((item) => (
@@ -32,10 +43,13 @@ export function ChannelShell({
         </nav>
       </header>
       <main>{children}</main>
-      <footer className={s.footer}>
+      <footer className={`${s.footer} ${channel.id === "ceduct" ? s.footerLight : ""}`}>
         <div>
           <strong>{channel.legalName}</strong>
           <p>{channel.description}</p>
+          {channel.id === "ceduct" && (
+            <p className={s.eceFooter}>Clave de acreditación CONOCER: ECE 002-10</p>
+          )}
         </div>
         <p className={s.copy}>
           © {new Date().getFullYear()} {channel.name}
