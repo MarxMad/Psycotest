@@ -75,11 +75,11 @@
 }
 
 .navLight {
-  background: color-mix(in srgb, #eef3f6 88%, transparent);
+  background: color-mix(in srgb, #f4f6fb 90%, transparent);
 }
 
 .footerLight {
-  background: #e8eef2;
+  background: #e9ebf7;
 }
 
 .eceFooter {
