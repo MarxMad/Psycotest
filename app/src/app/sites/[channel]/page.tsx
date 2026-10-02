@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CeductLanding } from "@/components/channels/CeductLanding";
 import { ChannelLanding } from "@/components/channels/ChannelLanding";
 import { ChannelShell } from "@/components/channels/ChannelShell";
+import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
 import { getChannelPage } from "@/lib/channel-store";
 
@@ -27,13 +28,13 @@ export default async function ChannelSitePage({ params }: Props) {
   const channel = getChannel(id);
   if (!channel) notFound();
   const content = getChannelPage(channel.id);
-  return (
-    <ChannelShell channel={channel}>
-      {channel.id === "ceduct" ? (
-        <CeductLanding channel={channel} content={content} />
-      ) : (
-        <ChannelLanding channel={channel} content={content} />
-      )}
-    </ChannelShell>
-  );
+
+  let landing = <ChannelLanding channel={channel} content={content} />;
+  if (channel.id === "ceduct") {
+    landing = <CeductLanding channel={channel} content={content} />;
+  } else if (channel.id === "psicologia") {
+    landing = <PsicologiaLanding channel={channel} content={content} />;
+  }
+
+  return <ChannelShell channel={channel}>{landing}</ChannelShell>;
 }

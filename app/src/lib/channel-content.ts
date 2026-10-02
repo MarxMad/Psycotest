@@ -167,37 +167,53 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
   },
   psicologia: {
     channelId: "psicologia",
-    seoTitle: "Psicología Aplicada — Pruebas, selección y diplomados",
+    seoTitle: "Psicología Aplicada — Pruebas, códigos e informes",
     seoDescription:
-      "Batería psicológica, elección de personal, diplomados de 90 horas y estudios socioeconómicos.",
+      "Portal de evaluación: PAPI, Hartman, MABE y Cleaver con acceso por código. Gestión desde el panel admin.",
     published: true,
     updatedAt: new Date().toISOString(),
     hero: {
       brand: "Psicología Aplicada",
-      headline: "Decisiones de personal con evidencia",
-      lead: "Pruebas psicológicas, batería para elección de personal, diplomados de 90 horas y estudios socioeconómicos.",
+      headline: "Evaluación con evidencia, acceso con código",
+      lead: "Batería psicométrica para selección y desarrollo. El candidato entra con código; el psicólogo opera pruebas, códigos e informes en el admin.",
       image: "/ige/serv3.png",
-      primaryCta: { label: "Entrar a evaluación", href: "/evaluacion" },
-      secondaryCta: { label: "Servicios", href: "#servicios" },
+      primaryCta: { label: "Entrar a evaluación", href: "#acceso" },
+      secondaryCta: { label: "Ver batería", href: "#bateria" },
     },
     sections: [
       {
         id: "servicios",
         eyebrow: "Servicios",
         title: "De la prueba al informe accionable",
-        body: "Aplicación controlada por códigos, calificación automática e interpretación profesional.",
+        body: "Aplicación controlada por códigos, calificación automática e interpretación profesional — todo ligado al panel.",
         items: [
           {
             title: "Pruebas psicológicas",
-            text: "Instrumentos para perfil conductual, valores y competencias.",
+            text: "PAPI, Hartman, MABE y Cleaver con sesión trazable.",
           },
           {
-            title: "Elección de personal",
-            text: "Batería orientada al puesto con contraste persona–rol.",
+            title: "Códigos de acceso",
+            text: "El admin define qué instrumentos puede aplicar cada candidato.",
           },
           {
-            title: "Estudios socioeconómicos",
-            text: "Complemento contextual para procesos de selección sensibles.",
+            title: "Informes",
+            text: "Resultados e interpretación disponibles en Pruebas del panel.",
+          },
+        ],
+      },
+      {
+        id: "seleccion",
+        eyebrow: "Selección",
+        title: "Elección de personal con contraste persona–rol",
+        body: "Arma baterías por puesto y documenta el proceso sin salir de la plataforma.",
+        items: [
+          {
+            title: "Por puesto",
+            text: "Combina instrumentos según el perfil requerido.",
+          },
+          {
+            title: "Trazabilidad",
+            text: "Cada aplicación queda asociada a código, sesión y resultado.",
           },
         ],
       },
@@ -205,15 +221,15 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
         id: "diplomados",
         eyebrow: "Formación",
         title: "Diplomados de 90 horas",
-        body: "Rutas de profundización para profesionales de RH y psicología organizacional.",
+        body: "Rutas de profundización para RH y psicología organizacional, operadas desde el LMS del panel.",
         items: [
           {
             title: "Formato",
-            text: "90 horas con seguimiento y evidencia de avance.",
+            text: "90 horas con seguimiento de avance.",
           },
           {
             title: "Enfoque",
-            text: "Aplicación práctica a selección, clima y desarrollo.",
+            text: "Selección, clima y desarrollo con práctica aplicada.",
           },
         ],
       },

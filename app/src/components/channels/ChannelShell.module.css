@@ -101,6 +101,25 @@
   background: #fff;
 }
 
+.navPsico {
+  background: rgba(14, 20, 28, 0.88);
+  border-bottom-color: rgba(232, 237, 244, 0.1);
+  color: #e8edf4;
+  backdrop-filter: blur(14px);
+}
+
+.navPsico .brandMark {
+  color: #d4895a;
+}
+
+.navPsico .links a {
+  color: rgba(232, 237, 244, 0.72);
+}
+
+.navPsico .links a:hover {
+  color: #fff;
+}
+
 .footerLight {
   background: #e9ebf7;
 }
@@ -117,6 +136,16 @@
 
 .footerCeduct .eceFooter {
   color: #e8c96a !important;
+}
+
+.footerPsico {
+  background: #0a0e14;
+  color: #e8edf4;
+  border-top-color: rgba(232, 237, 244, 0.1);
+}
+
+.footerPsico p {
+  color: #9aa6b6;
 }
 
 .eceFooter {

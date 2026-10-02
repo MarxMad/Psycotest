@@ -18,7 +18,11 @@ export function ChannelShell({
   return (
     <div className={s.shell} style={style} data-channel={channel.id}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700&family=Outfit:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap');`}</style>
-      <header className={`${s.nav} ${channel.id === "ceduct" ? s.navCeduct : ""}`}>
+      <header
+        className={`${s.nav} ${
+          channel.id === "ceduct" ? s.navCeduct : channel.id === "psicologia" ? s.navPsico : ""
+        }`}
+      >
         <a href="/" className={s.brand}>
           {channel.logo ? (
             <img
@@ -43,7 +47,11 @@ export function ChannelShell({
         </nav>
       </header>
       <main>{children}</main>
-      <footer className={`${s.footer} ${channel.id === "ceduct" ? s.footerCeduct : ""}`}>
+      <footer
+        className={`${s.footer} ${
+          channel.id === "ceduct" ? s.footerCeduct : channel.id === "psicologia" ? s.footerPsico : ""
+        }`}
+      >
         <div>
           <strong>{channel.legalName}</strong>
           <p>{channel.description}</p>
