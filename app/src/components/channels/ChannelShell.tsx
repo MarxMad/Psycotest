@@ -24,9 +24,9 @@ export function ChannelShell({
             <img
               src={channel.logo}
               alt=""
-              className={s.brandLogo}
-              width={40}
-              height={40}
+              className={`${s.brandLogo} ${channel.id === "ceduct" ? s.brandLogoWide : ""}`}
+              width={channel.id === "ceduct" ? 56 : 40}
+              height={channel.id === "ceduct" ? 42 : 40}
             />
           ) : null}
           <span className={s.brandText}>

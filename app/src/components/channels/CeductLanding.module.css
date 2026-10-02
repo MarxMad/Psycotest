@@ -1,11 +1,11 @@
 .page {
   --ced-pad: clamp(1.25rem, 4vw, 3.5rem);
-  --ced-teal: #0f766e;
-  --ced-teal-deep: #115e59;
-  --ced-amber: #b45309;
-  --ced-ink: #102a43;
-  --ced-muted: #5a7184;
-  --ced-line: rgba(16, 42, 67, 0.12);
+  --ced-navy: #14145c;
+  --ced-navy-deep: #0d0d3d;
+  --ced-gold: #c9a227;
+  --ced-ink: #14145c;
+  --ced-muted: #5b6284;
+  --ced-line: rgba(20, 20, 92, 0.12);
   color: var(--ced-ink);
 }
 
@@ -15,18 +15,18 @@
   padding: clamp(4.5rem, 10vh, 7rem) var(--ced-pad) clamp(2.5rem, 6vh, 4rem);
   overflow: hidden;
   background:
-    radial-gradient(ellipse 80% 60% at 85% 20%, rgba(15, 118, 110, 0.14), transparent 55%),
-    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(180, 83, 9, 0.1), transparent 50%),
-    linear-gradient(180deg, #e8f0f3 0%, #eef3f6 45%, #f5f8fa 100%);
+    radial-gradient(ellipse 70% 55% at 88% 18%, rgba(20, 20, 92, 0.1), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 8% 88%, rgba(201, 162, 39, 0.12), transparent 50%),
+    linear-gradient(180deg, #eef1f8 0%, #f4f6fb 48%, #fafbfe 100%);
 }
 
 .heroPattern {
   position: absolute;
   inset: 0;
-  opacity: 0.35;
+  opacity: 0.4;
   background-image:
-    linear-gradient(rgba(16, 42, 67, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 42, 67, 0.04) 1px, transparent 1px);
+    linear-gradient(rgba(20, 20, 92, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 92, 0.045) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, #000 20%, transparent 75%);
   animation: gridDrift 22s linear infinite;
@@ -36,7 +36,7 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(220px, 340px) minmax(0, 1fr);
+  grid-template-columns: minmax(240px, 400px) minmax(0, 1fr);
   gap: clamp(1.75rem, 5vw, 3.5rem);
   align-items: center;
   max-width: 1120px;
@@ -49,44 +49,35 @@
   gap: 0.85rem;
 }
 
-.sealRing {
+.logoPlate {
   position: relative;
-  width: min(100%, 320px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  padding: 0.55rem;
-  background: #eef3f6;
+  width: min(100%, 400px);
+  aspect-ratio: 4 / 3;
+  border-radius: 1rem;
+  padding: 1.1rem 1.25rem;
+  background: #fff;
+  border: 1px solid rgba(20, 20, 92, 0.1);
   box-shadow:
-    0 0 0 1px rgba(15, 118, 110, 0.2),
-    0 24px 48px rgba(16, 42, 67, 0.12);
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 28px 56px rgba(20, 20, 92, 0.12);
+  overflow: hidden;
 }
 
-.sealRing::before {
-  content: "";
+.logoGlow {
   position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: conic-gradient(from 210deg, #ca8a04, #0f766e, #115e59, #ca8a04);
-  z-index: 0;
-  animation: sealSpin 28s linear infinite;
-}
-
-.sealRing::after {
-  content: "";
-  position: absolute;
-  inset: 0.55rem;
-  border-radius: 50%;
-  background: #eef3f6;
-  z-index: 1;
+  inset: -30% -10% auto;
+  height: 70%;
+  background: radial-gradient(ellipse at center, rgba(201, 162, 39, 0.18), transparent 68%);
+  pointer-events: none;
+  animation: glowPulse 6s ease-in-out infinite alternate;
 }
 
 .logo {
   position: relative;
-  z-index: 2;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
   display: block;
 }
 
@@ -106,7 +97,7 @@
 
 .kicker {
   margin: 0 0 0.65rem;
-  color: var(--ced-teal);
+  color: var(--ced-navy);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.76rem;
@@ -119,7 +110,7 @@
   gap: 0.65rem;
   margin: 0 0 1rem;
   padding: 0.45rem 0.85rem 0.45rem 0.7rem;
-  border-left: 3px solid var(--ced-amber);
+  border-left: 3px solid var(--ced-gold);
   background: rgba(255, 255, 255, 0.72);
 }
 
@@ -180,12 +171,12 @@
 }
 
 .btnPrimary {
-  background: var(--ced-teal);
-  color: #f7fffe;
+  background: var(--ced-navy);
+  color: #f7f8ff;
 }
 
 .btnPrimary:hover {
-  background: var(--ced-teal-deep);
+  background: var(--ced-navy-deep);
   transform: translateY(-2px);
 }
 
@@ -196,24 +187,24 @@
 }
 
 .btnGhost:hover {
-  border-color: var(--ced-teal);
+  border-color: var(--ced-navy);
   transform: translateY(-2px);
 }
 
 .section {
   padding: clamp(3rem, 8vh, 5.25rem) var(--ced-pad);
   border-top: 1px solid var(--ced-line);
-  background: #f7fafb;
+  background: #f7f8fc;
 }
 
 .sectionAccent {
   background:
-    linear-gradient(180deg, #e6f2f1 0%, #eef3f6 100%);
+    linear-gradient(180deg, #e9ebf7 0%, #f4f6fb 100%);
 }
 
 .eyebrow {
   margin: 0;
-  color: var(--ced-teal);
+  color: var(--ced-navy);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.74rem;
@@ -246,14 +237,14 @@
   padding: 1.2rem 1.15rem 1.35rem;
   background: #fff;
   border: 1px solid var(--ced-line);
-  border-top: 3px solid var(--ced-teal);
+  border-top: 3px solid var(--ced-navy);
 }
 
 .itemIndex {
   display: block;
   font-size: 0.75rem;
   letter-spacing: 0.12em;
-  color: var(--ced-amber);
+  color: var(--ced-gold);
   font-weight: 700;
   margin-bottom: 0.45rem;
 }
@@ -274,7 +265,7 @@
   margin-top: 1.5rem;
   padding: 0;
   min-height: auto;
-  color: var(--ced-teal-deep);
+  color: var(--ced-navy-deep);
 }
 
 .inlineCta:hover {
@@ -282,17 +273,17 @@
 }
 
 .platform {
-  background: #102a43;
-  color: #eef3f6;
+  background: var(--ced-navy-deep);
+  color: #eef1f8;
   border-top: none;
 }
 
 .platform .eyebrow {
-  color: #5eead4;
+  color: #e8c96a;
 }
 
 .platform .sectionBody {
-  color: #9fb3c4;
+  color: #a8b0d0;
 }
 
 .platformGrid {
@@ -318,20 +309,25 @@
 }
 
 .platformCard span {
-  color: #9fb3c4;
+  color: #a8b0d0;
   font-size: 0.88rem;
   line-height: 1.4;
 }
 
 .platformCard:hover {
-  border-color: #5eead4;
-  background: rgba(15, 118, 110, 0.18);
+  border-color: #e8c96a;
+  background: rgba(20, 20, 92, 0.35);
   transform: translateY(-2px);
 }
 
-@keyframes sealSpin {
+@keyframes glowPulse {
+  from {
+    opacity: 0.55;
+    transform: translateY(0);
+  }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(8%);
   }
 }
 
@@ -369,14 +365,14 @@
     justify-content: center;
   }
 
-  .sealRing {
-    width: min(72vw, 260px);
+  .logoPlate {
+    width: min(86vw, 340px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .heroPattern,
-  .sealRing::before {
+  .logoGlow {
     animation: none !important;
   }
 }

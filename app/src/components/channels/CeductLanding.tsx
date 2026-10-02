@@ -24,17 +24,18 @@ export function CeductLanding({
         <div className={s.heroGrid}>
           <motion.div
             className={s.sealCol}
-            initial={reduce ? false : { opacity: 0, scale: 0.92 }}
-            animate={reduce ? undefined : { opacity: 1, scale: 1 }}
+            initial={reduce ? false : { opacity: 0, scale: 0.96, y: 12 }}
+            animate={reduce ? undefined : { opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className={s.sealRing}>
+            <div className={s.logoPlate}>
+              <span className={s.logoGlow} aria-hidden />
               <img
                 src={logo}
-                alt="Logo CEDUCT ECE 002-10"
+                alt="CEDUCT — Centro de Educación y Capacitación para los Trabajadores, A.C. ECE 002-10"
                 className={s.logo}
-                width={320}
-                height={320}
+                width={480}
+                height={360}
               />
             </div>
             <p className={s.sealCaption}>Entidad de Certificación y Evaluación</p>

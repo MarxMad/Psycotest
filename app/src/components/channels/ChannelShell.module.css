@@ -50,6 +50,16 @@
   object-fit: cover;
   flex-shrink: 0;
   border: 2px solid color-mix(in srgb, var(--ch-accent) 55%, transparent);
+  background: #fff;
+}
+
+.brandLogoWide {
+  width: 56px;
+  height: 42px;
+  border-radius: 0.35rem;
+  object-fit: contain;
+  border-width: 1px;
+  padding: 2px;
 }
 
 .brandMark {
