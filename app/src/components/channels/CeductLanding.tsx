@@ -1,10 +1,14 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
 import s from "./CeductLanding.module.css";
+
+const VIDEO_SRC = "/media/hero-bg.mp4";
+const POSTER_SRC = "/media/hero-poster.jpg";
 
 export function CeductLanding({
   channel,
@@ -16,20 +20,60 @@ export function CeductLanding({
   const reduce = useReducedMotion();
   const platformCtas = getChannelPlatformCtas(channel.id);
   const logo = channel.logo || content.hero.image || "/ceduct/hqdefault.jpg";
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoReady, setVideoReady] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || reduce) return;
+    const play = () => {
+      video.play().catch(() => {
+        /* autoplay bloqueado: queda el póster */
+      });
+    };
+    play();
+    video.addEventListener("loadeddata", play);
+    return () => video.removeEventListener("loadeddata", play);
+  }, [reduce]);
 
   return (
     <div className={s.page}>
       <section className={s.hero} aria-label="Inicio CEDUCT">
-        <div className={s.heroPattern} aria-hidden />
+        <div className={s.heroMedia} aria-hidden>
+          <div
+            className={s.heroPoster}
+            style={{ backgroundImage: `url(${POSTER_SRC})` }}
+            data-ready={videoReady ? "true" : undefined}
+          />
+          {!reduce ? (
+            <video
+              ref={videoRef}
+              className={s.heroVideo}
+              data-ready={videoReady ? "true" : undefined}
+              poster={POSTER_SRC}
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="metadata"
+              onCanPlay={() => setVideoReady(true)}
+              onPlaying={() => setVideoReady(true)}
+            >
+              <source src={VIDEO_SRC} type="video/mp4" />
+            </video>
+          ) : null}
+          <div className={s.heroScrim} />
+          <div className={s.heroVignette} />
+        </div>
+
         <div className={s.heroGrid}>
           <motion.div
             className={s.sealCol}
-            initial={reduce ? false : { opacity: 0, scale: 0.96, y: 12 }}
+            initial={reduce ? false : { opacity: 0, scale: 0.96, y: 16 }}
             animate={reduce ? undefined : { opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className={s.logoPlate}>
-              <span className={s.logoGlow} aria-hidden />
               <img
                 src={logo}
                 alt="CEDUCT — Centro de Educación y Capacitación para los Trabajadores, A.C. ECE 002-10"
@@ -45,7 +89,7 @@ export function CeductLanding({
             className={s.copyCol}
             initial={reduce ? false : { opacity: 0, y: 28 }}
             animate={reduce ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
             <p className={s.kicker}>{content.hero.brand}</p>
             <p className={s.eceCode} aria-label="Clave de acreditación">
@@ -106,10 +150,10 @@ export function CeductLanding({
           )}
           {section.id === "certificaciones" && (
             <div className={s.dualCtas}>
-              <a className={s.btnPrimary} href="/consultorio/expediente">
+              <a className={s.btnPrimarySolid} href="/consultorio/expediente">
                 Gestionar expedientes
               </a>
-              <a className={s.btnGhost} href="/consultorio/constancias">
+              <a className={s.btnOutline} href="/consultorio/constancias">
                 Constancias
               </a>
             </div>
