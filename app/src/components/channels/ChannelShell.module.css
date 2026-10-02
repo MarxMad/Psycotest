@@ -131,6 +131,43 @@
 @media (max-width: 720px) {
   .nav {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.75rem var(--ch-pad);
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand strong {
+    font-size: 0.98rem;
+  }
+
+  .links {
+    width: 100%;
+    gap: 0.35rem 0.85rem;
+    justify-content: flex-start;
+  }
+
+  .links a {
+    font-size: 0.86rem;
+  }
+
+  .footer {
+    flex-direction: column;
+    padding: 2rem var(--ch-pad) 1.75rem;
+    margin-top: 2.5rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .brandLogoWide {
+    width: 48px;
+    height: 36px;
+  }
+
+  .brandMark {
+    font-size: 0.62rem;
   }
 }
