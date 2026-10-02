@@ -2,10 +2,9 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { users } from "@/db/schema";
 
-const db = getDb();
-
 export async function GET() {
   try {
+    const db = getDb();
     const allUsers = await db.select().from(users);
 
     const sanitizedUsers = allUsers.map((user) => ({

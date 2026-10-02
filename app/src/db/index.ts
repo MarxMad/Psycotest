@@ -12,6 +12,14 @@ const globalForDb = globalThis as unknown as {
   __sistemapsicPg?: ReturnType<typeof import("postgres")>;
 };
 
+function isNextBuildPhase(): boolean {
+  return (
+    process.env.NEXT_PHASE === "phase-production-build" ||
+    process.env.NEXT_PHASE === "phase-export" ||
+    process.env.npm_lifecycle_event === "build"
+  );
+}
+
 function requireDatabaseUrl(): string {
   const url = process.env.DATABASE_URL?.trim();
   if (url) return url;
@@ -19,6 +27,21 @@ function requireDatabaseUrl(): string {
     "Falta DATABASE_URL. Use la connection string de Supabase (Project Settings → Database) " +
       "o el Postgres local de docker compose (postgresql://postgres:postgres@localhost:5432/sistemapsic).",
   );
+}
+
+/** Placeholder solo para evaluar módulos durante `next build` sin DATABASE_URL. */
+function createBuildPlaceholderDb(): AppDb {
+  const err = () => {
+    throw new Error(
+      "Falta DATABASE_URL en runtime. Configure la URI de Supabase en Vercel Environment Variables.",
+    );
+  };
+  return new Proxy({} as AppDb, {
+    get(_target, prop) {
+      if (prop === "then") return undefined;
+      return err;
+    },
+  });
 }
 
 function createDb(): AppDb {
@@ -43,6 +66,9 @@ function createDb(): AppDb {
 
 export function getDb(): AppDb {
   if (!globalForDb.__sistemapsicDb) {
+    if (!process.env.DATABASE_URL?.trim() && isNextBuildPhase()) {
+      return createBuildPlaceholderDb();
+    }
     globalForDb.__sistemapsicDb = createDb();
     void ensureDbReadyOnce(globalForDb.__sistemapsicDb).catch((error) => {
       console.error("[sistemapsic] ensureDbReady falló:", error);
