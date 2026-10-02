@@ -78,8 +78,45 @@
   background: color-mix(in srgb, #f4f6fb 90%, transparent);
 }
 
+.navCeduct {
+  background: rgba(8, 8, 36, 0.72);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  color: #f4f6fb;
+  backdrop-filter: blur(16px);
+}
+
+.navCeduct .brandMark {
+  color: #e8c96a;
+}
+
+.navCeduct .links a {
+  color: rgba(244, 246, 251, 0.78);
+}
+
+.navCeduct .links a:hover {
+  color: #fff;
+}
+
+.navCeduct .brandLogoWide {
+  background: #fff;
+}
+
 .footerLight {
   background: #e9ebf7;
+}
+
+.footerCeduct {
+  background: #0d0d3d;
+  color: #eef1f8;
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.footerCeduct p {
+  color: #a8b0d0;
+}
+
+.footerCeduct .eceFooter {
+  color: #e8c96a !important;
 }
 
 .eceFooter {
