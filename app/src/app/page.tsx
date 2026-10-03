@@ -1,72 +1,72 @@
 import type { Metadata } from "next";
 import { CHANNELS, channelPublicUrl, type ChannelId } from "@/lib/channels";
+import { CONTACTO, mailto } from "@/lib/contacto";
+import h from "./hub.module.css";
 
 export const metadata: Metadata = {
-  title: "Sistema Psic — Canales",
-  description: "CEDUCT, Psicología Aplicada, Ingeniería de Grupos Efectivos y portafolio Martín Hernández.",
+  title: "Martín Hernández González — Certificación, evaluación y formación",
+  description:
+    "Certificación de competencias laborales, evaluación y selección de personal, capacitación y consultoría organizacional.",
 };
 
-const ORDER: ChannelId[] = ["martin", "ceduct", "psicologia", "ige"];
+const ORDEN: ChannelId[] = ["ceduct", "psicologia", "ige", "martin"];
+
+const TONO: Record<ChannelId, string> = {
+  ceduct: "#5b89ad",
+  psicologia: "#3fb59a",
+  ige: "#e8524a",
+  martin: "#d4a24c",
+};
 
 export default function HubPage() {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "clamp(2rem, 6vw, 4rem)",
-        background: "#0b1020",
-        color: "#f4f1ea",
-        fontFamily: '"DM Sans", system-ui, sans-serif',
-      }}
-    >
-      <p style={{ letterSpacing: "0.14em", textTransform: "uppercase", color: "#d4a24c", fontSize: 12 }}>
-        Sistema Psic · Hub
-      </p>
-      <h1 style={{ fontFamily: "Georgia, serif", fontSize: "clamp(2rem, 5vw, 3.4rem)", maxWidth: "14ch" }}>
-        Cuatro canales. Una operación.
-      </h1>
-      <p style={{ color: "#9aa3b5", maxWidth: 480, lineHeight: 1.55 }}>
-        Elige el sitio según tu necesidad. En producción cada canal vive en su subdominio.
-      </p>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "1rem",
-          marginTop: "2rem",
-        }}
-      >
-        {ORDER.map((id) => {
-          const ch = CHANNELS[id];
-          return (
-            <a
-              key={id}
-              href={`/sites/${id}`}
-              style={{
-                display: "block",
-                padding: "1.25rem",
-                border: "1px solid rgba(255,255,255,0.12)",
-                borderRadius: 10,
-                textDecoration: "none",
-                color: "inherit",
-                background: "#141c2e",
-              }}
-            >
-              <small style={{ color: "#d4a24c" }}>{ch.accentLabel}</small>
-              <strong style={{ display: "block", marginTop: 6, fontSize: "1.2rem" }}>{ch.name}</strong>
-              <span style={{ display: "block", marginTop: 8, color: "#9aa3b5", fontSize: 14 }}>
-                {ch.tagline}
-              </span>
-              <span style={{ display: "block", marginTop: 14, fontSize: 13, color: "#d4a24c" }}>
-                Abrir →
-              </span>
-              <span style={{ display: "block", marginTop: 6, fontSize: 11, color: "#667085" }}>
-                {channelPublicUrl(id)}
-              </span>
-            </a>
-          );
-        })}
-      </div>
-    </main>
+    <div className={h.page}>
+      <div className={h.bg} aria-hidden />
+
+      <main>
+        <section className={`${h.wrap} ${h.head}`}>
+          <p className={h.kicker}>Cuatro líneas de trabajo</p>
+          <h1 className={h.title}>
+            Decidir sobre tu gente <em>sin adivinar.</em>
+          </h1>
+          <p className={h.lead}>
+            Certificamos competencias, evaluamos candidatos, formamos equipos y acompañamos a la
+            dirección. Elige por dónde empezar.
+          </p>
+        </section>
+
+        <section className={`${h.wrap} ${h.grid}`}>
+          {ORDEN.map((id) => {
+            const canal = CHANNELS[id];
+            return (
+              <a
+                key={id}
+                href={channelPublicUrl(id)}
+                className={h.card}
+                style={{ ["--tono" as string]: TONO[id] }}
+              >
+                <span className={h.cardRole}>{canal.accentLabel}</span>
+                <span className={h.cardName}>{canal.name}</span>
+                <span className={h.cardPitch}>{canal.description}</span>
+                <span className={h.spacer} />
+                <span className={h.cardCta}>Entrar →</span>
+              </a>
+            );
+          })}
+        </section>
+      </main>
+
+      <footer className={h.foot}>
+        <div className={`${h.wrap} ${h.footInner}`}>
+          <p className={h.footCopy}>
+            <strong>¿No sabes cuál te corresponde?</strong> Escríbenos en una línea qué necesitas
+            resolver y te decimos por dónde entrar.
+          </p>
+          <a className={h.footLink} href={mailto("Quiero saber qué servicio me corresponde")}>
+            {CONTACTO.email}
+          </a>
+        </div>
+      </footer>
+    </div>
   );
 }

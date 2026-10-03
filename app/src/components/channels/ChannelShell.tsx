@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { ChannelDef } from "@/lib/channels";
+import { FUENTES_CANAL } from "@/lib/channel-fonts";
 import s from "./ChannelShell.module.css";
 
 export function ChannelShell({
@@ -9,15 +10,19 @@ export function ChannelShell({
   channel: ChannelDef;
   children: ReactNode;
 }) {
+  const fuentes = FUENTES_CANAL[channel.id];
   const style = {
     ...channel.theme.vars,
-    "--ch-font-display": channel.theme.fontDisplay,
-    "--ch-font-body": channel.theme.fontBody,
+    "--ch-font-display": fuentes.display,
+    "--ch-font-body": fuentes.body,
   } as CSSProperties;
 
   return (
-    <div className={s.shell} style={style} data-channel={channel.id}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;600;700&family=Outfit:wght@500;700;800&family=Source+Sans+3:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap');`}</style>
+    <div
+      className={`${s.shell} ${fuentes.className}`}
+      style={style}
+      data-channel={channel.id}
+    >
       <header
         className={`${s.nav} ${
           channel.id === "ceduct" ? s.navCeduct : channel.id === "psicologia" ? s.navPsico : ""

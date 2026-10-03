@@ -1,0 +1,246 @@
+/* ================================================================== *
+ * Hub — portada que reparte hacia los cuatro canales.
+ * ================================================================== */
+
+.page {
+  --gut: clamp(1rem, 5vw, 3.5rem);
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #0b1020;
+  color: #f4f1ea;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: clip;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(48rem 30rem at 78% -8%, rgba(61, 126, 166, 0.3), transparent 66%),
+    radial-gradient(40rem 26rem at 6% 20%, rgba(212, 162, 76, 0.16), transparent 64%),
+    radial-gradient(38rem 24rem at 52% 106%, rgba(218, 37, 29, 0.14), transparent 66%);
+}
+
+.wrap {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-inline: var(--gut);
+}
+
+/* ---------- encabezado ---------- */
+
+.head {
+  padding-block: clamp(3.5rem, 10vw, 7rem) clamp(2rem, 5vw, 3.25rem);
+}
+
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 1.4rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #d4a24c;
+}
+
+.kicker::before {
+  content: "";
+  width: 30px;
+  height: 1px;
+  background: currentColor;
+}
+
+.title {
+  max-width: 18ch;
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(2.25rem, 6.5vw, 4.25rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.title em {
+  font-style: italic;
+  color: #d4a24c;
+}
+
+.lead {
+  max-width: 42ch;
+  margin: 1.4rem 0 0;
+  font-size: clamp(1rem, 1.6vw, 1.1875rem);
+  line-height: 1.6;
+  color: rgba(244, 241, 234, 0.68);
+}
+
+/* ---------- tarjetas ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.1rem;
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+
+@media (min-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 15rem;
+  padding: 1.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.24s ease,
+    background 0.24s ease, box-shadow 0.24s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: var(--tono);
+  transform: scaleX(0.2);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(26rem 16rem at 85% -12%, var(--tono), transparent 70%);
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--tono) 55%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 28px 56px -26px rgba(0, 0, 0, 0.7);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card:hover::after {
+  opacity: 0.28;
+}
+
+.cardRole {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--tono);
+}
+
+.cardName {
+  margin-top: 0.6rem;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(1.25rem, 2.1vw, 1.5rem);
+  font-weight: 650;
+  letter-spacing: -0.022em;
+  line-height: 1.18;
+  color: #ffffff;
+}
+
+.cardPitch {
+  margin-top: 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: rgba(244, 241, 234, 0.64);
+}
+
+.spacer {
+  flex: 1;
+  min-height: 1.1rem;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: #ffffff;
+  transition: gap 0.2s ease;
+}
+
+.card:hover .cardCta {
+  gap: 0.7rem;
+}
+
+/* ---------- pie ---------- */
+
+.foot {
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.26);
+}
+
+.footInner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.75rem;
+}
+
+.footCopy {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: rgba(244, 241, 234, 0.6);
+}
+
+.footCopy strong {
+  color: #ffffff;
+  font-weight: 650;
+}
+
+.footLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  background: #d4a24c;
+  color: #17130a;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.footLink:hover {
+  background: #e3b864;
+  transform: translateY(-2px);
+}
