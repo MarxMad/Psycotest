@@ -60,25 +60,25 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: var(--admin-fs-xl);
   font-weight: 700;
   color: var(--admin-text);
 }
 
 .noData {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   text-align: center;
   padding: 1rem;
 }
 
 .linkAction {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-primary);
   text-decoration: none;
   font-weight: 500;
@@ -96,7 +96,7 @@
   padding: 0.5rem 0.75rem;
   background: color-mix(in srgb, var(--admin-primary) 10%, transparent);
   border-radius: var(--r);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-primary);
   font-weight: 500;
 }
@@ -144,7 +144,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.85rem 0;
-  border-bottom: 1px solid var(--admin-border, #e5e7eb);
+  border-bottom: 1px solid var(--admin-border);
 }
 
 .activityItem:last-child {
@@ -156,20 +156,20 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--admin-primary, #2563eb);
+  background: var(--admin-primary);
 }
 
 .activityText {
   flex: 1;
   min-width: 0;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   line-height: 1.45;
 }
 
 .activityTime {
   flex: none;
-  font-size: 0.78rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
   white-space: nowrap;
 }
 
@@ -183,5 +183,5 @@
   border-radius: 8px;
   background: #fef2f2;
   color: #991b1b;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }

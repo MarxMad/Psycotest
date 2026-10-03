@@ -3,12 +3,12 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CleaverGraficas } from "@/app/psycotest/cleaver/CleaverGraficas";
-import { MabeGraficas } from "@/app/psycotest/mabe/MabeGraficas";
-import { MabeCalificacion } from "@/app/psycotest/mabe/MabeCalificacion";
-import { PapiGraficas } from "@/app/psycotest/papi/PapiGraficas";
-import { HartmanGraficas } from "@/app/psycotest/hartman/HartmanGraficas";
-import { HartmanCalificacion } from "@/app/psycotest/hartman/HartmanCalificacion";
+import { CleaverGraficas } from "@/app/evaluacion/cleaver/CleaverGraficas";
+import { MabeGraficas } from "@/app/evaluacion/mabe/MabeGraficas";
+import { MabeCalificacion } from "@/app/evaluacion/mabe/MabeCalificacion";
+import { PapiGraficas } from "@/app/evaluacion/papi/PapiGraficas";
+import { HartmanGraficas } from "@/app/evaluacion/hartman/HartmanGraficas";
+import { HartmanCalificacion } from "@/app/evaluacion/hartman/HartmanCalificacion";
 import { calificarPapi, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";

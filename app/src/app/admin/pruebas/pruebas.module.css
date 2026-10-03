@@ -31,13 +31,13 @@
 }
 
 .statN {
-  font-size: 2rem;
+  font-size: var(--admin-fs-2xl);
   font-weight: 700;
   color: var(--admin-text);
 }
 
 .stat span:last-child {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
 }
 
@@ -47,7 +47,7 @@
   align-items: center;
   gap: 0.5rem 0.75rem;
   margin-bottom: 1.5rem;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
 }
 
@@ -58,7 +58,7 @@
   border: 1px solid var(--admin-border);
   background: var(--admin-card-bg);
   color: var(--admin-text-muted);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -97,7 +97,7 @@
 .table th {
   padding: 1rem;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   color: var(--admin-text-muted);
   border-bottom: 1px solid var(--admin-border);
@@ -118,7 +118,7 @@
   border-radius: var(--r);
   background: color-mix(in srgb, var(--c) 15%, transparent);
   color: var(--c);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -126,7 +126,7 @@
 
 .muted {
   color: var(--admin-text-muted);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }
 
 .pending,
@@ -135,7 +135,7 @@
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: var(--r);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
 }
 
@@ -157,7 +157,7 @@
 .link {
   color: var(--admin-primary);
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 500;
   transition: color 0.2s;
 }

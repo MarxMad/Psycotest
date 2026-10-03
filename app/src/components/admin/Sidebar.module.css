@@ -38,7 +38,7 @@
 }
 
 .headerTitle {
-  font-size: 1.25rem;
+  font-size: var(--admin-fs-lg);
   font-weight: 700;
   color: var(--admin-text);
   margin: 0;
@@ -48,7 +48,7 @@
 }
 
 .headerSubtitle {
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   color: var(--admin-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -127,7 +127,7 @@
 }
 
 .itemLabel {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -161,7 +161,7 @@
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   flex-shrink: 0;
 }
 
@@ -174,7 +174,7 @@
 }
 
 .userName {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   color: var(--admin-text);
   white-space: nowrap;
@@ -183,7 +183,7 @@
 }
 
 .userEmail {
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   color: var(--admin-text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -201,7 +201,7 @@
   border: 1px solid var(--admin-border);
   background: transparent;
   color: var(--admin-text-muted);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;

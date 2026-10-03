@@ -46,8 +46,8 @@
 }
 
 .barraEtiqueta {
-  font-size: 0.82rem;
-  color: var(--admin-text, #111827);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -58,7 +58,7 @@
   position: relative;
   block-size: 10px;
   border-radius: 4px;
-  background: var(--admin-border-soft, #f3f4f6);
+  background: var(--admin-border-soft);
   overflow: hidden;
 }
 
@@ -66,24 +66,24 @@
   display: block;
   block-size: 100%;
   border-radius: 4px;
-  background: var(--admin-primary, #2563eb);
+  background: var(--admin-primary);
 }
 
 .barraCifra {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   font-weight: 650;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  color: var(--admin-text, #111827);
+  color: var(--admin-text);
 }
 
 .barraCifra small {
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 400;
-  color: var(--admin-text-muted, #6b7280);
+  color: var(--admin-text-muted);
 }
 
 .vacio,
@@ -91,8 +91,8 @@
   margin: 0;
   padding: 1.5rem 0;
   text-align: center;
-  font-size: 0.88rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
 }
 
 .error {
@@ -102,5 +102,5 @@
   border-radius: 8px;
   background: #fef2f2;
   color: #991b1b;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }

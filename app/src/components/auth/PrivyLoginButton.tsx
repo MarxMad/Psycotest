@@ -1,0 +1,72 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getAccessToken, useLogin, usePrivy } from "@privy-io/react-auth";
+import s from "./PrivyLoginButton.module.css";
+
+/**
+ * Acceso con Privy. Tras confirmar la identidad, intercambia su token por la
+ * sesión propia de la aplicación y manda a la persona a donde le corresponde.
+ */
+export function PrivyLoginButton({ next }: { next?: string }) {
+  const router = useRouter();
+  const { ready, authenticated, logout } = usePrivy();
+  const [canjeando, setCanjeando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const canjearSesion = useCallback(async () => {
+    setCanjeando(true);
+    setError(null);
+    try {
+      const token = await getAccessToken();
+      const r = await fetch("/api/auth/privy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error ?? "No se pudo iniciar sesión");
+      router.push(next || d.next || "/admin");
+      router.refresh();
+    } catch (e) {
+      setError((e as Error).message);
+      // La identidad quedó abierta en Privy pero no hay sesión en la app:
+      // se cierra para que el siguiente intento empiece limpio.
+      await logout().catch(() => {});
+    } finally {
+      setCanjeando(false);
+    }
+  }, [logout, next, router]);
+
+  const { login } = useLogin({ onComplete: canjearSesion });
+
+  // Si Privy ya tenía la sesión abierta, se canjea sin pedir nada.
+  useEffect(() => {
+    if (ready && authenticated && !canjeando) void canjearSesion();
+    // Solo al quedar listo: no re-disparar en cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, authenticated]);
+
+  if (!ready) {
+    return (
+      <button type="button" className={s.boton} disabled>
+        Cargando…
+      </button>
+    );
+  }
+
+  return (
+    <div className={s.wrap}>
+      <button
+        type="button"
+        className={s.boton}
+        onClick={() => login()}
+        disabled={canjeando}
+      >
+        {canjeando ? "Entrando…" : "Entrar con correo o Google"}
+      </button>
+      {error && <p className={s.error}>{error}</p>}
+    </div>
+  );
+}

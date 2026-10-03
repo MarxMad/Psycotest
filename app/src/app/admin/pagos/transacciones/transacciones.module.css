@@ -20,24 +20,24 @@
 
 .filtro {
   padding: 0.45rem 0.9rem;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border);
   border-radius: 999px;
-  background: var(--admin-surface, #fff);
-  font-size: 0.82rem;
+  background: var(--admin-surface);
+  font-size: var(--admin-fs-sm);
   font-weight: 600;
-  color: var(--admin-text-muted, #6b7280);
+  color: var(--admin-text-muted);
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
 .filtro:hover {
-  border-color: var(--admin-primary, #2563eb);
-  color: var(--admin-primary, #2563eb);
+  border-color: var(--admin-primary);
+  color: var(--admin-primary);
 }
 
 .filtroActivo {
-  background: var(--admin-primary, #2563eb);
-  border-color: var(--admin-primary, #2563eb);
+  background: var(--admin-primary);
+  border-color: var(--admin-primary);
   color: #fff;
 }
 
@@ -46,14 +46,14 @@
   align-items: center;
   gap: 0.45rem;
   margin: 0;
-  font-size: 0.85rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .sub {
-  font-size: 0.78rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
 }
 
 .items {
@@ -66,15 +66,15 @@
 }
 
 .items li {
-  font-size: 0.84rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .code {
   padding: 0.12rem 0.4rem;
   border-radius: 5px;
-  background: var(--admin-bg, #f3f4f6);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.78rem;
+  background: var(--admin-bg);
+  font-family: var(--mono);
+  font-size: var(--admin-fs-sm);
 }
 
 .cargando,
@@ -82,8 +82,8 @@
   margin: 0;
   padding: 2rem 1rem;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
 }
 
 .error {

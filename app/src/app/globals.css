@@ -60,11 +60,36 @@
   --admin-header-height: 64px;
   --admin-bg: #f4f4f0;
   --admin-card-bg: #ffffff;
+  /** Fondo de controles y tablas; distinto de --admin-bg (lienzo) */
+  --admin-surface: #ffffff;
   --admin-border: #dcdcd4;
+  /** Separador interno, más tenue que --admin-border */
+  --admin-border-soft: #ebebe4;
   --admin-text: #191b1f;
   --admin-text-muted: #6d7278;
   --admin-primary: #3e5a6e;
   --admin-primary-hover: #2d4453;
+  /** Estados: se usan en badges y avisos, nunca como color de serie */
+  --admin-success: #15803d;
+  --admin-success-bg: #dcfce7;
+  --admin-warn: #b45309;
+  --admin-warn-bg: #fef3c7;
+  --admin-danger: #b91c1c;
+  --admin-danger-bg: #fee2e2;
+  --admin-info: #1d4ed8;
+  --admin-info-bg: #dbeafe;
+  --admin-neutral: #4b5563;
+  --admin-neutral-bg: #f3f4f6;
+  /** Tipografía del panel: una sola escala, siete pasos */
+  --admin-font: var(--sans);
+  --admin-font-head: var(--serif);
+  --admin-fs-xs: 0.75rem;    /* 12px — eyebrows, badges, metadatos */
+  --admin-fs-sm: 0.8125rem;  /* 13px — pies de tabla, notas */
+  --admin-fs-base: 0.875rem; /* 14px — cuerpo y celdas */
+  --admin-fs-md: 1rem;       /* 16px — títulos de tarjeta */
+  --admin-fs-lg: 1.25rem;    /* 20px — encabezados de sección */
+  --admin-fs-xl: 1.5rem;     /* 24px — título de página */
+  --admin-fs-2xl: 2rem;      /* 32px — cifras de estadística */
   
   /* Color utilities */
   --gray-50: #f9fafb;
@@ -169,9 +194,23 @@
   /* Admin Panel Dark Mode */
   --admin-bg: #0c1929;
   --admin-card-bg: #1a2d45;
+  --admin-surface: #16283d;
   --admin-border: #2d3f56;
+  --admin-border-soft: #22354c;
   --admin-text: #e8edf4;
   --admin-text-muted: #94a3b8;
+  --admin-primary: #5b89ad;
+  --admin-primary-hover: #74a3c7;
+  --admin-success: #6ee7a8;
+  --admin-success-bg: #11321f;
+  --admin-warn: #fcd34d;
+  --admin-warn-bg: #3a2c0c;
+  --admin-danger: #fca5a5;
+  --admin-danger-bg: #3b1515;
+  --admin-info: #93c5fd;
+  --admin-info-bg: #132b45;
+  --admin-neutral: #cbd5e1;
+  --admin-neutral-bg: #1e2f44;
 }
 
 *,

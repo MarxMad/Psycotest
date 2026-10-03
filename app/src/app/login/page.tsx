@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
+import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
 import s from "./login.module.css";
 
 type LoginUser = { id: string; email: string; nombre: string; rol: string };
@@ -63,6 +64,12 @@ function LoginForm() {
     >
       <span className="eyebrow">{APP_NAME}</span>
       <h1>Inicio de sesión</h1>
+
+      <PrivyLoginButton next={nextParam || undefined} />
+
+      <div className={s.separador}>
+        <span>o con tu contraseña</span>
+      </div>
       <p className={s.sub}>
         Portal único para miembros. Según tu cuenta entrarás al panel de administración o a tus
         cursos.
@@ -112,8 +119,7 @@ function LoginForm() {
       </motion.button>
 
       <p className={s.hint}>
-        ¿Primera vez? Usa la cuenta que te asignó el administrador. Admin inicial:{" "}
-        <code>admin@sistemapsic.local</code>
+        ¿Primera vez? Entra con el correo que te dio el administrador.
       </p>
       <Link href="/" className={s.back}>
         ← Volver al inicio

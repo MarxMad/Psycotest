@@ -5,20 +5,20 @@
 }
 
 .meta {
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
   margin: 0;
 }
 
 .block h2 {
-  font-size: 1rem;
+  font-size: var(--admin-fs-md);
   margin-bottom: 0.75rem;
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .table th,
@@ -30,7 +30,7 @@
 }
 
 .table th {
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--muted);
@@ -59,5 +59,5 @@
 .raw {
   white-space: pre-wrap;
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
 }

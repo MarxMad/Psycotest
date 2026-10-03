@@ -11,15 +11,12 @@ import {
 
 const COOKIE = "psycotest_session";
 
+/** Rutas de aplicación de prueba: exigen un código de candidato vigente. */
 const TEST_PATHS = [
-  "/papi",
-  "/hartman",
-  "/mabe",
-  "/cleaver",
-  "/psycotest/papi",
-  "/psycotest/hartman",
-  "/psycotest/mabe",
-  "/psycotest/cleaver",
+  "/evaluacion/papi",
+  "/evaluacion/hartman",
+  "/evaluacion/mabe",
+  "/evaluacion/cleaver",
 ] as const;
 
 function secret() {
@@ -93,11 +90,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (
-    !pathname.startsWith("/admin") &&
-    !pathname.startsWith("/participantes") &&
-    !pathname.startsWith("/psycotest/participantes")
-  ) {
+  // Todo lo que exige sesión de staff vive bajo /admin.
+  if (!pathname.startsWith("/admin")) {
     return NextResponse.next();
   }
 

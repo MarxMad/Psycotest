@@ -3,7 +3,7 @@
 import itemsJson from "@/data/papi-items.json";
 import hartmanJson from "@/data/hartman-items.json";
 import { CLAVE, NOMBRES, type Respuestas } from "@/lib/papi";
-import { MabeRespuestas } from "@/app/psycotest/mabe/MabeRespuestas";
+import { MabeRespuestas } from "@/app/evaluacion/mabe/MabeRespuestas";
 import type { RespuestasMabe } from "@/lib/mabe";
 import { SERIES_CLEAVER, type RespuestasCleaver } from "@/lib/cleaver";
 import type { Sesion } from "@/lib/storage";

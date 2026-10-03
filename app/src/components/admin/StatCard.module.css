@@ -21,13 +21,13 @@
 }
 
 .statLabel {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   margin-bottom: 0.5rem;
 }
 
 .statValue {
-  font-size: 2rem;
+  font-size: var(--admin-fs-2xl);
   font-weight: 700;
   color: var(--admin-text);
   line-height: 1;
@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   margin-top: 0.5rem;
 }

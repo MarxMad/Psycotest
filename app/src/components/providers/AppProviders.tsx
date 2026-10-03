@@ -5,6 +5,7 @@ import type { LenisRef } from "lenis/react";
 import { cancelFrame, frame } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { PrivyProvider } from "@/components/auth/PrivyProvider";
 import "lenis/dist/lenis.css";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
@@ -19,14 +20,16 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <ThemeProvider>
-      <ReactLenis
-        root
-        options={{ autoRaf: false, lerp: 0.085, smoothWheel: true }}
-        ref={lenisRef}
-      >
-        {children}
-      </ReactLenis>
-    </ThemeProvider>
+    <PrivyProvider>
+      <ThemeProvider>
+        <ReactLenis
+          root
+          options={{ autoRaf: false, lerp: 0.085, smoothWheel: true }}
+          ref={lenisRef}
+        >
+          {children}
+        </ReactLenis>
+      </ThemeProvider>
+    </PrivyProvider>
   );
 }

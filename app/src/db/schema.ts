@@ -10,7 +10,10 @@ export const users = pgTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
   nombre: text("nombre").notNull(),
+  /** Vacío cuando la cuenta entra por Privy: ahí no hay contraseña local. */
   passwordHash: text("password_hash").notNull(),
+  /** Identificador de Privy (did:privy:...), si la cuenta se creó por ahí. */
+  privyId: text("privy_id").unique(),
   rol: text("rol", { enum: ["admin", "psicologo", "aplicador"] }).notNull().default("psicologo"),
   emailVerified: boolean("email_verified").notNull().default(false),
   createdAt: text("created_at").notNull(),

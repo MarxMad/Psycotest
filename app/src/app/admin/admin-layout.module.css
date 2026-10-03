@@ -2,6 +2,9 @@
   display: flex;
   min-height: 100dvh;
   background: var(--admin-bg);
+  /* Una sola familia y un solo color de texto para todo el panel */
+  font-family: var(--admin-font);
+  color: var(--admin-text);
   /* Evita que hijos con minmax fijos empujen el viewport */
   overflow-x: clip;
 }
@@ -52,13 +55,13 @@
 }
 
 .mobileTitle {
-  font-size: 1rem;
+  font-size: var(--admin-fs-md);
   font-weight: 700;
   color: var(--admin-text);
 }
 
 .mobileSubtitle {
-  font-size: 0.7rem;
+  font-size: var(--admin-fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--admin-text-muted);

@@ -69,7 +69,7 @@
   gap: 0.75rem;
   align-items: center;
   padding: 0.7rem 0;
-  border-bottom: 1px solid var(--admin-border-soft, #f3f4f6);
+  border-bottom: 1px solid var(--admin-border-soft);
 }
 
 .recientes li:last-child {
@@ -77,20 +77,20 @@
 }
 
 .recienteNombre {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .recienteFecha {
-  font-size: 0.78rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
   white-space: nowrap;
 }
 
 .recienteTotal {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }

@@ -4,58 +4,62 @@
   gap: 1.25rem;
 }
 
-.leyenda {
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
   gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  align-items: start;
 }
 
-.leyenda li {
+.form {
   display: flex;
-  gap: 0.65rem;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 1rem;
 }
 
-.leyenda svg {
-  flex: none;
-  margin-top: 0.15rem;
-  color: var(--admin-primary);
+.row2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 0.9rem;
 }
 
-.leyenda strong {
-  display: block;
-  font-size: var(--admin-fs-base);
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.leyenda p {
-  margin: 0.2rem 0 0;
-  font-size: var(--admin-fs-sm);
-  line-height: 1.5;
+.campo span {
+  font-size: var(--admin-fs-xs);
+  font-weight: 650;
   color: var(--admin-text-muted);
 }
 
-.sub {
-  font-size: var(--admin-fs-sm);
-  color: var(--admin-text-muted);
-}
-
-.select {
-  padding: 0.4rem 0.6rem;
+.campo input,
+.campo textarea {
+  padding: 0.55rem 0.7rem;
   border: 1px solid var(--admin-border);
   border-radius: 7px;
   background: var(--admin-surface);
-  font-size: var(--admin-fs-sm);
+  color: var(--admin-text);
   font: inherit;
-  font-size: var(--admin-fs-sm);
-  cursor: pointer;
+  font-size: var(--admin-fs-base);
+  resize: vertical;
 }
 
-.select:disabled {
-  opacity: 0.55;
-  cursor: wait;
+.campo input:focus-visible,
+.campo textarea:focus-visible {
+  outline: 2px solid var(--admin-primary);
+  outline-offset: 1px;
+}
+
+.listHead {
+  padding: 1.25rem 1.25rem 0;
+}
+
+.sub {
+  color: var(--admin-text-muted);
 }
 
 .cargando {

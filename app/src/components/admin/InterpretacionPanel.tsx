@@ -1,6 +1,6 @@
 "use client";
 
-import { MabeInterpretacion } from "@/app/psycotest/mabe/MabeInterpretacion";
+import { MabeInterpretacion } from "@/app/evaluacion/mabe/MabeInterpretacion";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
 import { calificarPapi, DIADAS, banda, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";

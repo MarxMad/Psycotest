@@ -61,13 +61,13 @@
 }
 
 .statN {
-  font-size: 2rem;
+  font-size: var(--admin-fs-2xl);
   font-weight: 700;
   color: var(--admin-text);
 }
 
 .stat span:last-child {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
 }
 
@@ -105,7 +105,7 @@
 .table th {
   padding: 1rem;
   text-align: left;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   color: var(--admin-text-muted);
   border-bottom: 1px solid var(--admin-border);
@@ -122,7 +122,7 @@
 
 .muted {
   color: var(--admin-text-muted);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }
 
 .badge {
@@ -131,7 +131,7 @@
   gap: 0.375rem;
   padding: 0.25rem 0.75rem;
   border-radius: var(--r);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;

@@ -15,7 +15,7 @@
 }
 
 .label {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   color: var(--admin-text);
 }
@@ -28,7 +28,7 @@
   border-radius: var(--r);
   background: var(--admin-card-bg);
   color: var(--admin-text);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   transition: border-color 0.2s;
 }
 
@@ -44,7 +44,7 @@
 }
 
 .hint {
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   color: var(--admin-text-muted);
 }
 

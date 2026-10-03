@@ -63,13 +63,13 @@
 }
 
 .statN {
-  font-family: var(--serif);
-  font-size: 2rem;
+  font-family: var(--admin-font-head);
+  font-size: var(--admin-fs-2xl);
   line-height: 1;
 }
 
 .stat span:last-child {
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -81,14 +81,14 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1.25rem;
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   color: var(--muted);
 }
 
 .filter,
 .filterOn {
   font: inherit;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   padding: 0.35rem 0.75rem;
   border-radius: 99px;
   border: 1px solid var(--rule);
@@ -127,13 +127,13 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
 }
 
 .table th {
   text-align: left;
   padding: 0.75rem 1rem;
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
@@ -161,7 +161,7 @@
 
 .badge {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   padding: 0.2rem 0.5rem;
@@ -184,33 +184,33 @@
 
 .ok {
   color: var(--hartman);
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .pending {
   color: var(--mabe);
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .review {
   color: var(--papi);
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .validated {
   color: var(--hartman);
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   font-weight: 500;
 }
 
 .validatedMsg {
   margin-top: 1rem;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
   color: var(--hartman);
 }
 
 .link {
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   font-weight: 500;
   white-space: nowrap;
 }
@@ -218,7 +218,7 @@
 .crumb {
   display: flex;
   gap: 0.5rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
   margin-bottom: 1rem;
 }
@@ -251,7 +251,7 @@
 .tab,
 .tabOn {
   font: inherit;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
   padding: 0.65rem 1rem;
   border: none;
   background: none;
@@ -279,7 +279,7 @@
 .interpBox pre {
   white-space: pre-wrap;
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
   line-height: 1.5;
   max-height: 400px;
   overflow: auto;
@@ -289,7 +289,7 @@
 .notasLabel {
   display: grid;
   gap: 0.5rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   font-weight: 500;
   color: var(--muted);
   margin-top: 1rem;
@@ -313,7 +313,7 @@
 .miniTable {
   width: 100%;
   margin-top: 1.5rem;
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   border-collapse: collapse;
 }
 
@@ -335,7 +335,7 @@
   border-radius: var(--r);
   padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
 }
 
 .jobLinkBox {
@@ -354,7 +354,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   flex: 1;
   min-width: 220px;
@@ -397,7 +397,7 @@
 }
 
 .hartmanGrid h3 {
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--muted);
@@ -406,5 +406,5 @@
 
 .hartmanGrid p {
   font-family: var(--mono);
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
 }

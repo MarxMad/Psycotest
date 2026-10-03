@@ -6,6 +6,6 @@
 
 .hint {
   margin-top: 0.5rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
 }

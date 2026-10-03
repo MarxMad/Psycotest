@@ -18,22 +18,22 @@
 }
 
 .campo span {
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
   font-weight: 650;
-  color: var(--admin-text-muted, #6b7280);
+  color: var(--admin-text-muted);
 }
 
 .campo input {
   padding: 0.55rem 0.7rem;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border);
   border-radius: 7px;
-  background: var(--admin-surface, #fff);
+  background: var(--admin-surface);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }
 
 .campo input:focus-visible {
-  outline: 2px solid var(--admin-primary, #2563eb);
+  outline: 2px solid var(--admin-primary);
   outline-offset: 1px;
 }
 
@@ -45,48 +45,48 @@
   border-radius: 6px;
   background: transparent;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
 }
 
 .inlineInput:hover {
-  border-color: var(--admin-border, #e5e7eb);
+  border-color: var(--admin-border);
 }
 
 .inlineInput:focus-visible {
-  outline: 2px solid var(--admin-primary, #2563eb);
+  outline: 2px solid var(--admin-primary);
   outline-offset: 1px;
-  background: var(--admin-surface, #fff);
+  background: var(--admin-surface);
 }
 
 .code {
   padding: 0.12rem 0.4rem;
   border-radius: 5px;
-  background: var(--admin-bg, #f3f4f6);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.76rem;
-  color: var(--admin-text-muted, #6b7280);
+  background: var(--admin-bg);
+  font-family: var(--mono);
+  font-size: var(--admin-fs-xs);
+  color: var(--admin-text-muted);
 }
 
 .sub {
-  font-size: 0.8rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
 }
 
 .borrar {
   display: inline-flex;
   padding: 0.4rem;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border);
   border-radius: 7px;
-  background: var(--admin-surface, #fff);
-  color: #b91c1c;
+  background: var(--admin-surface);
+  color: var(--admin-danger);
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 .borrar:hover:not(:disabled) {
-  background: #fef2f2;
-  border-color: #fecaca;
+  background: var(--admin-danger-bg);
+  border-color: color-mix(in srgb, var(--admin-danger) 35%, transparent);
 }
 
 .borrar:disabled {
@@ -98,27 +98,27 @@
   margin: 0;
   padding: 2rem 1rem;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
 }
 
 .error,
 .aviso {
   padding: 0.8rem 1.1rem;
   border-radius: 8px;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }
 
 .error {
-  border: 1px solid #fecaca;
-  border-left: 4px solid #dc2626;
-  background: #fef2f2;
-  color: #991b1b;
+  border: 1px solid color-mix(in srgb, var(--admin-danger) 35%, transparent);
+  border-left: 4px solid var(--admin-danger);
+  background: var(--admin-danger-bg);
+  color: var(--admin-danger);
 }
 
 .aviso {
-  border: 1px solid #bbf7d0;
-  border-left: 4px solid #16a34a;
-  background: #f0fdf4;
-  color: #15803d;
+  border: 1px solid color-mix(in srgb, var(--admin-success) 35%, transparent);
+  border-left: 4px solid var(--admin-success);
+  background: var(--admin-success-bg);
+  color: var(--admin-success);
 }

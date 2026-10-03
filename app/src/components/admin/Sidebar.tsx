@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
+  UserRound,
   FlaskConical,
   GraduationCap,
   Video,
@@ -71,6 +72,7 @@ interface SidebarProps {
 const NAV: { href: string; label: string; icon: ReactNode; soloAdmin?: boolean }[] = [
   { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
   { href: "/admin/pruebas", label: "Pruebas", icon: <FlaskConical size={20} /> },
+  { href: "/admin/participantes", label: "Participantes", icon: <UserRound size={20} /> },
   { href: "/admin/cursos", label: "Cursos", icon: <GraduationCap size={20} /> },
   { href: "/admin/clases-vivo", label: "Clases en Vivo", icon: <Video size={20} /> },
   { href: "/admin/expedientes", label: "Expedientes", icon: <FolderOpen size={20} /> },

@@ -1,16 +1,16 @@
 .wrap {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border);
   border-radius: 10px;
-  background: var(--admin-surface, #fff);
+  background: var(--admin-surface);
 }
 
 .table {
   width: 100%;
   min-width: 36rem;
   border-collapse: collapse;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }
 
 .table thead th {
@@ -18,19 +18,19 @@
   top: 0;
   padding: 0.75rem 1rem;
   text-align: left;
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--admin-text-muted, #6b7280);
-  background: var(--admin-bg, #f9fafb);
-  border-bottom: 1px solid var(--admin-border, #e5e7eb);
+  color: var(--admin-text-muted);
+  background: var(--admin-bg);
+  border-bottom: 1px solid var(--admin-border);
   white-space: nowrap;
 }
 
 .table tbody td {
   padding: 0.8rem 1rem;
-  border-bottom: 1px solid var(--admin-border-soft, #f3f4f6);
+  border-bottom: 1px solid var(--admin-border-soft);
   vertical-align: middle;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .table tbody tr:hover {
-  background: var(--admin-bg, #f9fafb);
+  background: var(--admin-bg);
 }
 
 .alignEnd {
@@ -56,14 +56,14 @@
 }
 
 .muted {
-  color: var(--admin-text-muted, #6b7280);
+  color: var(--admin-text-muted);
 }
 
 .empty {
   padding: 2.5rem 1rem;
   text-align: center;
-  color: var(--admin-text-muted, #6b7280);
-  font-size: 0.9rem;
+  color: var(--admin-text-muted);
+  font-size: var(--admin-fs-base);
 }
 
 /* ---------- etiquetas de estado ---------- */
@@ -74,32 +74,32 @@
   gap: 0.35rem;
   padding: 0.22rem 0.6rem;
   border-radius: 999px;
-  font-size: 0.74rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 650;
   white-space: nowrap;
 }
 
 .badgeNeutral {
-  background: #f3f4f6;
-  color: #4b5563;
+  background: var(--admin-neutral-bg);
+  color: var(--admin-neutral);
 }
 
 .badgeSuccess {
-  background: #dcfce7;
-  color: #15803d;
+  background: var(--admin-success-bg);
+  color: var(--admin-success);
 }
 
 .badgeWarn {
-  background: #fef3c7;
-  color: #b45309;
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn);
 }
 
 .badgeDanger {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: var(--admin-danger-bg);
+  color: var(--admin-danger);
 }
 
 .badgeInfo {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: var(--admin-info-bg);
+  color: var(--admin-info);
 }

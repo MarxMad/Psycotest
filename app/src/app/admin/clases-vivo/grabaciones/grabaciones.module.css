@@ -5,23 +5,23 @@
 }
 
 .sub {
-  font-size: 0.78rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
 }
 
 .urlInput {
   width: 100%;
   min-width: 12rem;
   padding: 0.4rem 0.6rem;
-  border: 1px solid var(--admin-border, #e5e7eb);
+  border: 1px solid var(--admin-border);
   border-radius: 7px;
-  background: var(--admin-surface, #fff);
+  background: var(--admin-surface);
   font: inherit;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .urlInput:focus-visible {
-  outline: 2px solid var(--admin-primary, #2563eb);
+  outline: 2px solid var(--admin-primary);
   outline-offset: 1px;
 }
 
@@ -34,8 +34,8 @@
   margin: 0;
   padding: 2rem 1rem;
   text-align: center;
-  font-size: 0.9rem;
-  color: var(--admin-text-muted, #6b7280);
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
 }
 
 .error {
@@ -45,5 +45,5 @@
   border-radius: 8px;
   background: #fef2f2;
   color: #991b1b;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
 }

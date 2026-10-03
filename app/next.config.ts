@@ -8,22 +8,17 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["drizzle-kit", "better-sqlite3", "@libsql/client"],
   async redirects() {
     return [
+      // Enlaces viejos: la carpeta pasó de /psycotest a /evaluacion.
+      { source: "/psycotest", destination: "/evaluacion/acceso", permanent: true },
       {
-        source: "/psycotest",
-        destination: "/evaluacion",
+        source: "/psycotest/participantes",
+        destination: "/admin/participantes",
         permanent: true,
       },
-      {
-        source: "/psycotest/:path*",
-        destination: "/evaluacion/:path*",
-        permanent: true,
-      },
-    ];
-  },
-  async rewrites() {
-    return [
-      { source: "/evaluacion", destination: "/psycotest" },
-      { source: "/evaluacion/:path*", destination: "/psycotest/:path*" },
+      { source: "/evaluacion/participantes", destination: "/admin/participantes", permanent: true },
+      { source: "/psycotest/:path*", destination: "/evaluacion/:path*", permanent: true },
+      // El módulo de evaluación no tiene portada: el candidato entra con su código.
+      { source: "/evaluacion", destination: "/evaluacion/acceso", permanent: false },
     ];
   },
 };

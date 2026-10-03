@@ -3,10 +3,13 @@ import { eq, sql } from "drizzle-orm";
 import type { AppDb } from "./index";
 import * as schema from "./schema";
 
-export const DEFAULT_ADMIN_EMAIL = (
-  process.env.DEFAULT_ADMIN_EMAIL ?? "admin@sistemapsic.local"
-).toLowerCase();
-export const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD ?? "sistemapsic2026";
+/**
+ * Admin inicial. Sin valores por defecto a propósito: una credencial escrita
+ * en el código es una puerta abierta en producción. Si no se configuran,
+ * no se crea ninguna cuenta y los admins entran por Privy con ADMIN_EMAILS.
+ */
+export const DEFAULT_ADMIN_EMAIL = (process.env.DEFAULT_ADMIN_EMAIL ?? "").toLowerCase().trim();
+export const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD ?? "";
 
 export type DbErrorCode =
   | "DB_UNAVAILABLE"
@@ -129,6 +132,9 @@ export async function ensureSchema(db: AppDb): Promise<void> {
 }
 
 export async function ensureDefaultAdmin(db: AppDb): Promise<void> {
+  // Sin credenciales configuradas no se siembra nada.
+  if (!DEFAULT_ADMIN_EMAIL || !DEFAULT_ADMIN_PASSWORD) return;
+
   const [existing] = await db
     .select({ id: schema.users.id })
     .from(schema.users)
@@ -160,12 +166,10 @@ export async function bootstrapAdminForLogin(
   email: string,
   password: string,
 ): Promise<void> {
+  if (!DEFAULT_ADMIN_EMAIL || !DEFAULT_ADMIN_PASSWORD) return;
+
   const normalized = email.toLowerCase().trim();
-  const legacyEmail = "admin@psycotest.local";
-  const legacyPass = "psycotest2026";
-  const isDefault =
-    (normalized === DEFAULT_ADMIN_EMAIL && password === DEFAULT_ADMIN_PASSWORD) ||
-    (normalized === legacyEmail && password === legacyPass);
+  const isDefault = normalized === DEFAULT_ADMIN_EMAIL && password === DEFAULT_ADMIN_PASSWORD;
   if (!isDefault) return;
 
   const [user] = await db
