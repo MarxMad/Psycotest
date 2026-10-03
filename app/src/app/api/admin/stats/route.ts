@@ -1,15 +1,7 @@
 import { NextResponse } from "next/server";
-import { and, count, desc, eq, gte, sum } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db/index";
-import {
-  assessmentSessions,
-  auditLog,
-  courseEnrollments,
-  courses,
-  liveClasses,
-  orders,
-  users,
-} from "@/db/schema";
+import { auditLog, users } from "@/db/schema";
 import { requireUser } from "@/lib/auth";
 
 /** Primer día del mes en curso, en ISO. */
@@ -40,65 +32,60 @@ export async function GET() {
     const db = getDb();
     const { desde, hasta } = hoy();
 
-    const [
-      pruebasTotal,
-      pruebasPendientes,
-      cursosPublicados,
-      estudiantes,
-      clasesProgramadas,
-      clasesHoy,
-      ingresosMes,
-      ingresosTotal,
-      usuariosTotal,
-      actividad,
-    ] = await Promise.all([
-      db.select({ v: count() }).from(assessmentSessions),
-      db
-        .select({ v: count() })
-        .from(assessmentSessions)
-        .where(eq(assessmentSessions.aprobada, false)),
-      db.select({ v: count() }).from(courses).where(eq(courses.status, "published")),
-      db.select({ v: count() }).from(courseEnrollments),
-      db.select({ v: count() }).from(liveClasses).where(eq(liveClasses.status, "scheduled")),
-      db
-        .select({ v: count() })
-        .from(liveClasses)
-        .where(and(gte(liveClasses.scheduledAt, desde), eq(liveClasses.status, "scheduled"))),
-      db
-        .select({ v: sum(orders.total) })
-        .from(orders)
-        .where(and(eq(orders.status, "completed"), gte(orders.createdAt, inicioDeMes()))),
-      db.select({ v: sum(orders.total) }).from(orders).where(eq(orders.status, "completed")),
-      db.select({ v: count() }).from(users),
-      db
-        .select({
-          id: auditLog.id,
-          action: auditLog.action,
-          entity: auditLog.entity,
-          entityId: auditLog.entityId,
-          createdAt: auditLog.createdAt,
-          userNombre: users.nombre,
-        })
-        .from(auditLog)
-        .leftJoin(users, eq(auditLog.userId, users.id))
-        .orderBy(desc(auditLog.createdAt))
-        .limit(12),
-    ]);
+    // Un solo viaje a la base: el pool es de una conexión en producción,
+    // así que diez consultas en paralelo se encolan y agotan el tiempo límite.
+    const [agregados] = await db.execute<{
+      pruebas_total: number;
+      pruebas_pendientes: number;
+      cursos_publicados: number;
+      estudiantes: number;
+      clases_programadas: number;
+      clases_hoy: number;
+      ingresos_mes: number;
+      ingresos_total: number;
+      usuarios_total: number;
+    }>(sql`
+      select
+        (select count(*) from assessment_sessions)                      as pruebas_total,
+        (select count(*) from assessment_sessions where aprobada = false) as pruebas_pendientes,
+        (select count(*) from courses where status = 'published')        as cursos_publicados,
+        (select count(*) from course_enrollments)                        as estudiantes,
+        (select count(*) from live_classes where status = 'scheduled')   as clases_programadas,
+        (select count(*) from live_classes
+          where status = 'scheduled'
+            and scheduled_at >= ${desde} and scheduled_at < ${hasta})    as clases_hoy,
+        (select coalesce(sum(total), 0) from orders
+          where status = 'completed' and created_at >= ${inicioDeMes()}) as ingresos_mes,
+        (select coalesce(sum(total), 0) from orders
+          where status = 'completed')                                    as ingresos_total,
+        (select count(*) from users)                                     as usuarios_total
+    `);
 
-    // clasesHoy cuenta desde el inicio del día; se acota al día actual
-    const hoyReal = clasesHoy[0] ? n(clasesHoy[0].v) : 0;
-    const programadas = n(clasesProgramadas[0]?.v);
+    const actividad = await db
+      .select({
+        id: auditLog.id,
+        action: auditLog.action,
+        entity: auditLog.entity,
+        entityId: auditLog.entityId,
+        createdAt: auditLog.createdAt,
+        userNombre: users.nombre,
+      })
+      .from(auditLog)
+      .leftJoin(users, eq(auditLog.userId, users.id))
+      .orderBy(desc(auditLog.createdAt))
+      .limit(12);
+
+    const a = agregados;
 
     return NextResponse.json({
       stats: {
-        pruebas: { total: n(pruebasTotal[0]?.v), pendientes: n(pruebasPendientes[0]?.v) },
-        cursos: { total: n(cursosPublicados[0]?.v), estudiantes: n(estudiantes[0]?.v) },
-        clasesVivo: { programadas, hoy: Math.min(hoyReal, programadas) },
-        ingresos: { mes: n(ingresosMes[0]?.v), total: n(ingresosTotal[0]?.v) },
-        usuarios: { total: n(usuariosTotal[0]?.v) },
+        pruebas: { total: n(a?.pruebas_total), pendientes: n(a?.pruebas_pendientes) },
+        cursos: { total: n(a?.cursos_publicados), estudiantes: n(a?.estudiantes) },
+        clasesVivo: { programadas: n(a?.clases_programadas), hoy: n(a?.clases_hoy) },
+        ingresos: { mes: n(a?.ingresos_mes), total: n(a?.ingresos_total) },
+        usuarios: { total: n(a?.usuarios_total) },
       },
       actividad,
-      hastaHoy: hasta,
     });
   } catch (error) {
     console.error("[admin/stats]", error);
