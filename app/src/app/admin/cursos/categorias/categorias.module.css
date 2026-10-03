@@ -1,0 +1,124 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.campo span {
+  font-size: 0.78rem;
+  font-weight: 650;
+  color: var(--admin-text-muted, #6b7280);
+}
+
+.campo input {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--admin-border, #e5e7eb);
+  border-radius: 7px;
+  background: var(--admin-surface, #fff);
+  font: inherit;
+  font-size: 0.875rem;
+}
+
+.campo input:focus-visible {
+  outline: 2px solid var(--admin-primary, #2563eb);
+  outline-offset: 1px;
+}
+
+.inlineInput {
+  width: 100%;
+  min-width: 8rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.inlineInput:hover {
+  border-color: var(--admin-border, #e5e7eb);
+}
+
+.inlineInput:focus-visible {
+  outline: 2px solid var(--admin-primary, #2563eb);
+  outline-offset: 1px;
+  background: var(--admin-surface, #fff);
+}
+
+.code {
+  padding: 0.12rem 0.4rem;
+  border-radius: 5px;
+  background: var(--admin-bg, #f3f4f6);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.76rem;
+  color: var(--admin-text-muted, #6b7280);
+}
+
+.sub {
+  font-size: 0.8rem;
+  color: var(--admin-text-muted, #6b7280);
+}
+
+.borrar {
+  display: inline-flex;
+  padding: 0.4rem;
+  border: 1px solid var(--admin-border, #e5e7eb);
+  border-radius: 7px;
+  background: var(--admin-surface, #fff);
+  color: #b91c1c;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.borrar:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.borrar:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.cargando {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--admin-text-muted, #6b7280);
+}
+
+.error,
+.aviso {
+  padding: 0.8rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.error {
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.aviso {
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+  color: #15803d;
+}

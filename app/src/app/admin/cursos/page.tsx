@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { GraduationCap, Plus, FolderOpen, Settings } from "lucide-react";
+import { GraduationCap, Plus, FolderOpen } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
@@ -40,10 +40,6 @@ export default function CursosPage() {
             <Link href="/admin/cursos/categorias" className="btn">
               <FolderOpen size={16} />
               Categorías
-            </Link>
-            <Link href="/admin/cursos/inventario" className="btn">
-              <Settings size={16} />
-              Inventario
             </Link>
             <Link href="/admin/cursos/crear" className="btn btn-primary">
               <Plus size={16} />

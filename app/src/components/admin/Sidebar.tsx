@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import s from "./Sidebar.module.css";
+import type { ReactNode } from "react";
 
 interface SidebarItemProps {
   href: string;
@@ -55,13 +56,29 @@ function SidebarItem({ href, icon, label, compact, onNavigate }: SidebarItemProp
 }
 
 interface SidebarProps {
-  user: { nombre: string; email: string } | null;
+  user: { nombre: string; email: string; rol?: string } | null;
   onLogout: () => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 }
+
+/**
+ * Menú del panel. `soloAdmin` marca las secciones que el psicólogo no abre
+ * (el middleware también las bloquea; esto solo evita mostrar un camino muerto).
+ */
+const NAV: { href: string; label: string; icon: ReactNode; soloAdmin?: boolean }[] = [
+  { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+  { href: "/admin/pruebas", label: "Pruebas", icon: <FlaskConical size={20} /> },
+  { href: "/admin/cursos", label: "Cursos", icon: <GraduationCap size={20} /> },
+  { href: "/admin/clases-vivo", label: "Clases en Vivo", icon: <Video size={20} /> },
+  { href: "/admin/expedientes", label: "Expedientes", icon: <FolderOpen size={20} /> },
+  { href: "/admin/canales", label: "Canales", icon: <Globe2 size={20} /> },
+  { href: "/admin/pagos", label: "Pagos", icon: <CreditCard size={20} />, soloAdmin: true },
+  { href: "/admin/marketing", label: "Marketing", icon: <Mail size={20} />, soloAdmin: true },
+  { href: "/admin/usuarios", label: "Usuarios", icon: <Users size={20} />, soloAdmin: true },
+];
 
 export function Sidebar({
   user,
@@ -73,6 +90,8 @@ export function Sidebar({
 }: SidebarProps) {
   // En drawer móvil siempre mostramos labels aunque el desktop esté colapsado
   const compact = isCollapsed && !mobileOpen;
+  const esAdmin = user?.rol === "admin";
+  const navVisible = NAV.filter((item) => !item.soloAdmin || esAdmin);
 
   return (
     <aside
@@ -116,69 +135,16 @@ export function Sidebar({
         </div>
 
         <nav className={s.nav} aria-label="Navegación admin">
-          <SidebarItem
-            href="/admin"
-            icon={<LayoutDashboard size={20} />}
-            label="Dashboard"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/pruebas"
-            icon={<FlaskConical size={20} />}
-            label="Pruebas"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/cursos"
-            icon={<GraduationCap size={20} />}
-            label="Cursos"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/clases-vivo"
-            icon={<Video size={20} />}
-            label="Clases en Vivo"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/expedientes"
-            icon={<FolderOpen size={20} />}
-            label="Expedientes"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/pagos"
-            icon={<CreditCard size={20} />}
-            label="Pagos"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/canales"
-            icon={<Globe2 size={20} />}
-            label="Canales"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/marketing"
-            icon={<Mail size={20} />}
-            label="Marketing"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
-          <SidebarItem
-            href="/admin/usuarios"
-            icon={<Users size={20} />}
-            label="Usuarios"
-            compact={compact}
-            onNavigate={onCloseMobile}
-          />
+          {navVisible.map((item) => (
+            <SidebarItem
+              key={item.href}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              compact={compact}
+              onNavigate={onCloseMobile}
+            />
+          ))}
         </nav>
 
         <div className={s.footer}>

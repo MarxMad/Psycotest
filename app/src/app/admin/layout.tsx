@@ -10,6 +10,7 @@ import s from "./admin-layout.module.css";
 interface AuthUser {
   nombre: string;
   email: string;
+  rol?: string;
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

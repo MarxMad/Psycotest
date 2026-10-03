@@ -74,3 +74,30 @@
     grid-template-columns: 1fr;
   }
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cardHead {
+  padding: 1.25rem 1.25rem 0;
+}
+
+.code {
+  padding: 0.14rem 0.45rem;
+  border-radius: 5px;
+  background: var(--admin-bg, #f3f4f6);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.cargando {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--admin-text-muted, #6b7280);
+}

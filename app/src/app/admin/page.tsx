@@ -18,6 +18,7 @@ import { StatCard } from "@/components/admin/StatCard";
 import { Card, CardHeader } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
+import { haceCuanto } from "@/lib/formato";
 import s from "./dashboard.module.css";
 
 interface DashboardStats {
@@ -25,24 +26,70 @@ interface DashboardStats {
   cursos: { total: number; estudiantes: number };
   clasesVivo: { programadas: number; hoy: number };
   ingresos: { mes: number; total: number };
+  usuarios: { total: number };
 }
+
+interface ActividadItem {
+  id: string;
+  action: string;
+  entity: string;
+  entityId: string | null;
+  createdAt: string;
+  userNombre: string | null;
+}
+
+const ACCION_LABEL: Record<string, string> = {
+  create: "creó",
+  update: "actualizó",
+  delete: "eliminó",
+  login: "inició sesión en",
+  approve: "aprobó",
+};
+
+const ENTIDAD_LABEL: Record<string, string> = {
+  channel_page: "una página pública",
+  course: "un curso",
+  access_code: "un código de acceso",
+  session: "una sesión de evaluación",
+  user: "un usuario",
+  coupon: "un cupón",
+  live_class: "una clase en vivo",
+  expediente: "un expediente",
+  job_profile: "un perfil de puesto",
+};
+
+function describirActividad(a: ActividadItem): string {
+  const quien = a.userNombre ?? "Alguien";
+  const verbo = ACCION_LABEL[a.action] ?? a.action;
+  const que = ENTIDAD_LABEL[a.entity] ?? a.entity;
+  return `${quien} ${verbo} ${que}`;
+}
+
+
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [actividad, setActividad] = useState<ActividadItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulando carga de estadísticas
-    // TODO: Reemplazar con llamada real a API
-    setTimeout(() => {
-      setStats({
-        pruebas: { total: 45, pendientes: 8 },
-        cursos: { total: 0, estudiantes: 0 },
-        clasesVivo: { programadas: 0, hoy: 0 },
-        ingresos: { mes: 0, total: 0 },
-      });
-      setLoading(false);
-    }, 500);
+    let vivo = true;
+    fetch("/api/admin/stats")
+      .then(async (r) => {
+        if (!r.ok) throw new Error("No se pudieron cargar las estadísticas");
+        return r.json();
+      })
+      .then((data) => {
+        if (!vivo) return;
+        setStats(data.stats);
+        setActividad(data.actividad ?? []);
+      })
+      .catch((e: Error) => vivo && setError(e.message))
+      .finally(() => vivo && setLoading(false));
+    return () => {
+      vivo = false;
+    };
   }, []);
 
   if (loading) {
@@ -56,6 +103,7 @@ export default function AdminDashboard() {
 
   return (
     <div className={s.dashboard}>
+      {error && <div className={s.errorBanner}>{error}</div>}
       <PageHeader
         title="Dashboard"
         subtitle="Vista general de tu plataforma"
@@ -79,10 +127,6 @@ export default function AdminDashboard() {
           value={stats?.pruebas.total || 0}
           icon={<FlaskConical size={24} />}
           color="blue"
-          trend={{
-            value: 12,
-            isPositive: true,
-          }}
         />
         <StatCard
           label="Estudiantes Activos"
@@ -101,10 +145,6 @@ export default function AdminDashboard() {
           value={`$${((stats?.ingresos.mes || 0) / 100).toLocaleString()}`}
           icon={<DollarSign size={24} />}
           color="orange"
-          trend={{
-            value: 8,
-            isPositive: true,
-          }}
         />
       </div>
 
@@ -218,14 +258,28 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Activity Feed */}
+      {/* Actividad reciente — registro de auditoría */}
       <Card>
         <CardHeader title="Actividad Reciente" subtitle="Últimas acciones en la plataforma" />
-        <EmptyState
-          icon={<TrendingUp size={32} />}
-          title="Sin actividad reciente"
-          description="La actividad aparecerá aquí cuando empieces a usar la plataforma"
-        />
+        {actividad.length === 0 ? (
+          <EmptyState
+            icon={<TrendingUp size={32} />}
+            title="Sin actividad reciente"
+            description="La actividad aparecerá aquí cuando empieces a usar la plataforma"
+          />
+        ) : (
+          <ul className={s.activityList}>
+            {actividad.map((a) => (
+              <li key={a.id} className={s.activityItem}>
+                <span className={s.activityDot} aria-hidden />
+                <span className={s.activityText}>{describirActividad(a)}</span>
+                <time className={s.activityTime} dateTime={a.createdAt}>
+                  {haceCuanto(a.createdAt)}
+                </time>
+              </li>
+            ))}
+          </ul>
+        )}
       </Card>
     </div>
   );

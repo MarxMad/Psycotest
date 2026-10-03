@@ -111,9 +111,18 @@ export async function middleware(request: NextRequest) {
   try {
     const { payload } = await jwtVerify(token, secret());
     const rol = payload.rol as string | undefined;
-    if (rol !== "admin") {
+
+    // El aplicador no opera el panel: solo acompaña la aplicación de pruebas.
+    if (rol !== "admin" && rol !== "psicologo") {
       return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
     }
+
+    // Secciones reservadas al administrador: personas, dinero y marca.
+    const soloAdmin = ["/admin/usuarios", "/admin/pagos", "/admin/marketing"];
+    if (rol !== "admin" && soloAdmin.some((r) => pathname.startsWith(r))) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
     return NextResponse.next();
   } catch {
     const login = new URL("/login", request.url);
