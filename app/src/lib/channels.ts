@@ -38,7 +38,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     legalName: "Martín Hernández González",
     tagline: "Consultor · Valuador · Certificador",
     description:
-      "Portafolio profesional: consultoría organizacional, valuación de competencias y certificación CONOCER.",
+      "Consultoría organizacional, valuación con dictamen técnico y certificación de competencias laborales.",
     accentLabel: "Portafolio",
     theme: {
       fontDisplay: '"Fraunces", "Libre Baskerville", Georgia, serif',
@@ -54,12 +54,12 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
         "--ch-hero-overlay": "linear-gradient(120deg, rgba(12,18,34,0.92) 0%, rgba(12,18,34,0.55) 55%, rgba(12,18,34,0.2) 100%)",
       },
     },
-    primaryCta: { label: "Ver credenciales", href: "#credenciales" },
-    secondaryCta: { label: "Canales de servicio", href: "#canales" },
+    primaryCta: { label: "Agendar conversación", href: "#contacto" },
+    secondaryCta: { label: "Ver mi práctica", href: "#credenciales" },
     nav: [
-      { label: "Inicio", href: "/" },
-      { label: "Credenciales", href: "#credenciales" },
-      { label: "Canales", href: "#canales" },
+      { label: "Perfil", href: "#credenciales" },
+      { label: "Método", href: "#metodo" },
+      { label: "Líneas de trabajo", href: "#canales" },
       { label: "Contacto", href: "#contacto" },
     ],
   },
@@ -91,10 +91,10 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     primaryCta: { label: "Ver diplomados", href: "#diplomados" },
     secondaryCta: { label: "Certificaciones", href: "#certificaciones" },
     nav: [
-      { label: "Inicio", href: "/" },
       { label: "Diplomados", href: "#diplomados" },
       { label: "Certificaciones", href: "#certificaciones" },
-      { label: "Expedientes", href: "/consultorio/expediente" },
+      { label: "Proceso", href: "#proceso" },
+      { label: "Contacto", href: "#contacto" },
     ],
   },
   psicologia: {
@@ -104,7 +104,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     legalName: "Psicología Aplicada — Evaluación y desarrollo organizacional",
     tagline: "Pruebas · Códigos · Informes · Selección",
     description:
-      "Portal de evaluación psicométrica: batería PAPI, Hartman, MABE y Cleaver con acceso por código, gestionado desde el panel admin.",
+      "Batería psicológica, estudios socioeconómicos y diplomados de 90 horas para contratar con información real.",
     accentLabel: "Evaluación",
     theme: {
       fontDisplay: '"Space Grotesk", "DM Sans", sans-serif',
@@ -127,7 +127,8 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
       { label: "Inicio", href: "/" },
       { label: "Acceso", href: "#acceso" },
       { label: "Batería", href: "#bateria" },
-      { label: "Admin", href: "/login?next=/admin/pruebas" },
+      { label: "Diplomados", href: "#diplomados" },
+      { label: "Contacto", href: "#contacto" },
     ],
   },
   ige: {
@@ -137,7 +138,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     legalName: "Ingeniería de Grupos Efectivos",
     tagline: "Cursos · Capacitación · Consultoría",
     description:
-      "Formación de equipos y consultoría para resultados medibles en organizaciones.",
+      "Cursos, talleres, diplomados, conferencias y consultoría organizacional para el sector público y la iniciativa privada.",
     accentLabel: "Capacitación",
     theme: {
       fontDisplay: '"Outfit", "Space Grotesk", sans-serif',
@@ -153,13 +154,14 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
         "--ch-hero-overlay": "linear-gradient(100deg, rgba(10,13,16,0.92) 0%, rgba(10,13,16,0.55) 50%, rgba(10,13,16,0.15) 100%)",
       },
     },
-    primaryCta: { label: "Ver cursos", href: "/consultorio/cursos" },
-    secondaryCta: { label: "Clases en vivo", href: "/consultorio/clases-vivo" },
+    primaryCta: { label: "Solicitar propuesta", href: "#contacto" },
+    secondaryCta: { label: "Ver cursos", href: "/consultorio/cursos" },
     nav: [
-      { label: "Inicio", href: "/" },
-      { label: "Cursos", href: "/consultorio/cursos" },
+      { label: "Capacitación", href: "#capacitacion" },
       { label: "Consultoría", href: "#consultoria" },
-      { label: "En vivo", href: "/consultorio/clases-vivo" },
+      { label: "Especialidades", href: "#especialidades" },
+      { label: "Cursos", href: "/consultorio/cursos" },
+      { label: "Contacto", href: "#contacto" },
     ],
   },
 };
@@ -226,8 +228,8 @@ export function getChannelPlatformCtas(
     ],
     psicologia: [
       { label: "Entrar con código", href: "/evaluacion/acceso", hint: "Portal del candidato" },
-      { label: "Códigos (admin)", href: "/admin/pruebas/codigos", hint: "Emitir y revocar códigos" },
-      { label: "Resultados", href: "/admin/pruebas", hint: "Sesiones e informes" },
+      { label: "Diplomados de 90 horas", href: "/consultorio/cursos", hint: "Formación para evaluar con criterio" },
+      { label: "Solicitar evaluación", href: "#contacto", hint: "Cotiza tu proceso de selección" },
     ],
     ige: [
       { label: "Catálogo de cursos", href: "/consultorio/cursos", hint: "Inscripción en línea" },

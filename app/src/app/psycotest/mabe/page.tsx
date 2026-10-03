@@ -104,7 +104,7 @@ export default function MabePage() {
           <PhaseTransition phaseKey="intro">
             <div className={s.intro}>
               <BackLink />
-              <span className="eyebrow">MABE</span>
+              <span className="eyebrow">Toma de Decisiones</span>
               <h1>Managerial Behavior Evaluation</h1>
               <p className={s.lede}>
                 Cuatro formularios como en el cuadernillo: <strong>puesto</strong> (proceso + valores) y{" "}

@@ -591,8 +591,27 @@ export type CourseLesson = typeof courseLessons.$inferSelect;
 export type Enrollment = typeof enrollments.$inferSelect;
 export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
 export type LiveClass = typeof liveClasses.$inferSelect;
+
+/**
+ * Contenido editable de cada página pública (canal), administrado desde
+ * /admin/canales. Vive en la base porque el sistema de archivos de Vercel
+ * es efímero: lo que se escriba en disco se pierde en el siguiente deploy.
+ */
+export const channelPages = pgTable("channel_pages", {
+  /** ID del canal: martin | ceduct | psicologia | ige */
+  channelId: text("channel_id").primaryKey(),
+  seoTitle: text("seo_title").notNull(),
+  seoDescription: text("seo_description").notNull(),
+  published: boolean("published").notNull().default(true),
+  hero: jsonb("hero").notNull(),
+  sections: jsonb("sections").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export type Coupon = typeof coupons.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type StudentExpediente = typeof studentExpedientes.$inferSelect;
 export type CourseCertificate = typeof courseCertificates.$inferSelect;
 export type CertificationProgram = typeof certificationPrograms.$inferSelect;
+
+export type ChannelPageRow = typeof channelPages.$inferSelect;

@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
+import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import s from "./CeductLanding.module.css";
 
 const VIDEO_SRC = "/media/hero-bg.mp4";
@@ -150,11 +151,29 @@ export function CeductLanding({
           )}
           {section.id === "certificaciones" && (
             <div className={s.dualCtas}>
-              <a className={s.btnPrimarySolid} href="/consultorio/expediente">
-                Gestionar expedientes
+              <a className={s.btnPrimarySolid} href="#contacto">
+                Quiero certificarme
               </a>
               <a className={s.btnOutline} href="/consultorio/constancias">
-                Constancias
+                Verificar una constancia
+              </a>
+            </div>
+          )}
+          {section.id === "contacto" && (
+            <div className={s.dualCtas}>
+              <a
+                className={s.btnPrimarySolid}
+                href={whatsapp("Hola, me interesa certificar competencias laborales con CEDUCT.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Escribir por WhatsApp
+              </a>
+              <a className={s.btnOutline} href={mailto("Quiero certificar competencias con CEDUCT")}>
+                {CONTACTO.email}
+              </a>
+              <a className={s.btnOutline} href={tel()}>
+                {CONTACTO.phoneDisplay}
               </a>
             </div>
           )}

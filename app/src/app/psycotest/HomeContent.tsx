@@ -85,9 +85,9 @@ const evaluaciones = [
   },
   {
     slug: "cleaver",
-    nombre: "Cleaver (DISC)",
-    tagline: "Autodescripción + Factor Humano",
-    sub: "Perfil motivacional D-I-S-C (gráficas M/L/T) confrontable con el Análisis del Trabajo del puesto.",
+    nombre: "Compatibilidad Puesto–Persona",
+    tagline: "Ajuste del perfil al puesto",
+    sub: "Perfil conductual confrontado contra las exigencias reales del puesto.",
     tint: "var(--cleaver, #2a6f97)",
     facts: [
       ["Series", "24×4"],
@@ -183,8 +183,8 @@ export function HomeContent() {
               <div>
                 <strong>{MANUAL_GUIA_PSICOLOGO.title}</strong>
                 <span>
-                  Descarga el instructivo ejecutivo en PDF: pruebas, códigos, Cleaver, cursos, meet y
-                  ventas.
+                  Descarga el instructivo ejecutivo en PDF: aplicación, códigos, interpretación,
+                  cursos y clases en vivo.
                 </span>
               </div>
               <span className={s.go}>Descargar PDF →</span>

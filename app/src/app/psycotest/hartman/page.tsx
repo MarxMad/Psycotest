@@ -74,7 +74,7 @@ export default function Hartman() {
           <PhaseTransition phaseKey="intro">
             <div className={s.intro}>
               <BackLink />
-              <span className="eyebrow">Hartman</span>
+              <span className="eyebrow">Axiología de Valores</span>
           <h1>Inventario de Valores</h1>
 
           <div className={s.instructions}>
@@ -260,7 +260,7 @@ function Ordenar({
     <main className={s.main}>
       <div className={s.stage}>
         <div className={s.head}>
-          <span className="eyebrow">Hartman</span>
+          <span className="eyebrow">Axiología de Valores</span>
           <h1>{titulo}</h1>
           <p style={{ color: "var(--ink-soft)" }}>{leyenda}</p>
           <div className={s.status}>

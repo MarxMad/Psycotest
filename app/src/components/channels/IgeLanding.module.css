@@ -1,0 +1,365 @@
+/* ================================================================== *
+ * Ingeniería de Grupos Efectivos — canal de capacitación y consultoría.
+ * Rejilla técnica, tipografía ancha, acento del tema del canal.
+ * ================================================================== */
+
+.page {
+  --ige-pad: clamp(1rem, 4vw, 3.5rem);
+  --ige-ink: var(--ch-ink, #f3f6f8);
+  --ige-muted: var(--ch-muted, #93a1ad);
+  --ige-bg: var(--ch-bg, #0a0d10);
+  --ige-surface: var(--ch-surface, #12171c);
+  --ige-accent: var(--ch-accent, #22d3ee);
+  --ige-accent-2: var(--ch-accent-2, #f97316);
+  --ige-line: rgba(243, 246, 248, 0.1);
+  --ige-max: 1120px;
+  color: var(--ige-ink);
+  background: var(--ige-bg);
+  overflow-x: clip;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: min(90svh, 820px);
+  padding: clamp(6rem, 12vh, 8rem) var(--ige-pad) clamp(3rem, 7vh, 4.5rem);
+  overflow: hidden;
+}
+
+.heroMedia {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.04);
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  background: var(
+    --ch-hero-overlay,
+    linear-gradient(100deg, rgba(10, 13, 16, 0.94) 0%, rgba(10, 13, 16, 0.6) 52%, rgba(10, 13, 16, 0.2) 100%)
+  );
+}
+
+.heroRules {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(243, 246, 248, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(243, 246, 248, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 25% 70%, #000 10%, transparent 72%);
+  pointer-events: none;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--ige-max);
+  margin: 0 auto;
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 0.85rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+  color: var(--ige-accent);
+}
+
+.hero h1 {
+  max-width: 17ch;
+  margin: 0;
+  font-family: var(--ch-font-display, "Outfit", sans-serif);
+  font-size: clamp(2.4rem, 6.6vw, 4.6rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.99;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 54ch;
+  margin: 1.4rem 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  line-height: 1.62;
+  color: var(--ige-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.1rem;
+}
+
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.92rem 1.65rem;
+  border-radius: 999px;
+  font-size: 0.94rem;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.btnPrimary {
+  background: var(--ige-accent);
+  color: #06181c;
+  border: 1.5px solid var(--ige-accent);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btnGhost {
+  color: var(--ige-ink);
+  border: 1.5px solid var(--ige-line);
+}
+
+.btnGhost:hover {
+  transform: translateY(-2px);
+  border-color: var(--ige-accent);
+  color: var(--ige-accent);
+}
+
+.heroTrust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 2.2rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--ige-line);
+  list-style: none;
+}
+
+.heroTrust li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.83rem;
+  color: var(--ige-muted);
+}
+
+.heroTrust li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ige-accent);
+}
+
+/* ---------- secciones ---------- */
+
+.section {
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--ige-pad);
+}
+
+.sectionAlt {
+  background: var(--ige-surface);
+}
+
+.sectionHead {
+  max-width: var(--ige-max);
+  margin: 0 auto clamp(2.2rem, 5vw, 3.4rem);
+}
+
+.section h2 {
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--ch-font-display, "Outfit", sans-serif);
+  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.sectionBody {
+  max-width: 62ch;
+  margin: 1rem 0 0;
+  font-size: clamp(0.97rem, 1.3vw, 1.1rem);
+  line-height: 1.64;
+  color: var(--ige-muted);
+}
+
+/* ---------- tarjetas ---------- */
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1.1rem;
+  max-width: var(--ige-max);
+  margin: 0 auto;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  padding: 1.7rem;
+  border: 1px solid var(--ige-line);
+  border-radius: 16px;
+  background: rgba(243, 246, 248, 0.025);
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.item:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--ige-accent) 45%, transparent);
+  background: rgba(243, 246, 248, 0.05);
+}
+
+.item h3 {
+  margin: 0;
+  font-family: var(--ch-font-display, "Outfit", sans-serif);
+  font-size: 1.14rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.26;
+}
+
+.item p {
+  flex: 1;
+  margin: 0.65rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--ige-muted);
+}
+
+.itemCta {
+  margin-top: 1.35rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  color: var(--ige-accent);
+  text-decoration: none;
+}
+
+.item:hover .itemCta {
+  color: var(--ige-accent-2);
+}
+
+/* ---------- pasos numerados ---------- */
+
+.pasos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1.6rem;
+  max-width: var(--ige-max);
+  margin: 0 auto;
+}
+
+@media (min-width: 1040px) {
+  .pasos {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+.paso {
+  position: relative;
+  padding-top: 2.6rem;
+  border-top: 1px solid var(--ige-line);
+}
+
+.pasoNum {
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  font-family: var(--ch-font-display, "Outfit", sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ige-accent);
+}
+
+.paso h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -0.012em;
+}
+
+.paso p {
+  margin: 0.55rem 0 0;
+  font-size: 0.89rem;
+  line-height: 1.58;
+  color: var(--ige-muted);
+}
+
+/* ---------- accesos a plataforma ---------- */
+
+.platform {
+  background: var(--ige-surface);
+}
+
+.platformGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  max-width: var(--ige-max);
+  margin: 0 auto;
+}
+
+.platformCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--ige-line);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.platformCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--ige-accent);
+}
+
+.platformCard strong {
+  font-size: 0.97rem;
+  font-weight: 650;
+}
+
+.platformCard span {
+  font-size: 0.84rem;
+  color: var(--ige-muted);
+}
+
+/* ---------- contacto ---------- */
+
+.contacto {
+  border-top: 1px solid var(--ige-line);
+}
+
+.contactoActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: var(--ige-max);
+  margin: 0 auto;
+}
+
+@media (max-width: 560px) {
+  .actions,
+  .contactoActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

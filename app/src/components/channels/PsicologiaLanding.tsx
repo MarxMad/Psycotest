@@ -5,36 +5,44 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
 import { evaluacion } from "@/lib/routes";
+import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import s from "./PsicologiaLanding.module.css";
 
 const INSTRUMENTOS = [
   {
     id: "papi",
-    name: "PAPI",
-    tag: "Personalidad",
+    name: "Inventario de Personalidad",
+    tag: "Rasgos y estilo de trabajo",
     time: "~20 min",
-    blurb: "Factores conductuales por pares comparativos.",
+    blurb: "Cómo se conduce en el día a día: iniciativa, trato, tolerancia a la presión.",
   },
   {
     id: "hartman",
-    name: "Hartman",
-    tag: "Valores",
+    name: "Axiología de Valores",
+    tag: "Valores y motivación",
     time: "~15 min",
-    blurb: "Jerarquía axiológica y estructura de prioridades.",
+    blurb: "Qué lo mueve de verdad y si embona con la cultura de tu organización.",
   },
   {
     id: "mabe",
-    name: "MABE",
-    tag: "Competencias",
+    name: "Toma de Decisiones",
+    tag: "Criterio aplicado",
     time: "~25 min",
-    blurb: "Contraste persona–puesto y preferencias de pensamiento.",
+    blurb: "Qué información usa para decidir, qué riesgo acepta y qué tan consistente es.",
   },
   {
     id: "cleaver",
-    name: "Cleaver",
-    tag: "DISC",
+    name: "Compatibilidad Puesto–Persona",
+    tag: "Ajuste al puesto",
     time: "~12 min",
-    blurb: "Estilo conductual y Factor Humano.",
+    blurb: "Qué exige el puesto contra lo que la persona ofrece, y dónde habrá fricción.",
+  },
+  {
+    id: "gerenciales",
+    name: "Estilos Gerenciales",
+    tag: "Conducción de equipos",
+    time: "~15 min",
+    blurb: "Cómo dirige, cómo delega y cómo sostiene el resultado con su equipo.",
   },
 ] as const;
 
@@ -101,34 +109,29 @@ export function PsicologiaLanding({
 
       <section id="acceso" className={`${s.section} ${s.acceso}`}>
         <p className={s.eyebrow}>Portal de acceso</p>
-        <h2>Dos entradas. Un solo panel operativo.</h2>
+        <h2>¿Vienes a presentar tu evaluación?</h2>
         <p className={s.sectionBody}>
-          El candidato aplica con código. El psicólogo gestiona pruebas, códigos y resultados desde el
-          admin — sin sitios separados.
+          La empresa que te convocó te envió un código. Con él entras directo a las pruebas que te
+          corresponden — no necesitas crear cuenta ni preparar nada.
         </p>
         <div className={s.portalGrid}>
           <a className={s.portalCard} href={evaluacion.acceso}>
             <span className={s.portalTag}>Candidato</span>
             <h3>Tengo un código</h3>
             <p>
-              Ingresa tu código de acceso para aplicar las pruebas autorizadas (PAPI, Hartman, MABE,
-              Cleaver).
+              Ingresa tu código y tus datos para comenzar. Puedes pausar y retomar donde te quedaste.
             </p>
-            <span className={s.portalLink}>Ir a evaluación →</span>
+            <span className={s.portalLink}>Ir a mi evaluación →</span>
           </a>
-          <a className={`${s.portalCard} ${s.portalCardAdmin}`} href="/login?next=/admin/pruebas">
-            <span className={s.portalTag}>Psicólogo / Admin</span>
-            <h3>Gestionar pruebas y códigos</h3>
+          <a className={`${s.portalCard} ${s.portalCardAdmin}`} href="#contacto">
+            <span className={s.portalTag}>Empresas</span>
+            <h3>Quiero evaluar candidatos</h3>
             <p>
-              Emite códigos, revisa sesiones y exporta informes desde el panel único de Sistema Psic.
+              Te damos los códigos para tu proceso y el informe interpretado por un psicólogo en 72
+              horas.
             </p>
-            <span className={s.portalLink}>Abrir panel →</span>
+            <span className={s.portalLink}>Solicitar una cotización →</span>
           </a>
-        </div>
-        <div className={s.adminShortcuts}>
-          <a href="/admin/pruebas/codigos">Códigos de acceso</a>
-          <a href="/admin/pruebas">Sesiones y resultados</a>
-          <a href={evaluacion.participantes}>Participantes</a>
         </div>
       </section>
 
@@ -136,7 +139,8 @@ export function PsicologiaLanding({
         <p className={s.eyebrow}>Instrumentos</p>
         <h2>Batería psicológica</h2>
         <p className={s.sectionBody}>
-          Cada prueba se habilita por código desde el admin. El candidato solo ve lo autorizado.
+          Cinco instrumentos que se leen juntos. Según el puesto, aplicamos la batería completa o
+          solo los que aportan a la decisión.
         </p>
         <div className={s.battery}>
           {INSTRUMENTOS.map((item, i) => (
@@ -185,10 +189,11 @@ export function PsicologiaLanding({
       ))}
 
       <section id="plataforma" className={`${s.section} ${s.platform}`}>
-        <p className={s.eyebrow}>Operación</p>
-        <h2>Todo ligado al admin</h2>
+        <p className={s.eyebrow}>Siguiente paso</p>
+        <h2>Por dónde empezar</h2>
         <p className={s.sectionBody}>
-          Códigos, sesiones, informes y diplomados viven en el mismo panel. Este canal solo orienta.
+          Si ya traes código, entra directo. Si estás armando un proceso de selección, escríbenos y
+          te decimos qué instrumentos aplican a esa vacante.
         </p>
         <div className={s.platformGrid}>
           {platformCtas.map((cta) => (
@@ -199,6 +204,32 @@ export function PsicologiaLanding({
           ))}
         </div>
       </section>
+
+      <section id="contacto" className={`${s.section} ${s.contacto}`}>
+        <p className={s.eyebrow}>Contacto</p>
+        <h2>Dinos qué puesto necesitas cubrir</h2>
+        <p className={s.sectionBody}>
+          En una llamada corta definimos qué instrumentos aplican, si conviene el estudio
+          socioeconómico y en cuántos días tienes el informe. Sin costo.
+        </p>
+        <div className={s.contactoActions}>
+          <a
+            className={s.btnPrimary}
+            href={whatsapp("Hola, necesito evaluar candidatos para una vacante.")}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Escribir por WhatsApp
+          </a>
+          <a className={s.btnGhost} href={mailto("Solicito una evaluación de personal")}>
+            {CONTACTO.email}
+          </a>
+          <a className={s.btnGhost} href={tel()}>
+            {CONTACTO.phoneDisplay}
+          </a>
+        </div>
+      </section>
+
     </div>
   );
 }

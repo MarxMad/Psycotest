@@ -6,13 +6,11 @@ import { Copy, KeyRound, Plus } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "../../admin.module.css";
 import c from "./codigos.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const INSTRUMENTOS: { id: Instrumento; label: string }[] = [
-  { id: "papi", label: "PAPI" },
-  { id: "hartman", label: "Hartman" },
-  { id: "mabe", label: "MABE" },
-  { id: "cleaver", label: "Cleaver (DISC)" },
-];
+const INSTRUMENTOS: { id: Instrumento; label: string }[] = (
+  ["papi", "hartman", "mabe", "cleaver"] as Instrumento[]
+).map((id) => ({ id, label: NOMBRE_INSTRUMENTO[id] }));
 
 interface CodeRow {
   id: string;

@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
 
-  const pages = listChannelPages();
+  const pages = await listChannelPages();
   const channels = CHANNEL_IDS.map((id) => ({
     ...CHANNELS[id],
     page: pages.find((p) => p.channelId === id) ?? null,

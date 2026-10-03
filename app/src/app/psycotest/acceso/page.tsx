@@ -10,12 +10,13 @@ import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
 import { useApplicantSession } from "@/lib/applicant-client";
 import s from "./acceso.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
 const PRUEBAS: Record<Instrumento, { nombre: string; tint: string; href: string }> = {
-  papi: { nombre: "PAPI", tint: "var(--papi)", href: psycotest.papi },
-  hartman: { nombre: "Hartman", tint: "var(--hartman)", href: psycotest.hartman },
-  mabe: { nombre: "MABE", tint: "var(--mabe)", href: psycotest.mabe },
-  cleaver: { nombre: "Cleaver (DISC)", tint: "var(--cleaver)", href: psycotest.cleaver },
+  papi: { nombre: NOMBRE_INSTRUMENTO.papi, tint: "var(--papi)", href: psycotest.papi },
+  hartman: { nombre: NOMBRE_INSTRUMENTO.hartman, tint: "var(--hartman)", href: psycotest.hartman },
+  mabe: { nombre: NOMBRE_INSTRUMENTO.mabe, tint: "var(--mabe)", href: psycotest.mabe },
+  cleaver: { nombre: NOMBRE_INSTRUMENTO.cleaver, tint: "var(--cleaver)", href: psycotest.cleaver },
 };
 
 const ERRORES: Record<string, string> = {

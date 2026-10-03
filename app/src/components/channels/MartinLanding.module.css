@@ -1,0 +1,352 @@
+/* ================================================================== *
+ * Martín Hernández González — portafolio personal.
+ * Editorial, grafito y oro, serif de display.
+ * ================================================================== */
+
+.page {
+  --mh-pad: clamp(1rem, 4vw, 3.5rem);
+  --mh-ink: var(--ch-ink, #f2efe8);
+  --mh-muted: var(--ch-muted, #9aa3b5);
+  --mh-bg: var(--ch-bg, #0c1222);
+  --mh-surface: var(--ch-surface, #141c2e);
+  --mh-gold: var(--ch-accent, #d4a24c);
+  --mh-blue: var(--ch-accent-2, #3d7ea6);
+  --mh-line: rgba(242, 239, 232, 0.12);
+  --mh-max: 1120px;
+  color: var(--mh-ink);
+  background: var(--mh-bg);
+  overflow-x: clip;
+}
+
+/* ---------- hero ---------- */
+
+.hero {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  min-height: min(90svh, 840px);
+  max-width: var(--mh-max);
+  margin: 0 auto;
+  padding: clamp(6rem, 12vh, 8.5rem) var(--mh-pad) clamp(3rem, 7vh, 4.5rem);
+}
+
+@media (min-width: 940px) {
+  .hero {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  }
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 58% 48% at 88% 12%, rgba(212, 162, 76, 0.17), transparent 58%),
+    radial-gradient(ellipse 48% 42% at 4% 78%, rgba(61, 126, 166, 0.16), transparent 56%);
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 0.9rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mh-gold);
+}
+
+.heroTitle {
+  max-width: 13ch;
+  margin: 0;
+  font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
+  font-size: clamp(2.4rem, 6.4vw, 4.5rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--mh-gold);
+}
+
+.lead {
+  max-width: 50ch;
+  margin: 1.5rem 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.64;
+  color: var(--mh-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.1rem;
+}
+
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.92rem 1.65rem;
+  border-radius: 999px;
+  font-size: 0.94rem;
+  font-weight: 650;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+.btnPrimary {
+  background: var(--mh-gold);
+  color: #1a1408;
+  border: 1.5px solid var(--mh-gold);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btnGhost {
+  color: var(--mh-ink);
+  border: 1.5px solid var(--mh-line);
+}
+
+.btnGhost:hover {
+  transform: translateY(-2px);
+  border-color: var(--mh-gold);
+  color: var(--mh-gold);
+}
+
+.heroTrust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.6rem;
+  margin: 2.2rem 0 0;
+  padding: 1.5rem 0 0;
+  border-top: 1px solid var(--mh-line);
+  list-style: none;
+}
+
+.heroTrust li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.83rem;
+  color: var(--mh-muted);
+}
+
+.heroTrust li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mh-gold);
+}
+
+/* ---------- cita del hero ---------- */
+
+.heroQuote {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  border-left: 3px solid var(--mh-gold);
+  border-radius: 0 18px 18px 0;
+  background: rgba(242, 239, 232, 0.045);
+}
+
+.heroQuote blockquote {
+  margin: 0;
+  font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
+  font-size: clamp(1.15rem, 2.1vw, 1.55rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.42;
+}
+
+.heroQuote figcaption {
+  margin-top: 1.2rem;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--mh-gold);
+}
+
+/* ---------- secciones ---------- */
+
+.section {
+  padding: clamp(3.5rem, 8vw, 6.5rem) var(--mh-pad);
+}
+
+.sectionAlt {
+  background: var(--mh-surface);
+}
+
+.sectionHead {
+  max-width: var(--mh-max);
+  margin: 0 auto clamp(2.2rem, 5vw, 3.4rem);
+}
+
+.section h2 {
+  max-width: 22ch;
+  margin: 0;
+  font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
+  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.sectionBody {
+  max-width: 62ch;
+  margin: 1rem 0 0;
+  font-size: clamp(0.97rem, 1.3vw, 1.1rem);
+  line-height: 1.64;
+  color: var(--mh-muted);
+}
+
+/* ---------- tarjetas ---------- */
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 1.1rem;
+  max-width: var(--mh-max);
+  margin: 0 auto;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.7rem;
+  padding-top: 2.9rem;
+  border: 1px solid var(--mh-line);
+  border-radius: 16px;
+  background: rgba(242, 239, 232, 0.025);
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.item:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--mh-gold) 50%, transparent);
+  background: rgba(242, 239, 232, 0.05);
+}
+
+.itemIndex {
+  position: absolute;
+  top: 1.35rem;
+  left: 1.7rem;
+  font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--mh-gold);
+}
+
+.item h3 {
+  margin: 0;
+  font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
+  font-size: 1.14rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.26;
+}
+
+.item p {
+  flex: 1;
+  margin: 0.65rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--mh-muted);
+}
+
+.itemCta {
+  margin-top: 1.35rem;
+  font-size: 0.86rem;
+  font-weight: 650;
+  color: var(--mh-gold);
+  text-decoration: none;
+}
+
+.item:hover .itemCta {
+  color: var(--mh-blue);
+}
+
+/* ---------- accesos ---------- */
+
+.platform {
+  background: var(--mh-surface);
+}
+
+.platformGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 1rem;
+  max-width: var(--mh-max);
+  margin: 0 auto;
+}
+
+.platformCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--mh-line);
+  border-radius: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.platformCard:hover {
+  transform: translateY(-3px);
+  border-color: var(--mh-gold);
+}
+
+.platformCard strong {
+  font-size: 0.97rem;
+  font-weight: 650;
+}
+
+.platformCard span {
+  font-size: 0.84rem;
+  color: var(--mh-muted);
+}
+
+/* ---------- contacto ---------- */
+
+.contacto {
+  border-top: 1px solid var(--mh-line);
+}
+
+.contactoActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: var(--mh-max);
+  margin: 0 auto;
+}
+
+@media (max-width: 560px) {
+  .actions,
+  .contactoActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

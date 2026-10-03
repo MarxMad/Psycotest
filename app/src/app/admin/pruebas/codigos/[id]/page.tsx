@@ -7,13 +7,9 @@ import { ArrowLeft, Download, Users } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "../../../admin.module.css";
 import c from "../codigos.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Hartman",
-  mabe: "MABE",
-  cleaver: "Cleaver (DISC)",
-};
+const ETIQUETAS: Record<Instrumento, string> = NOMBRE_INSTRUMENTO;
 
 interface CodeInfo {
   id: string;

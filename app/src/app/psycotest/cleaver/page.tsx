@@ -141,7 +141,7 @@ export default function CleaverPage() {
           <PhaseTransition phaseKey="intro">
             <div className={s.intro}>
               <BackLink />
-              <span className="eyebrow">Cleaver · DISC</span>
+              <span className="eyebrow">Compatibilidad Puesto–Persona</span>
               <h1>Autodescripción</h1>
               <p>
                 Lea las instrucciones antes de comenzar. En cada serie elija la palabra que más lo

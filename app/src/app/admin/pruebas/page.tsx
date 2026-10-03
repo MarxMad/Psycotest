@@ -13,13 +13,9 @@ import {
 import { listarSesiones, type Instrumento, type MetaSesion } from "@/lib/storage";
 import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
 import s from "./pruebas.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Hartman",
-  mabe: "MABE",
-  cleaver: "Cleaver (DISC)",
-};
+const ETIQUETAS: Record<Instrumento, string> = NOMBRE_INSTRUMENTO;
 
 const COLORES: Record<Instrumento, string> = {
   papi: "var(--papi)",

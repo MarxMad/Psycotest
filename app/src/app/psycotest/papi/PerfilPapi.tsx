@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Hoja de perfil del PAPI.
+ * Hoja de perfil del Inventario de Personalidad.
  *
  * Reproduce la lámina impresa: veinte radios en el sentido de las agujas del
  * reloj a partir de N, con la escala 0–9 del centro hacia afuera. De adentro
@@ -107,8 +107,8 @@ export function PerfilPapi({
         </header>
       )}
 
-      <svg viewBox="0 0 810 810" role="img" aria-label="Hoja de perfil del PAPI">
-        <title>Hoja de perfil del PAPI{nombre ? ` — ${nombre}` : ""}</title>
+      <svg viewBox="0 0 810 810" role="img" aria-label="Hoja de perfil de personalidad">
+        <title>Hoja de perfil de personalidad{nombre ? ` — ${nombre}` : ""}</title>
 
         {/* anillos de la escala 0…9 */}
         {Array.from({ length: 10 }, (_, p) => (
@@ -230,7 +230,7 @@ export function PerfilPapi({
         })}
 
         <text x={CX} y={CY + 5} className="centroTitulo">
-          PAPI
+          PERFIL
         </text>
       </svg>
 

@@ -153,7 +153,7 @@ function PapiInterpretacionResumen({
   return (
     <div className={s.resumen}>
       <header className={s.hero}>
-        <span className={s.eyebrow}>PAPI — borrador clínico</span>
+        <span className={s.eyebrow}>Inventario de Personalidad — borrador</span>
         <p>
           Control sumas: roles <strong>{cal.totalRoles}/45</strong> · necesidades{" "}
           <strong>{cal.totalNecesidades}/45</strong>
@@ -188,7 +188,7 @@ function HartmanInterpretacionResumen({
   return (
     <div className={s.resumen}>
       <header className={s.hero}>
-        <span className={s.eyebrow}>Hartman — borrador clínico</span>
+        <span className={s.eyebrow}>Axiología de Valores — borrador</span>
         <p>
           Interpretable: <strong>{cal.interpretable ? "Sí" : "No"}</strong>
           {!cal.interpretable && cal.motivo && <> — {cal.motivo}</>}

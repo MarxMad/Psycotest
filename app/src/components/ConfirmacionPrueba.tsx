@@ -4,13 +4,9 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "./ConfirmacionPrueba.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Inventario de Valores Hartman",
-  mabe: "MABE",
-  cleaver: "Cleaver — Autodescripción (DISC)",
-};
+const ETIQUETAS: Record<Instrumento, string> = NOMBRE_INSTRUMENTO;
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleString("es-MX", {

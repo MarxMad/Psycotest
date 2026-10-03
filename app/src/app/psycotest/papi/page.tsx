@@ -110,7 +110,7 @@ export default function Papi() {
           <PhaseTransition phaseKey="intro">
             <div className={s.intro}>
               <BackLink />
-              <span className="eyebrow">PAPI</span>
+              <span className="eyebrow">Inventario de Personalidad</span>
           <h1>Inventario de Preferencias de Personalidad</h1>
           <p>
             Lea las instrucciones antes de comenzar. Puede volver a consultarlas en cualquier momento

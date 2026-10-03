@@ -16,7 +16,7 @@ export async function GET(_request: Request, { params }: Params) {
   const { id } = await params;
   const channel = getChannel(id);
   if (!channel) return NextResponse.json({ error: "Canal no encontrado" }, { status: 404 });
-  return NextResponse.json({ channel, page: getChannelPage(channel.id) });
+  return NextResponse.json({ channel, page: await getChannelPage(channel.id) });
 }
 
 export async function PATCH(request: Request, { params }: Params) {
@@ -40,7 +40,7 @@ export async function PATCH(request: Request, { params }: Params) {
     sections?: ChannelSection[];
   };
 
-  const page = updateChannelPage(id as ChannelId, {
+  const page = await updateChannelPage(id as ChannelId, {
     seoTitle: body.seoTitle,
     seoDescription: body.seoDescription,
     published: body.published,

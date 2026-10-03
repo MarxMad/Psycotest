@@ -10,6 +10,13 @@ __pycache__/
 app/data/
 app/.env
 app/.env.local
+# Cualquier .env en cualquier nivel — nunca deben llegar al repositorio
+.env
+.env.*
+!.env.example
+# Metadatos locales de Vercel
+.vercel/
+**/.vercel/
 
 # Dependencias y build (también en app/.gitignore)
 **/node_modules/

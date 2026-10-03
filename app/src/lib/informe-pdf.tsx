@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { APP_NAME } from "./brand";
+import { SUBTITULO_INSTRUMENTO } from "@/lib/instrumentos";
 
 const styles = StyleSheet.create({
   page: {
@@ -72,12 +73,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const INSTRUMENTO_LABEL: Record<string, string> = {
-  papi: "PAPI — Personality and Preference Inventory",
-  hartman: "Inventario de Valores Hartman",
-  cleaver: "Cleaver — Autodescripción (DISC)",
-  mabe: "MABE — Managerial Behavior Evaluation",
-};
+const INSTRUMENTO_LABEL: Record<string, string> = SUBTITULO_INSTRUMENTO;
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleString("es-MX", {
