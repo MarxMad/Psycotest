@@ -189,6 +189,13 @@ function AccesoInner() {
               {enviando ? "Validando…" : "Acceder a las pruebas"}
             </button>
           </form>
+
+          {/* Puerta del profesional: existe, pero por debajo y con su nombre,
+              para que nadie la confunda con la del aplicante. */}
+          <p className={s.profesional}>
+            ¿Eres el psicólogo o quien administra las pruebas?{" "}
+            <Link href="/login">Entra al panel</Link>
+          </p>
         </FadeIn>
       </main>
     </>
