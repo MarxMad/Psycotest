@@ -157,7 +157,31 @@
   background: var(--mh-gold);
 }
 
-/* ---------- cita del hero ---------- */
+/* ---------- obra del hero ---------- */
+
+.heroObra {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  color: var(--mh-ink);
+}
+
+.heroObra::before {
+  content: "";
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 162, 76, 0.22), transparent 68%);
+  filter: blur(40px);
+}
+
+.heroObra svg {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-width: 24rem;
+}
 
 .heroQuote {
   position: relative;
@@ -234,24 +258,60 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 1.7rem;
-  padding-top: 2.9rem;
+  padding: 1.9rem;
+  padding-top: 3.2rem;
   border: 1px solid var(--mh-line);
-  border-radius: 16px;
-  background: rgba(242, 239, 232, 0.025);
-  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+  border-radius: 18px;
+  background:
+    linear-gradient(160deg, rgba(242, 239, 232, 0.06), rgba(242, 239, 232, 0.015) 55%);
+  overflow: hidden;
+  isolation: isolate;
+  transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.26s ease,
+    box-shadow 0.26s ease;
+}
+
+/* Filo superior que se enciende al pasar el cursor */
+.item::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--mh-gold), transparent 70%);
+  transform: scaleX(0.25);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Halo que aparece desde la esquina */
+.item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: radial-gradient(18rem 12rem at 88% -10%, rgba(212, 162, 76, 0.22), transparent 70%);
+  transition: opacity 0.35s ease;
 }
 
 .item:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--mh-gold) 50%, transparent);
-  background: rgba(242, 239, 232, 0.05);
+  transform: translateY(-5px);
+  border-color: color-mix(in srgb, var(--mh-gold) 45%, transparent);
+  box-shadow: 0 24px 50px -26px rgba(0, 0, 0, 0.75);
+}
+
+.item:hover::before {
+  transform: scaleX(1);
+}
+
+.item:hover::after {
+  opacity: 1;
 }
 
 .itemIndex {
   position: absolute;
-  top: 1.35rem;
-  left: 1.7rem;
+  top: 1.5rem;
+  left: 1.9rem;
   font-family: var(--ch-font-display, "Fraunces", Georgia, serif);
   font-size: 0.86rem;
   font-weight: 700;

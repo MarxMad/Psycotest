@@ -6,6 +6,8 @@ import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
+import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
+import { RadarBateria } from "./arte";
 import s from "./PsicologiaLanding.module.css";
 
 const INSTRUMENTOS = [
@@ -135,6 +137,25 @@ export function PsicologiaLanding({
         </div>
       </section>
 
+      <SplitObra obra={<RadarBateria />}>
+        <p className={s.eyebrow}>Por qué se leen juntos</p>
+        <h2 className={s.tituloSplit}>Un instrumento solo no decide nada</h2>
+        <p className={s.sectionBody}>
+          Lo que importa no es cada eje por separado, sino la distancia entre lo que el puesto
+          exige y lo que la persona ofrece. Esa brecha es la que se interpreta — y la que te dice
+          dónde va a necesitar apoyo desde el primer mes.
+        </p>
+      </SplitObra>
+
+      <Cifras
+        datos={[
+          { valor: "5", etiqueta: "Instrumentos que integran la batería completa" },
+          { valor: "72 h", etiqueta: "Entrega del informe una vez aplicada" },
+          { valor: "90 h", etiqueta: "Duración de los diplomados profesionales" },
+          { valor: "En línea", etiqueta: "El candidato responde desde donde esté" },
+        ]}
+      />
+
       <section id="bateria" className={s.section}>
         <p className={s.eyebrow}>Instrumentos</p>
         <h2>Batería psicológica</h2>
@@ -162,7 +183,27 @@ export function PsicologiaLanding({
         </div>
       </section>
 
-      {content.sections.map((section, idx) => (
+      {content.sections.map((section, idx) => {
+        // El proceso se lee mejor como línea de tiempo que como tarjetas
+        if (section.id === "seleccion") {
+          return (
+            <div key={section.id}>
+              <Declaracion
+                id={section.id}
+                texto={section.title}
+                pie={section.body}
+                trama="puntos"
+                compacta
+              />
+              <Pasos
+                pegado
+                pasos={(section.items ?? []).map((i) => ({ title: i.title, text: i.text }))}
+              />
+            </div>
+          );
+        }
+
+        return (
         <motion.section
           key={section.id}
           id={section.id}
@@ -186,7 +227,8 @@ export function PsicologiaLanding({
             </div>
           )}
         </motion.section>
-      ))}
+        );
+      })}
 
       <section id="plataforma" className={`${s.section} ${s.platform}`}>
         <p className={s.eyebrow}>Siguiente paso</p>

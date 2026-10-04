@@ -5,6 +5,8 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
+import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
+import { RedEquipo } from "./arte";
 import s from "./IgeLanding.module.css";
 
 /** Secciones que se pintan como pasos numerados en lugar de tarjetas. */
@@ -64,7 +66,43 @@ export function IgeLanding({
 
       {/* ---------- SECCIONES ---------- */}
       {secciones.map((section, idx) => {
-        const pasos = SECCIONES_PASOS.has(section.id);
+        if (SECCIONES_PASOS.has(section.id)) {
+          return (
+            <div key={section.id}>
+              <Declaracion
+                id={section.id}
+                texto={section.title}
+                pie={section.body}
+                trama="curvas"
+                compacta
+              />
+              <Pasos
+                pegado
+                pasos={(section.items ?? []).map((i) => ({ title: i.title, text: i.text }))}
+              />
+            </div>
+          );
+        }
+
+        if (section.id === "especialidades") {
+          return (
+            <SplitObra key={section.id} id={section.id} obra={<RedEquipo />} inverso>
+              <p className={s.eyebrow}>{section.eyebrow}</p>
+              <h2 className={s.tituloSplit}>{section.title}</h2>
+              <p className={s.sectionBody}>{section.body}</p>
+              <ul className={s.listaSplit}>
+                {(section.items ?? []).map((i) => (
+                  <li key={i.title}>
+                    <strong>{i.title}</strong>
+                    <span>{i.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </SplitObra>
+          );
+        }
+
+        const pasos = false;
         return (
           <motion.section
             key={section.id}

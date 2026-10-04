@@ -5,6 +5,8 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { channelPublicUrl, getChannelPlatformCtas, type ChannelId } from "@/lib/channels";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
+import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
+import { TresOficios } from "./arte";
 import s from "./MartinLanding.module.css";
 
 /** Enlace profundo desde una tarjeta de "líneas de trabajo" al canal correspondiente. */
@@ -60,67 +62,100 @@ export function MartinLanding({
           </ul>
         </motion.div>
 
-        <motion.figure
-          className={s.heroQuote}
-          initial={reduce ? false : { opacity: 0, x: 22 }}
-          animate={reduce ? undefined : { opacity: 1, x: 0 }}
-          transition={{ duration: 0.75, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+        <motion.div
+          className={s.heroObra}
+          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
+          animate={reduce ? undefined : { opacity: 1, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          aria-hidden={false}
         >
-          <blockquote>
-            A las organizaciones no las detiene la falta de información. Las detiene no saber qué
-            vale lo que ya tienen.
-          </blockquote>
-          <figcaption>Martín Hernández González</figcaption>
-        </motion.figure>
+          <TresOficios />
+        </motion.div>
       </section>
 
-      {/* ---------- SECCIONES ---------- */}
-      {secciones.map((section, idx) => (
-        <motion.section
-          key={section.id}
-          id={section.id}
-          className={`${s.section} ${idx % 2 === 1 ? s.sectionAlt : ""}`}
-          initial={reduce ? false : { opacity: 0, y: 22 }}
-          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.55 }}
-        >
-          <div className={s.sectionHead}>
-            {section.eyebrow && <p className={s.eyebrow}>{section.eyebrow}</p>}
-            <h2>{section.title}</h2>
-            <p className={s.sectionBody}>{section.body}</p>
-          </div>
+      {/* Cifras: sólo lo que se puede afirmar */}
+      <Cifras
+        datos={[
+          { valor: "3", etiqueta: "Oficios que se cruzan en cada intervención" },
+          { valor: "4", etiqueta: "Líneas de trabajo bajo una misma responsable" },
+          { valor: "15 min", etiqueta: "La primera conversación, sin costo" },
+          { valor: "ECE 002-10", etiqueta: "Clave de acreditación de la certificadora" },
+        ]}
+      />
 
-          {section.items && section.items.length > 0 && (
-            <div className={s.items}>
-              {section.items.map((item, i) => {
-                const canal = section.id === "canales" ? CANAL_POR_TITULO[item.title] : undefined;
-                return (
-                  <motion.article
-                    key={item.title}
-                    className={s.item}
-                    initial={reduce ? false : { opacity: 0, y: 16 }}
-                    whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: Math.min(i * 0.07, 0.35), duration: 0.45 }}
-                  >
-                    <span className={s.itemIndex} aria-hidden>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3>{item.title}</h3>
-                    <p>{item.text}</p>
-                    {canal && (
-                      <a className={s.itemCta} href={channelPublicUrl(canal)}>
-                        Abrir canal →
-                      </a>
-                    )}
-                  </motion.article>
-                );
-              })}
+      <Cita
+        texto="A las organizaciones no las detiene la falta de información. Las detiene no saber qué vale lo que ya tienen."
+        autor="Martín Hernández González"
+        trama="radial"
+      />
+
+      {/* Secciones con contenido editable desde el panel */}
+      {secciones.map((section, idx) => {
+        if (section.id === "metodo") {
+          return (
+            <div key={section.id}>
+              <Declaracion
+                id={section.id}
+                texto={section.title}
+                pie={section.body}
+                trama="puntos"
+                compacta
+              />
+              <Pasos
+                pegado
+                pasos={(section.items ?? []).map((i) => ({ title: i.title, text: i.text }))}
+              />
             </div>
-          )}
-        </motion.section>
-      ))}
+          );
+        }
+
+        return (
+          <motion.section
+            key={section.id}
+            id={section.id}
+            className={`${s.section} ${idx % 2 === 1 ? s.sectionAlt : ""}`}
+            initial={reduce ? false : { opacity: 0, y: 22 }}
+            whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.55 }}
+          >
+            <div className={s.sectionHead}>
+              {section.eyebrow && <p className={s.eyebrow}>{section.eyebrow}</p>}
+              <h2>{section.title}</h2>
+              <p className={s.sectionBody}>{section.body}</p>
+            </div>
+
+            {section.items && section.items.length > 0 && (
+              <div className={s.items}>
+                {section.items.map((item, i) => {
+                  const canal = section.id === "canales" ? CANAL_POR_TITULO[item.title] : undefined;
+                  return (
+                    <motion.article
+                      key={item.title}
+                      className={s.item}
+                      initial={reduce ? false : { opacity: 0, y: 16 }}
+                      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: Math.min(i * 0.07, 0.35), duration: 0.45 }}
+                    >
+                      <span className={s.itemIndex} aria-hidden>
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                      {canal && (
+                        <a className={s.itemCta} href={channelPublicUrl(canal)}>
+                          Abrir canal →
+                        </a>
+                      )}
+                    </motion.article>
+                  );
+                })}
+              </div>
+            )}
+          </motion.section>
+        );
+      })}
 
       {/* ---------- ACCESOS ---------- */}
       <section className={`${s.section} ${s.platform}`} id="plataforma">

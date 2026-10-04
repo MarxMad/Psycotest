@@ -6,6 +6,8 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { getChannelPlatformCtas } from "@/lib/channels";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
+import { Cifras, Cita } from "./Secciones";
+import { SelloClave } from "./arte";
 import s from "./CeductLanding.module.css";
 
 const VIDEO_SRC = "/media/hero-bg.mp4";
@@ -110,6 +112,15 @@ export function CeductLanding({
           </motion.div>
         </div>
       </section>
+
+      <Cifras
+        datos={[
+          { valor: "ECE 002-10", etiqueta: "Clave de acreditación como entidad certificadora" },
+          { valor: "5 pasos", etiqueta: "Del diagnóstico al certificado, con fechas claras" },
+          { valor: "Permanente", etiqueta: "La competencia certificada no caduca" },
+          { valor: "Individual y grupal", etiqueta: "Una persona o toda la plantilla" },
+        ]}
+      />
 
       {content.sections.map((section, idx) => (
         <motion.section

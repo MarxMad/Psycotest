@@ -363,3 +363,56 @@
     align-items: stretch;
   }
 }
+
+/* ---------- bloque de texto dentro de un split con obra ---------- */
+
+.tituloSplit {
+  max-width: 18ch;
+  margin: 0;
+  font-family: var(--ch-font-display, "Outfit", sans-serif);
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.listaSplit {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaSplit li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+
+.listaSplit li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ige-accent);
+}
+
+.listaSplit strong {
+  display: block;
+  font-size: 0.97rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.listaSplit span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ige-muted);
+}
