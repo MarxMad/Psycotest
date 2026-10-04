@@ -167,3 +167,46 @@
     flex-direction: column;
   }
 }
+
+/* ---- añadidos: reparto de salas y dinámicas ---- */
+
+.pill {
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.filaAcciones {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex: none;
+}
+
+/* El enlace a pestaña aparte comparte el aspecto del botón fantasma. */
+a.ghost {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.dinamicaForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+}
+
+.promptInput {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--rule, #cfd6d1);
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.88rem;
+  background: var(--surface, #fff);
+  color: inherit;
+}

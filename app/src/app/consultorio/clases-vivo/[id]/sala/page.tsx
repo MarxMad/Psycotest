@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { JitsiMeetEmbed } from "@/components/live/JitsiMeetEmbed";
+import { JitsiMeetEmbed, type EstadoSala } from "@/components/live/JitsiMeetEmbed";
 import { LiveSessionTools } from "@/components/live/LiveSessionTools";
 import styles from "../../clases-vivo.module.css";
 
@@ -13,8 +13,11 @@ export default function AlumnoSalaPage() {
   const [activeRoomUrl, setActiveRoomUrl] = useState<string | null>(null);
   const [title, setTitle] = useState("Sala en vivo");
   const [displayName, setDisplayName] = useState("Alumno");
+  const [userId, setUserId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [estadoSala, setEstadoSala] = useState<EstadoSala>("conectando");
+  const [enSala, setEnSala] = useState<number | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -37,6 +40,7 @@ export default function AlumnoSalaPage() {
         setActiveRoomUrl(data.roomUrl);
         setTitle(data.title || "Sala en vivo");
         if (data.displayName) setDisplayName(data.displayName);
+        if (data.attendance?.userId) setUserId(data.attendance.userId);
       } catch {
         if (active) setError("Error de red al unirse.");
       } finally {
@@ -76,10 +80,26 @@ export default function AlumnoSalaPage() {
 
       {!loading && activeRoomUrl && (
         <>
-          <JitsiMeetEmbed roomUrl={activeRoomUrl} displayName={displayName} />
+          {/* La reunión no arranca hasta que entra el instructor. Decirlo
+              evita que el alumno crea que su conexión está fallando. */}
+          {estadoSala === "esperando" && (
+            <p className={styles.espera}>
+              La clase todavía no empieza: estamos esperando a que el instructor abra la reunión.
+              No cierres esta pestaña, entrarás en cuanto arranque.
+            </p>
+          )}
+
+          <JitsiMeetEmbed
+            roomUrl={activeRoomUrl}
+            displayName={displayName}
+            onEstado={setEstadoSala}
+            onParticipantes={setEnSala}
+          />
           <LiveSessionTools
             liveClassId={id}
             isAdmin={false}
+            userId={userId}
+            enSala={enSala}
             mainRoomUrl={mainRoomUrl}
             onRoomUrlChange={(url) => setActiveRoomUrl(url || mainRoomUrl)}
           />

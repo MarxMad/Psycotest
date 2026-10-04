@@ -108,11 +108,13 @@ export default function LiveClassDetailPage() {
             {liveClass.status === "scheduled" && (
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn"
                 disabled={busy}
                 onClick={() => void setStatus("live")}
               >
-                Iniciar sesión
+                {/* Decía «Iniciar sesión», igual que el botón de identificarse
+                    de Jitsi que aparece al lado. Esto es empezar la clase. */}
+                Marcar como en curso
               </button>
             )}
             {liveClass.status === "live" && (
@@ -126,7 +128,7 @@ export default function LiveClassDetailPage() {
               </button>
             )}
             <Link href={`/admin/clases-vivo/${id}/sala`} className="btn btn-primary">
-              Abrir sala
+              Entrar a la sala
             </Link>
           </div>
         }

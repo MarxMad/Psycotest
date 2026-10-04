@@ -202,3 +202,32 @@
     width: 100%;
   }
 }
+
+/* Tarjeta que explica el arranque de la reunión al anfitrión. */
+.anfitrionTitulo {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+}
+
+.anfitrionTexto {
+  margin: 0 0 0.9rem;
+  max-width: 60ch;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+
+.anfitrionAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.avisoOk {
+  margin: 0 0 0.75rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid color-mix(in srgb, #1f7a4d 30%, transparent);
+  background: color-mix(in srgb, #1f7a4d 8%, transparent);
+  font-size: 0.88rem;
+}

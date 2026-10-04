@@ -23,15 +23,32 @@ export async function getWhiteboardDoc(liveClassId: string, breakoutRoomId?: str
   return rows[0] ?? null;
 }
 
+/** Alguien guardó encima mientras este cliente dibujaba. */
+export class WhiteboardConflict extends Error {
+  constructor(readonly current: Awaited<ReturnType<typeof getWhiteboardDoc>>) {
+    super("WHITEBOARD_CONFLICT");
+  }
+}
+
 export async function saveWhiteboardDoc(
   liveClassId: string,
   documentJson: Record<string, unknown>,
   userId: string,
   breakoutRoomId?: string | null,
+  /**
+   * Marca del documento que el cliente tenía al empezar a dibujar. Si ya no
+   * coincide, otro guardó en medio y sobrescribir perdería su trabajo.
+   * Sin marca (primer guardado o cliente antiguo) no se comprueba nada.
+   */
+  baseUpdatedAt?: string | null,
 ) {
   const db = getDb();
   const now = new Date().toISOString();
   const existing = await getWhiteboardDoc(liveClassId, breakoutRoomId);
+
+  if (existing && baseUpdatedAt && existing.updatedAt !== baseUpdatedAt) {
+    throw new WhiteboardConflict(existing);
+  }
 
   if (existing) {
     await db

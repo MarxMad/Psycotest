@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   liveBreakoutAssignments,
@@ -46,6 +46,11 @@ export async function createBreakouts(
   const now = new Date().toISOString();
   const created = [];
 
+  // Repartir otra vez reemplaza el reparto anterior. Antes se acumulaban:
+  // pedir tres salas dos veces dejaba seis abiertas y a la gente repartida
+  // entre las viejas, que ya nadie miraba.
+  await closeAllBreakouts(liveClassId);
+
   for (let i = 0; i < count; i++) {
     const roomId = id("breakout");
     const { roomSlug, roomUrl } = buildJitsiRoom(`${liveClassId}-b${i}-${roomId}`);
@@ -71,15 +76,44 @@ export async function createBreakouts(
   return listBreakouts(liveClassId);
 }
 
+/** Cuánto silencio basta para dar por ida a una persona. */
+const LATIDO_VIGENTE_MS = 2 * 60 * 1000;
+
+/**
+ * Quién está en la sala ahora mismo.
+ *
+ * No vale la lista de asistencias completa: incluye a quien ya se fue, y
+ * repartirlo deja salas de división con sillas vacías.
+ */
+export async function presentesEnSala(liveClassId: string): Promise<string[]> {
+  const db = getDb();
+  const filas = await db
+    .select({
+      userId: liveClassAttendances.userId,
+      lastHeartbeatAt: liveClassAttendances.lastHeartbeatAt,
+    })
+    .from(liveClassAttendances)
+    .where(
+      and(
+        eq(liveClassAttendances.liveClassId, liveClassId),
+        isNull(liveClassAttendances.leftAt),
+      ),
+    );
+
+  const limite = Date.now() - LATIDO_VIGENTE_MS;
+  const vivos = filas.filter((f) => {
+    if (!f.lastHeartbeatAt) return true;
+    const t = new Date(f.lastHeartbeatAt).getTime();
+    return Number.isNaN(t) || t >= limite;
+  });
+
+  return [...new Set(vivos.map((f) => f.userId))];
+}
+
 export async function autoAssignParticipants(liveClassId: string, roomIds: string[]) {
   if (roomIds.length === 0) return;
   const db = getDb();
-  const attendances = await db
-    .select({ userId: liveClassAttendances.userId })
-    .from(liveClassAttendances)
-    .where(eq(liveClassAttendances.liveClassId, liveClassId));
-
-  const uniqueUsers = [...new Set(attendances.map((a) => a.userId))];
+  const uniqueUsers = await presentesEnSala(liveClassId);
   const now = new Date().toISOString();
 
   for (let i = 0; i < uniqueUsers.length; i++) {

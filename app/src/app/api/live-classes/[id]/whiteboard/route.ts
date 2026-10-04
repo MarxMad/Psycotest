@@ -5,11 +5,13 @@ import { liveClasses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
 import { userCanAccessLiveClass } from "@/lib/live-classes";
 import {
+  WhiteboardConflict,
   createSnapshot,
   getWhiteboardDoc,
   listSnapshots,
   saveWhiteboardDoc,
 } from "@/lib/live-whiteboard";
+import { getAssignmentForUser } from "@/lib/live-breakouts";
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
@@ -94,13 +96,39 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
       return NextResponse.json({ error: "Falta documentJson" }, { status: 400 });
     }
 
-    const document = await saveWhiteboardDoc(
-      liveClass.id,
-      body.documentJson,
-      user.id,
-      body.breakoutRoomId || null,
-    );
-    return NextResponse.json({ document });
+    // La pizarra de la clase la lleva el instructor; las de las salas de
+    // división las lleva quien está asignado a esa sala.
+    const breakoutRoomId = body.breakoutRoomId || null;
+    if (user.rol !== "admin") {
+      const suya = breakoutRoomId
+        ? await getAssignmentForUser(liveClass.id, user.id)
+        : null;
+      if (!suya || suya.id !== breakoutRoomId) {
+        return NextResponse.json(
+          { error: "Solo el instructor puede dibujar en esta pizarra" },
+          { status: 403 },
+        );
+      }
+    }
+
+    try {
+      const document = await saveWhiteboardDoc(
+        liveClass.id,
+        body.documentJson,
+        user.id,
+        breakoutRoomId,
+        typeof body.baseUpdatedAt === "string" ? body.baseUpdatedAt : null,
+      );
+      return NextResponse.json({ document });
+    } catch (error) {
+      if (error instanceof WhiteboardConflict) {
+        return NextResponse.json(
+          { error: "La pizarra cambió en otro dispositivo", document: error.current },
+          { status: 409 },
+        );
+      }
+      throw error;
+    }
   } catch (error) {
     console.error("whiteboard POST:", error);
     return NextResponse.json({ error: "Error al guardar pizarra" }, { status: 500 });
