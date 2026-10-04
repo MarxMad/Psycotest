@@ -42,11 +42,12 @@ function BotonPrivy({ next }: { next?: string }) {
       const r = await fetch("/api/auth/privy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, next }),
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error ?? "No se pudo iniciar sesión");
-      router.push(next || d.next || "/admin");
+      // El servidor ya validó el destino contra el rol; no se sobreescribe.
+      router.push(d.next);
       router.refresh();
     } catch (e) {
       setError((e as Error).message);

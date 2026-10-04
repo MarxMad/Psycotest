@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import {
   createSessionToken,
-  homePathForUser,
   logAudit,
+  resolvePostLoginPath,
   setSessionCookie,
 } from "@/lib/auth";
 import { privyConfigurado, verificarToken } from "@/lib/privy";
@@ -20,7 +20,10 @@ export async function POST(request: Request) {
     );
   }
 
-  const { token } = (await request.json().catch(() => ({}))) as { token?: string };
+  const { token, next } = (await request.json().catch(() => ({}))) as {
+    token?: string;
+    next?: string;
+  };
 
   const identidad = await verificarToken(token);
   if (!identidad) {
@@ -44,7 +47,8 @@ export async function POST(request: Request) {
     await setSessionCookie(sesion);
     await logAudit(user.id, "login", "user", user.id, { via: "privy" });
 
-    return NextResponse.json({ user, next: homePathForUser(user) });
+    // El destino lo decide el servidor: es quien conoce el rol.
+    return NextResponse.json({ user, next: resolvePostLoginPath(user, next) });
   } catch (error) {
     console.error("[auth/privy]", error);
     return NextResponse.json({ error: "Error al iniciar sesión." }, { status: 500 });
