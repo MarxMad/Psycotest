@@ -56,14 +56,14 @@ export function TopNav() {
   }
 
   const enPanel = pathname.startsWith("/admin");
-  const enParticipantes = pathname.startsWith("/evaluacion/participantes");
+  const enParticipantes = pathname.startsWith("/admin/participantes");
   const enLogin = pathname.startsWith("/login");
 
   return (
     <nav className="topnav" aria-label="Navegación principal">
       {ready && user ? (
         <>
-          <NavLink href="/evaluacion/participantes" active={enParticipantes}>
+          <NavLink href="/admin/participantes" active={enParticipantes}>
             Participantes
           </NavLink>
           <div className="topnav-user">

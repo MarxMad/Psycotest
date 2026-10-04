@@ -230,7 +230,7 @@ export default function CleaverPage() {
                 <button type="button" className="btn btn-primary" onClick={() => iniciar(participante)}>
                   Comenzar la aplicación →
                 </button>
-                <Link href="/psycotest" className="btn">
+                <Link href="/evaluacion/acceso" className="btn">
                   Volver
                 </Link>
               </div>
