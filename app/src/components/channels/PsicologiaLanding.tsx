@@ -1,53 +1,104 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, onScroll } from "animejs";
+import { ArrowRight, Clock, Layers, MessageCircle, ShieldCheck } from "lucide-react";
 import type { ChannelDef } from "@/lib/channels";
-import type { ChannelPageContent } from "@/lib/channel-content";
-import { getChannelPlatformCtas } from "@/lib/channels";
+import type { ChannelPageContent, ChannelSection } from "@/lib/channel-content";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
-import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
+import { PRUEBAS } from "@/lib/pruebas-catalogo";
+import { menosMovimiento, useAparicion, useAparicionLista } from "@/lib/aparicion";
+import { Cifras, Declaracion, Pasos } from "./Secciones";
 import { Cotizador } from "./Cotizador";
-import { RadarBateria, SelloSociedad } from "./arte";
+import { PuertasPsico } from "./PuertasPsico";
+import { RadarVivo } from "./RadarVivo";
+import { BarraAccion } from "./BarraAccion";
+import { TituloVivo } from "./TituloVivo";
+import { SelloSociedad, Trama } from "./arte";
 import s from "./PsicologiaLanding.module.css";
 
-const INSTRUMENTOS = [
-  {
-    id: "papi",
-    name: "Inventario de Personalidad",
-    tag: "Rasgos y estilo de trabajo",
-    time: "~20 min",
-    blurb: "Cómo se conduce en el día a día: iniciativa, trato, tolerancia a la presión.",
+const pesos = (centavos: number) =>
+  new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+    maximumFractionDigits: 0,
+  }).format(centavos / 100);
+
+/** La prueba más barata marca el piso: sirve para anclar el precio desde la portada. */
+const DESDE = pesos(Math.min(...PRUEBAS.map((p) => p.precio)));
+
+const CONFIANZA = [
+  { icono: Layers, texto: `${PRUEBAS.length} instrumentos, una sola lectura` },
+  { icono: Clock, texto: "Informe en 72 h" },
+  { icono: ShieldCheck, texto: "Confidencial" },
+];
+
+/**
+ * Cada bloque de contenido cierra con la acción que le toca. Antes se leían
+ * tres secciones seguidas sin nada que tocar y el único botón vivía al final
+ * de la página.
+ */
+const QUE_SIGUE = [
+  "Definimos el puesto y qué instrumentos aplican.",
+  "Te mandamos los códigos a tu nombre para repartir.",
+  "Recibes el informe interpretado en 72 horas.",
+];
+
+const ACCION_SECCION: Record<string, { label: string; href: string; externo?: boolean }> = {
+  servicios: { label: "Ver precios y armar la evaluación", href: "#bateria" },
+  socioeconomicos: {
+    label: "Pedir un estudio socioeconómico",
+    href: whatsapp("Hola, necesito un estudio socioeconómico para un candidato."),
+    externo: true,
   },
-  {
-    id: "hartman",
-    name: "Axiología de Valores",
-    tag: "Valores y motivación",
-    time: "~15 min",
-    blurb: "Qué lo mueve de verdad y si embona con la cultura de tu organización.",
-  },
-  {
-    id: "mabe",
-    name: "Toma de Decisiones",
-    tag: "Criterio aplicado",
-    time: "~25 min",
-    blurb: "Qué información usa para decidir, qué riesgo acepta y qué tan consistente es.",
-  },
-  {
-    id: "cleaver",
-    name: "Compatibilidad Puesto–Persona",
-    tag: "Ajuste al puesto",
-    time: "~12 min",
-    blurb: "Qué exige el puesto contra lo que la persona ofrece, y dónde habrá fricción.",
-  },
-  {
-    id: "gerenciales",
-    name: "Estilos Gerenciales",
-    tag: "Conducción de equipos",
-    time: "~15 min",
-    blurb: "Cómo dirige, cómo delega y cómo sostiene el resultado con su equipo.",
-  },
-] as const;
+};
+
+/** Sección de contenido: encabezado que entra y tarjetas escalonadas. */
+function SeccionContenido({
+  section,
+  alterna,
+}: {
+  section: ChannelSection;
+  alterna: boolean;
+}) {
+  const cabecera = useAparicion<HTMLDivElement>({ y: 22 });
+  const tarjetas = useAparicionLista<HTMLDivElement>();
+  const accion = ACCION_SECCION[section.id];
+
+  return (
+    <section id={section.id} className={`${s.section} ${alterna ? s.sectionAlt : ""}`}>
+      <div ref={cabecera}>
+        {section.eyebrow && <p className={s.eyebrow}>{section.eyebrow}</p>}
+        <h2>{section.title}</h2>
+        <p className={s.sectionBody}>{section.body}</p>
+      </div>
+
+      {section.items && section.items.length > 0 && (
+        <div className={s.items} ref={tarjetas}>
+          {section.items.map((item, i) => (
+            <article key={item.title} className={s.item}>
+              <span className={s.itemNum}>{String(i + 1).padStart(2, "0")}</span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {accion && (
+        <a
+          className={s.enlaceAccion}
+          href={accion.href}
+          {...(accion.externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
+          {accion.label}
+          <ArrowRight size={16} aria-hidden />
+        </a>
+      )}
+    </section>
+  );
+}
 
 export function PsicologiaLanding({
   channel,
@@ -56,107 +107,126 @@ export function PsicologiaLanding({
   channel: ChannelDef;
   content: ChannelPageContent;
 }) {
-  const reduce = useReducedMotion();
-  const platformCtas = getChannelPlatformCtas(channel.id);
+  const portada = useRef<HTMLElement>(null);
+  const brillo = useRef<HTMLDivElement>(null);
+  const copia = useAparicion<HTMLDivElement>({ inmediato: true, y: 26 });
+  const panel = useAparicion<HTMLElement>({ inmediato: true, y: 18, retraso: 140 });
+  const instrumentos = useAparicionLista<HTMLUListElement>({ retraso: 340, separacion: 70, inmediato: true });
+  const brechaTexto = useAparicion<HTMLDivElement>({ y: 24 });
+  const brechaObra = useAparicion<HTMLDivElement>({ y: 24, retraso: 120 });
+  const cierre = useAparicion<HTMLDivElement>({ y: 24 });
+
+  // La portada se hunde un poco al bajar: la rejilla se va antes que el texto y
+  // el scroll se siente con profundidad sin robarle protagonismo a nada.
+  useEffect(() => {
+    const capa = brillo.current;
+    const zona = portada.current;
+    if (!capa || !zona || menosMovimiento()) return;
+
+    const animacion = animate(capa, {
+      translateY: [0, 110],
+      opacity: [1, 0.25],
+      ease: "linear",
+      autoplay: onScroll({
+        target: zona,
+        enter: "start start",
+        leave: "start end",
+        sync: 0.2,
+      }),
+    });
+
+    return () => {
+      animacion.revert();
+    };
+  }, []);
 
   return (
     <div className={s.page}>
-      <section className={s.hero} aria-label="Inicio Psicología Aplicada">
-        <div className={s.heroGlow} aria-hidden />
+      <section
+        className={s.hero}
+        id="acceso"
+        ref={portada}
+        aria-label={`Inicio ${channel.name}`}
+      >
+        <div className={s.heroGlow} ref={brillo} aria-hidden />
         <div className={s.heroGrid}>
-          <motion.div
-            className={s.copy}
-            initial={reduce ? false : { opacity: 0, y: 24 }}
-            animate={reduce ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          >
+          <div className={s.copy} ref={copia}>
             <p className={s.kicker}>{content.hero.brand}</p>
-            <h1>{content.hero.headline}</h1>
+            <TituloVivo texto={content.hero.headline} />
             <p className={s.lead}>{content.hero.lead}</p>
-            <div className={s.actions}>
-              <a className={s.btnPrimary} href="#acceso">
-                {content.hero.primaryCta.label}
-              </a>
-              <a className={s.btnGhost} href={content.hero.secondaryCta.href}>
-                {content.hero.secondaryCta.label}
-              </a>
-            </div>
-          </motion.div>
 
-          <motion.aside
-            className={s.heroPanel}
-            initial={reduce ? false : { opacity: 0, x: 20 }}
-            animate={reduce ? undefined : { opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            aria-label="Resumen de batería"
-          >
-            <p className={s.panelEyebrow}>Batería activa</p>
-            <ul className={s.panelList}>
-              {INSTRUMENTOS.map((item, i) => (
-                <li key={item.id}>
-                  <span className={s.panelIndex}>{String(i + 1).padStart(2, "0")}</span>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <em>{item.tag}</em>
-                  </div>
-                  <span className={s.panelTime}>{item.time}</span>
+            <ul className={s.confianza}>
+              {CONFIANZA.map(({ icono: Icono, texto }) => (
+                <li key={texto}>
+                  <Icono size={15} strokeWidth={2} aria-hidden />
+                  {texto}
                 </li>
               ))}
             </ul>
-            <a className={s.panelCta} href={evaluacion.acceso}>
-              Entrar con código →
+          </div>
+
+          <aside className={s.heroPanel} ref={panel} aria-label="Resumen de batería">
+            <p className={s.panelEyebrow}>Batería activa</p>
+            <ul className={s.panelList} ref={instrumentos}>
+              {PRUEBAS.map((item, i) => (
+                <li key={item.id}>
+                  <span className={s.panelIndex}>{String(i + 1).padStart(2, "0")}</span>
+                  <div>
+                    <strong>{item.nombre}</strong>
+                    <em>{item.etiqueta}</em>
+                  </div>
+                  <span className={s.panelTime}>~{item.minutos} min</span>
+                </li>
+              ))}
+            </ul>
+
+            <a className={s.panelCta} href="#bateria">
+              Desde {DESDE} por candidato
+              <ArrowRight size={15} aria-hidden />
             </a>
 
             <div className={s.respaldo}>
               <SelloSociedad className={s.sello} />
               <div>
                 <strong>Sociedad de Psicología Aplicada A.C.</strong>
-                <span>
-                  Instrumentos y criterios de interpretación respaldados por la asociación.
-                </span>
+                <span>Instrumentos y criterios de interpretación respaldados.</span>
               </div>
             </div>
-          </motion.aside>
+          </aside>
+        </div>
+
+        {/* Las dos puertas del canal, a lo ancho: es lo primero que hay que decidir.
+            En móvil se adelantan al panel —la decisión va antes que el detalle. */}
+        <div className={s.puertasZona}>
+          <PuertasPsico />
         </div>
       </section>
 
-      <section id="acceso" className={`${s.section} ${s.acceso}`}>
-        <p className={s.eyebrow}>Portal de acceso</p>
-        <h2>¿Vienes a presentar tu evaluación?</h2>
-        <p className={s.sectionBody}>
-          La empresa que te convocó te envió un código. Con él entras directo a las pruebas que te
-          corresponden — no necesitas crear cuenta ni preparar nada.
-        </p>
-        <div className={s.portalGrid}>
-          <a className={s.portalCard} href={evaluacion.acceso}>
-            <span className={s.portalTag}>Candidato</span>
-            <h3>Tengo un código</h3>
-            <p>
-              Ingresa tu código y tus datos para comenzar. Puedes pausar y retomar donde te quedaste.
+      <section id="brecha" className={s.brecha}>
+        <div className={s.brechaGrid}>
+          <div ref={brechaTexto}>
+            <p className={s.eyebrow}>Por qué se leen juntos</p>
+            <h2 className={s.tituloSplit}>Un instrumento solo no decide nada</h2>
+            <p className={s.sectionBody}>
+              Lo que importa no es cada eje por separado, sino la distancia entre lo que el puesto
+              exige y lo que la persona ofrece. Esa brecha es la que se interpreta — y la que te
+              dice dónde va a necesitar apoyo desde el primer mes.
             </p>
-            <span className={s.portalLink}>Ir a mi evaluación →</span>
-          </a>
-          <a className={`${s.portalCard} ${s.portalCardAdmin}`} href="#contacto">
-            <span className={s.portalTag}>Empresas</span>
-            <h3>Quiero evaluar candidatos</h3>
-            <p>
-              Te damos los códigos para tu proceso y el informe interpretado por un psicólogo en 72
-              horas.
+            <p className={s.sectionBody}>
+              Cambia de candidato y mira cómo se mueve el perfil contra el mismo puesto: es
+              exactamente la lectura que recibes por escrito.
             </p>
-            <span className={s.portalLink}>Solicitar una cotización →</span>
-          </a>
+            <a className={s.enlaceAccion} href="#bateria">
+              Armar mi evaluación
+              <ArrowRight size={16} aria-hidden />
+            </a>
+          </div>
+
+          <div ref={brechaObra}>
+            <RadarVivo />
+          </div>
         </div>
       </section>
-
-      <SplitObra obra={<RadarBateria />}>
-        <p className={s.eyebrow}>Por qué se leen juntos</p>
-        <h2 className={s.tituloSplit}>Un instrumento solo no decide nada</h2>
-        <p className={s.sectionBody}>
-          Lo que importa no es cada eje por separado, sino la distancia entre lo que el puesto
-          exige y lo que la persona ofrece. Esa brecha es la que se interpreta — y la que te dice
-          dónde va a necesitar apoyo desde el primer mes.
-        </p>
-      </SplitObra>
 
       <Cifras
         datos={[
@@ -199,74 +269,65 @@ export function PsicologiaLanding({
         }
 
         return (
-        <motion.section
-          key={section.id}
-          id={section.id}
-          className={`${s.section} ${idx % 2 === 1 ? s.sectionAlt : ""}`}
-          initial={reduce ? false : { opacity: 0, y: 20 }}
-          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-10% 0px" }}
-          transition={{ duration: 0.5 }}
-        >
-          {section.eyebrow && <p className={s.eyebrow}>{section.eyebrow}</p>}
-          <h2>{section.title}</h2>
-          <p className={s.sectionBody}>{section.body}</p>
-          {section.items && section.items.length > 0 && (
-            <div className={s.items}>
-              {section.items.map((item) => (
-                <article key={item.title} className={s.item}>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
-                </article>
-              ))}
-            </div>
-          )}
-        </motion.section>
+          <SeccionContenido key={section.id} section={section} alterna={idx % 2 === 1} />
         );
       })}
 
-      <section id="plataforma" className={`${s.section} ${s.platform}`}>
-        <p className={s.eyebrow}>Siguiente paso</p>
-        <h2>Por dónde empezar</h2>
-        <p className={s.sectionBody}>
-          Si ya traes código, entra directo. Si estás armando un proceso de selección, escríbenos y
-          te decimos qué instrumentos aplican a esa vacante.
-        </p>
-        <div className={s.platformGrid}>
-          {platformCtas.map((cta) => (
-            <a key={cta.href + cta.label} href={cta.href} className={s.platformCard}>
-              <strong>{cta.label}</strong>
-              <span>{cta.hint}</span>
-            </a>
-          ))}
+      <section id="contacto" className={s.contacto}>
+        <Trama variante="curvas" className={s.contactoTrama} />
+        <div className={s.contactoPanel} ref={cierre}>
+          <div>
+            <p className={s.eyebrow}>Contacto</p>
+            <h2>Dinos qué puesto necesitas cubrir</h2>
+            <p className={s.sectionBody}>
+              En una llamada corta definimos qué instrumentos aplican, si conviene el estudio
+              socioeconómico y en cuántos días tienes el informe. Sin costo.
+            </p>
+            <div className={s.contactoActions}>
+              <a
+                className={s.btnPrimary}
+                href={whatsapp("Hola, necesito evaluar candidatos para una vacante.")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <MessageCircle size={17} aria-hidden />
+                Escribir por WhatsApp
+              </a>
+              <a className={s.btnGhost} href={mailto("Solicito una evaluación de personal")}>
+                {CONTACTO.email}
+              </a>
+              <a className={s.btnGhost} href={tel()}>
+                {CONTACTO.phoneDisplay}
+              </a>
+            </div>
+            <p className={s.contactoNota}>
+              ¿Ya traes un código de tu empresa?{" "}
+              <a href={evaluacion.acceso}>Entra directo a tu evaluación</a>.
+            </p>
+          </div>
+
+          <aside className={s.queSigue} aria-label="Qué pasa después">
+            <p className={s.queSigueTitulo}>Qué pasa después</p>
+            <ol>
+              {QUE_SIGUE.map((paso, i) => (
+                <li key={paso}>
+                  <span>{String(i + 1).padStart(2, "0")}</span>
+                  {paso}
+                </li>
+              ))}
+            </ol>
+            <p className={s.queSiguePie}>Respondemos el mismo día hábil.</p>
+          </aside>
         </div>
       </section>
 
-      <section id="contacto" className={`${s.section} ${s.contacto}`}>
-        <p className={s.eyebrow}>Contacto</p>
-        <h2>Dinos qué puesto necesitas cubrir</h2>
-        <p className={s.sectionBody}>
-          En una llamada corta definimos qué instrumentos aplican, si conviene el estudio
-          socioeconómico y en cuántos días tienes el informe. Sin costo.
-        </p>
-        <div className={s.contactoActions}>
-          <a
-            className={s.btnPrimary}
-            href={whatsapp("Hola, necesito evaluar candidatos para una vacante.")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Escribir por WhatsApp
-          </a>
-          <a className={s.btnGhost} href={mailto("Solicito una evaluación de personal")}>
-            {CONTACTO.email}
-          </a>
-          <a className={s.btnGhost} href={tel()}>
-            {CONTACTO.phoneDisplay}
-          </a>
-        </div>
-      </section>
-
+      <BarraAccion
+        tema="psicologia"
+        titulo="Arma tu evaluación"
+        nota="Informe interpretado por un psicólogo en 72 h"
+        principal={{ label: "Ver precios", href: "#bateria" }}
+        secundario={{ label: "Tengo un código", href: evaluacion.acceso, externo: false }}
+      />
     </div>
   );
 }

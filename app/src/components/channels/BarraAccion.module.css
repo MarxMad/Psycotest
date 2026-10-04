@@ -1,4 +1,9 @@
 .barra {
+  /* Paleta por defecto: CEDUCT. */
+  --b-fondo: rgba(13, 13, 61, 0.92);
+  --b-acento: #e8c96a;
+  --b-acento-2: #c9a227;
+  --b-sobre-acento: #14145c;
   position: fixed;
   z-index: 60;
   left: 50%;
@@ -7,7 +12,7 @@
   transform: translate(-50%, 140%);
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
-  background: rgba(13, 13, 61, 0.92);
+  background: var(--b-fondo);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 28px 70px -30px rgba(0, 0, 0, 0.85);
@@ -33,7 +38,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #c9a227 0%, #f3dc92 100%);
+  background: linear-gradient(90deg, var(--b-acento-2) 0%, var(--b-acento) 100%);
   transform-origin: left center;
   transform: scaleX(0);
 }
@@ -88,7 +93,15 @@
 
 .principal {
   background: #fff;
-  color: #14145c;
+  color: var(--b-sobre-acento);
+}
+
+/* Psicología Aplicada trabaja sobre fondo frío y acento cálido. */
+.barra[data-tema="psicologia"] {
+  --b-fondo: rgba(14, 20, 28, 0.93);
+  --b-acento: #d4895a;
+  --b-acento-2: #a9643c;
+  --b-sobre-acento: #0e141c;
 }
 
 .principal svg {
@@ -96,7 +109,7 @@
 }
 
 .principal:hover {
-  background: #e8c96a;
+  background: var(--b-acento);
   transform: translateY(-2px);
 }
 

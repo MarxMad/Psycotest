@@ -10,6 +10,7 @@ import {
   descuentoPorVolumen,
 } from "@/lib/pruebas-catalogo";
 import { whatsapp } from "@/lib/contacto";
+import { menosMovimiento } from "@/lib/aparicion";
 import s from "./Cotizador.module.css";
 
 const pesos = (centavos: number) =>
@@ -18,13 +19,6 @@ const pesos = (centavos: number) =>
     currency: "MXN",
     maximumFractionDigits: 0,
   }).format(centavos / 100);
-
-function menosMovimiento() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
-}
 
 /**
  * Cotizador de evaluaciones.
@@ -54,6 +48,9 @@ export function Cotizador() {
       return;
     }
 
+    // Un pulso corto además del conteo: el ojo encuentra qué cambió.
+    animate(nodo, { scale: [1.05, 1], duration: 420, ease: "out(3)" });
+
     const objeto = { v: desde };
     const animacion = animate(objeto, {
       v: cuenta.total,
@@ -69,10 +66,15 @@ export function Cotizador() {
     };
   }, [cuenta.total]);
 
-  function alternar(id: string) {
+  function alternar(id: string, casilla?: HTMLElement | null) {
     setElegidas((previas) =>
       previas.includes(id) ? previas.filter((x) => x !== id) : [...previas, id],
     );
+
+    // La casilla rebota al tocarla: confirma el toque antes de que el precio
+    // termine de contar.
+    if (!casilla || menosMovimiento()) return;
+    animate(casilla, { scale: [1, 1.3, 1], duration: 420, ease: "out(3)" });
   }
 
   const nada = elegidas.length === 0;
@@ -113,9 +115,11 @@ export function Cotizador() {
                   className={s.prueba}
                   data-puesta={puesta}
                   aria-pressed={puesta}
-                  onClick={() => alternar(p.id)}
+                  onClick={(e) =>
+                    alternar(p.id, e.currentTarget.querySelector<HTMLElement>("[data-marca]"))
+                  }
                 >
-                  <span className={s.marca} aria-hidden>
+                  <span className={s.marca} data-marca aria-hidden>
                     {puesta && <Check size={13} strokeWidth={3} />}
                   </span>
                   <span className={s.pruebaTexto}>

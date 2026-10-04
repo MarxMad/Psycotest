@@ -1,25 +1,15 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useAparicion } from "@/lib/aparicion";
 import { Trama } from "./arte";
 import { Contador } from "./Contador";
 import s from "./Secciones.module.css";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
-
+/** Aparición al entrar en pantalla. El retraso se recibe en segundos. */
 function Reveal({ children, delay = 0 }: { children: ReactNode; delay?: number }) {
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      initial={reduce ? false : { opacity: 0, y: 26 }}
-      whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-12% 0px" }}
-      transition={{ duration: 0.65, delay, ease: EASE }}
-    >
-      {children}
-    </motion.div>
-  );
+  const caja = useAparicion<HTMLDivElement>({ y: 26, retraso: delay * 1000, duracion: 650 });
+  return <div ref={caja}>{children}</div>;
 }
 
 /** Una frase a gran escala. Corta el ritmo de las rejillas. */

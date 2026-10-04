@@ -194,6 +194,7 @@
 }
 
 .total {
+  display: inline-block;
   font-family: var(--ch-font-display);
   font-size: clamp(2rem, 5vw, 2.8rem);
   font-weight: 700;
