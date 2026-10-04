@@ -7,6 +7,7 @@ import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
 import { resolvePostLoginPath } from "@/lib/auth-rutas";
 import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
+import { PARAM_SALIDA } from "@/lib/salir";
 import s from "./login.module.css";
 
 type Rol = "admin" | "psicologo" | "aplicador";
@@ -16,6 +17,8 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const nextParam = params.get("next");
+  // Llega de pulsar «Salir»: hay que cerrar también la sesión de Privy.
+  const salir = params.get(PARAM_SALIDA) === "1";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -53,7 +56,7 @@ function LoginForm() {
       <span className="eyebrow">{APP_NAME}</span>
       <h1>Inicio de sesión</h1>
 
-      <PrivyLoginButton next={nextParam || undefined} />
+      <PrivyLoginButton next={nextParam || undefined} salir={salir} />
 
       <div className={s.separador}>
         <span>o con tu contraseña</span>

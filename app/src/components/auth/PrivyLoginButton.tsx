@@ -17,21 +17,23 @@ import s from "./PrivyLoginButton.module.css";
  * públicas sobre HTTP ("Embedded wallet is only available over HTTPS") y
  * cargaba su peso en cada visita sin hacer falta.
  */
-export function PrivyLoginButton({ next }: { next?: string }) {
+export function PrivyLoginButton({ next, salir }: { next?: string; salir?: boolean }) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
   if (!appId) return null;
 
   return (
     <PrivyProvider>
-      <BotonPrivy next={next} />
+      <BotonPrivy next={next} salir={salir} />
     </PrivyProvider>
   );
 }
 
-function BotonPrivy({ next }: { next?: string }) {
+function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   const router = useRouter();
   const { ready, authenticated, logout } = usePrivy();
   const [canjeando, setCanjeando] = useState(false);
+  /** Arranca cerrado cuando venimos de «Salir»: bloquea el canje desde el primer render. */
+  const [cerrando, setCerrando] = useState(Boolean(salir));
   const [error, setError] = useState<string | null>(null);
 
   const canjearSesion = useCallback(async () => {
@@ -61,17 +63,47 @@ function BotonPrivy({ next }: { next?: string }) {
 
   const { login } = useLogin({ onComplete: canjearSesion });
 
+  /**
+   * Venimos de pulsar «Salir»: antes de nada, se cierra también la sesión de
+   * Privy. Si no, el canje de abajo volvía a entrar al instante y «Salir»
+   * dejaba a la persona exactamente donde estaba, una y otra vez.
+   */
+  useEffect(() => {
+    if (!salir) return;
+    let vivo = true;
+
+    // Si el SDK no llega a estar listo —no carga, el app id está mal— el
+    // botón se quedaría deshabilitado para siempre. A los cinco segundos se
+    // desbloquea: sin sesión de Privy que cerrar, no hay bucle que evitar.
+    const limite = setTimeout(() => {
+      if (vivo) setCerrando(false);
+    }, 5000);
+
+    if (ready) {
+      void (async () => {
+        await logout().catch(() => {});
+        if (vivo) setCerrando(false);
+      })();
+    }
+
+    return () => {
+      vivo = false;
+      clearTimeout(limite);
+    };
+  }, [salir, ready, logout]);
+
   // Si Privy ya tenía la sesión abierta, se canjea sin pedir nada.
   useEffect(() => {
+    if (cerrando) return;
     if (ready && authenticated && !canjeando) void canjearSesion();
     // Solo al quedar listo: no re-disparar en cada render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ready, authenticated]);
+  }, [ready, authenticated, cerrando]);
 
-  if (!ready) {
+  if (!ready || cerrando) {
     return (
       <button type="button" className={s.boton} disabled>
-        Cargando…
+        {cerrando ? "Cerrando sesión…" : "Cargando…"}
       </button>
     );
   }

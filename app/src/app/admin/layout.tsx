@@ -6,6 +6,7 @@ import { Menu } from "lucide-react";
 import { Sidebar } from "@/components/admin/Sidebar";
 import { useAdminSidebar } from "@/hooks/useAdmin";
 import s from "./admin-layout.module.css";
+import { rutaDeSalida } from "@/lib/salir";
 
 interface AuthUser {
   nombre: string;
@@ -44,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const handleLogout = async () => {
     await fetch("/api/auth/login", { method: "DELETE" });
     setUser(null);
-    router.push("/login");
+    router.push(rutaDeSalida());
     router.refresh();
   };
 

@@ -8,6 +8,7 @@ import { SECCIONES_ALUMNO, TITULO_AREA } from "@/lib/area-alumno";
 import { FUENTES_CANAL } from "@/lib/channel-fonts";
 import { CHANNELS } from "@/lib/channels";
 import s from "./area.module.css";
+import { rutaDeSalida } from "@/lib/salir";
 
 /**
  * Cáscara de la zona privada. Hereda el color y la tipografía del canal por
@@ -30,7 +31,7 @@ export function AreaShell({
 
   async function salir() {
     await fetch("/api/auth/login", { method: "DELETE" });
-    router.push("/login");
+    router.push(rutaDeSalida());
     router.refresh();
   }
 
