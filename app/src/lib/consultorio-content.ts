@@ -127,36 +127,32 @@ export const ROADMAP = [
   { month: "Dic 2026", label: "Plataforma certificadora 100% operativa", done: false },
 ] as const;
 
-export const NAV_SCROLL = [
-  { label: "CONOCER", href: "/#conocer" },
-  { label: "Plataforma", href: "/#plataforma" },
-  { label: "Experiencias", href: "/#experiencias" },
-  { label: "Contacto", href: "/#contacto" },
+/* ------------------------------------------------------------------ *
+ * Navegación del área de alumno.
+ *
+ * Antes apuntaba a anclas de la portada (/#conocer, /#plataforma…) que
+ * dejaron de existir al rehacer la raíz: eran cuatro enlaces muertos.
+ * Ahora lleva a las secciones que el alumno realmente usa.
+ * ------------------------------------------------------------------ */
+
+export const NAV_ALUMNO = [
+  { label: "Mis cursos", href: "/consultorio/cursos" },
+  { label: "Clases en vivo", href: "/consultorio/clases-vivo" },
+  { label: "Mi expediente", href: "/consultorio/expediente" },
 ] as const;
 
-/** Botones siempre visibles en el header */
+/** Botones del extremo derecho del encabezado. */
 export const NAV_PRIMARY = [
   { label: "Acceder", href: "/login" },
-  { label: "Cursos", href: "/consultorio/cursos" },
 ] as const;
 
-/** Ítems del desplegable «Plataforma» */
-export const NAV_MORE = [
-  { label: "En vivo", href: "/consultorio/clases-vivo" },
-  { label: "Constancias", href: "/consultorio/constancias" },
-  { label: "Expediente", href: "/consultorio/expediente" },
-  { label: "Evaluación", href: "/evaluacion" },
+/** Enlaces secundarios del pie del área de alumno. */
+export const NAV_PIE = [
+  { label: "Verificar una constancia", href: "/verificar" },
+  { label: "Aviso legal", href: "/consultorio/legal" },
 ] as const;
 
-/** @deprecated Prefer NAV_PRIMARY + NAV_MORE */
-export const NAV_ACTIONS = [...NAV_PRIMARY, ...NAV_MORE] as const;
 
-/** @deprecated Prefer NAV_SCROLL + NAV_ACTIONS */
-export const NAV_LINKS = [
-  ...NAV_SCROLL,
-  { label: "Cursos", href: "/consultorio/cursos" },
-  { label: "Evaluación", href: "/#evaluacion" },
-] as const;
 
 export const HERO_STATS = [
   { value: "CONOCER", label: "Certificación oficial SEP" },

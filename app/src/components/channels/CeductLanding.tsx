@@ -154,7 +154,7 @@ export function CeductLanding({
               <a className={s.btnPrimarySolid} href="#contacto">
                 Quiero certificarme
               </a>
-              <a className={s.btnOutline} href="/consultorio/constancias">
+              <a className={s.btnOutline} href="/verificar">
                 Verificar una constancia
               </a>
             </div>

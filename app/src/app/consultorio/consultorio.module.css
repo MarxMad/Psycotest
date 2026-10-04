@@ -1593,3 +1593,25 @@
   background: linear-gradient(180deg, #93c5fd, var(--c-blue));
   opacity: 0.85;
 }
+
+/* ---------- sección activa en el área de alumno ---------- */
+
+.navLink[data-activo],
+.mobileLink[data-activo] {
+  color: var(--c-blue);
+  font-weight: 650;
+}
+
+.navLink[data-activo] {
+  position: relative;
+}
+
+.navLink[data-activo]::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0.75rem;
+  bottom: 0.1rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c-blue);
+}

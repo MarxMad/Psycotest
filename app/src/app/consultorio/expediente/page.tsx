@@ -194,7 +194,7 @@ export default function MiExpedientePage() {
           )}
 
           <p className={styles.muted} style={{ marginTop: "2rem" }}>
-            <Link href="/consultorio/constancias">Ver constancias</Link>
+            <Link href="/verificar">Ver constancias</Link>
             {" · "}
             <Link href="/consultorio/legal">Documentos legales</Link>
           </p>

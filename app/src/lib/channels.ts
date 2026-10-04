@@ -224,7 +224,7 @@ export function getChannelPlatformCtas(
     ceduct: [
       { label: "Diplomados", href: "/consultorio/cursos", hint: "Formación con seguimiento" },
       { label: "Expedientes", href: "/consultorio/expediente", hint: "Gestión del candidato ECE" },
-      { label: "Constancias", href: "/consultorio/constancias", hint: "Emisión y verificación" },
+      { label: "Constancias", href: "/verificar", hint: "Emisión y verificación" },
     ],
     psicologia: [
       { label: "Entrar con código", href: "/evaluacion/acceso", hint: "Portal del candidato" },

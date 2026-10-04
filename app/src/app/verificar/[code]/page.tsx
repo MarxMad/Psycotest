@@ -44,7 +44,7 @@ export default function VerificarPage() {
           {result && !result.valid && (
             <div className={styles.card}>
               <p>No se encontró una constancia válida con ese código.</p>
-              <Link href="/consultorio/constancias" className={styles.btnPrimary}>
+              <Link href="/verificar" className={styles.btnPrimary}>
                 Ir a constancias
               </Link>
             </div>
@@ -69,7 +69,7 @@ export default function VerificarPage() {
                 <a className={styles.btnPrimary} href={`/api/certificates/${code}/pdf`}>
                   Descargar PDF
                 </a>
-                <Link href="/consultorio/constancias" className={styles.btnSecondary}>
+                <Link href="/verificar" className={styles.btnSecondary}>
                   Más información
                 </Link>
               </div>

@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
       },
       { source: "/evaluacion/participantes", destination: "/admin/participantes", permanent: true },
       { source: "/psycotest/:path*", destination: "/evaluacion/:path*", permanent: true },
+      // La verificación de constancias es pública: salió del área de alumno.
+      { source: "/consultorio/constancias", destination: "/verificar", permanent: true },
       // El módulo de evaluación no tiene portada: el candidato entra con su código.
       { source: "/evaluacion", destination: "/evaluacion/acceso", permanent: false },
     ];

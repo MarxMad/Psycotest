@@ -4,10 +4,8 @@ import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
-import {
-  getChannelFromHost,
-  isPlatformPath,
-} from "@/lib/channels";
+import { getChannelFromHost, isPlatformPath } from "@/lib/channels";
+import { esSoloAdmin, operaElPanel, type Rol } from "@/lib/auth-rutas";
 
 const COOKIE = "psycotest_session";
 
@@ -107,13 +105,12 @@ export async function middleware(request: NextRequest) {
     const rol = payload.rol as string | undefined;
 
     // El aplicador no opera el panel: solo acompaña la aplicación de pruebas.
-    if (rol !== "admin" && rol !== "psicologo") {
+    if (!operaElPanel(rol as Rol)) {
       return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
     }
 
-    // Secciones reservadas al administrador: personas, dinero y marca.
-    const soloAdmin = ["/admin/usuarios", "/admin/pagos", "/admin/marketing"];
-    if (rol !== "admin" && soloAdmin.some((r) => pathname.startsWith(r))) {
+    // Personas, dinero y marca quedan para el administrador.
+    if (rol !== "admin" && esSoloAdmin(pathname)) {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
 

@@ -1,0 +1,101 @@
+.main {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background: var(--surface);
+}
+
+.card {
+  width: 100%;
+  max-width: 32rem;
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-xl);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--brand-bright);
+}
+
+.card h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.lead {
+  margin: 0.85rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
+}
+
+.form input {
+  flex: 1 1 14rem;
+  min-width: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9375rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.form input:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 1px;
+}
+
+.form button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--r);
+  background: var(--brand);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.form button:hover:not(:disabled) {
+  background: var(--brand-bright);
+}
+
+.form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pie {
+  margin: 1.5rem 0 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.pie a {
+  color: var(--brand-bright);
+  font-weight: 600;
+}

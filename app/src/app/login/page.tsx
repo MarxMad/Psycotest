@@ -6,23 +6,12 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
+import { resolvePostLoginPath } from "@/lib/auth-rutas";
 import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
 import s from "./login.module.css";
 
-type LoginUser = { id: string; email: string; nombre: string; rol: string };
-
-function homeForRole(rol: string) {
-  return rol === "admin" ? "/admin" : "/consultorio/cursos";
-}
-
-function resolveNext(rol: string, next: string | null) {
-  const fallback = homeForRole(rol);
-  if (!next || !next.startsWith("/") || next.startsWith("//")) return fallback;
-  if (next.startsWith("/admin") || next.startsWith("/participantes")) {
-    return rol === "admin" ? next : fallback;
-  }
-  return next;
-}
+type Rol = "admin" | "psicologo" | "aplicador";
+type LoginUser = { id: string; email: string; nombre: string; rol: Rol };
 
 function LoginForm() {
   const router = useRouter();
@@ -49,8 +38,8 @@ function LoginForm() {
       return;
     }
     const data = (await res.json()) as { user?: LoginUser };
-    const rol = data.user?.rol ?? "psicologo";
-    router.push(resolveNext(rol, nextParam));
+    const rol: Rol = data.user?.rol ?? "psicologo";
+    router.push(resolvePostLoginPath({ rol }, nextParam));
     router.refresh();
   }
 
