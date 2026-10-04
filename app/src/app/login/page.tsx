@@ -59,11 +59,6 @@ function LoginForm() {
       <div className={s.separador}>
         <span>o con tu contraseña</span>
       </div>
-      <p className={s.sub}>
-        Portal único para miembros. Según tu cuenta entrarás al panel de administración o a tus
-        cursos.
-      </p>
-
       <label>
         Correo
         <input
@@ -107,9 +102,6 @@ function LoginForm() {
         {loading ? "Entrando…" : "Entrar"}
       </motion.button>
 
-      <p className={s.hint}>
-        ¿Primera vez? Entra con el correo que te dio el administrador.
-      </p>
       <Link href="/" className={s.back}>
         ← Volver al inicio
       </Link>

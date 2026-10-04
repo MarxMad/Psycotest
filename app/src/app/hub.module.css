@@ -121,10 +121,9 @@
   background: var(--admin-bg);
 }
 
-/* Anchos fijos para que cifras y botones queden en columna entre filas */
 @media (min-width: 860px) {
   .fila {
-    grid-template-columns: minmax(0, 1fr) 13rem 15rem;
+    grid-template-columns: minmax(0, 1fr) 9rem;
   }
 }
 

@@ -88,14 +88,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  /**
-   * El índice de marcas en la raíz es interno: desde ahí Martín entra a
-   * cualquiera de sus cuatro sitios y a su administración. Con dominio
-   * propio el público llega por subdominio, nunca al apex.
-   */
-  const esIndiceInterno = pathname === "/";
-
-  if (!pathname.startsWith("/admin") && !esIndiceInterno) {
+  // Sólo el panel exige sesión. La raíz es el índice público de marcas.
+  if (!pathname.startsWith("/admin")) {
     return NextResponse.next();
   }
 
