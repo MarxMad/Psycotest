@@ -2,7 +2,6 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
@@ -102,9 +101,6 @@ function LoginForm() {
         {loading ? "Entrando…" : "Entrar"}
       </motion.button>
 
-      <Link href="/" className={s.back}>
-        ← Volver al inicio
-      </Link>
     </motion.form>
   );
 }

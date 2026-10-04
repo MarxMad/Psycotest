@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { channelPublicUrl } from "@/lib/channels";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { BackLink } from "@/components/ui/BackLink";
 import { PhaseTransition } from "@/components/ui/PhaseTransition";
@@ -167,7 +168,7 @@ export default function MabePage() {
               )}
 
               <div className={s.row}>
-                <Link href="/" className="btn">
+                <Link href={channelPublicUrl("psicologia")} className="btn">
                   Volver
                 </Link>
                 <button type="button" className="btn btn-primary" onClick={iniciar}>

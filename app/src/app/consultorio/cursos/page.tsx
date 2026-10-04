@@ -111,8 +111,8 @@ export default async function CursosCatalogPage() {
                 <Link href="/consultorio/ingreso" className={c.emptyPrimary}>
                   Acceder
                 </Link>
-                <Link href="/" className={c.emptySecondary}>
-                  Volver al inicio
+                <Link href="/mi-cuenta" className={c.emptySecondary}>
+                  Ir a mi cuenta
                 </Link>
               </div>
             </div>

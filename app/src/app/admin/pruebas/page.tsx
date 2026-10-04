@@ -95,7 +95,7 @@ export default function PruebasPage() {
               <KeyRound size={16} />
               Códigos
             </Link>
-            <Link href="/" className="btn btn-primary">
+            <Link href="/admin/participantes" className="btn btn-primary">
               <Plus size={16} />
               Nueva Evaluación
             </Link>
@@ -140,7 +140,7 @@ export default function PruebasPage() {
             title="No hay sesiones guardadas"
             description="Las evaluaciones aparecerán aquí una vez aplicadas"
             action={
-              <Link href="/" className="btn btn-primary">
+              <Link href="/admin/participantes" className="btn btn-primary">
                 Aplicar Prueba
               </Link>
             }

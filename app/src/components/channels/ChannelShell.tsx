@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import type { ChannelDef } from "@/lib/channels";
+import { channelPublicUrl, type ChannelDef } from "@/lib/channels";
 import { FUENTES_CANAL } from "@/lib/channel-fonts";
 import s from "./ChannelShell.module.css";
 
@@ -28,7 +28,7 @@ export function ChannelShell({
           channel.id === "ceduct" ? s.navCeduct : channel.id === "psicologia" ? s.navPsico : ""
         }`}
       >
-        <a href="/" className={s.brand}>
+        <a href={channelPublicUrl(channel.id)} className={s.brand}>
           {channel.logo ? (
             <img
               src={channel.logo}

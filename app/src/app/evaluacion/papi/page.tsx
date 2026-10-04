@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { channelPublicUrl } from "@/lib/channels";
 import { motion } from "framer-motion";
 import items from "@/data/papi-items.json";
 import { AmbientBackground } from "@/components/AmbientBackground";
@@ -194,7 +195,7 @@ export default function Papi() {
             <button className="btn btn-primary" onClick={() => iniciar(participante)}>
               Comenzar la aplicación →
             </button>
-            <Link href="/" className="btn">Volver</Link>
+            <Link href={channelPublicUrl("psicologia")} className="btn">Volver</Link>
           </div>
             </div>
           </PhaseTransition>

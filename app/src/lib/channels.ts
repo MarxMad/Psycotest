@@ -140,11 +140,10 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     primaryCta: { label: "Entrar con código", href: "#acceso" },
     secondaryCta: { label: "Ver batería", href: "#bateria" },
     nav: [
-      { label: "Inicio", href: "/" },
       { label: "Acceso", href: "#acceso" },
       { label: "Cómo funciona", href: "#tres-pasos" },
       { label: "Batería", href: "#bateria" },
-      { label: "Diplomados", href: "/diplomados" },
+      { label: "Estudios socioeconómicos", href: "#socioeconomicos" },
       { label: "Contacto", href: "#contacto" },
     ],
   },
@@ -155,7 +154,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     legalName: "Ingeniería de Grupos Efectivos",
     tagline: "Cursos · Capacitación · Consultoría",
     description:
-      "Cursos, talleres, diplomados, conferencias y consultoría organizacional para el sector público y la iniciativa privada.",
+      "Cursos, talleres, conferencias y consultoría organizacional para el sector público y la iniciativa privada.",
     accentLabel: "Capacitación",
     theme: {
       fontDisplay: '"Outfit", "Space Grotesk", sans-serif',
@@ -240,18 +239,18 @@ export function getChannelPlatformCtas(
       {
         label: "Psicología Aplicada",
         href: channelPublicUrl("psicologia"),
-        hint: "Evaluación y diplomados",
+        hint: "Evaluación y selección de personal",
       },
       { label: "IGE", href: channelPublicUrl("ige"), hint: "Cursos y consultoría" },
     ],
     ceduct: [
-      { label: "Diplomados", href: "/consultorio/cursos", hint: "Formación con seguimiento" },
+      { label: "Diplomados", href: "/diplomados", hint: "Catálogo e inscripción" },
       { label: "Expedientes", href: "/consultorio/expediente", hint: "Gestión del candidato ECE" },
       { label: "Constancias", href: "/verificar", hint: "Emisión y verificación" },
     ],
     psicologia: [
       { label: "Entrar con código", href: "/evaluacion/acceso", hint: "Portal del candidato" },
-      { label: "Diplomados de 90 horas", href: "/consultorio/cursos", hint: "Formación para evaluar con criterio" },
+      { label: "Ver la batería", href: "#bateria", hint: "Qué mide cada instrumento" },
       { label: "Solicitar evaluación", href: "#contacto", hint: "Cotiza tu proceso de selección" },
     ],
     ige: [

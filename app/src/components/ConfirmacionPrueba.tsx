@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { channelPublicUrl } from "@/lib/channels";
 import { CheckCircle2 } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "./ConfirmacionPrueba.module.css";
@@ -52,7 +53,7 @@ export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn }: 
           cuando esté listo.
         </p>
 
-        <Link href="/" className="btn btn-primary">
+        <Link href={channelPublicUrl("psicologia")} className="btn btn-primary">
           Volver al inicio
         </Link>
       </div>

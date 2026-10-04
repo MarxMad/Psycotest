@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -30,10 +29,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       {!hide ? (
         <header className="topbar">
           <div className="topbar-in">
-            <Link href="/" className="brand" title={APP_NAME}>
+            {/* Rótulo, no enlace: el índice de marcas es sólo demo y no debe
+                alcanzarse desde ninguna página pública. */}
+            <span className="brand" title={APP_NAME}>
               <BrandDot />
               <span className="brand-text">{APP_NAME}</span>
-            </Link>
+            </span>
             <div className="topbar-actions">
               <ThemeToggle />
               <TopNav />

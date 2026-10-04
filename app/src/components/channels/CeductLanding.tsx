@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
@@ -8,17 +7,15 @@ import type { Diplomado } from "@/lib/diplomados-formato";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { RejillaDiplomados } from "@/components/ceduct/Catalogo";
 import { Cifras, Pasos } from "./Secciones";
-import { SelloClave } from "./arte";
+import { SelloClave, TramaCertificado } from "./arte";
 import s from "./CeductLanding.module.css";
 
-const VIDEO_SRC = "/media/hero-bg.mp4";
-const POSTER_SRC = "/media/hero-poster.jpg";
 const LOGO = "/ceduct/logo-ceduct.png";
 
 type Area = { slug: string; nombre: string; total: number };
 
 /** Las secciones de contenido que esta portada compone a mano. */
-const PROPIAS = new Set(["diplomados", "certificaciones", "proceso", "contacto"]);
+const PROPIAS = new Set(["diplomados", "certificaciones", "estandares", "proceso", "contacto"]);
 
 export function CeductLanding({
   channel,
@@ -32,56 +29,21 @@ export function CeductLanding({
   areas?: Area[];
 }) {
   const reduce = useReducedMotion();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoReady, setVideoReady] = useState(false);
 
   const seccion = (id: string) => content.sections.find((x) => x.id === id);
   const proceso = seccion("proceso");
   const certificaciones = seccion("certificaciones");
   const contacto = seccion("contacto");
   const diplomadosTxt = seccion("diplomados");
+  const estandares = seccion("estandares");
   const otras = content.sections.filter((x) => !PROPIAS.has(x.id));
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || reduce) return;
-    const play = () => {
-      video.play().catch(() => {
-        /* autoplay bloqueado: queda el póster */
-      });
-    };
-    play();
-    video.addEventListener("loadeddata", play);
-    return () => video.removeEventListener("loadeddata", play);
-  }, [reduce]);
 
   return (
     <div className={s.page}>
       {/* ---------- Portada: manda el producto ---------- */}
       <section className={s.hero} aria-label={`Inicio ${channel.name}`}>
         <div className={s.heroMedia} aria-hidden>
-          <div
-            className={s.heroPoster}
-            style={{ backgroundImage: `url(${POSTER_SRC})` }}
-            data-ready={videoReady ? "true" : undefined}
-          />
-          {!reduce ? (
-            <video
-              ref={videoRef}
-              className={s.heroVideo}
-              data-ready={videoReady ? "true" : undefined}
-              poster={POSTER_SRC}
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="metadata"
-              onCanPlay={() => setVideoReady(true)}
-              onPlaying={() => setVideoReady(true)}
-            >
-              <source src={VIDEO_SRC} type="video/mp4" />
-            </video>
-          ) : null}
+          <TramaCertificado className={s.heroTrama} />
           <div className={s.heroScrim} />
           <div className={s.heroVignette} />
         </div>
@@ -213,6 +175,48 @@ export function CeductLanding({
               ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* ---------- Qué competencias certificamos ---------- */}
+      {estandares && (
+        <section className={s.section} id="estandares">
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-12% 0px" }}
+            transition={{ duration: 0.55 }}
+          >
+            <p className={s.eyebrow}>{estandares.eyebrow}</p>
+            <h2>{estandares.title}</h2>
+            <p className={s.sectionBody}>{estandares.body}</p>
+          </motion.div>
+
+          <ul className={s.estandares}>
+            {(estandares.items ?? []).map((item, i) => (
+              <motion.li
+                key={item.title}
+                className={s.estandar}
+                initial={reduce ? false : { opacity: 0, y: 10 }}
+                whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: Math.min(i * 0.045, 0.36), duration: 0.35 }}
+              >
+                <span className={s.estandarNum} aria-hidden>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className={s.estandarNombre}>{item.title}</span>
+                <a
+                  className={s.estandarCta}
+                  href={whatsapp(`Hola, me interesa certificarme en: ${item.title}.`)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Solicitar
+                </a>
+              </motion.li>
+            ))}
+          </ul>
         </section>
       )}
 

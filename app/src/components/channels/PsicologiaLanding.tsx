@@ -161,8 +161,8 @@ export function PsicologiaLanding({
         datos={[
           { valor: "5", etiqueta: "Instrumentos que integran la batería completa" },
           { valor: "72 h", etiqueta: "Entrega del informe una vez aplicada" },
-          { valor: "90 h", etiqueta: "Duración de los diplomados profesionales" },
           { valor: "En línea", etiqueta: "El candidato responde desde donde esté" },
+          { valor: "Confidencial", etiqueta: "Resultados sólo para quien solicitó la evaluación" },
         ]}
       />
 

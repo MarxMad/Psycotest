@@ -90,11 +90,11 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
           },
           {
             title: "Psicología Aplicada",
-            text: "Batería psicológica, selección de personal, estudios socioeconómicos y diplomados de 90 horas.",
+            text: "Batería psicológica, selección de personal y estudios socioeconómicos.",
           },
           {
             title: "Ingeniería de Grupos Efectivos",
-            text: "Cursos, talleres, diplomados, conferencias y consultoría organizacional.",
+            text: "Cursos, talleres, conferencias y consultoría organizacional.",
           },
         ],
       },
@@ -187,6 +187,23 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
         ],
       },
       {
+        id: "estandares",
+        eyebrow: "Qué certificamos",
+        title: "Las competencias que podemos certificarte",
+        body: "Éstas son las certificaciones que emitimos hoy. Si la tuya no está en la lista, pregúntanos: el catálogo de estándares es amplio y podemos revisar cuál te corresponde.",
+        items: [
+          { title: "Sesiones de Coach", text: "" },
+          { title: "Atención al ciudadano", text: "" },
+          { title: "Atención a comensales", text: "" },
+          { title: "Recepción y atención al huésped", text: "" },
+          { title: "Atención en adicciones", text: "" },
+          { title: "Cursos de formación en línea", text: "" },
+          { title: "Tutoría de cursos y diplomados", text: "" },
+          { title: "Cursos de formación presencial grupal", text: "" },
+          { title: "Evaluación de competencias", text: "" },
+        ],
+      },
+      {
         id: "contacto",
         eyebrow: "Contacto",
         title: "Empieza por una llamada de quince minutos",
@@ -214,7 +231,7 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
       {
         id: "servicios",
         eyebrow: "Servicios",
-        title: "Cuatro formas de dejar de contratar a ciegas",
+        title: "Tres formas de dejar de contratar a ciegas",
         body: "Puedes contratar un servicio suelto o el proceso completo: perfil del puesto, batería, verificación en campo y recomendación final por escrito.",
         items: [
           {
@@ -228,10 +245,6 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
           {
             title: "Estudios socioeconómicos",
             text: "Visita domiciliaria, verificación de referencias y dictamen con nivel de riesgo. Lo que se comprueba en campo.",
-          },
-          {
-            title: "Diplomados de 90 horas",
-            text: "Formación para psicólogos y responsables de capital humano que quieren evaluar con criterio propio.",
           },
         ],
       },
@@ -275,37 +288,13 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
           },
         ],
       },
-      {
-        id: "diplomados",
-        eyebrow: "Formación",
-        title: "Diplomados de 90 horas",
-        body: "Noventa horas para dejar de aplicar instrumentos a ciegas. Aprendes a elegir el instrumento, leer el resultado y sostener tu recomendación frente a la dirección.",
-        items: [
-          {
-            title: "Fundamentos",
-            text: "Qué mide cada instrumento y qué no. Ética y manejo de información reservada.",
-          },
-          {
-            title: "Aplicación",
-            text: "Encuadre con el evaluado y los errores que invalidan una aplicación.",
-          },
-          {
-            title: "Interpretación",
-            text: "Lectura integrada de los cinco instrumentos con casos reales y discusión guiada.",
-          },
-          {
-            title: "Entrega",
-            text: "Redacción del informe profesional y cómo presentar hallazgos a dirección.",
-          },
-        ],
-      },
     ],
   },
   ige: {
     channelId: "ige",
     seoTitle: "Ingeniería de Grupos Efectivos — Capacitación y consultoría",
     seoDescription:
-      "Cursos, talleres, diplomados, conferencias y consultoría organizacional para el sector público y la iniciativa privada.",
+      "Cursos, talleres, conferencias y consultoría organizacional para el sector público y la iniciativa privada.",
     published: true,
     updatedAt: new Date().toISOString(),
     hero: {
@@ -328,8 +317,8 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
             text: "En tus instalaciones, con tu gente y con tus casos. El equipo sale con acuerdos escritos, no con apuntes.",
           },
           {
-            title: "Diplomado",
-            text: "Programas extensos para desarrollar una competencia completa y dejar capacidad instalada en el área.",
+            title: "Programa largo",
+            text: "Varias sesiones encadenadas para desarrollar una competencia completa y dejar capacidad instalada en el área.",
           },
           {
             title: "Cursos públicos",
