@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { animate, stagger } from "animejs";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { animate, createLayout, stagger } from "animejs";
 import { ArrowRight } from "lucide-react";
 import s from "./RutaCertificacion.module.css";
 
@@ -70,6 +70,7 @@ export function RutaCertificacion() {
   const [activa, setActiva] = useState(0);
   const lista = useRef<HTMLOListElement>(null);
   const seccion = useRef<HTMLElement>(null);
+  const reacomodo = useRef<ReturnType<typeof createLayout> | null>(null);
   const [dentro, setDentro] = useState(false);
 
   useEffect(() => {
@@ -91,30 +92,66 @@ export function RutaCertificacion() {
     return () => observador.disconnect();
   }, []);
 
-  // Los pasos de la etapa entran escalonados cada vez que se cambia de etapa.
-  const animarPasos = useCallback(() => {
+  // Las etapas no tienen el mismo número de pasos (tres, cuatro, tres), así
+  // que al cambiar la columna crecía o encogía de golpe. Se mide antes y se
+  // acompaña el cambio.
+  useEffect(() => {
+    const nodo = lista.current;
+    if (!nodo) return;
+    reacomodo.current = createLayout(nodo, { children: "[data-paso]" });
+    return () => {
+      reacomodo.current?.revert();
+      reacomodo.current = null;
+    };
+  }, []);
+
+  const elegir = useCallback((i: number) => {
+    reacomodo.current?.record();
+    setActiva(i);
+  }, []);
+
+  /**
+   * Dos animaciones distintas sobre los mismos nodos, y nunca a la vez:
+   * la primera vez que la sección asoma, los pasos entran escalonados; a
+   * partir de ahí, cambiar de etapa es un reacomodo medido.
+   */
+  const yaEntraron = useRef(false);
+
+  useLayoutEffect(() => {
     const nodos = lista.current?.querySelectorAll<HTMLElement>("[data-paso]");
-    if (!nodos?.length) return;
+    if (!dentro || !nodos?.length) return;
+
     if (menosMovimiento()) {
       nodos.forEach((n) => {
         n.style.opacity = "1";
         n.style.transform = "none";
       });
+      yaEntraron.current = true;
       return;
     }
-    animate(Array.from(nodos), {
-      opacity: [0, 1],
-      translateY: [14, 0],
-      duration: 480,
-      delay: stagger(70),
-      ease: "out(3)",
-    });
-  }, []);
 
-  useEffect(() => {
-    if (!dentro) return;
-    animarPasos();
-  }, [activa, dentro, animarPasos]);
+    if (!yaEntraron.current) {
+      yaEntraron.current = true;
+      animate(Array.from(nodos), {
+        opacity: [0, 1],
+        translateY: [14, 0],
+        duration: 480,
+        delay: stagger(70),
+        ease: "out(3)",
+      });
+      return;
+    }
+
+    // Entrar y salir solo admite opacidad en esta versión del layout: `y` y
+    // `scale` se ignoran en silencio. Lo que importa igualmente es que la
+    // columna ya no salta al pasar de tres pasos a cuatro.
+    reacomodo.current?.animate({
+      duration: 420,
+      ease: "out(3)",
+      enterFrom: { opacity: 0 },
+      leaveTo: { opacity: 0 },
+    });
+  }, [activa, dentro]);
 
   const etapa = ETAPAS[activa];
 
@@ -146,7 +183,7 @@ export function RutaCertificacion() {
                 className={s.etapa}
                 data-activa={activo}
                 style={{ ["--i" as string]: i }}
-                onClick={() => setActiva(i)}
+                onClick={() => elegir(i)}
               >
                 <span className={s.ordinal} aria-hidden>
                   {e.ordinal}

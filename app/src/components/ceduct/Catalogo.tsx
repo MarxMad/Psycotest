@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { animate, stagger } from "animejs";
+import { animate, createLayout, stagger } from "animejs";
 import { Clock, GraduationCap, MapPin } from "lucide-react";
 import {
   MODALIDAD_LABEL,
@@ -77,6 +77,8 @@ export function RejillaDiplomados({
 }) {
   const [area, setArea] = useState<string>("todos");
   const rejilla = useRef<HTMLDivElement>(null);
+  const reacomodo = useRef<ReturnType<typeof createLayout> | null>(null);
+  const yaEntraron = useRef(false);
 
   const visibles = useMemo(
     () =>
@@ -86,18 +88,57 @@ export function RejillaDiplomados({
     [area, diplomados],
   );
 
-  // Las fichas entran escalonadas al cargar y al cambiar de filtro.
+  /** Columnas que la rejilla tiene ahora mismo, para escalonar en dos ejes. */
+  function columnas(nodo: HTMLElement): number {
+    const tracks = getComputedStyle(nodo).gridTemplateColumns.split(" ").filter(Boolean);
+    return Math.max(1, tracks.length);
+  }
+
+  // Al cambiar de área las fichas se reacomodan: anime.js mide dónde estaban
+  // y las lleva a su sitio nuevo, en vez de que la rejilla salte de golpe.
   useEffect(() => {
-    const nodos =
-      rejilla.current?.querySelectorAll<HTMLElement>("[data-ficha]");
-    if (!nodos?.length) return;
+    const nodo = rejilla.current;
+    if (!nodo) return;
+    reacomodo.current = createLayout(nodo, { children: "[data-ficha]" });
+    return () => {
+      reacomodo.current?.revert();
+      reacomodo.current = null;
+    };
+  }, []);
+
+  const cambiarArea = useCallback((nueva: string) => {
+    // Hay que medir antes de que React vuelva a pintar.
+    reacomodo.current?.record();
+    setArea(nueva);
+  }, []);
+
+  useLayoutEffect(() => {
+    const nodo = rejilla.current;
+    if (!nodo) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    animate(Array.from(nodos), {
-      opacity: [0, 1],
-      translateY: [18, 0],
+
+    // La primera vez entran escalonadas en diagonal; después se reacomodan.
+    if (!yaEntraron.current) {
+      yaEntraron.current = true;
+      const fichas = Array.from(nodo.querySelectorAll<HTMLElement>("[data-ficha]"));
+      if (!fichas.length) return;
+      const cols = columnas(nodo);
+      animate(fichas, {
+        opacity: [0, 1],
+        scale: [0.94, 1],
+        translateY: [20, 0],
+        duration: 560,
+        delay: stagger(55, { grid: [cols, Math.ceil(fichas.length / cols)], from: "first" }),
+        ease: "out(3)",
+      });
+      return;
+    }
+
+    reacomodo.current?.animate({
       duration: 520,
-      delay: stagger(55),
       ease: "out(3)",
+      enterFrom: { opacity: 0 },
+      leaveTo: { opacity: 0 },
     });
   }, [area]);
 
@@ -108,7 +149,7 @@ export function RejillaDiplomados({
           <button
             type="button"
             className={`${s.filtro} ${area === "todos" ? s.filtroActivo : ""}`}
-            onClick={() => setArea("todos")}
+            onClick={() => cambiarArea("todos")}
             aria-pressed={area === "todos"}
           >
             Todos <span>{diplomados.length}</span>
@@ -118,7 +159,7 @@ export function RejillaDiplomados({
               key={a.slug}
               type="button"
               className={`${s.filtro} ${area === a.slug ? s.filtroActivo : ""}`}
-              onClick={() => setArea(a.slug)}
+              onClick={() => cambiarArea(a.slug)}
               aria-pressed={area === a.slug}
             >
               {a.nombre} <span>{a.total}</span>
