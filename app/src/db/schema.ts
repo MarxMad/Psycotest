@@ -49,6 +49,8 @@ export const accessCodes = pgTable("access_codes", {
   id: text("id").primaryKey(),
   label: text("label").notNull(),
   empresa: text("empresa"),
+  /** Cuenta de la empresa que contrató; le da acceso a los resultados de sus candidatos. */
+  clienteUserId: text("cliente_user_id").references(() => users.id),
   /** SHA-256 con pepper — búsqueda sin almacenar el código en claro */
   lookupHash: text("lookup_hash").notNull().unique(),
   /** Últimos 4 caracteres para identificación en panel (no secretos) */
@@ -123,6 +125,12 @@ export const courseCategories = pgTable("course_categories", {
   name: text("name").notNull(),
   description: text("description"),
   sortOrder: integer("sort_order").notNull().default(0),
+  /**
+   * Canal al que pertenece esta escuela: ceduct | psicologia | ige.
+   * Determina en qué zona de alumno aparecen sus cursos, para que quien
+   * compró formación en un canal no vea el catálogo de otro.
+   */
+  channelId: text("channel_id").notNull().default("ige"),
 });
 
 // Cursos

@@ -19,9 +19,14 @@ export function esSoloAdmin(pathname: string): boolean {
   return SOLO_ADMIN.some((r) => pathname.startsWith(r));
 }
 
-/** Destino tras iniciar sesión, sin un `next` explícito. */
+/**
+ * Destino tras iniciar sesión, sin un `next` explícito.
+ *
+ * El alumno va a /mi-cuenta, que resuelve por sí misma a qué canal
+ * pertenece y lo deja en la sección que le corresponde.
+ */
 export function homePathForUser(user: { rol: Rol }): string {
-  return operaElPanel(user.rol) ? "/admin" : "/consultorio/cursos";
+  return operaElPanel(user.rol) ? "/admin" : "/mi-cuenta";
 }
 
 /** Resuelve `?next=` sin permitir que alguien llegue donde no le toca. */

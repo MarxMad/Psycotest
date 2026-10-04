@@ -243,6 +243,8 @@ export function getChannelPlatformCtas(
 export function isPlatformPath(pathname: string): boolean {
   const skip = [
     "/admin",
+    "/mi-cuenta",
+    "/sin-contenido",
     "/api",
     "/login",
     "/evaluacion",
