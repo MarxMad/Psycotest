@@ -28,7 +28,22 @@ export type ChannelDef = {
   nav: Array<{ label: string; href: string }>;
 };
 
-const ROOT = () => (process.env.ROOT_DOMAIN || "localhost").replace(/^www\./, "");
+const ROOT = () => (process.env.ROOT_DOMAIN || "").trim().replace(/^www\./, "");
+
+/**
+ * ¿Hay un dominio propio donde los subdominios sí existen?
+ *
+ * Una URL de despliegue de Vercel (*.vercel.app) no admite subdominios
+ * arbitrarios: ceduct.mi-app.vercel.app no resuelve. Y sin ROOT_DOMAIN
+ * configurado, los enlaces salían apuntando a localhost en producción.
+ */
+function dominioConSubdominios(): string | null {
+  const root = ROOT();
+  if (!root) return null;
+  if (root === "localhost" || root.endsWith(".localhost")) return null;
+  if (root.endsWith(".vercel.app")) return null;
+  return root;
+}
 
 export const CHANNELS: Record<ChannelId, ChannelDef> = {
   martin: {
@@ -197,13 +212,19 @@ export function getChannelFromHost(hostHeader: string | null): ChannelDef | null
   return getChannel(first);
 }
 
+/**
+ * Dirección pública de un canal.
+ *
+ * Con dominio propio cada marca vive en su subdominio. Sin él —en
+ * desarrollo o en la URL de despliegue— se usa la ruta interna, que
+ * sirve el mismo sitio y funciona en cualquier host.
+ */
 export function channelPublicUrl(channelId: ChannelId, path = "/"): string {
-  const root = ROOT();
   const ch = CHANNELS[channelId];
   const p = path.startsWith("/") ? path : `/${path}`;
-  if (root === "localhost") {
-    return `http://${ch.hostPrefix}.localhost:3000${p}`;
-  }
+  const root = dominioConSubdominios();
+
+  if (!root) return `/sites/${ch.id}${p === "/" ? "" : p}`;
   return `https://${ch.hostPrefix}.${root}${p}`;
 }
 
