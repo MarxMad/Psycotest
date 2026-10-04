@@ -1,49 +1,90 @@
 /**
- * Tipografías de los canales públicos, servidas por next/font.
+ * Tipografías de los canales públicos, alojadas por nosotros.
  *
- * Antes se cargaban con un `@import` de Google Fonts dentro de un <style>:
- * eso bloquea el render y bajaba las ocho familias en cada canal, aunque cada
- * uno solo use dos. Con next/font se alojan en el propio dominio y cada canal
- * aplica únicamente su par.
+ * Antes se pedían a `next/font/google`, que las descarga en cada compilación.
+ * Eso ataba el despliegue a que Google respondiera igual desde la máquina de
+ * build: su cargador hace `/\.(woff|woff2|eot|ttf|otf)$/.exec(url)[1]` y, si
+ * alguna URL no trae extensión reconocible, revienta con «Cannot read
+ * properties of null». El build fallaba al azar —el mismo commit compilaba en
+ * un proyecto y moría en el otro— sin que nada hubiera cambiado en el código.
+ *
+ * Los archivos viven ahora en `src/fuentes`. Se bajó la variante variable de
+ * cada familia cuando existe, así que un archivo cubre todos los pesos; las
+ * dos que no tienen variable traen un archivo por peso. Son 321 kB en total y
+ * el navegador solo pide el par del canal que esté viendo.
  */
 
-import {
-  DM_Sans,
-  Fraunces,
-  IBM_Plex_Sans,
-  Libre_Baskerville,
-  Manrope,
-  Outfit,
-  Source_Sans_3,
-  Space_Grotesk,
-} from "next/font/google";
+import localFont from "next/font/local";
 import type { ChannelId } from "./channels";
 
-
-
-const fraunces = Fraunces({ subsets: ["latin"], display: "swap", weight: ["500", "700"], variable: "--f-fraunces" });
-const dmSans = DM_Sans({ subsets: ["latin"], display: "swap", weight: ["400", "500", "600", "700"], variable: "--f-dm-sans" });
-const libreBaskerville = Libre_Baskerville({
-  subsets: ["latin"],
+const fraunces = localFont({
+  src: "../fuentes/fraunces-variable.woff2",
+  weight: "100 900",
   display: "swap",
-  weight: ["400", "700"],
+  variable: "--f-fraunces",
+  adjustFontFallback: "Times New Roman",
+});
+
+const dmSans = localFont({
+  src: "../fuentes/dm-sans-variable.woff2",
+  weight: "100 1000",
+  display: "swap",
+  variable: "--f-dm-sans",
+  adjustFontFallback: "Arial",
+});
+
+const libreBaskerville = localFont({
+  src: [
+    { path: "../fuentes/libre-baskerville-400.woff2", weight: "400", style: "normal" },
+    { path: "../fuentes/libre-baskerville-700.woff2", weight: "700", style: "normal" },
+  ],
+  display: "swap",
   variable: "--f-libre",
+  adjustFontFallback: "Times New Roman",
 });
-const sourceSans = Source_Sans_3({
-  subsets: ["latin"],
+
+const sourceSans = localFont({
+  src: "../fuentes/source-sans-3-variable.woff2",
+  weight: "200 900",
   display: "swap",
-  weight: ["400", "600", "700"],
   variable: "--f-source-sans",
+  adjustFontFallback: "Arial",
 });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], display: "swap", weight: ["500", "700"], variable: "--f-space" });
-const ibmPlex = IBM_Plex_Sans({
-  subsets: ["latin"],
+
+const spaceGrotesk = localFont({
+  src: "../fuentes/space-grotesk-variable.woff2",
+  weight: "300 700",
   display: "swap",
-  weight: ["400", "500", "600"],
-  variable: "--f-ibm-plex",
+  variable: "--f-space",
+  adjustFontFallback: "Arial",
 });
-const outfit = Outfit({ subsets: ["latin"], display: "swap", weight: ["500", "700", "800"], variable: "--f-outfit" });
-const manrope = Manrope({ subsets: ["latin"], display: "swap", weight: ["400", "600", "700"], variable: "--f-manrope" });
+
+const ibmPlex = localFont({
+  src: [
+    { path: "../fuentes/ibm-plex-sans-400.woff2", weight: "400", style: "normal" },
+    { path: "../fuentes/ibm-plex-sans-500.woff2", weight: "500", style: "normal" },
+    { path: "../fuentes/ibm-plex-sans-600.woff2", weight: "600", style: "normal" },
+  ],
+  display: "swap",
+  variable: "--f-ibm-plex",
+  adjustFontFallback: "Arial",
+});
+
+const outfit = localFont({
+  src: "../fuentes/outfit-variable.woff2",
+  weight: "100 900",
+  display: "swap",
+  variable: "--f-outfit",
+  adjustFontFallback: "Arial",
+});
+
+const manrope = localFont({
+  src: "../fuentes/manrope-variable.woff2",
+  weight: "200 800",
+  display: "swap",
+  variable: "--f-manrope",
+  adjustFontFallback: "Arial",
+});
 
 type ParTipografico = {
   /** Clases que activan las variables de ambas familias */
