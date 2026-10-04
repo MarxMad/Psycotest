@@ -39,8 +39,8 @@ export function NavCeduct() {
       <Link href={`${inicio}#certificaciones`} className={s.navLink}>
         Certificaciones
       </Link>
-      <Link href={`${inicio}#proceso`} className={s.navLink}>
-        Proceso
+      <Link href={`${inicio}#ruta`} className={s.navLink}>
+        Cómo funciona
       </Link>
     </nav>
   );

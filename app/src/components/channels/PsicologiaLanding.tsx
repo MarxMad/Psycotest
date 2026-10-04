@@ -7,6 +7,7 @@ import { getChannelPlatformCtas } from "@/lib/channels";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
+import { Cotizador } from "./Cotizador";
 import { RadarBateria, SelloSociedad } from "./arte";
 import s from "./PsicologiaLanding.module.css";
 
@@ -167,30 +168,14 @@ export function PsicologiaLanding({
       />
 
       <section id="bateria" className={s.section}>
-        <p className={s.eyebrow}>Instrumentos</p>
-        <h2>Batería psicológica</h2>
+        <p className={s.eyebrow}>Instrumentos y precios</p>
+        <h2>Arma la evaluación y llévatela</h2>
         <p className={s.sectionBody}>
-          Cinco instrumentos que se leen juntos. Según el puesto, aplicamos la batería completa o
-          solo los que aportan a la decisión.
+          Cinco instrumentos que se leen juntos. Según el puesto aplicas la batería completa o solo
+          los que aportan a la decisión: marca los que necesitas, dinos a cuántas personas evalúas y
+          el precio se arma solo. Sin llamada previa.
         </p>
-        <div className={s.battery}>
-          {INSTRUMENTOS.map((item, i) => (
-            <motion.a
-              key={item.id}
-              href={evaluacion.acceso}
-              className={s.batteryCard}
-              initial={reduce ? false : { opacity: 0, y: 14 }}
-              whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06, duration: 0.4 }}
-            >
-              <span className={s.batteryName}>{item.name}</span>
-              <span className={s.batteryTag}>{item.tag}</span>
-              <p>{item.blurb}</p>
-              <span className={s.batteryMeta}>{item.time}</span>
-            </motion.a>
-          ))}
-        </div>
+        <Cotizador />
       </section>
 
       {content.sections.map((section, idx) => {

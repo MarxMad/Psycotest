@@ -6,10 +6,11 @@ import type { ChannelPageContent } from "@/lib/channel-content";
 import type { Diplomado } from "@/lib/diplomados-formato";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { RejillaDiplomados } from "@/components/ceduct/Catalogo";
-import { Cifras, Pasos } from "./Secciones";
+import { Cifras } from "./Secciones";
 import { RutaRapida } from "./RutaRapida";
 import { BarraAccion } from "./BarraAccion";
 import { CintaEstandares } from "./CintaEstandares";
+import { RutaCertificacion } from "./RutaCertificacion";
 import { SelloClave, TramaCertificado } from "./arte";
 import s from "./CeductLanding.module.css";
 
@@ -34,7 +35,6 @@ export function CeductLanding({
   const reduce = useReducedMotion();
 
   const seccion = (id: string) => content.sections.find((x) => x.id === id);
-  const proceso = seccion("proceso");
   const certificaciones = seccion("certificaciones");
   const contacto = seccion("contacto");
   const diplomadosTxt = seccion("diplomados");
@@ -128,22 +128,8 @@ export function CeductLanding({
         )}
       </section>
 
-      {/* ---------- Ruta hacia el certificado ---------- */}
-      {proceso && (
-        <section className={s.section} id="proceso">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-12% 0px" }}
-            transition={{ duration: 0.55 }}
-          >
-            <p className={s.eyebrow}>{proceso.eyebrow}</p>
-            <h2>{proceso.title}</h2>
-            <p className={s.sectionBody}>{proceso.body}</p>
-          </motion.div>
-          <Pasos pegado pasos={(proceso.items ?? []).map((i) => ({ title: i.title, text: i.text }))} />
-        </section>
-      )}
+      {/* ---------- Ruta hacia el certificado, en tres etapas ---------- */}
+      <RutaCertificacion />
 
       {/* ---------- Certificación directa ---------- */}
       {certificaciones && (

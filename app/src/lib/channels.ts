@@ -108,7 +108,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     nav: [
       { label: "Diplomados", href: "/diplomados" },
       { label: "Certificaciones", href: "#certificaciones" },
-      { label: "Proceso", href: "#proceso" },
+      { label: "Cómo funciona", href: "#ruta" },
       { label: "Respaldo", href: "#respaldo" },
       { label: "Contacto", href: "#contacto" },
     ],

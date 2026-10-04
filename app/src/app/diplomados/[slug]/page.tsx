@@ -111,7 +111,7 @@ export default async function DiplomadoPage({ params }: Props) {
                     CEDUCT, entidad acreditada con clave ECE 002-10. Tu constancia queda verificable
                     públicamente.
                   </p>
-                  <Link href="/sites/ceduct#proceso" className={s.enlaceInterno}>
+                  <Link href="/sites/ceduct#ruta" className={s.enlaceInterno}>
                     Ver el proceso de certificación →
                   </Link>
                 </section>
