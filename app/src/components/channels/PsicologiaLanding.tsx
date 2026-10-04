@@ -7,7 +7,7 @@ import { getChannelPlatformCtas } from "@/lib/channels";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { Cifras, Cita, Declaracion, Pasos, SplitObra } from "./Secciones";
-import { RadarBateria } from "./arte";
+import { RadarBateria, SelloSociedad } from "./arte";
 import s from "./PsicologiaLanding.module.css";
 
 const INSTRUMENTOS = [
@@ -105,6 +105,16 @@ export function PsicologiaLanding({
             <a className={s.panelCta} href={evaluacion.acceso}>
               Entrar con código →
             </a>
+
+            <div className={s.respaldo}>
+              <SelloSociedad className={s.sello} />
+              <div>
+                <strong>Sociedad de Psicología Aplicada A.C.</strong>
+                <span>
+                  Instrumentos y criterios de interpretación respaldados por la asociación.
+                </span>
+              </div>
+            </div>
           </motion.aside>
         </div>
       </section>
@@ -185,7 +195,7 @@ export function PsicologiaLanding({
 
       {content.sections.map((section, idx) => {
         // El proceso se lee mejor como línea de tiempo que como tarjetas
-        if (section.id === "seleccion") {
+        if (section.id === "tres-pasos") {
           return (
             <div key={section.id}>
               <Declaracion

@@ -193,18 +193,18 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
   },
   psicologia: {
     channelId: "psicologia",
-    seoTitle: "Psicología Aplicada — Evaluación y selección de personal",
+    seoTitle: "Psicología Aplicada — Certeza en tus resultados, privacidad en tus evaluaciones",
     seoDescription:
-      "Batería psicológica, estudios socioeconómicos y diplomados de 90 horas para contratar con información real.",
+      "Obtén los resultados de un conjunto de pruebas psicológicas en minutos, en tres pasos: solicita tus códigos, da acceso a tus candidatos y recibe el reporte individual e integral.",
     published: true,
     updatedAt: new Date().toISOString(),
     hero: {
       brand: "Psicología Aplicada",
-      headline: "Una mala contratación cuesta más que evaluar",
-      lead: "Aplicamos la batería psicológica completa y el estudio socioeconómico para que sepas, antes de firmar, cómo trabaja esa persona, qué la mueve y si realmente embona con el puesto.",
+      headline: "Certeza en tus resultados, privacidad en tus evaluaciones",
+      lead: "Obtén los resultados de un conjunto de pruebas psicológicas en minutos, con tan solo tres pasos: solicita tus códigos, da acceso a tus candidatos y recibe el reporte de resultados de forma individual e integral.",
       image: "/ige/serv3.png",
-      primaryCta: { label: "Solicitar una evaluación", href: "#contacto" },
-      secondaryCta: { label: "Ver qué evaluamos", href: "#bateria" },
+      primaryCta: { label: "Solicitar mis códigos", href: "#contacto" },
+      secondaryCta: { label: "Ver los tres pasos", href: "#tres-pasos" },
     },
     sections: [
       {
@@ -232,30 +232,22 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
         ],
       },
       {
-        id: "seleccion",
-        eyebrow: "Cómo trabajamos",
-        title: "De tu vacante a la recomendación, en cinco pasos",
-        body: "El candidato responde desde donde esté. Tú recibes una lectura integrada, no cinco reportes sueltos.",
+        id: "tres-pasos",
+        eyebrow: "Cómo funciona",
+        title: "Resultados en minutos, con tan solo tres pasos",
+        body: "Tú no instalas nada y el candidato no crea cuenta. Pides los códigos, los repartes y recibes el reporte. Si el puesto lo amerita, añadimos el perfil del puesto, el estudio socioeconómico y la interpretación de un psicólogo.",
         items: [
           {
-            title: "Definimos el perfil",
-            text: "Una sesión corta para traducir el puesto a conductas observables y criterios de decisión.",
+            title: "Solicita tus códigos",
+            text: "Nos dices cuántos candidatos vas a evaluar y para qué puesto. Recibes los códigos a tu nombre, listos para repartir.",
           },
           {
-            title: "Aplicamos",
-            text: "El candidato recibe su código y responde en línea o en nuestras instalaciones, sin preparación previa.",
+            title: "Da acceso a tus candidatos",
+            text: "Cada persona entra con su código desde donde esté, responde en línea y puede retomar si se interrumpe.",
           },
           {
-            title: "Verificamos",
-            text: "Si el puesto lo amerita, levantamos el estudio socioeconómico y confirmamos referencias en campo.",
-          },
-          {
-            title: "Interpretamos",
-            text: "Un psicólogo integra los cinco instrumentos y el trabajo de campo en una sola lectura.",
-          },
-          {
-            title: "Recomendamos",
-            text: "Recibes el informe con la recomendación, los riesgos y qué preguntar en la entrevista final.",
+            title: "Recibe el reporte de resultados",
+            text: "Lo obtienes de forma individual y de forma integral: el perfil de cada candidato y la lectura conjunta de la batería.",
           },
         ],
       },

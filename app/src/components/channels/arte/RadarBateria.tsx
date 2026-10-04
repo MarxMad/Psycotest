@@ -18,10 +18,13 @@ const CX = 200;
 const CY = 190;
 const R = 125;
 
+/** Node y el navegador serializan los flotantes distinto: redondear evita el aviso de hidratación. */
+const r3 = (n: number) => Number(n.toFixed(3));
+
 /** Punto del eje i (de 5) a una distancia 0–1 del centro. */
 function punto(i: number, v: number) {
   const a = (Math.PI * 2 * i) / EJES.length - Math.PI / 2;
-  return [CX + Math.cos(a) * R * v, CY + Math.sin(a) * R * v] as const;
+  return [r3(CX + Math.cos(a) * R * v), r3(CY + Math.sin(a) * R * v)] as const;
 }
 
 function poligono(valores: number[]) {

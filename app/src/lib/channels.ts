@@ -119,7 +119,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     legalName: "Psicología Aplicada — Evaluación y desarrollo organizacional",
     tagline: "Pruebas · Códigos · Informes · Selección",
     description:
-      "Batería psicológica, estudios socioeconómicos y diplomados de 90 horas para contratar con información real.",
+      "Resultados de un conjunto de pruebas psicológicas en minutos: solicita tus códigos, da acceso a tus candidatos y recibe el reporte.",
     accentLabel: "Evaluación",
     theme: {
       fontDisplay: '"Space Grotesk", "DM Sans", sans-serif',
@@ -141,6 +141,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     nav: [
       { label: "Inicio", href: "/" },
       { label: "Acceso", href: "#acceso" },
+      { label: "Cómo funciona", href: "#tres-pasos" },
       { label: "Batería", href: "#bateria" },
       { label: "Diplomados", href: "/diplomados" },
       { label: "Contacto", href: "#contacto" },

@@ -2,6 +2,21 @@
  * El sello de la CLAVE: la acreditación como pieza gráfica.
  * Anillos concéntricos con el código al centro, como un timbre oficial.
  */
+/** Node y el navegador serializan los flotantes distinto: redondear evita el aviso de hidratación. */
+const r3 = (n: number) => Number(n.toFixed(3));
+
+const MARCAS = Array.from({ length: 48 }, (_, i) => {
+  const a = (Math.PI * 2 * i) / 48;
+  const r2 = i % 4 === 0 ? 93 : 98;
+  return {
+    i,
+    x1: r3(150 + Math.cos(a) * 103),
+    y1: r3(150 + Math.sin(a) * 103),
+    x2: r3(150 + Math.cos(a) * r2),
+    y2: r3(150 + Math.sin(a) * r2),
+  };
+});
+
 export function SelloClave({
   clave = "ECE 002-10",
   className,
@@ -34,17 +49,15 @@ export function SelloClave({
       </text>
 
       {/* Marcas del perímetro: una por cada grado de competencia */}
-      {Array.from({ length: 48 }, (_, i) => {
-        const a = (Math.PI * 2 * i) / 48;
-        const r1 = 103;
-        const r2 = i % 4 === 0 ? 93 : 98;
+      {MARCAS.map((m) => {
+        const i = m.i;
         return (
           <line
             key={i}
-            x1={150 + Math.cos(a) * r1}
-            y1={150 + Math.sin(a) * r1}
-            x2={150 + Math.cos(a) * r2}
-            y2={150 + Math.sin(a) * r2}
+            x1={m.x1}
+            y1={m.y1}
+            x2={m.x2}
+            y2={m.y2}
             stroke="currentColor"
             strokeWidth={i % 4 === 0 ? 1.6 : 0.8}
             opacity={i % 4 === 0 ? 0.55 : 0.28}

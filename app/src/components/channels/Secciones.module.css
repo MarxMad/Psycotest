@@ -154,21 +154,19 @@
     gap: 1.5rem;
   }
 
+  /* La línea une el primer punto con el último; no sobra ni sugiere un paso de más. */
   .pasosFila::before {
+    --gap: 1.5rem;
+    --pista: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+    --ultimo: calc((var(--n) - 1) * (var(--pista) + var(--gap)));
     content: "";
     position: absolute;
     top: 13px;
-    left: 6%;
-    right: 6%;
+    left: 7px;
+    right: calc(100% - var(--ultimo) - 7px);
     height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      var(--ch-accent) 12%,
-      var(--ch-accent) 88%,
-      transparent
-    );
-    opacity: 0.4;
+    background: var(--ch-accent);
+    opacity: 0.35;
   }
 }
 
