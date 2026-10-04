@@ -54,7 +54,9 @@ function createDb(): AppDb {
   // Prepare opcional: en pooler de Supabase (6543 / transaction mode) prepare=false es más estable.
   const isPooler = connectionString.includes(":6543") || connectionString.includes("pooler");
   const client = postgres(connectionString, {
-    max: process.env.VERCEL ? 1 : 5,
+    // Fluid Compute atiende varias peticiones por instancia: con una sola
+    // conexión se serializaban y agotaban el tiempo límite de Supabase.
+    max: process.env.VERCEL ? 3 : 5,
     prepare: !isPooler,
     idle_timeout: 20,
     connect_timeout: 30,

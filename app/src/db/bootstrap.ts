@@ -210,16 +210,30 @@ export async function probeDb(db: AppDb): Promise<void> {
   }
 }
 
+/**
+ * En producción el esquema ya está aplicado con las migraciones de docs/.
+ * Correr aquí un push de drizzle-kit más la siembra de datos demo ocupaba
+ * la única conexión del pool en cada arranque en frío, y la consulta real
+ * de la petición moría con «statement timeout». Migrar en caliente además
+ * no es algo que deba pasar sirviendo tráfico.
+ */
+function enProduccion(): boolean {
+  return process.env.VERCEL_ENV === "production" || process.env.NODE_ENV === "production";
+}
+
 export async function ensureDbReady(db: AppDb): Promise<DbReadyState> {
   validateDatabaseConfig();
   await probeDb(db);
-  await ensureSchema(db);
-  await ensureDefaultAdmin(db);
-  try {
-    const { seedDemoCourse } = await import("./seed-lms");
-    await seedDemoCourse(db);
-  } catch (error) {
-    console.error("[sistemapsic] seedDemoCourse falló:", error);
+
+  if (!enProduccion()) {
+    await ensureSchema(db);
+    await ensureDefaultAdmin(db);
+    try {
+      const { seedDemoCourse } = await import("./seed-lms");
+      await seedDemoCourse(db);
+    } catch (error) {
+      console.error("[sistemapsic] seedDemoCourse falló:", error);
+    }
   }
 
   return {
