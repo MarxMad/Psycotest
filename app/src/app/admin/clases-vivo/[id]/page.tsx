@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import type { LiveClass } from "@/db/schema";
+import { salaEsAdivinable } from "@/lib/salas";
 import s from "../clases-vivo.module.css";
 
 type AttendanceRow = {
@@ -72,6 +73,33 @@ export default function LiveClassDetailPage() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         alert(data.error || "No se pudo actualizar el estado");
+        return;
+      }
+      const data = await res.json();
+      setLiveClass(data.liveClass);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function regenerarSala() {
+    if (
+      !confirm(
+        "Se cambiará el enlace de la sala. Quien ya tenga el anterior dejará de poder entrar y habrá que repartir el nuevo. ¿Continuar?",
+      )
+    ) {
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/live-classes/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ regenerarSala: true }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "No se pudo cambiar el enlace");
         return;
       }
       const data = await res.json();
@@ -159,6 +187,22 @@ export default function LiveClassDetailPage() {
           <p>
             <strong>Grabación:</strong> {liveClass.recordingUrl ?? "Pendiente"}
           </p>
+
+          {/* Las salas creadas antes llevaban el nombre derivado de la fecha:
+              se adivinaban probando marcas de tiempo. */}
+          {salaEsAdivinable(roomUrl) && (
+            <div className={s.avisoSala}>
+              <strong>Este enlace se puede adivinar</strong>
+              <p>
+                Se generó con el patrón anterior, derivado de la hora de creación: alguien podría
+                dar con él sin invitación y entrar a una clase donde se registra asistencia.
+                Cámbialo por uno nuevo y reparte el enlace otra vez.
+              </p>
+              <button type="button" className="btn" disabled={busy} onClick={() => void regenerarSala()}>
+                Cambiar el enlace de la sala
+              </button>
+            </div>
+          )}
         </Card>
 
         <Card>

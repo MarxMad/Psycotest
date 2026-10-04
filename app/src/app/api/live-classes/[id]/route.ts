@@ -109,7 +109,16 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
       updates.status = body.status;
     }
 
-    if (updates.status === "live" || body.ensureRoom) {
+    // Cambia el nombre de la sala por uno nuevo. Para las clases creadas
+    // antes de que los nombres llevaran cola al azar: el enlace anterior se
+    // podía adivinar. Rompe los enlaces ya repartidos, así que se pide
+    // a mano desde el detalle de la clase.
+    if (body.regenerarSala) {
+      const nueva = buildJitsiRoom(existing.id).roomUrl;
+      updates.provider = "jitsi";
+      updates.roomUrl = nueva;
+      updates.dailyRoomUrl = nueva;
+    } else if (updates.status === "live" || body.ensureRoom) {
       const room = resolveRoomUrl(existing) || buildJitsiRoom(existing.id).roomUrl;
       updates.provider = "jitsi";
       updates.roomUrl = room;
