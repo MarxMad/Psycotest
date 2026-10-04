@@ -3,13 +3,17 @@ import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { courseCategories, courses, orderItems, orders, users } from "@/db/schema";
 import { getSessionUser, logAudit } from "@/lib/auth";
+import { crearSesionDePago, origenDe } from "@/lib/pagos";
+import { isStripeConfigured } from "@/lib/stripe";
 
 /**
- * Registra una inscripción a uno o más diplomados.
+ * Registra una inscripción a uno o más diplomados y abre el pago.
  *
  * El pedido queda en la base con estado `pending` y Martín lo ve en
- * Pagos → Transacciones. El cobro con tarjeta se conecta después; hasta
- * entonces se acuerda el pago por los medios de contacto.
+ * Pagos → Transacciones. Si hay Stripe configurado y todos los diplomados
+ * tienen precio publicado, se devuelve además la URL de pago. Cuando alguno
+ * va con precio «Consultar», o Stripe no está puesto, el pedido se queda
+ * registrado y se cierra por contacto, como hasta ahora.
  */
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
@@ -117,8 +121,26 @@ export async function POST(request: Request) {
       notas: body.notas?.trim() || null,
     });
 
+    // El pago solo se abre si hay precio que cobrar; lo demás se acuerda
+    // por contacto y el pedido se queda pendiente para eso.
+    let pagoUrl: string | null = null;
+    if (isStripeConfigured() && subtotal > 0) {
+      const sesion = await crearSesionDePago({
+        pedidoId,
+        origen: origenDe(request),
+        email,
+        cancelarEn: "/checkout",
+      });
+      if (sesion.ok) {
+        pagoUrl = sesion.url;
+      } else {
+        // Que falle el pago no debe perder la inscripción: ya está registrada.
+        console.error("[api/pedidos] no se pudo abrir el pago:", sesion.error);
+      }
+    }
+
     return NextResponse.json(
-      { pedidoId, total: subtotal, diplomados: elegidos.map((c) => c.titulo) },
+      { pedidoId, total: subtotal, pagoUrl, diplomados: elegidos.map((c) => c.titulo) },
       { status: 201 },
     );
   } catch (error) {

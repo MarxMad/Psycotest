@@ -30,8 +30,14 @@ export function FormularioInscripcion() {
       });
       const d = await r.json();
       if (!r.ok) throw new Error(d.error ?? "No se pudo registrar la inscripción");
-      setHecho({ pedidoId: d.pedidoId, total: d.total });
       vaciar();
+      // Con precio publicado se pasa al pago; si no, queda registrada y se
+      // cierra por contacto.
+      if (d.pagoUrl) {
+        window.location.href = d.pagoUrl;
+        return;
+      }
+      setHecho({ pedidoId: d.pedidoId, total: d.total });
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -121,7 +127,7 @@ export function FormularioInscripcion() {
           {error && <p className={s.formError}>{error}</p>}
 
           <button type="submit" className={s.btnPrimario} disabled={enviando || !listo}>
-            {enviando ? "Registrando…" : "Registrar mi inscripción"}
+            {enviando ? "Preparando el pago…" : total > 0 ? "Continuar al pago" : "Registrar mi inscripción"}
           </button>
         </form>
 

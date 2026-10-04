@@ -9,11 +9,10 @@ type Props = {
   courseSlug: string;
   priceLabel: string;
   stripeReady: boolean;
-  hasPriceId: boolean;
   enrolled: boolean;
 };
 
-export function CourseCheckout({ courseSlug, priceLabel, stripeReady, hasPriceId, enrolled }: Props) {
+export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,7 +20,7 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, hasPriceId
   async function buy() {
     setLoading(true);
     setError("");
-    const res = await fetch("/api/stripe/create-checkout-session", {
+    const res = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ courseSlug }),
@@ -67,16 +66,14 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, hasPriceId
   return (
     <div className={styles.checkoutBox}>
       <p className={styles.priceTag}>{priceLabel}</p>
-      {stripeReady && hasPriceId ? (
+      {stripeReady ? (
         <button type="button" className={styles.btnPrimary} onClick={buy} disabled={loading}>
           {loading ? "Redirigiendo…" : "Comprar con tarjeta"}
         </button>
       ) : (
         <>
           <p className={styles.checkoutHint}>
-            {stripeReady
-              ? "Falta configurar STRIPE_PRICE_* para este curso."
-              : "Stripe no configurado — usa inscripción de prueba en desarrollo."}
+            El cobro con tarjeta no está configurado en este entorno.
           </p>
           {process.env.NODE_ENV !== "production" ? (
             <button type="button" className={styles.btnSecondary} onClick={devEnroll} disabled={loading}>

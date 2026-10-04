@@ -91,7 +91,6 @@ export default async function CourseDetailPage({ params }: Props) {
                   courseSlug={course.slug}
                   priceLabel={formatMxn(course.priceMxn)}
                   stripeReady={isStripeConfigured()}
-                  hasPriceId={Boolean(course.stripePriceId)}
                   enrolled={enrolled}
                 />
               </div>

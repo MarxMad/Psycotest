@@ -270,6 +270,9 @@ export function isPlatformPath(pathname: string): boolean {
     "/diplomados",
     "/carrito",
     "/checkout",
+    // Vuelta del pago. Sin esto, en el subdominio de CEDUCT se reescribía a
+    // /sites/ceduct/gracias, que no existe: quien pagaba caía en un 404.
+    "/gracias",
     "/api",
     "/login",
     "/evaluacion",
