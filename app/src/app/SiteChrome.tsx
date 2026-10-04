@@ -7,12 +7,18 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { APP_NAME } from "@/lib/brand";
 import { BrandDot, TopNav } from "./TopNav";
 
+/** Rutas que traen su propio encabezado: la barra global sobraría encima. */
+const CON_ENCABEZADO_PROPIO = [
+  "/consultorio",
+  "/sites",
+  "/diplomados",
+  "/carrito",
+  "/checkout",
+  "/mi-cuenta",
+];
+
 function hideGlobalTopbar(pathname: string) {
-  return (
-    pathname === "/" ||
-    pathname.startsWith("/consultorio") ||
-    pathname.startsWith("/sites")
-  );
+  return pathname === "/" || CON_ENCABEZADO_PROPIO.some((r) => pathname.startsWith(r));
 }
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {

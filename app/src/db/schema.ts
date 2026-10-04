@@ -152,6 +152,12 @@ export const courses = pgTable("courses", {
   instructorBio: text("instructor_bio"),
   instructorId: text("instructor_id").references(() => users.id),
   level: text("level", { enum: ["basico", "intermedio", "avanzado"] }).notNull().default("basico"),
+  /** Cómo se cursa. Define qué se promete en la ficha del diplomado. */
+  modalidad: text("modalidad", { enum: ["online", "presencial", "mixta"] })
+    .notNull()
+    .default("online"),
+  /** Clave del estándar CONOCER al que prepara, si aplica (EC0217, EC0301…). */
+  estandarClave: text("estandar_clave"),
   durationMinutes: integer("duration_minutes").notNull().default(0),
   published: boolean("published").notNull().default(true),
   status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
