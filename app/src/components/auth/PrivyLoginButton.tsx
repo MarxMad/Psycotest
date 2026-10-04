@@ -3,13 +3,32 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken, useLogin, usePrivy } from "@privy-io/react-auth";
+import { PrivyProvider } from "./PrivyProvider";
 import s from "./PrivyLoginButton.module.css";
 
 /**
  * Acceso con Privy. Tras confirmar la identidad, intercambia su token por la
  * sesión propia de la aplicación y manda a la persona a donde le corresponde.
  */
+/**
+ * Acceso con Privy, con su proveedor dentro.
+ *
+ * El SDK sólo se monta aquí: en el proveedor global rompía las páginas
+ * públicas sobre HTTP ("Embedded wallet is only available over HTTPS") y
+ * cargaba su peso en cada visita sin hacer falta.
+ */
 export function PrivyLoginButton({ next }: { next?: string }) {
+  const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+  if (!appId) return null;
+
+  return (
+    <PrivyProvider>
+      <BotonPrivy next={next} />
+    </PrivyProvider>
+  );
+}
+
+function BotonPrivy({ next }: { next?: string }) {
   const router = useRouter();
   const { ready, authenticated, logout } = usePrivy();
   const [canjeando, setCanjeando] = useState(false);

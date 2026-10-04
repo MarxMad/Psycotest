@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ConsultorioNav } from "../ConsultorioNav";
-import { BrandShell } from "../BrandShell";
 import styles from "../conocer-pages.module.css";
 
 type Exp = {
@@ -72,7 +71,7 @@ export default function MiExpedientePage() {
   }
 
   return (
-    <BrandShell>
+    <>
       <ConsultorioNav />
       <div className={styles.shell} data-anime="page">
         <main className={styles.main}>
@@ -200,6 +199,6 @@ export default function MiExpedientePage() {
           </p>
         </main>
       </div>
-    </BrandShell>
+    </>
   );
 }

@@ -2,16 +2,20 @@
 
 import { usePathname } from "next/navigation";
 import { ConsultorioNav } from "../ConsultorioNav";
-import { BrandShell } from "../BrandShell";
 
+/**
+ * El layout de /consultorio ya aplica la cáscara y el tema del canal;
+ * aquí sólo se decide si se muestra el encabezado.
+ */
 export function CursosShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isPlayer = pathname.includes("/aprender/");
+  // El reproductor va a pantalla completa: sin encabezado que estorbe.
+  const enReproductor = pathname.includes("/aprender/");
 
   return (
-    <BrandShell>
-      {!isPlayer ? <ConsultorioNav /> : null}
+    <>
+      {!enReproductor ? <ConsultorioNav /> : null}
       {children}
-    </BrandShell>
+    </>
   );
 }

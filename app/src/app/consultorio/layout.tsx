@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { CONSULTORIO } from "@/lib/consultorio-brand";
 import { ConsultorioRoot } from "./ConsultorioRoot";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: `${CONSULTORIO.shortName} — Plataforma profesional`,
   description: CONSULTORIO.tagline,

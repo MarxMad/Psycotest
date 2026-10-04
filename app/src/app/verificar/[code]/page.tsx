@@ -4,8 +4,6 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/brand";
-import { ConsultorioNav } from "@/app/consultorio/ConsultorioNav";
-import { BrandShell } from "@/app/consultorio/BrandShell";
 import styles from "@/app/consultorio/conocer-pages.module.css";
 
 type Result = {
@@ -31,8 +29,7 @@ export default function VerificarPage() {
   }, [code]);
 
   return (
-    <BrandShell>
-      <ConsultorioNav />
+    <>
       <div className={styles.shell} data-anime="page">
         <main className={styles.main}>
           <header className={styles.hero} data-anime="hero">
@@ -77,6 +74,6 @@ export default function VerificarPage() {
           )}
         </main>
       </div>
-    </BrandShell>
+    </>
   );
 }

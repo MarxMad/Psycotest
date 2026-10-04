@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { CursosShell } from "./CursosShell";
 
 export const metadata: Metadata = {
-  title: "Cursos en línea — Martín Hernández",
-  description: "Formación grabada con temario, progreso y certificación CONOCER.",
+  title: "Cursos en línea",
+  description: "Formación con temario, avance por lección y ruta hacia la certificación.",
 };
 
 export default function CursosLayout({ children }: { children: React.ReactNode }) {
