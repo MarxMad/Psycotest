@@ -88,8 +88,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Todo lo que exige sesión de staff vive bajo /admin.
-  if (!pathname.startsWith("/admin")) {
+  /**
+   * El índice de marcas en la raíz es interno: desde ahí Martín entra a
+   * cualquiera de sus cuatro sitios y a su administración. Con dominio
+   * propio el público llega por subdominio, nunca al apex.
+   */
+  const esIndiceInterno = pathname === "/";
+
+  if (!pathname.startsWith("/admin") && !esIndiceInterno) {
     return NextResponse.next();
   }
 
