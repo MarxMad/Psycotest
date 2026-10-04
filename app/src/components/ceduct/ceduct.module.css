@@ -48,9 +48,10 @@
 
 .marca {
   display: flex;
+  flex: none;
   flex-direction: column;
   gap: 0.1rem;
-  margin-right: auto;
+  margin-right: 1.25rem;
   text-decoration: none;
   color: inherit;
   line-height: 1.2;
@@ -70,15 +71,28 @@
   letter-spacing: 0.01em;
 }
 
+/* En el teléfono se desplaza en horizontal: antes se ocultaba entera y el
+   catálogo se quedaba sin ninguna forma de volver. */
 .navLinks {
-  display: none;
-  gap: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 0;
+  margin-right: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
-.navLinks a {
-  padding: 0.5rem 0.8rem;
+.navLinks::-webkit-scrollbar {
+  display: none;
+}
+
+.navLink {
+  position: relative;
+  padding: 0.5rem 0.7rem;
   border-radius: 7px;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 550;
   color: var(--muted);
   text-decoration: none;
@@ -86,14 +100,83 @@
   transition: color 0.15s ease, background 0.15s ease;
 }
 
-.navLinks a:hover {
+.navLink:hover {
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.06);
+  background: color-mix(in srgb, var(--acento) 8%, transparent);
+}
+
+/* La página en la que estás, marcada: el resto de enlaces se van a otra. */
+.navLink[aria-current="page"] {
+  color: var(--ink);
+  font-weight: 650;
+  background: color-mix(in srgb, var(--acento) 10%, transparent);
+}
+
+.navLink[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  right: 0.7rem;
+  bottom: 0.22rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--acento);
+}
+
+/* En pantalla chica la barra deja sitio a la navegación: la clave y el
+   rótulo del carrito ocupaban más de lo que aportan ahí. */
+@media (max-width: 620px) {
+  .navInterior {
+    gap: 0.5rem;
+    padding-inline: 0.85rem;
+  }
+
+  .marca {
+    margin-right: 0.6rem;
+  }
+
+  .marcaClave {
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+  }
+
+  .marca strong {
+    font-size: 0.92rem;
+  }
+
+  /* El borde que se desvanece dice que la fila sigue. */
+  .navLinks {
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+
+  .navLink {
+    padding-inline: 0.5rem;
+    font-size: 0.82rem;
+  }
+
+  .carritoBtn {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .carritoBtn > span:first-of-type {
+    display: none;
+  }
+}
+
+/* Separa lo que vive aquí de lo que vive en la portada. */
+.navCorte {
+  flex: none;
+  width: 1px;
+  height: 1.1rem;
+  margin-inline: 0.45rem;
+  background: var(--linea);
 }
 
 @media (min-width: 760px) {
   .navLinks {
-    display: flex;
+    gap: 0.3rem;
+    overflow-x: visible;
   }
 }
 
@@ -213,23 +296,39 @@
   font-size: 0.84rem;
   font-weight: 600;
   cursor: pointer;
-  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .filtro span {
   font-size: 0.72rem;
   opacity: 0.7;
+  font-variant-numeric: tabular-nums;
 }
 
 .filtro:hover {
   color: var(--ink);
   border-color: var(--acento);
+  transform: translateY(-2px);
+}
+
+.filtro:active {
+  transform: translateY(0);
 }
 
 .filtroActivo {
   background: var(--acento);
   border-color: var(--acento);
   color: var(--bg);
+  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--acento) 80%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filtro,
+  .filtro:hover,
+  .filtro:active {
+    transform: none;
+  }
 }
 
 .filtroActivo span {
@@ -245,24 +344,80 @@
 }
 
 .ficha {
+  --mx: 50%;
+  --my: 0%;
+  --gx: 0;
+  --gy: 0;
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--linea);
   border-radius: 16px;
   background: var(--surface);
   overflow: hidden;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.22s ease,
-    box-shadow 0.22s ease;
+  transform: perspective(1100px) rotateY(calc(var(--gx) * 8deg))
+    rotateX(calc(var(--gy) * -8deg)) translateY(0);
+  transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.22s ease,
+    box-shadow 0.26s ease;
 }
 
-.ficha:hover {
-  transform: translateY(-4px);
-  border-color: color-mix(in srgb, var(--acento) 50%, transparent);
-  box-shadow: 0 22px 44px -24px rgba(0, 0, 0, 0.7);
+/* Resplandor que sigue al cursor, por debajo del contenido. */
+.ficha::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(
+    20rem 20rem at var(--mx) var(--my),
+    color-mix(in srgb, var(--acento) 18%, transparent) 0%,
+    transparent 68%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+/* Filo de un píxel que se enciende donde está el cursor, por encima de todo. */
+.ficha::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    12rem 12rem at var(--mx) var(--my),
+    color-mix(in srgb, var(--acento) 85%, transparent) 0%,
+    transparent 62%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.ficha:hover,
+.ficha:focus-within {
+  transform: perspective(1100px) rotateY(calc(var(--gx) * 8deg))
+    rotateX(calc(var(--gy) * -8deg)) translateY(-6px);
+  border-color: color-mix(in srgb, var(--acento) 45%, transparent);
+  box-shadow: 0 26px 50px -26px color-mix(in srgb, var(--acento) 55%, rgba(0, 0, 0, 0.6));
+}
+
+.ficha:hover::after,
+.ficha:focus-within::after,
+.ficha:hover::before,
+.ficha:focus-within::before {
+  opacity: 1;
 }
 
 .fichaImagen {
   position: relative;
+  z-index: 1;
   display: block;
   aspect-ratio: 16 / 9;
   background: color-mix(in srgb, var(--acento) 12%, var(--bg));
@@ -273,6 +428,36 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ficha:hover .fichaImagen img {
+  transform: scale(1.05);
+}
+
+/* Barrido de luz sobre la portada al pasar el cursor. */
+.fichaImagen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.4) 50%,
+    transparent 62%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+
+.ficha:hover .fichaImagen::after {
+  animation: fichaBarrido 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fichaBarrido {
+  to {
+    transform: translateX(120%);
+  }
 }
 
 /* Portada dibujada cuando el diplomado no tiene fotografía cargada. */
@@ -289,14 +474,28 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fichaPortada,
-  .ficha:hover .fichaPortada {
+  .ficha:hover .fichaPortada,
+  .fichaImagen img,
+  .ficha:hover .fichaImagen img {
     transition: none;
     transform: none;
+  }
+
+  .ficha,
+  .ficha:hover,
+  .ficha:focus-within {
+    transform: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .ficha:hover .fichaImagen::after {
+    animation: none;
   }
 }
 
 .fichaClave {
   position: absolute;
+  z-index: 2;
   top: 0.7rem;
   left: 0.7rem;
   padding: 0.22rem 0.55rem;
@@ -310,6 +509,8 @@
 }
 
 .fichaCuerpo {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   flex: 1;

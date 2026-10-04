@@ -4,6 +4,7 @@ import { CHANNELS } from "@/lib/channels";
 import { FUENTES_CANAL } from "@/lib/channel-fonts";
 import { channelPublicUrl } from "@/lib/channels";
 import { BotonCarrito } from "./BotonCarrito";
+import { NavCeduct } from "./NavCeduct";
 import s from "./ceduct.module.css";
 
 /**
@@ -31,11 +32,7 @@ export function CeductShell({ children }: { children: ReactNode }) {
             <span className={s.marcaClave}>ECE 002-10</span>
             <strong>CEDUCT</strong>
           </Link>
-          <nav className={s.navLinks} aria-label="Principal">
-            <Link href="/diplomados">Diplomados</Link>
-            <Link href={`${channelPublicUrl("ceduct")}#certificaciones`}>Certificaciones</Link>
-            <Link href={`${channelPublicUrl("ceduct")}#proceso`}>Proceso</Link>
-          </nav>
+          <NavCeduct />
           <BotonCarrito />
         </div>
       </header>

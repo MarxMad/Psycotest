@@ -16,6 +16,29 @@ import s from "./ceduct.module.css";
 
 type Area = { slug: string; nombre: string; total: number };
 
+/**
+ * La ficha sigue al cursor: guarda dónde está el puntero en variables CSS y
+ * el resto (resplandor, filo encendido, inclinación) lo resuelve la hoja de
+ * estilos. Así no hay re-render por movimiento del ratón.
+ */
+function seguirPuntero(e: React.PointerEvent<HTMLElement>) {
+  if (e.pointerType !== "mouse") return;
+  const nodo = e.currentTarget;
+  const caja = nodo.getBoundingClientRect();
+  const x = (e.clientX - caja.left) / caja.width;
+  const y = (e.clientY - caja.top) / caja.height;
+  nodo.style.setProperty("--mx", `${(x * 100).toFixed(2)}%`);
+  nodo.style.setProperty("--my", `${(y * 100).toFixed(2)}%`);
+  nodo.style.setProperty("--gx", (x - 0.5).toFixed(3));
+  nodo.style.setProperty("--gy", (y - 0.5).toFixed(3));
+}
+
+function soltarPuntero(e: React.PointerEvent<HTMLElement>) {
+  const nodo = e.currentTarget;
+  nodo.style.setProperty("--gx", "0");
+  nodo.style.setProperty("--gy", "0");
+}
+
 /** Catálogo con su portada: la página /diplomados. */
 export function Catalogo({
   diplomados,
@@ -112,7 +135,13 @@ export function RejillaDiplomados({
       ) : (
         <div className={s.rejilla} ref={rejilla}>
           {visibles.map((d) => (
-            <article key={d.id} className={s.ficha} data-ficha>
+            <article
+              key={d.id}
+              className={s.ficha}
+              data-ficha
+              onPointerMove={seguirPuntero}
+              onPointerLeave={soltarPuntero}
+            >
               <Link
                 href={`/diplomados/${d.slug}`}
                 className={s.fichaImagen}

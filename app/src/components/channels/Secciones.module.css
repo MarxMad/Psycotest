@@ -114,6 +114,58 @@
   flex-direction: column;
   gap: 0.5rem;
   min-width: 0;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Entran escalonadas cuando la fila asoma. */
+.cifras[data-en="si"] .cifra {
+  animation: subeCifra 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes subeCifra {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Una regla de acento que se traza bajo el número. */
+.cifraRegla {
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-top: 0.1rem;
+  background: var(--ch-accent-2, var(--ch-accent));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.cifras[data-en="si"] .cifraRegla {
+  animation: trazaRegla 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 420ms);
+}
+
+@keyframes trazaRegla {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cifra,
+  .cifras[data-en="si"] .cifra {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .cifraRegla,
+  .cifras[data-en="si"] .cifraRegla {
+    transform: none;
+    animation: none;
+  }
 }
 
 .cifraValor {
@@ -131,13 +183,32 @@
 
 /* Valores que son palabra, no número: bajan de tamaño para caber en su columna. */
 .cifraValor[data-largo="medio"] {
-  font-size: clamp(1.6rem, 3.2vw, 2.25rem);
+  font-size: clamp(1.45rem, 2.8vw, 1.95rem);
 }
 
 .cifraValor[data-largo="largo"] {
   font-size: clamp(1.25rem, 2.4vw, 1.6rem);
   letter-spacing: -0.015em;
   line-height: 1.15;
+}
+
+/* Las tres filas se comparten: aunque un valor ocupe dos líneas, las reglas
+   y las etiquetas de todas las cifras quedan a la misma altura. */
+@supports (grid-template-rows: subgrid) {
+  .cifras {
+    grid-template-rows: auto auto auto;
+  }
+
+  .cifra {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+
+  .cifraValor {
+    align-self: end;
+  }
 }
 
 .cifraEtiqueta {
@@ -182,12 +253,39 @@
     height: 1px;
     background: var(--ch-accent);
     opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  /* La línea se traza de un extremo a otro cuando el bloque asoma. */
+  .pasosFila[data-en="si"]::before {
+    animation: trazaRuta 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
+
+@keyframes trazaRuta {
+  to {
+    transform: scaleX(1);
   }
 }
 
 .paso {
   position: relative;
   padding-top: 2.5rem;
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.pasos[data-en="si"] .paso {
+  animation: subePaso 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+@keyframes subePaso {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .pasoPunto {
@@ -201,12 +299,49 @@
   background: var(--ch-bg);
 }
 
+/* Anillo que se expande una vez: el paso "prende" al llegar. */
+.pasos[data-en="si"] .pasoPunto::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--ch-accent);
+  animation: prendePunto 1.1s ease-out forwards;
+  animation-delay: calc(var(--i, 0) * 110ms + 180ms);
+  opacity: 0;
+}
+
+@keyframes prendePunto {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
 .pasoPunto::after {
   content: "";
   position: absolute;
   inset: 3px;
   border-radius: 50%;
   background: var(--ch-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paso,
+  .pasos[data-en="si"] .paso {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .pasos[data-en="si"] .pasoPunto::before {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .pasoNum {

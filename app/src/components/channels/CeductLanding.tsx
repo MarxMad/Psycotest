@@ -7,6 +7,9 @@ import type { Diplomado } from "@/lib/diplomados-formato";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { RejillaDiplomados } from "@/components/ceduct/Catalogo";
 import { Cifras, Pasos } from "./Secciones";
+import { RutaRapida } from "./RutaRapida";
+import { BarraAccion } from "./BarraAccion";
+import { CintaEstandares } from "./CintaEstandares";
 import { SelloClave, TramaCertificado } from "./arte";
 import s from "./CeductLanding.module.css";
 
@@ -54,17 +57,25 @@ export function CeductLanding({
           animate={reduce ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className={s.kicker}>{content.hero.brand}</p>
-          <h1>{content.hero.headline}</h1>
-          <p className={s.lead}>{content.hero.lead}</p>
+          <div className={s.heroTexto}>
+            <p className={s.kicker}>{content.hero.brand}</p>
+            <h1>{content.hero.headline}</h1>
+            <p className={s.lead}>{content.hero.lead}</p>
 
-          <div className={s.actions}>
-            <a className={s.btnPrimary} href={content.hero.primaryCta.href}>
-              {content.hero.primaryCta.label}
-            </a>
-            <a className={s.btnGhost} href={content.hero.secondaryCta.href}>
-              {content.hero.secondaryCta.label}
-            </a>
+            <div className={s.actions}>
+              <a className={s.btnPrimary} href={content.hero.primaryCta.href}>
+                {content.hero.primaryCta.label}
+              </a>
+              <a className={s.btnGhost} href={content.hero.secondaryCta.href}>
+                {content.hero.secondaryCta.label}
+              </a>
+            </div>
+
+          </div>
+
+          {/* Quien llega resuelve aquí mismo cuál es su camino, sin bajar. */}
+          <div className={s.heroRuta}>
+            <RutaRapida total={diplomados.length} />
           </div>
 
           {/* CEDUCT aparece como aval, no como titular. */}
@@ -87,6 +98,8 @@ export function CeductLanding({
           { valor: "15 min", etiqueta: "La llamada en que sabes qué estándar te toca" },
         ]}
       />
+
+      <CintaEstandares nombres={(estandares?.items ?? []).map((i) => i.title)} />
 
       {/* ---------- El catálogo: lo principal ---------- */}
       <section className={s.catalogoWrap} id="diplomados">
@@ -161,6 +174,7 @@ export function CeductLanding({
                 <motion.article
                   key={item.title}
                   className={s.certItem}
+                  data-num={String(i + 1).padStart(2, "0")}
                   initial={reduce ? false : { opacity: 0, y: 14 }}
                   whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -313,6 +327,8 @@ export function CeductLanding({
           </motion.div>
         </section>
       )}
+
+      <BarraAccion total={diplomados.length} />
     </div>
   );
 }

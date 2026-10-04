@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Trama } from "./arte";
+import { Contador } from "./Contador";
 import s from "./Secciones.module.css";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -92,18 +93,47 @@ function escala(valor: string): "corto" | "medio" | "largo" {
 }
 
 export function Cifras({ datos }: { datos: { valor: string; etiqueta: string }[] }) {
+  const rejilla = useRef<HTMLDivElement>(null);
+  const [dentro, setDentro] = useState(false);
+
+  // Un solo observador para toda la fila: el escalonado lo hace el CSS.
+  useEffect(() => {
+    const nodo = rejilla.current;
+    if (!nodo) return;
+    if (!("IntersectionObserver" in window)) {
+      setDentro(true);
+      return;
+    }
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        setDentro(true);
+        observador.disconnect();
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+    observador.observe(nodo);
+    return () => observador.disconnect();
+  }, []);
+
   return (
     <section className={s.wrap}>
-      <div className={s.cifras}>
+      <div className={s.cifras} ref={rejilla} data-en={dentro ? "si" : "no"}>
         {datos.map((d, i) => (
-          <Reveal key={d.etiqueta} delay={Math.min(i * 0.07, 0.3)}>
-            <div className={s.cifra}>
-              <span className={s.cifraValor} data-largo={escala(d.valor)}>
-                {d.valor}
-              </span>
-              <span className={s.cifraEtiqueta}>{d.etiqueta}</span>
-            </div>
-          </Reveal>
+          <div
+            key={d.etiqueta}
+            className={s.cifra}
+            style={{ ["--i" as string]: i }}
+          >
+            <Contador
+              valor={d.valor}
+              className={s.cifraValor}
+              data-largo={escala(d.valor)}
+              retraso={Math.min(i * 90, 360)}
+            />
+            <span className={s.cifraRegla} aria-hidden />
+            <span className={s.cifraEtiqueta}>{d.etiqueta}</span>
+          </div>
         ))}
       </div>
     </section>
@@ -125,21 +155,44 @@ export function Pasos({
   pegado?: boolean;
 }) {
   const enFila = pasos.length <= 5;
+  const rejilla = useRef<HTMLDivElement>(null);
+  const [dentro, setDentro] = useState(false);
+
+  // La línea se traza y los puntos se encienden en orden: se lee como un recorrido.
+  useEffect(() => {
+    const nodo = rejilla.current;
+    if (!nodo) return;
+    if (!("IntersectionObserver" in window)) {
+      setDentro(true);
+      return;
+    }
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        setDentro(true);
+        observador.disconnect();
+      },
+      { rootMargin: "0px 0px -12% 0px" },
+    );
+    observador.observe(nodo);
+    return () => observador.disconnect();
+  }, []);
+
   return (
     <section id={id} className={s.wrap}>
       <div
+        ref={rejilla}
+        data-en={dentro ? "si" : "no"}
         className={`${s.pasos} ${enFila ? s.pasosFila : ""} ${pegado ? s.pasosPegado : ""}`}
         style={{ ["--n" as string]: pasos.length }}
       >
         {pasos.map((p, i) => (
-          <Reveal key={p.title} delay={Math.min(i * 0.08, 0.4)}>
-            <div className={s.paso}>
-              <span className={s.pasoPunto} aria-hidden />
-              <span className={s.pasoNum}>{String(i + 1).padStart(2, "0")}</span>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
-            </div>
-          </Reveal>
+          <div key={p.title} className={s.paso} style={{ ["--i" as string]: i }}>
+            <span className={s.pasoPunto} aria-hidden />
+            <span className={s.pasoNum}>{String(i + 1).padStart(2, "0")}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
+          </div>
         ))}
       </div>
     </section>
