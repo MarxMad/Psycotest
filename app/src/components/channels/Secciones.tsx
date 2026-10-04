@@ -84,6 +84,13 @@ export function SplitObra({
 }
 
 /** Cifras grandes: lo que se puede afirmar sin inventar nada. */
+/** Un valor corto se compone como número; uno largo es una palabra y debe caber. */
+function escala(valor: string): "corto" | "medio" | "largo" {
+  if (valor.length <= 7) return "corto";
+  if (valor.length <= 12) return "medio";
+  return "largo";
+}
+
 export function Cifras({ datos }: { datos: { valor: string; etiqueta: string }[] }) {
   return (
     <section className={s.wrap}>
@@ -91,7 +98,9 @@ export function Cifras({ datos }: { datos: { valor: string; etiqueta: string }[]
         {datos.map((d, i) => (
           <Reveal key={d.etiqueta} delay={Math.min(i * 0.07, 0.3)}>
             <div className={s.cifra}>
-              <span className={s.cifraValor}>{d.valor}</span>
+              <span className={s.cifraValor} data-largo={escala(d.valor)}>
+                {d.valor}
+              </span>
               <span className={s.cifraEtiqueta}>{d.etiqueta}</span>
             </div>
           </Reveal>

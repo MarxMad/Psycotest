@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { useCarrito } from "@/lib/carrito";
 import { precioMxn } from "@/lib/diplomados-formato";
-import s from "../diplomados/ceduct.module.css";
+import s from "@/components/ceduct/ceduct.module.css";
 
 export function VistaCarrito() {
   const { items, total, listo, quitar } = useCarrito();

@@ -9,10 +9,10 @@ import {
   precioMxn,
   temarioDe,
 } from "@/lib/diplomados";
-import { BotonAgregar } from "../BotonAgregar";
-import { CeductShell } from "../CeductShell";
-import { Revelar } from "../Revelar";
-import s from "../ceduct.module.css";
+import { BotonAgregar } from "@/components/ceduct/BotonAgregar";
+import { CeductShell } from "@/components/ceduct/CeductShell";
+import { Revelar } from "@/components/ceduct/Revelar";
+import s from "@/components/ceduct/ceduct.module.css";
 
 export const dynamic = "force-dynamic";
 

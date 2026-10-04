@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { listarAreas, listarDiplomados } from "@/lib/diplomados";
-import { CatalogoDiplomados } from "./CatalogoDiplomados";
-import { CeductShell } from "./CeductShell";
+import { Catalogo } from "@/components/ceduct/Catalogo";
+import { CeductShell } from "@/components/ceduct/CeductShell";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ export default async function DiplomadosPage() {
 
   return (
     <CeductShell>
-      <CatalogoDiplomados diplomados={diplomados} areas={areas} />
+      <Catalogo diplomados={diplomados} areas={areas} />
     </CeductShell>
   );
 }

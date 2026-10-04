@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CeductShell } from "../diplomados/CeductShell";
+import { CeductShell } from "@/components/ceduct/CeductShell";
 import { VistaCarrito } from "./VistaCarrito";
 
 export const metadata: Metadata = {

@@ -4,6 +4,12 @@
   color: var(--ch-ink);
   font-family: var(--ch-font-body);
   --ch-pad: clamp(1.25rem, 4vw, 3.5rem);
+  /* Alto del encabezado fijo: las anclas se detienen debajo de él, no detrás. */
+  --ch-nav-alto: 76px;
+}
+
+.shell :global([id]) {
+  scroll-margin-top: calc(var(--ch-nav-alto) + 1rem);
 }
 
 .shell :global(h1),

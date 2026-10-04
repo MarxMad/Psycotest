@@ -81,58 +81,67 @@
   pointer-events: none;
 }
 
-.heroGrid {
+/* La portada la ocupa el producto: una sola columna de texto, sin placa de logo. */
+.heroCopy {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(200px, 360px) minmax(0, 1fr);
-  gap: clamp(1.5rem, 4.5vw, 3.25rem);
-  align-items: center;
 }
 
-.sealCol {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.logoPlate {
-  width: min(100%, 360px);
-  aspect-ratio: 4 / 3;
-  border-radius: 0.85rem;
-  padding: clamp(0.75rem, 2vw, 1.15rem);
-  background: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow:
-    0 0 0 1px rgba(20, 20, 92, 0.08),
-    0 24px 60px rgba(0, 0, 0, 0.35);
-}
-
-.logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-}
-
-.sealCaption {
+.heroCopy h1 {
   margin: 0;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(244, 246, 251, 0.72);
-  text-align: center;
+  font-size: clamp(2rem, 5.2vw, 3.9rem);
+  line-height: 1.06;
+  max-width: 19ch;
+  color: #fff;
+  text-wrap: balance;
+}
+
+/* El aval: CEDUCT va aquí, en pequeño, respaldando. */
+.aval {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: clamp(2rem, 5vw, 3rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  max-width: 44rem;
+}
+
+.avalLogo {
+  flex: none;
+  width: 104px;
+  height: auto;
+  border-radius: 0.5rem;
+  background: #fff;
+  padding: 0.3rem 0.45rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.aval p {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: rgba(244, 246, 251, 0.78);
+}
+
+.aval strong {
+  color: #fff;
   font-weight: 650;
 }
 
-.copyCol {
-  max-width: 36rem;
-  min-width: 0;
+@media (max-width: 560px) {
+  .aval {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .avalLogo {
+    width: 92px;
+  }
 }
 
 .kicker {
@@ -171,15 +180,6 @@
   color: #fff;
   letter-spacing: 0.04em;
   line-height: 1;
-}
-
-.copyCol h1 {
-  margin: 0;
-  font-size: clamp(1.85rem, 4.6vw, 3.4rem);
-  line-height: 1.08;
-  max-width: 16ch;
-  color: #fff;
-  text-wrap: balance;
 }
 
 .lead {
@@ -527,4 +527,153 @@
   .heroPoster {
     opacity: 1 !important;
   }
+}
+
+
+/* ================= catálogo dentro de la portada ================= */
+
+.catalogoWrap {
+  padding-block: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1px solid var(--ch-rule);
+}
+
+.catalogoIntro {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 3rem);
+}
+
+.catalogoIntro h2 {
+  margin: 0;
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 20ch;
+}
+
+.catalogoIntro .sectionBody {
+  margin-top: 0.9rem;
+}
+
+.vacioCatalogo {
+  max-width: 1140px;
+  margin: 2rem auto 0;
+  padding: 2rem clamp(1rem, 4vw, 3rem) 4rem;
+  color: var(--ch-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ================= certificación directa ================= */
+
+.certGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .certGrid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+
+.certCopy {
+  min-width: 0;
+}
+
+.certItems {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+
+.certItem {
+  position: relative;
+  min-width: 0;
+  padding: 1.15rem 1.15rem 1.25rem;
+  border: 1px solid var(--ch-rule);
+  border-radius: 12px;
+  background: var(--ch-surface);
+}
+
+.certItem h3 {
+  margin: 0.55rem 0 0.4rem;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.certItem p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--ch-muted);
+}
+
+/* ================= respaldo institucional ================= */
+
+.respaldo {
+  padding: clamp(3rem, 7vw, 5rem) clamp(1rem, 4vw, 3rem);
+  border-top: 1px solid var(--ch-rule);
+  background: color-mix(in srgb, var(--ch-accent) 5%, var(--ch-bg));
+}
+
+.respaldoGrid {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+@media (min-width: 820px) {
+  .respaldoGrid {
+    grid-template-columns: minmax(170px, 230px) minmax(0, 1fr);
+  }
+}
+
+.respaldoSello {
+  color: var(--ch-accent);
+  max-width: 230px;
+  width: 100%;
+}
+
+.respaldoSello svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.respaldoCopy {
+  min-width: 0;
+}
+
+.respaldoCopy h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.3rem, 2.8vw, 1.95rem);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  max-width: 26ch;
+}
+
+.respaldoMarca {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.6rem;
+}
+
+.respaldoMarca img {
+  width: 150px;
+  height: auto;
+  border-radius: 0.5rem;
+  border: 1px solid var(--ch-rule);
+  background: #fff;
+  padding: 0.35rem 0.5rem;
 }

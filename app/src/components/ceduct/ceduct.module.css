@@ -177,9 +177,20 @@
 /* ---------- filtros ---------- */
 
 .catalogo {
+  /* La rejilla también se usa en la portada del canal, donde no hay .shell. */
+  --pad: clamp(1rem, 4vw, 3rem);
+  --max: 1140px;
+  --ink: var(--ch-ink, #f2f4f8);
+  --muted: var(--ch-muted, #9aa6b8);
+  --bg: var(--ch-bg, #0b1020);
+  --surface: var(--ch-surface, #141b2e);
+  --acento: var(--ch-accent, #5b89ad);
+  --linea: var(--ch-rule, rgba(255, 255, 255, 0.12));
+
   max-width: var(--max);
   margin: 0 auto;
   padding: clamp(2rem, 4vw, 3rem) var(--pad) clamp(3.5rem, 7vw, 5rem);
+  color: var(--ink);
 }
 
 .filtros {
@@ -264,12 +275,24 @@
   object-fit: cover;
 }
 
-.fichaImagenVacia {
-  display: grid;
-  place-items: center;
+/* Portada dibujada cuando el diplomado no tiene fotografía cargada. */
+.fichaPortada {
+  display: block;
   width: 100%;
   height: 100%;
-  color: color-mix(in srgb, var(--acento) 70%, transparent);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ficha:hover .fichaPortada {
+  transform: scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fichaPortada,
+  .ficha:hover .fichaPortada {
+    transition: none;
+    transform: none;
+  }
 }
 
 .fichaClave {

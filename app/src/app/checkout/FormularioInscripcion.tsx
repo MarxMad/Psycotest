@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 import { useCarrito } from "@/lib/carrito";
 import { precioMxn } from "@/lib/diplomados-formato";
 import { CONTACTO, whatsapp } from "@/lib/contacto";
-import s from "../diplomados/ceduct.module.css";
+import s from "@/components/ceduct/ceduct.module.css";
 
 export function FormularioInscripcion() {
   const { items, total, listo, vaciar } = useCarrito();

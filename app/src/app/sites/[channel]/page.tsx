@@ -8,6 +8,7 @@ import { ChannelShell } from "@/components/channels/ChannelShell";
 import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
 import { getChannelPage } from "@/lib/channel-store";
+import { listarAreas, listarDiplomados } from "@/lib/diplomados";
 
 /** El contenido se edita desde /admin/canales: no se puede prerenderizar. */
 export const dynamic = "force-dynamic";
@@ -32,7 +33,11 @@ export default async function ChannelSitePage({ params }: Props) {
 
   let landing = <ChannelLanding channel={channel} content={content} />;
   if (channel.id === "ceduct") {
-    landing = <CeductLanding channel={channel} content={content} />;
+    // El catálogo es lo principal de esta portada, así que viaja con ella.
+    const [diplomados, areas] = await Promise.all([listarDiplomados(), listarAreas()]);
+    landing = (
+      <CeductLanding channel={channel} content={content} diplomados={diplomados} areas={areas} />
+    );
   } else if (channel.id === "psicologia") {
     landing = <PsicologiaLanding channel={channel} content={content} />;
   } else if (channel.id === "ige") {
