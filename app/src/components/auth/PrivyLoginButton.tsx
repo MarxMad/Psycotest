@@ -84,7 +84,7 @@ function BotonPrivy({ next }: { next?: string }) {
         onClick={() => login()}
         disabled={canjeando}
       >
-        {canjeando ? "Entrando…" : "Entrar con correo o Google"}
+        {canjeando ? "Entrando…" : "Entrar con mi correo"}
       </button>
       {error && <p className={s.error}>{error}</p>}
     </div>

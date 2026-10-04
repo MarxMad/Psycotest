@@ -15,8 +15,8 @@ export function PrivyProvider({ children }: { children: ReactNode }) {
     <Base
       appId={appId}
       config={{
-        // Plataforma profesional, no cripto: solo correo y Google.
-        loginMethods: ["email", "google"],
+        // Sólo correo: Google no está habilitado en la app de Privy.
+        loginMethods: ["email"],
         appearance: { theme: "light", accentColor: "#3e5a6e" },
         // Sin wallets: no se crea ninguna al entrar.
         embeddedWallets: {
