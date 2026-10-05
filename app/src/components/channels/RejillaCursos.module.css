@@ -1,0 +1,275 @@
+.caja {
+  display: grid;
+  gap: 1.6rem;
+}
+
+/* ---------- filtros ---------- */
+
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--ch-rule);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ch-surface) 70%, transparent);
+  color: var(--ch-muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.filtro:hover {
+  color: var(--ch-ink);
+  border-color: color-mix(in srgb, var(--ch-accent) 50%, transparent);
+}
+
+.filtro[data-activo="true"] {
+  background: var(--ch-accent);
+  border-color: var(--ch-accent);
+  color: #06212a;
+}
+
+.filtro:focus-visible {
+  outline: 2px solid var(--ch-accent);
+  outline-offset: 2px;
+}
+
+.cuenta {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+/* ---------- rejilla ---------- */
+
+.rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+  gap: 1.1rem;
+}
+
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ch-rule);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--ch-surface) 88%, transparent);
+  transition: border-color 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.22s ease;
+}
+
+.tarjeta:hover {
+  border-color: color-mix(in srgb, var(--ch-accent) 55%, transparent);
+  transform: translateY(-4px);
+  box-shadow: 0 22px 46px -28px rgba(0, 0, 0, 0.95);
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0b1114;
+}
+
+.foto {
+  object-fit: cover;
+  /* La foto es soporte, no protagonista: entintada deja leer el título. */
+  filter: saturate(0.75) contrast(1.05);
+  opacity: 0.68;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+}
+
+.tarjeta:hover .foto {
+  transform: scale(1.05);
+  opacity: 0.85;
+}
+
+.media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ch-bg) 20%, transparent),
+    color-mix(in srgb, var(--ch-bg) 85%, transparent)
+  );
+  pointer-events: none;
+}
+
+.formato {
+  position: absolute;
+  z-index: 1;
+  top: 0.7rem;
+  left: 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  backdrop-filter: blur(6px);
+}
+
+.formato[data-formato="vivo"] {
+  background: color-mix(in srgb, var(--ch-accent-2, #f97316) 88%, transparent);
+  color: #1a0e04;
+}
+
+.formato[data-formato="grabado"] {
+  background: color-mix(in srgb, var(--ch-accent) 88%, transparent);
+  color: #06212a;
+}
+
+.cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem 1.15rem;
+  flex: 1;
+}
+
+.categoria {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ch-accent);
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--ch-font-display);
+  font-size: 1.12rem;
+  font-weight: 650;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+
+.resumen {
+  margin: 0;
+  font-size: 0.87rem;
+  line-height: 1.5;
+  color: var(--ch-muted);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.78rem;
+  color: var(--ch-muted);
+}
+
+.meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+.principal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 999px;
+  background: var(--ch-accent);
+  color: #06212a;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.principal:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+}
+
+.secundaria {
+  font-size: 0.85rem;
+  font-weight: 650;
+  color: var(--ch-muted);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.secundaria:hover {
+  color: var(--ch-ink);
+  border-bottom-color: var(--ch-accent);
+}
+
+/* Botón para abrir el resto del catálogo sin que la portada se vuelva infinita. */
+.masCaja {
+  display: flex;
+  justify-content: center;
+}
+
+.mas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border: 1px solid color-mix(in srgb, var(--ch-accent) 50%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ch-ink);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.mas:hover {
+  background: color-mix(in srgb, var(--ch-accent) 12%, transparent);
+  border-color: var(--ch-accent);
+}
+
+.mas:focus-visible {
+  outline: 2px solid var(--ch-accent);
+  outline-offset: 2px;
+}
+
+.vacio {
+  margin: 0;
+  color: var(--ch-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta,
+  .tarjeta:hover,
+  .foto,
+  .tarjeta:hover .foto,
+  .principal,
+  .filtro {
+    transform: none;
+    transition: none;
+  }
+}

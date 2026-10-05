@@ -23,7 +23,7 @@ export function BarraAccion({
   secundario,
 }: {
   total?: number;
-  tema?: "ceduct" | "psicologia";
+  tema?: "ceduct" | "psicologia" | "ige";
   titulo?: string;
   nota?: string;
   principal?: Accion;

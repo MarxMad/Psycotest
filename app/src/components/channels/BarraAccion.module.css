@@ -96,6 +96,14 @@
   color: var(--b-sobre-acento);
 }
 
+/* IGE: fondo casi negro y acento cian. */
+.barra[data-tema="ige"] {
+  --b-fondo: rgba(10, 13, 16, 0.94);
+  --b-acento: #22d3ee;
+  --b-acento-2: #0e7490;
+  --b-sobre-acento: #06212a;
+}
+
 /* Psicología Aplicada trabaja sobre fondo frío y acento cálido. */
 .barra[data-tema="psicologia"] {
   --b-fondo: rgba(14, 20, 28, 0.93);

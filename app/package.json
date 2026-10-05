@@ -12,7 +12,8 @@
     "db:down": "docker compose down",
     "db:smoke": "tsx src/db/smoke-supabase.ts",
     "vercel-build": "next build",
-    "canal:sembrar": "tsx src/db/sembrar-canal.ts"
+    "canal:sembrar": "tsx src/db/sembrar-canal.ts",
+    "ige:sembrar": "tsx src/db/sembrar-ige.ts"
   },
   "dependencies": {
     "@privy-io/react-auth": "^3.47.0",

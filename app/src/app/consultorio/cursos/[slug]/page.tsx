@@ -13,6 +13,7 @@ import {
 } from "@/lib/courses";
 import { courseThumbnail, evaluationFocus } from "@/lib/course-marketing";
 import { formatMxn, isStripeConfigured } from "@/lib/stripe";
+import { whatsapp } from "@/lib/contacto";
 import { CourseCheckout } from "../CourseCheckout";
 import c from "../cursos.module.css";
 
@@ -63,14 +64,22 @@ export default async function CourseDetailPage({ params }: Props) {
 
               <div className={c.metaPills}>
                 <span>{levelLabel(course.level)}</span>
-                <span>{lessonCount} clases</span>
-                <span>{formatDuration(course.durationMinutes)} de contenido</span>
-                <span>Certificación CONOCER</span>
+                {lessonCount > 0 ? <span>{lessonCount} clases</span> : null}
+                {course.durationMinutes > 0 ? (
+                  <span>{formatDuration(course.durationMinutes)} de contenido</span>
+                ) : null}
+                <span>{course.modalidad === "online" ? "Grabado" : "En vivo"}</span>
+                {course.estandarClave ? <span>Estándar {course.estandarClave}</span> : null}
               </div>
 
               <div className={c.instructorRow}>
                 <div className={c.instructorAvatar} aria-hidden>
-                  MH
+                  {course.instructorName
+                    .split(/\s+/)
+                    .filter((p) => p.length > 2)
+                    .slice(0, 2)
+                    .map((p) => p[0]?.toUpperCase())
+                    .join("")}
                 </div>
                 <div>
                   <p className={c.instructorName}>{course.instructorName}</p>
@@ -87,12 +96,29 @@ export default async function CourseDetailPage({ params }: Props) {
                     ▶
                   </span>
                 </div>
-                <CourseCheckout
-                  courseSlug={course.slug}
-                  priceLabel={formatMxn(course.priceMxn)}
-                  stripeReady={isStripeConfigured()}
-                  enrolled={enrolled}
-                />
+                {course.priceMxn > 0 ? (
+                  <CourseCheckout
+                    courseSlug={course.slug}
+                    priceLabel={formatMxn(course.priceMxn)}
+                    stripeReady={isStripeConfigured()}
+                    enrolled={enrolled}
+                  />
+                ) : (
+                  <div className={c.checkoutBox}>
+                    <p className={c.priceTag}>Precio a cotizar</p>
+                    <a
+                      className={c.btnPrimary}
+                      href={whatsapp(`Hola, quiero cotizar el curso «${course.title}».`)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Pedir cotización
+                    </a>
+                    <p className={c.checkoutHint}>
+                      Se cotiza por grupo: nos dices cuántas personas y en qué modalidad.
+                    </p>
+                  </div>
+                )}
               </div>
             </aside>
           </div>
@@ -103,10 +129,18 @@ export default async function CourseDetailPage({ params }: Props) {
         <div className={c.detailBodyInner}>
           <h2 className={c.syllabusTitle}>Contenido del curso</h2>
           <p className={c.syllabusLead}>
-            {lessonCount} clases · {formatDuration(course.durationMinutes)} · Avance guardado automáticamente
+            {lessonCount > 0
+              ? `${lessonCount} clases · ${formatDuration(course.durationMinutes)} · Avance guardado automáticamente`
+              : `${formatDuration(course.durationMinutes)} de programa · el temario detallado va en la propuesta`}
           </p>
 
           <div className={c.syllabusPlatzi}>
+            {curriculum.length === 0 ? (
+              <p className={c.syllabusLead}>
+                Este curso se arma sobre tu diagnóstico: el temario con objetivos, duración y
+                materiales se entrega en la propuesta.
+              </p>
+            ) : null}
             {curriculum.map((block) => (
               <section key={block.module.id} className={c.syllabusSection}>
                 <h3>{block.module.title}</h3>

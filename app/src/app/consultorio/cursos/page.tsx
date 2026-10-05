@@ -1,12 +1,14 @@
+import { headers } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import {
   countCourseLessons,
   formatDuration,
   levelLabel,
-  listCategories,
-  listPublishedCourses,
+  listCategoriesByChannel,
+  listPublishedCoursesByChannel,
 } from "@/lib/courses";
+import { getChannelFromHost, type ChannelId } from "@/lib/channels";
 import { courseThumbnail, evaluationFocus } from "@/lib/course-marketing";
 import { formatMxn } from "@/lib/stripe";
 import { CourseSearchBar } from "./CourseSearchBar";
@@ -14,7 +16,40 @@ import c from "./cursos.module.css";
 
 export const dynamic = "force-dynamic";
 
-type CourseRow = Awaited<ReturnType<typeof listPublishedCourses>>[number];
+/**
+ * Cada canal tiene su escuela. El catálogo se filtra por el canal del host,
+ * así que la portada tiene que hablar de lo que ese canal enseña.
+ */
+const PORTADA: Record<ChannelId, { eyebrow: string; titulo: string; lead: string; sello: string }> = {
+  ceduct: {
+    eyebrow: "Academy · Formación CONOCER",
+    titulo: "Aprende certificación y evaluación a tu ritmo",
+    lead:
+      "Rutas de aprendizaje con video, temario por módulos y avance por lección — estilo academy, alineadas a certificación CONOCER.",
+    sello: "Certificación CONOCER",
+  },
+  ige: {
+    eyebrow: "Academia · Ingeniería de Grupos Efectivos",
+    titulo: "Cursos para equipos que tienen que entenderse",
+    lead:
+      "Dirección, clima laboral, cumplimiento y diagnóstico. En vivo con tu gente y tus casos, o grabados para avanzar cuando se pueda.",
+    sello: "En vivo y grabados",
+  },
+  psicologia: {
+    eyebrow: "Academia · Psicología Aplicada",
+    titulo: "Formación en evaluación de personal",
+    lead: "Cursos sobre aplicación e interpretación de instrumentos psicométricos.",
+    sello: "Instrumentos aplicados",
+  },
+  martin: {
+    eyebrow: "Academia",
+    titulo: "Cursos y programas",
+    lead: "Formación con avance por lección.",
+    sello: "Avance por lección",
+  },
+};
+
+type CourseRow = Awaited<ReturnType<typeof listPublishedCoursesByChannel>>[number];
 
 function CourseCard({
   course,
@@ -41,11 +76,16 @@ function CourseCard({
         {course.subtitle ? <p className={c.cardSub}>{course.subtitle}</p> : null}
         <div className={c.cardMeta}>
           <span className={c.tag}>{levelLabel(course.level)}</span>
-          <span className={c.tag}>{lessonCount} clases</span>
-          <span className={c.tag}>{formatDuration(course.durationMinutes)}</span>
+          {lessonCount > 0 ? <span className={c.tag}>{lessonCount} clases</span> : null}
+          {course.durationMinutes > 0 ? (
+            <span className={c.tag}>{formatDuration(course.durationMinutes)}</span>
+          ) : null}
         </div>
         <div className={c.cardFooter}>
-          <span className={c.cardPrice}>{formatMxn(course.priceMxn)}</span>
+          {/* Sin precio cargado el curso se cotiza; "$0" se leería como gratis. */}
+          <span className={c.cardPrice}>
+            {course.priceMxn > 0 ? formatMxn(course.priceMxn) : "Cotizar"}
+          </span>
           <span className={c.cardCta}>Ver curso →</span>
         </div>
       </div>
@@ -54,7 +94,14 @@ function CourseCard({
 }
 
 export default async function CursosCatalogPage() {
-  const [categories, courses] = await Promise.all([listCategories(), listPublishedCourses()]);
+  const host = (await headers()).get("host");
+  const canal: ChannelId = getChannelFromHost(host)?.id ?? "ceduct";
+  const portada = PORTADA[canal] ?? PORTADA.ceduct;
+
+  const [categories, courses] = await Promise.all([
+    listCategoriesByChannel(canal),
+    listPublishedCoursesByChannel(canal),
+  ]);
 
   const lessonCounts = await Promise.all(
     courses.map(async ({ course }) => ({
@@ -78,17 +125,14 @@ export default async function CursosCatalogPage() {
     <div className={c.catalogPage}>
       <section className={c.catalogHero}>
         <div className={c.catalogHeroInner}>
-          <p className={c.catalogEyebrow}>Academy · Formación CONOCER</p>
-          <h1>Aprende certificación y evaluación a tu ritmo</h1>
-          <p className={c.catalogLead}>
-            Rutas de aprendizaje con video, temario por módulos y avance por lección — estilo academy,
-            alineadas a certificación CONOCER.
-          </p>
+          <p className={c.catalogEyebrow}>{portada.eyebrow}</p>
+          <h1>{portada.titulo}</h1>
+          <p className={c.catalogLead}>{portada.lead}</p>
           {totalCourses > 0 ? <CourseSearchBar /> : null}
           <div className={c.catalogStats}>
             <span>{totalCourses} cursos</span>
             <span>·</span>
-            <span>Certificación CONOCER</span>
+            <span>{portada.sello}</span>
             <span>·</span>
             <span>Avance por lección</span>
           </div>
