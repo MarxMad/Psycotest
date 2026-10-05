@@ -37,8 +37,8 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
     updatedAt: new Date().toISOString(),
     hero: {
       brand: "Martín Hernández González",
-      headline: "Consultor. Valuador. Certificador.",
-      lead: "Tres oficios que se cruzan en un mismo punto: poner valor donde hoy sólo hay intuición. Lo hago con organizaciones que necesitan decidir sobre su gente, su patrimonio y sus competencias.",
+      headline: "Pongo valor donde hoy sólo hay intuición",
+      lead: "Consultoría, valuación y certificación de competencias para organizaciones que necesitan decidir sobre su gente, su patrimonio y lo que saben hacer. Entro directo con dirección y todo queda por escrito.",
       image: "/ige/banner.png",
       primaryCta: { label: "Agendar una conversación", href: "#contacto" },
       secondaryCta: { label: "Ver mi práctica", href: "#credenciales" },

@@ -73,6 +73,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     secondaryCta: { label: "Ver mi práctica", href: "#credenciales" },
     nav: [
       { label: "Perfil", href: "#credenciales" },
+      { label: "Qué entrego", href: "#entregables" },
       { label: "Método", href: "#metodo" },
       { label: "Líneas de trabajo", href: "#canales" },
       { label: "Contacto", href: "#contacto" },
