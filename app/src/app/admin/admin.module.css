@@ -408,3 +408,53 @@
   font-family: var(--mono);
   font-size: var(--admin-fs-base);
 }
+
+/*
+ * Móvil. Esta hoja se escribió para el escritorio y no tenía ni una media
+ * query: las pestañas se salían del ancho y, como el panel recorta lo que
+ * desborda, «Interpretación» quedaba cortada y sin manera de alcanzarla.
+ */
+@media (max-width: 768px) {
+  /* Las pestañas siguen en una fila, pero ahora se arrastran. */
+  .tabs {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab,
+  .tabOn {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* El título y su botón dejan de pelearse por el ancho. */
+  .detailHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Migas y botoneras: antes de estrujarse, que bajen de línea. */
+  .crumb,
+  .row,
+  .stats {
+    flex-wrap: wrap;
+  }
+
+  .hartmanGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* El panel ya pone su propio margen alrededor. */
+  .main {
+    padding-top: 0.5rem;
+  }
+
+  .wrap {
+    padding: 0;
+  }
+}
