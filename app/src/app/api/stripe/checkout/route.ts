@@ -7,7 +7,7 @@ import { isStripeConfigured } from "@/lib/stripe";
  * Abre el pago de un pedido.
  *
  * Acepta un pedido ya creado (el carrito de diplomados) o el slug de un curso
- * del consultorio, en cuyo caso crea el pedido primero. En los dos casos el
+ * del catálogo, en cuyo caso crea el pedido primero. En los dos casos el
  * importe sale de la base de datos, nunca de lo que mande el navegador.
  */
 export async function POST(request: Request) {
@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       pedidoId: pedido.pedidoId,
       origen,
       email: usuario.email,
-      cancelarEn: `/consultorio/cursos/${body.courseSlug}`,
+      cancelarEn: `/cursos/${body.courseSlug}`,
     });
     return sesion.ok
       ? NextResponse.json({ url: sesion.url })

@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ConsultorioNav } from "../ConsultorioNav";
-import styles from "../conocer-pages.module.css";
+import { RevelarAlEntrar } from "@/components/ui/RevelarAlEntrar";
+import styles from "@/styles/conocer-pages.module.css";
 
 type Exp = {
   id: string;
@@ -13,7 +13,13 @@ type Exp = {
   program?: { code: string; title: string; courseId: string } | null;
 };
 
-export default function MiExpedientePage() {
+/**
+ * Lo que el alumno aporta a su expediente: diagnóstico, evaluaciones y
+ * portafolio de evidencias. Vive bajo «Mi expediente», que es el resumen de
+ * sólo lectura; antes estaba en un área de alumno aparte, con su propio
+ * encabezado y su propia marca sobre los mismos datos.
+ */
+export default function EvidenciasPage() {
   const [rows, setRows] = useState<Exp[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [detail, setDetail] = useState<Record<string, unknown> | null>(null);
@@ -71,13 +77,12 @@ export default function MiExpedientePage() {
   }
 
   return (
-    <>
-      <ConsultorioNav />
-      <div className={styles.shell} data-anime="page">
-        <main className={styles.main}>
+    <RevelarAlEntrar>
+      <div data-anime="page">
+        <div className={styles.main}>
           <header className={styles.hero} data-anime="hero">
             <p className={styles.eyebrow}>CONOCER · Expediente</p>
-            <h1>Mi expediente</h1>
+            <h1>Evaluaciones y evidencias</h1>
             <p className={styles.lead}>
               Diagnóstico, evaluaciones, portafolio y seguimiento de aprovechamiento.
             </p>
@@ -193,12 +198,14 @@ export default function MiExpedientePage() {
           )}
 
           <p className={styles.muted} style={{ marginTop: "2rem" }}>
+            <Link href="/mi-cuenta/expediente">Volver a mi expediente</Link>
+            {" · "}
             <Link href="/verificar">Ver constancias</Link>
             {" · "}
-            <Link href="/consultorio/legal">Documentos legales</Link>
+            <Link href="/legal">Documentos legales</Link>
           </p>
-        </main>
+        </div>
       </div>
-    </>
+    </RevelarAlEntrar>
   );
 }

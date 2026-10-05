@@ -62,7 +62,7 @@ export default async function EnVivoPage() {
                   meta={c.estado === "live" ? "En curso ahora" : "Próxima"}
                   titulo={c.titulo}
                   pie={
-                    <Link href={`/consultorio/clases-vivo/${c.id}/sala`}>
+                    <Link href={`/mi-cuenta/en-vivo/${c.id}/sala`}>
                       {c.estado === "live" ? "Entrar ahora →" : "Ver detalle →"}
                     </Link>
                   }

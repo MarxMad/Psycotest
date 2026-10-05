@@ -61,7 +61,7 @@ export default async function MisCursosPage() {
         <Vacio
           titulo="Todavía no tienes cursos"
           texto="Cuando te inscribas a un programa aparecerá aquí con tu avance."
-          accion={<Link href="/consultorio/cursos">Ver catálogo</Link>}
+          accion={<Link href="/cursos">Ver catálogo</Link>}
         />
       ) : (
         <Tarjetas>
@@ -73,7 +73,7 @@ export default async function MisCursosPage() {
                 meta={c.instructor}
                 titulo={c.titulo}
                 pie={
-                  <Link href={`/consultorio/cursos/${c.slug}/aprender`}>
+                  <Link href={`/cursos/${c.slug}/aprender`}>
                     {a && a.hechas > 0 ? "Continuar →" : "Empezar →"}
                   </Link>
                 }

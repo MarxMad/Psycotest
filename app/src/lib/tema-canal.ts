@@ -42,7 +42,7 @@ export function estiloDeCanal(canal: ChannelId): CSSProperties {
     "--gold": "var(--ch-accent-2, var(--ch-accent))",
     "--gold-soft": "color-mix(in srgb, var(--ch-accent-2, var(--ch-accent)) 16%, var(--ch-surface))",
 
-    // Alias heredados del consultorio
+    // Alias heredados de la paleta original
     "--c-blue": "var(--ch-accent)",
     "--c-blue-bright": "var(--ch-accent)",
     "--c-blue-soft": "color-mix(in srgb, var(--ch-accent) 16%, var(--ch-surface))",

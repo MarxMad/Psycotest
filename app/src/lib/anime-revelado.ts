@@ -8,7 +8,7 @@ function markHidden(els: HTMLElement[]) {
   }
 }
 
-export function animateEnter(
+function animateEnter(
   targets: string | HTMLElement | HTMLElement[],
   opts?: { delay?: number; y?: number; duration?: number },
 ) {
@@ -21,7 +21,7 @@ export function animateEnter(
   });
 }
 
-export function animateStagger(targets: HTMLElement[], opts?: { y?: number; duration?: number }) {
+function animateStagger(targets: HTMLElement[], opts?: { y?: number; duration?: number }) {
   return animate(targets, {
     opacity: [0, 1],
     translateY: [opts?.y ?? 22, 0],
@@ -32,7 +32,7 @@ export function animateStagger(targets: HTMLElement[], opts?: { y?: number; dura
 }
 
 /** Anima nodos data-anime / data-reveal / data-anime-stagger dentro de root. */
-export function bindConsultorioAnime(root: HTMLElement): () => void {
+export function bindRevelado(root: HTMLElement): () => void {
   const immediate = root.querySelectorAll<HTMLElement>(
     '[data-anime="hero"], [data-anime="nav"], [data-anime="page"]',
   );

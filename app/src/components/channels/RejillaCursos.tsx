@@ -211,7 +211,7 @@ export function RejillaCursos({ cursos }: { cursos: CursoVista[] }) {
 
               <div className={s.acciones}>
                 {curso.precio > 0 ? (
-                  <a className={s.principal} href={`/consultorio/cursos/${curso.slug}`}>
+                  <a className={s.principal} href={`/cursos/${curso.slug}`}>
                     Comprar · {pesos(curso.precio)}
                     <ArrowRight size={15} aria-hidden />
                   </a>
@@ -230,7 +230,7 @@ export function RejillaCursos({ cursos }: { cursos: CursoVista[] }) {
                     <ArrowRight size={15} aria-hidden />
                   </a>
                 )}
-                <a className={s.secundaria} href={`/consultorio/cursos/${curso.slug}`}>
+                <a className={s.secundaria} href={`/cursos/${curso.slug}`}>
                   Ver temario
                 </a>
               </div>

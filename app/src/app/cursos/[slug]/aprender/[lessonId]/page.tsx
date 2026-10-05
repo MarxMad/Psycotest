@@ -2,6 +2,8 @@ import { redirect, notFound } from "next/navigation";
 import { getSessionUser } from "@/lib/auth";
 import { canAccessLesson, getEnrollmentBySlug, getPlayerState } from "@/lib/course-access";
 import { getLessonInCourse } from "@/lib/courses";
+import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
+import { canalDelCurso } from "../../../canal";
 import { CoursePlayer } from "../../../CoursePlayer";
 
 type Props = { params: Promise<{ slug: string; lessonId: string }> };
@@ -15,7 +17,7 @@ export default async function LessonPage({ params }: Props) {
 
   const user = await getSessionUser();
   if (!user) {
-    redirect(`/consultorio/ingreso?next=/consultorio/cursos/${slug}/aprender/${lessonId}`);
+    redirect(`/login?next=/cursos/${slug}/aprender/${lessonId}`);
   }
 
   const allowed = await canAccessLesson({
@@ -26,12 +28,12 @@ export default async function LessonPage({ params }: Props) {
   });
 
   if (!allowed) {
-    redirect(`/consultorio/cursos/${slug}`);
+    redirect(`/cursos/${slug}`);
   }
 
   const state = await getPlayerState(user.id, slug);
   if (!state && !lessonRow.lesson.freePreview) {
-    redirect(`/consultorio/cursos/${slug}`);
+    redirect(`/cursos/${slug}`);
   }
 
   let curriculum;
@@ -65,8 +67,13 @@ export default async function LessonPage({ params }: Props) {
     }));
   }
 
+  // El reproductor va a pantalla completa, sin encabezado de sitio; el tema
+  // del canal sí viaja con él para que no cambie de piel al entrar a clase.
+  const canal = canalDelCurso(lessonRow.category?.channelId);
+
   return (
-    <CoursePlayer
+    <div className={clasesDeCanal(canal)} style={estiloDeCanal(canal)}>
+      <CoursePlayer
         courseSlug={slug}
         courseTitle={lessonRow.course.title}
         currentLessonId={lessonId}
@@ -74,5 +81,6 @@ export default async function LessonPage({ params }: Props) {
         videoUrl={lessonRow.lesson.videoUrl}
         progressPercent={state?.enrollment.progressPercent ?? 0}
       />
+    </div>
   );
 }

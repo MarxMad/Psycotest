@@ -1,8 +1,16 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { channelPublicUrl, type ChannelDef } from "@/lib/channels";
-import { FUENTES_CANAL } from "@/lib/channel-fonts";
+import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
 import s from "./ChannelShell.module.css";
 
+/**
+ * Cáscara de un sitio de canal: encabezado, contenido y pie.
+ *
+ * El tema va por `estiloDeCanal`, que además de los tokens `--ch-*` deja los
+ * alias de la paleta original (`--ink`, `--paper`, `--brand`…). Así una
+ * página interna escrita con esos tokens —la ficha de un curso, por
+ * ejemplo— se pinta con la identidad del canal sin reescribir su CSS.
+ */
 export function ChannelShell({
   channel,
   children,
@@ -10,17 +18,16 @@ export function ChannelShell({
   channel: ChannelDef;
   children: ReactNode;
 }) {
-  const fuentes = FUENTES_CANAL[channel.id];
-  const style = {
-    ...channel.theme.vars,
-    "--ch-font-display": fuentes.display,
-    "--ch-font-body": fuentes.body,
-  } as CSSProperties;
+  const home = channelPublicUrl(channel.id);
+
+  // Las entradas del menú son anclas de la portada. Fuera de ella no hay
+  // nada que buscar: hay que volver a la portada y luego bajar a la sección.
+  const destino = (href: string) => (href.startsWith("#") ? `${home}${href}` : href);
 
   return (
     <div
-      className={`${s.shell} ${fuentes.className}`}
-      style={style}
+      className={`${s.shell} ${clasesDeCanal(channel.id)}`}
+      style={estiloDeCanal(channel.id)}
       data-channel={channel.id}
     >
       <header
@@ -28,7 +35,7 @@ export function ChannelShell({
           channel.id === "ceduct" ? s.navCeduct : channel.id === "psicologia" ? s.navPsico : ""
         }`}
       >
-        <a href={channelPublicUrl(channel.id)} className={s.brand}>
+        <a href={home} className={s.brand}>
           {channel.logo ? (
             <img
               src={channel.logo}
@@ -45,7 +52,7 @@ export function ChannelShell({
         </a>
         <nav className={s.links} aria-label="Principal">
           {channel.nav.map((item) => (
-            <a key={item.href + item.label} href={item.href}>
+            <a key={item.href + item.label} href={destino(item.href)}>
               {item.label}
             </a>
           ))}

@@ -29,7 +29,7 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }
     setLoading(false);
 
     if (res.status === 401) {
-      router.push(`/consultorio/ingreso?next=/consultorio/cursos/${courseSlug}`);
+      router.push(`/login?next=/cursos/${courseSlug}`);
       return;
     }
     if (!res.ok) {
@@ -56,7 +56,7 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }
     return (
       <div className={styles.checkoutBox}>
         <p className={styles.enrolledBadge}>Ya estás inscrito</p>
-        <Link href={`/consultorio/cursos/${courseSlug}/aprender`} className={styles.btnPrimary}>
+        <Link href={`/cursos/${courseSlug}/aprender`} className={styles.btnPrimary}>
           Continuar viendo →
         </Link>
       </div>
@@ -80,7 +80,7 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }
               Inscribirme (dev)
             </button>
           ) : (
-            <Link href={`/consultorio/ingreso?next=/consultorio/cursos/${courseSlug}`} className={styles.btnSecondary}>
+            <Link href={`/login?next=/cursos/${courseSlug}`} className={styles.btnSecondary}>
               Crear cuenta / iniciar sesión
             </Link>
           )}
@@ -89,7 +89,7 @@ export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }
       {error ? <p className={styles.error}>{error}</p> : null}
       <p className={styles.checkoutFine}>
         ¿Ya tienes cuenta?{" "}
-        <Link href={`/consultorio/ingreso?next=/consultorio/cursos/${courseSlug}`}>Inicia sesión</Link>
+        <Link href={`/login?next=/cursos/${courseSlug}`}>Inicia sesión</Link>
       </p>
     </div>
   );

@@ -45,7 +45,7 @@ export default function VerificarPage() {
 
         <p className={styles.pie}>
           ¿Buscas tu propia constancia?{" "}
-          <Link href="/consultorio/expediente">Entra a tu expediente</Link>.
+          <Link href="/mi-cuenta/expediente">Entra a tu expediente</Link>.
         </p>
       </div>
     </main>

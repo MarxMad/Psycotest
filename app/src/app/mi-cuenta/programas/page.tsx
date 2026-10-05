@@ -59,7 +59,7 @@ export default async function MisProgramasPage() {
         <Vacio
           titulo="No tienes programas activos"
           texto="Cuando te inscribas a un diplomado aparecerá aquí con tu avance y tus materiales."
-          accion={<Link href="/consultorio/cursos">Ver programas</Link>}
+          accion={<Link href="/cursos">Ver programas</Link>}
         />
       ) : (
         <Tarjetas>
@@ -68,7 +68,7 @@ export default async function MisProgramasPage() {
               key={c.id}
               meta={c.minutos ? `${Math.round(c.minutos / 60)} horas` : "Programa"}
               titulo={c.titulo}
-              pie={<Link href={`/consultorio/cursos/${c.slug}/aprender`}>Continuar →</Link>}
+              pie={<Link href={`/cursos/${c.slug}/aprender`}>Continuar →</Link>}
             >
               {c.subtitulo && <p>{c.subtitulo}</p>}
               <Avance porcentaje={porCurso.get(c.id) ?? 0} />

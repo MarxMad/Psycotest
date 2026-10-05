@@ -8,11 +8,11 @@ import s from "./ceduct.module.css";
 /**
  * Navegación de las páginas de compra (catálogo, ficha, carrito).
  *
- * Antes mostraba «Diplomados · Certificaciones · Proceso» como iguales, y
- * estando ya en /diplomados parecía que los tres eran secciones de esta
- * página: dos se iban a la portada sin avisar. Ahora la página en la que
- * estás va marcada y los enlaces que viven en la portada quedan detrás de
- * «Inicio», separados, para que se lea a qué sitio llevan.
+ * Sólo dos destinos: la portada y el catálogo. Antes colgaban aquí
+ * «Certificaciones» y «Cómo funciona», que son anclas de la portada: se
+ * leían como secciones de esta página y al tocarlas te sacaban del
+ * catálogo sin avisar. Quien quiera esas secciones las encuentra en
+ * «Inicio», que es donde viven.
  */
 export function NavCeduct() {
   const ruta = usePathname() || "";
@@ -31,16 +31,6 @@ export function NavCeduct() {
         aria-current={enCatalogo ? "page" : undefined}
       >
         Diplomados
-      </Link>
-
-      <span className={s.navCorte} aria-hidden />
-
-      {/* Secciones de la portada: el corte de arriba las separa de las de aquí. */}
-      <Link href={`${inicio}#certificaciones`} className={s.navLink}>
-        Certificaciones
-      </Link>
-      <Link href={`${inicio}#ruta`} className={s.navLink}>
-        Cómo funciona
       </Link>
     </nav>
   );

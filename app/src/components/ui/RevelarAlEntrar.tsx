@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { bindConsultorioAnime } from "@/lib/anime-consultorio";
+import { bindRevelado } from "@/lib/anime-revelado";
 
-/** Activa anime.js en el árbol del consultorio (data-anime / data-reveal). */
-export function ConsultorioAnime({ children }: { children: React.ReactNode }) {
+/** Revela con anime.js los nodos data-anime / data-reveal del árbol. */
+export function RevelarAlEntrar({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    return bindConsultorioAnime(root);
+    return bindRevelado(root);
   }, []);
 
   return (

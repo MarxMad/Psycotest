@@ -37,7 +37,7 @@
   --shadow-glow: 0 0 0 1px color-mix(in srgb, var(--brand) 18%, transparent),
     0 12px 40px -12px color-mix(in srgb, var(--brand) 28%, transparent);
 
-  /* Alias consultorio / CONOCER */
+  /* Alias de la paleta original / CONOCER */
   --c-blue: var(--brand);
   --c-blue-bright: var(--brand-bright);
   --c-blue-soft: var(--brand-soft);

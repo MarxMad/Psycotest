@@ -111,7 +111,7 @@ export function CoursePlayer({
     <div className={styles.playerLayout}>
       <aside className={styles.playerSidebar}>
         <div className={styles.playerSidebarHead}>
-          <Link href={`/consultorio/cursos/${courseSlug}`} className={styles.backLink}>
+          <Link href={`/cursos/${courseSlug}`} className={styles.backLink}>
             ← {courseTitle}
           </Link>
           <div className={styles.progressTrack}>
@@ -135,7 +135,7 @@ export function CoursePlayer({
                 {block.lessons.map((item) => (
                   <li key={item.id}>
                     <Link
-                      href={`/consultorio/cursos/${courseSlug}/aprender/${item.id}`}
+                      href={`/cursos/${courseSlug}/aprender/${item.id}`}
                       className={`${styles.lessonLink}${item.id === currentLessonId ? ` ${styles.lessonActive}` : ""}`}
                     >
                       <span className={styles.lessonCheck}>{item.progress?.completed ? "✓" : "○"}</span>
@@ -162,7 +162,7 @@ export function CoursePlayer({
             {marking ? "Guardando…" : "Marcar como vista"}
           </button>
           {next ? (
-            <Link href={`/consultorio/cursos/${courseSlug}/aprender/${next.id}`} className={styles.btnSecondary}>
+            <Link href={`/cursos/${courseSlug}/aprender/${next.id}`} className={styles.btnSecondary}>
               Siguiente clase →
             </Link>
           ) : null}

@@ -11,7 +11,7 @@ import { stripe } from "@/lib/stripe";
  *
  * Todo pasa por la misma pieza: un pedido (`orders` + `order_items`) es la
  * unidad que se cobra y que se cumple. Da igual que venga del carrito de
- * CEDUCT o del botón de un curso del consultorio; así solo hay un sitio donde
+ * CEDUCT o del botón de un curso del catálogo; así solo hay un sitio donde
  * se concede el acceso y un sitio donde puede fallar.
  */
 
@@ -34,7 +34,7 @@ export function origenDe(request: Request): string {
 }
 
 /**
- * Crea el pedido de un curso suelto del consultorio.
+ * Crea el pedido de un curso suelto del catálogo.
  *
  * Devuelve el pedido pendiente que ya existía si lo hay, para que recargar la
  * página o volver atrás no deje una ristra de pedidos huérfanos.

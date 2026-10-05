@@ -66,7 +66,7 @@ export async function seedDemoCourse(db: AppDb): Promise<void> {
     subtitle: "Curso demo con video y quiz validados",
     categoryId,
     priceMxn: 0,
-    instructorName: "Equipo consultorio",
+    instructorName: "Equipo académico",
     level: "basico",
     durationMinutes: 25,
     published: true,
@@ -167,5 +167,5 @@ export async function seedDemoCourse(db: AppDb): Promise<void> {
     },
   ]);
 
-  console.info(`[psycotest] Curso demo LMS sembrado: /consultorio/cursos/${DEMO_SLUG}`);
+  console.info(`[psycotest] Curso demo LMS sembrado: /cursos/${DEMO_SLUG}`);
 }

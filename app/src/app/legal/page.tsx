@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ConsultorioNav } from "../ConsultorioNav";
-import styles from "../conocer-pages.module.css";
+import { RevelarAlEntrar } from "@/components/ui/RevelarAlEntrar";
+import styles from "@/styles/conocer-pages.module.css";
 
 type Doc = {
   id: string;
@@ -35,13 +35,12 @@ export default function LegalDocsPage() {
     });
     if (res.ok) setAcked((a) => ({ ...a, [id]: true }));
     else if (res.status === 401) {
-      window.location.href = "/login?next=/consultorio/legal";
+      window.location.href = "/login?next=/legal";
     }
   }
 
   return (
-    <>
-      <ConsultorioNav />
+    <RevelarAlEntrar>
       <div className={styles.shell} data-anime="page">
         <main className={styles.main}>
           <header className={styles.hero} data-anime="hero">
@@ -65,10 +64,10 @@ export default function LegalDocsPage() {
           ))}
 
           <p className={styles.muted}>
-            <Link href="/consultorio/expediente">Mi expediente</Link>
+            <Link href="/mi-cuenta/expediente">Mi expediente</Link>
           </p>
         </main>
       </div>
-    </>
+    </RevelarAlEntrar>
   );
 }

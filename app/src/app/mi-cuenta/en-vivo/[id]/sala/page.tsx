@@ -57,10 +57,10 @@ export default function AlumnoSalaPage() {
   }, [id]);
 
   return (
-    <main className={styles.roomPage}>
+    <div className={styles.roomPage}>
       <div className={styles.roomTop}>
         <div>
-          <Link href="/consultorio/clases-vivo" className={styles.back}>
+          <Link href="/mi-cuenta/en-vivo" className={styles.back}>
             ← Mis clases
           </Link>
           <h1>{title}</h1>
@@ -72,7 +72,7 @@ export default function AlumnoSalaPage() {
       {!loading && error && (
         <div className={styles.empty}>
           <p>{error}</p>
-          <Link href="/login?next=/consultorio/clases-vivo" className={styles.cta}>
+          <Link href="/login?next=/mi-cuenta/en-vivo" className={styles.cta}>
             Iniciar sesión
           </Link>
         </div>
@@ -105,6 +105,6 @@ export default function AlumnoSalaPage() {
           />
         </>
       )}
-    </main>
+    </div>
   );
 }

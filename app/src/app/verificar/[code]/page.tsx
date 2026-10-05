@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/brand";
-import styles from "@/app/consultorio/conocer-pages.module.css";
+import styles from "@/styles/conocer-pages.module.css";
 
 type Result = {
   valid: boolean;

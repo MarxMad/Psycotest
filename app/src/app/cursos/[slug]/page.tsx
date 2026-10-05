@@ -14,6 +14,9 @@ import {
 import { courseThumbnail, evaluationFocus } from "@/lib/course-marketing";
 import { formatMxn, isStripeConfigured } from "@/lib/stripe";
 import { whatsapp } from "@/lib/contacto";
+import { CHANNELS, channelPublicUrl } from "@/lib/channels";
+import { ChannelShell } from "@/components/channels/ChannelShell";
+import { canalDelCurso } from "../canal";
 import { CourseCheckout } from "../CourseCheckout";
 import c from "../cursos.module.css";
 
@@ -29,7 +32,7 @@ export const dynamic = "force-dynamic";
 export default async function CourseDetailPage({ params }: Props) {
   const { slug } = await params;
   if (LEGACY_SLUGS[slug]) {
-    redirect(`/consultorio/cursos/${LEGACY_SLUGS[slug]}`);
+    redirect(`/cursos/${LEGACY_SLUGS[slug]}`);
   }
   const row = await getCourseBySlug(slug);
   if (!row?.course.published) notFound();
@@ -42,15 +45,16 @@ export default async function CourseDetailPage({ params }: Props) {
   const enrolled = enrollment?.enrollment.status === "active";
   const thumb = courseThumbnail(course.id, course.thumbnailUrl);
   const focus = evaluationFocus(course.id);
+  const canal = canalDelCurso(category?.channelId);
 
   let lessonIndex = 0;
 
   return (
-    <>
+    <ChannelShell channel={CHANNELS[canal]}>
       <div className={c.detailHero}>
         <div className={c.detailHeroInner}>
           <p className={c.detailBreadcrumb}>
-            <Link href="/consultorio/cursos">Cursos</Link>
+            <Link href={`${channelPublicUrl(canal)}#academia`}>Cursos</Link>
             <span>/</span>
             <span>{category?.name ?? "Cursos"}</span>
           </p>
@@ -169,6 +173,6 @@ export default async function CourseDetailPage({ params }: Props) {
           </div>
         </div>
       </div>
-    </>
+    </ChannelShell>
   );
 }

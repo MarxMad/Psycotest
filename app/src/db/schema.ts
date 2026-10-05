@@ -118,7 +118,7 @@ export const auditLog = pgTable("audit_log", {
   createdAt: text("created_at").notNull(),
 });
 
-// Categorías de cursos (CONOCER / consultorio)
+// Categorías de cursos: la «escuela» de cada canal
 export const courseCategories = pgTable("course_categories", {
   id: text("id").primaryKey(),
   slug: text("slug").notNull().unique(),
@@ -180,7 +180,7 @@ export const courseModules = pgTable("course_modules", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
-// Lecciones (nombre principal del consultorio CONOCER)
+// Lecciones
 export const courseLessons = pgTable("course_lessons", {
   id: text("id").primaryKey(),
   moduleId: text("module_id")

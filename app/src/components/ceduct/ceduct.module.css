@@ -164,15 +164,6 @@
   }
 }
 
-/* Separa lo que vive aquí de lo que vive en la portada. */
-.navCorte {
-  flex: none;
-  width: 1px;
-  height: 1.1rem;
-  margin-inline: 0.45rem;
-  background: var(--linea);
-}
-
 @media (min-width: 760px) {
   .navLinks {
     gap: 0.3rem;

@@ -303,7 +303,7 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
       lead: "Capacitación y consultoría para organizaciones del sector público y de la iniciativa privada. Intervenimos donde se traba el equipo: la comunicación, el mando, el acuerdo y el seguimiento.",
       image: "/ige/serv1.png",
       primaryCta: { label: "Solicitar una propuesta", href: "#contacto" },
-      secondaryCta: { label: "Ver catálogo de cursos", href: "/consultorio/cursos" },
+      secondaryCta: { label: "Ver catálogo de cursos", href: "#academia" },
     },
     sections: [
       {

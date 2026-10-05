@@ -1,6 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { certificationPrograms, studentExpedientes } from "@/db/schema";
+import Link from "next/link";
 import { asegurarSeccion } from "../guardia";
 import { Avance, Encabezado, Tarjeta, Tarjetas, Vacio } from "../Secciones";
 
@@ -42,6 +43,12 @@ export default async function MiExpedientePage() {
         titulo="Mi expediente"
         texto="Tu avance hacia la certificación: evidencias, permanencia y dictamen."
       />
+
+      <p>
+        <Link href="/mi-cuenta/expediente/evidencias">
+          Contestar evaluaciones y subir evidencias →
+        </Link>
+      </p>
 
       {expedientes.length === 0 ? (
         <Vacio

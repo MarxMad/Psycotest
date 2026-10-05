@@ -1,0 +1,66 @@
+/* Sala de la clase en vivo. El listado lo arma ya la zona de alumno. */
+
+.roomPage {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.roomTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.roomTop h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.back {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.muted {
+  color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.empty {
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: var(--brand, #0f766e);
+  color: var(--on-accent, #fff);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.cta:hover {
+  background: color-mix(in srgb, var(--brand, #0f766e) 85%, #fff);
+}
+
+/* Aviso mientras la reunión no arranca. */
+.espera {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, var(--accent, #0f3d3e) 25%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--accent, #0f3d3e) 7%, transparent);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}

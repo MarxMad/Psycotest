@@ -246,7 +246,7 @@ export function getChannelPlatformCtas(
     ],
     ceduct: [
       { label: "Diplomados", href: "/diplomados", hint: "Catálogo e inscripción" },
-      { label: "Expedientes", href: "/consultorio/expediente", hint: "Gestión del candidato ECE" },
+      { label: "Expedientes", href: "/mi-cuenta/expediente", hint: "Gestión del candidato ECE" },
       { label: "Constancias", href: "/verificar", hint: "Emisión y verificación" },
     ],
     psicologia: [
@@ -255,8 +255,8 @@ export function getChannelPlatformCtas(
       { label: "Solicitar evaluación", href: "#contacto", hint: "Cotiza tu proceso de selección" },
     ],
     ige: [
-      { label: "Catálogo de cursos", href: "/consultorio/cursos", hint: "Inscripción en línea" },
-      { label: "Clases en vivo", href: "/consultorio/clases-vivo", hint: "Sesiones sincrónicas" },
+      { label: "Catálogo de cursos", href: "#academia", hint: "Inscripción en línea" },
+      { label: "Clases en vivo", href: "/mi-cuenta/en-vivo", hint: "Sesiones sincrónicas" },
       { label: "Consultoría", href: "#consultoria", hint: "Diagnóstico de equipos" },
     ],
   };
@@ -278,7 +278,10 @@ export function isPlatformPath(pathname: string): boolean {
     "/login",
     "/evaluacion",
     "/psycotest",
-    "/consultorio",
+    // La ficha del curso y el reproductor son de la plataforma, no de una
+    // portada: su marca sale del canal del curso, no del subdominio.
+    "/cursos",
+    "/legal",
     "/participantes",
     "/verificar",
     "/sites",

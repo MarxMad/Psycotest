@@ -152,7 +152,7 @@ function ProgramarClaseForm() {
               ))}
             </select>
             <small className={s.hint}>
-              Los alumnos inscritos en este curso podrán entrar a la sala desde el consultorio.
+              Los alumnos inscritos en este curso podrán entrar a la sala desde su cuenta.
             </small>
           </div>
 

@@ -106,7 +106,7 @@ export async function middleware(request: NextRequest) {
 
     // El aplicador no opera el panel: solo acompaña la aplicación de pruebas.
     if (!operaElPanel(rol as Rol)) {
-      return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
+      return NextResponse.redirect(new URL("/mi-cuenta", request.url));
     }
 
     // Personas, dinero y marca quedan para el administrador.
