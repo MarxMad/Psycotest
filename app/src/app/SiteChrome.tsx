@@ -8,6 +8,7 @@ import { BrandDot, TopNav } from "./TopNav";
 
 /** Rutas que traen su propio encabezado: la barra global sobraría encima. */
 const CON_ENCABEZADO_PROPIO = [
+  "/admin",
   "/cursos",
   "/sites",
   "/diplomados",

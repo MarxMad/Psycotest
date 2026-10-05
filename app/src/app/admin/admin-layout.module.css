@@ -97,6 +97,16 @@
 }
 
 @media (max-width: 768px) {
+  /*
+   * En móvil la barra superior y el contenido se apilan. Sin esto el panel
+   * seguía siendo una fila: la barra y el contenido se repartían el ancho,
+   * la barra quedaba centrada a media altura y el contenido se estrujaba
+   * hasta desaparecer. El menú lateral es fijo, así que no cuenta aquí.
+   */
+  .adminLayout {
+    flex-direction: column;
+  }
+
   .mobileTopbar {
     display: flex;
     position: sticky;

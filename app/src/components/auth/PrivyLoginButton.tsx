@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAccessToken, useLogin, usePrivy } from "@privy-io/react-auth";
 import { PrivyProvider } from "./PrivyProvider";
@@ -36,7 +36,23 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   const [cerrando, setCerrando] = useState(Boolean(salir));
   const [error, setError] = useState<string | null>(null);
 
+  /**
+   * `logout` cambia de identidad en cada render del proveedor de Privy. Si
+   * entrara en las dependencias del efecto de salida, cerrar la sesión
+   * provocaría otro render, el efecto volvería a dispararse y Privy recibiría
+   * una avalancha de peticiones: primero 429 —y un error de CORS, porque esa
+   * respuesta no trae cabeceras— y luego 400, con la sesión ya destruida. Se
+   * guarda en una referencia para que los efectos dependan sólo del estado.
+   */
+  const logoutRef = useRef(logout);
+  logoutRef.current = logout;
+
+  /** Evita dos canjes a la vez: el automático y el de «onComplete». */
+  const canjeEnCurso = useRef(false);
+
   const canjearSesion = useCallback(async () => {
+    if (canjeEnCurso.current) return;
+    canjeEnCurso.current = true;
     setCanjeando(true);
     setError(null);
     try {
@@ -55,13 +71,35 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       setError((e as Error).message);
       // La identidad quedó abierta en Privy pero no hay sesión en la app:
       // se cierra para que el siguiente intento empiece limpio.
-      await logout().catch(() => {});
+      await logoutRef.current().catch(() => {});
     } finally {
+      canjeEnCurso.current = false;
       setCanjeando(false);
     }
-  }, [logout, next, router]);
+  }, [next, router]);
 
-  const { login } = useLogin({ onComplete: canjearSesion });
+  const canjearRef = useRef(canjearSesion);
+  canjearRef.current = canjearSesion;
+
+  /** Estable a propósito: Privy la recibe en cada render. */
+  const alEntrar = useCallback(() => {
+    void canjearRef.current();
+  }, []);
+  const { login } = useLogin({ onComplete: alEntrar });
+
+  /**
+   * Red de seguridad: si el SDK no llega a estar listo —no carga, el app id
+   * está mal— el botón se quedaría deshabilitado para siempre. A los cinco
+   * segundos se desbloquea: sin sesión de Privy que cerrar, no hay bucle.
+   */
+  useEffect(() => {
+    if (!salir) return;
+    const limite = setTimeout(() => setCerrando(false), 5000);
+    return () => clearTimeout(limite);
+  }, [salir]);
+
+  /** Un solo cierre por visita, pase lo que pase con los renders. */
+  const cerroPrivy = useRef(false);
 
   /**
    * Venimos de pulsar «Salir»: antes de nada, se cierra también la sesión de
@@ -69,35 +107,30 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
    * dejaba a la persona exactamente donde estaba, una y otra vez.
    */
   useEffect(() => {
-    if (!salir) return;
+    if (!salir || !ready || cerroPrivy.current) return;
+    cerroPrivy.current = true;
     let vivo = true;
 
-    // Si el SDK no llega a estar listo —no carga, el app id está mal— el
-    // botón se quedaría deshabilitado para siempre. A los cinco segundos se
-    // desbloquea: sin sesión de Privy que cerrar, no hay bucle que evitar.
-    const limite = setTimeout(() => {
-      if (vivo) setCerrando(false);
-    }, 5000);
-
-    if (ready) {
-      void (async () => {
-        await logout().catch(() => {});
-        if (vivo) setCerrando(false);
-      })();
-    }
+    void (async () => {
+      // Sólo si hay algo que cerrar: pedirle a Privy que destruya una sesión
+      // inexistente responde 400 «Error destroying session».
+      if (authenticated) await logoutRef.current().catch(() => {});
+      if (!vivo) return;
+      setCerrando(false);
+      // Se quita «salir» de la URL: ya no hay nada que cerrar, y sin esto una
+      // recarga echaba de nuevo a quien acabara de entrar.
+      router.replace(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
+    })();
 
     return () => {
       vivo = false;
-      clearTimeout(limite);
     };
-  }, [salir, ready, logout]);
+  }, [salir, ready, authenticated, next, router]);
 
   // Si Privy ya tenía la sesión abierta, se canjea sin pedir nada.
   useEffect(() => {
-    if (cerrando) return;
-    if (ready && authenticated && !canjeando) void canjearSesion();
-    // Solo al quedar listo: no re-disparar en cada render.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (cerrando || !ready || !authenticated) return;
+    void canjearRef.current();
   }, [ready, authenticated, cerrando]);
 
   if (!ready || cerrando) {
