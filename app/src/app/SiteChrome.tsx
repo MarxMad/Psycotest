@@ -15,6 +15,10 @@ const CON_ENCABEZADO_PROPIO = [
   "/carrito",
   "/checkout",
   "/gracias",
+  "/nosotros",
+  "/contacto",
+  "/acceso",
+  "/mis-cursos",
   "/mi-cuenta",
 ];
 

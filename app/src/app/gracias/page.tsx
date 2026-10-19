@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CeductShell } from "@/components/ceduct/CeductShell";
+import { MarketShell } from "@/components/marketplace/MarketShell";
 import { Confirmacion } from "./Confirmacion";
 
 export const metadata: Metadata = {
@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export default function GraciasPage() {
   return (
-    <CeductShell>
+    <MarketShell>
       <Confirmacion />
-    </CeductShell>
+    </MarketShell>
   );
 }

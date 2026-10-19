@@ -3,9 +3,11 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Check, Clock } from "lucide-react";
+import { ArrowRight, Check, Clock } from "lucide-react";
 import { CONTACTO, whatsapp } from "@/lib/contacto";
-import s from "@/components/ceduct/ceduct.module.css";
+import { RUTAS } from "@/lib/ceduct/rutas";
+import s from "@/components/marketplace/mk.module.css";
+import k from "@/components/marketplace/compra/compra.module.css";
 
 type Estado = { pagado: boolean; estado: string; total: number | null; correo: string | null };
 
@@ -38,14 +40,27 @@ function Cuerpo() {
   const confirmado = estado?.pagado ?? false;
 
   return (
-    <div className={s.detalle}>
-      <div className={s.exito}>
-        <span className={s.exitoIcono} aria-hidden>
-          {confirmado ? <Check size={24} /> : <Clock size={24} />}
+    <div className={`${s.contenedor} ${k.pagina}`}>
+      <ol className={k.pasos} aria-label="Progreso de compra">
+        <li data-hecho="true">Carrito</li>
+        <li data-hecho="true">Datos y pago</li>
+        <li aria-current="step">Confirmación</li>
+      </ol>
+      <div className={`${s.tarjeta} ${k.confirmacion}`}>
+        <span className={k.confirmacionIcono} aria-hidden>
+          {confirmado ? <Check size={40} strokeWidth={2.6} /> : <Clock size={40} />}
         </span>
-        <h1>{confirmado ? "Pago confirmado" : cargando ? "Confirmando tu pago…" : "Pago recibido"}</h1>
+        <h1 className={k.titulo} aria-live="polite">
+          {confirmado ? "¡Pago confirmado!" : cargando ? "Confirmando tu pago…" : "Pago recibido"}
+        </h1>
+        {pedido && (
+          <div className={k.orden}>
+            <span>Número de orden</span>
+            <strong>{pedido}</strong>
+          </div>
+        )}
 
-        <p className={s.parrafo}>
+        <p className={s.lead}>
           {confirmado ? (
             <>
               Gracias. Tu inscripción quedó cubierta
@@ -73,12 +88,12 @@ function Cuerpo() {
           )}
         </p>
 
-        <div className={s.exitoAcciones}>
-          <Link className={s.btnPrimario} href="/mi-cuenta/cursos">
-            Ver mis programas
+        <div className={k.vacioBotones}>
+          <Link className={`${s.btn} ${s.btnPrimario} ${s.btnGrande}`} href={RUTAS.misCursos}>
+            Ir a mis cursos <ArrowRight size={18} aria-hidden />
           </Link>
           <a
-            className={s.btnSecundario}
+            className={`${s.btn} ${s.btnSecundario} ${s.btnGrande}`}
             href={whatsapp(
               pedido
                 ? `Hola, acabo de pagar mi inscripción. Mi folio es ${pedido}.`
@@ -89,10 +104,10 @@ function Cuerpo() {
           >
             Escribir por WhatsApp
           </a>
-          <a className={s.btnSecundario} href={`mailto:${CONTACTO.email}`}>
-            {CONTACTO.email}
-          </a>
         </div>
+        <p className={s.meta}>
+          ¿Dudas? <a href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a>
+        </p>
       </div>
     </div>
   );
@@ -100,7 +115,7 @@ function Cuerpo() {
 
 export function Confirmacion() {
   return (
-    <Suspense fallback={<div className={s.detalle}><p className={s.parrafo}>Cargando…</p></div>}>
+    <Suspense fallback={<div className={`${s.contenedor} ${k.pagina}`}><p className={s.lead}>Cargando…</p></div>}>
       <Cuerpo />
     </Suspense>
   );
