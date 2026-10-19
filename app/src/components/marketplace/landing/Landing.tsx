@@ -16,6 +16,7 @@ import { IconoDeCategoria } from "../Iconos";
 import { Revelar } from "../Revelar";
 import { TarjetaPrograma } from "../TarjetaPrograma";
 import { HeroArte } from "./HeroArte";
+import { Ruta } from "./Ruta";
 import s from "../mk.module.css";
 import l from "./landing.module.css";
 
@@ -196,6 +197,9 @@ export function Landing({ programas }: { programas: Programa[] }) {
           </ol>
         </div>
       </section>
+
+      {/* ------------------------------------------------------- Ruta */}
+      <Ruta />
 
       {/* ------------------------------------------------- Testimonios */}
       <section className={s.seccion} aria-labelledby="test-titulo">

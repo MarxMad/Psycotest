@@ -206,3 +206,56 @@ export const RESPALDO = [
   { dato: "SEP · CONOCER", texto: "Emisión de certificados oficiales" },
   { dato: "100% en línea", texto: "Inscripción, pago y acceso" },
 ] as const;
+
+/**
+ * El camino a la certificación, en tres etapas.
+ *
+ * Es el esquema con el que CEDUCT lo explica desde siempre: primero se
+ * reconoce lo que la persona ya sabe hacer, luego cursa sólo lo que le falta,
+ * y al final un evaluador acreditado dictamina su competencia.
+ *
+ * No confundir con `PASOS`, que es el camino comercial (elegir, pagar,
+ * acceder). Éste es el formativo, y es el que justifica el precio.
+ */
+export const ETAPAS = [
+  {
+    ordinal: "uno",
+    titulo: "Reconoce lo que ya sabes",
+    resumen: "Antes de estudiar nada, ponemos en claro qué sabes hacer y cuánto de eso ya vale.",
+    pasos: [
+      { titulo: "Valida tus conocimientos", texto: "Vemos qué dominas de verdad, no qué cursos tomaste." },
+      { titulo: "Capitaliza tu experiencia", texto: "Los años de oficio cuentan como evidencia, no se tiran." },
+      { titulo: "Ubica tu dominio", texto: "Identificamos el estándar de competencia que te corresponde." },
+    ],
+  },
+  {
+    ordinal: "dos",
+    titulo: "Cursa el programa",
+    resumen: "El diplomado cubre lo que te falta para el estándar, ni más ni menos.",
+    pasos: [
+      { titulo: "Ingresa a los módulos", texto: "Sólo los que te corresponden según tu diagnóstico." },
+      { titulo: "Participa", texto: "Clases en vivo, pizarra y trabajo con el grupo." },
+      { titulo: "Practica", texto: "Ejercicios con los productos que luego serán tu evidencia." },
+      { titulo: "Recibe tu constancia", texto: "Al cerrar el programa, con horas y contenido detallados." },
+    ],
+  },
+  {
+    ordinal: "tres",
+    titulo: "Certifícate",
+    resumen: "La parte que da validez oficial: un evaluador acreditado dictamina tu competencia.",
+    pasos: [
+      { titulo: "Solicita tu evaluación", texto: "Se abre tu expediente y se agenda con el evaluador." },
+      { titulo: "Acredita tu competencia", texto: "Presentas evidencias y desempeños conforme al estándar." },
+      { titulo: "Obtén tu certificado", texto: "Se emite y se registra ante CONOCER. No caduca." },
+    ],
+  },
+] as const;
+
+/** Lo que se lleva quien termina. El motivo, no el trámite. */
+export const LOGROS = [
+  "Mejores ingresos",
+  "Reconocimiento nacional",
+  "Satisfacción por lo que haces",
+  "Constancia",
+  "Certificado",
+] as const;

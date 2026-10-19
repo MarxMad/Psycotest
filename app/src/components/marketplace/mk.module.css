@@ -869,6 +869,32 @@
   }
 }
 
+/*
+ * Áreas táctiles del pie.
+ *
+ * Con ratón, 36px de alto bastan y mantienen la lista compacta. Con el dedo
+ * no: los enlaces del pie quedaban en 36px y los legales en 21, por debajo de
+ * los 44px que pide WCAG 2.5.5 (AAA) y recomienda Apple. `pointer: coarse`
+ * apunta al dispositivo, no al ancho, que es lo que de verdad importa aquí:
+ * una tablet ancha con dedo también lo necesita.
+ */
+@media (pointer: coarse) {
+  .pieLista {
+    gap: 4px;
+  }
+  .pieLista a {
+    min-height: 44px;
+  }
+  .pieLegal nav {
+    gap: 4px 20px;
+  }
+  .pieLegal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
+
 /* ----------------------------------------------------- aviso demo */
 
 .avisoDemo {
