@@ -1,4 +1,4 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 
 export type CourseWithCategory = {
@@ -36,6 +36,54 @@ export async function listPublishedCourses() {
     return rows;
   } catch (error) {
     console.error("[courses] listPublishedCourses falló:", error);
+    return [];
+  }
+}
+
+/**
+ * Cursos publicados de un canal.
+ *
+ * La escuela de cada canal se distingue por la categoría (`channel_id`): sin
+ * este filtro, el catálogo de IGE aparecía dentro del de CEDUCT y al revés,
+ * que es justo lo que la columna existía para evitar.
+ */
+export async function listPublishedCoursesByChannel(channelId: string) {
+  try {
+    const db = getDb();
+    return await db
+      .select({
+        course: schema.courses,
+        category: schema.courseCategories,
+      })
+      .from(schema.courses)
+      .innerJoin(
+        schema.courseCategories,
+        eq(schema.courses.categoryId, schema.courseCategories.id),
+      )
+      .where(
+        and(
+          eq(schema.courses.published, true),
+          eq(schema.courseCategories.channelId, channelId),
+        ),
+      )
+      .orderBy(asc(schema.courses.sortOrder));
+  } catch (error) {
+    console.error("[courses] listPublishedCoursesByChannel falló:", error);
+    return [];
+  }
+}
+
+/** Categorías de un canal, en el orden en que se presentan. */
+export async function listCategoriesByChannel(channelId: string) {
+  try {
+    const db = getDb();
+    return await db
+      .select()
+      .from(schema.courseCategories)
+      .where(eq(schema.courseCategories.channelId, channelId))
+      .orderBy(asc(schema.courseCategories.sortOrder));
+  } catch (error) {
+    console.error("[courses] listCategoriesByChannel falló:", error);
     return [];
   }
 }

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { courseCategories, courses } from "@/db/schema";
+import { requireUser } from "@/lib/auth";
 
 /** Turso exige category_id NOT NULL; usa la pedida, la primera existente o crea General. */
 async function resolveCategoryId(
@@ -57,6 +58,12 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  try {
+    await requireUser(["admin", "psicologo"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
   try {
     const db = await getReadyDb();
     const body = await request.json();

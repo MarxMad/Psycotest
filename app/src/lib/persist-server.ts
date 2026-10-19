@@ -56,7 +56,12 @@ export async function persistirSesionServidor<TResp, TCalif>(
 
 export async function actualizarSesionServidor(
   id: string,
-  cambios: { notasPsicologo?: string; interpretacion?: string; aprobada?: boolean },
+  cambios: {
+    notasPsicologo?: string;
+    interpretacion?: string;
+    aprobada?: boolean;
+    jobProfileId?: string | null;
+  },
 ): Promise<boolean> {
   try {
     const res = await fetch(`/api/sessions/${id}`, {

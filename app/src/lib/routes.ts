@@ -14,6 +14,7 @@ export const evaluacion = {
   papi: `${EVAL_BASE}/papi`,
   hartman: `${EVAL_BASE}/hartman`,
   mabe: `${EVAL_BASE}/mabe`,
+  cleaver: `${EVAL_BASE}/cleaver`,
 } as const;
 
 /** @deprecated Prefer `evaluacion` */

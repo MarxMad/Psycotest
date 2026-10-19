@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { courses } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
-const db = getDb();
+import { requireUser } from "@/lib/auth";
 
 export async function GET(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    const db = getDb();
     const params = await props.params;
     const [course] = await db.select().from(courses).where(eq(courses.id, params.id));
 
@@ -23,6 +23,13 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 
 export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    await requireUser(["admin", "psicologo"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const params = await props.params;
     const body = await request.json();
     const now = new Date().toISOString();
@@ -43,6 +50,13 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
 
 export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
+    await requireUser(["admin", "psicologo"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const params = await props.params;
     await db.delete(courses).where(eq(courses.id, params.id));
 

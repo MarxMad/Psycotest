@@ -8,13 +8,22 @@ import {
   type LiveClass,
 } from "@/db/schema";
 import type { AuthUser } from "@/lib/auth";
+import { azarDeSala, semillaDeSala } from "@/lib/salas";
 
 const JOIN_EARLY_MS = 15 * 60 * 1000;
 
+/**
+ * Nombre de sala con una parte impredecible.
+ *
+ * El identificador de clase es `liveclass_${Date.now()}`, así que el nombre
+ * anterior —`sistemapsic-` más ese número— se podía adivinar probando marcas
+ * de tiempo: cualquiera entraba a una clase donde se registra asistencia para
+ * CONOCER. La semilla se queda para poder reconocer la sala de un vistazo; lo
+ * que la protege es la cola al azar.
+ */
 export function buildJitsiRoom(classId: string): { roomSlug: string; roomUrl: string } {
   const base = (process.env.JITSI_BASE_URL?.trim() || "https://meet.jit.si").replace(/\/$/, "");
-  const slugBase = classId.replace(/[^a-zA-Z0-9]/g, "").slice(-16) || Date.now().toString(36);
-  const roomSlug = `sistemapsic-${slugBase}`;
+  const roomSlug = `sistemapsic-${semillaDeSala(classId)}-${azarDeSala()}`;
   return { roomSlug, roomUrl: `${base}/${roomSlug}` };
 }
 

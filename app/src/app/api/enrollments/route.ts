@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { enrollments } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
-
-const db = getDb();
+import { requireUser } from "@/lib/auth";
 
 export async function GET(request: Request) {
   try {
+    await requireUser();
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get("userId");
     const courseId = searchParams.get("courseId");
@@ -38,6 +44,13 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    await requireUser();
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const body = await request.json();
     const { userId, courseId } = body;
 

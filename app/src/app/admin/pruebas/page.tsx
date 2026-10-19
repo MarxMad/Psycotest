@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FlaskConical, Plus, KeyRound } from "lucide-react";
+import { FlaskConical, Plus, KeyRound, Briefcase, Download } from "lucide-react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
@@ -11,18 +11,17 @@ import {
   fetchSessions,
 } from "@/lib/api-client";
 import { listarSesiones, type Instrumento, type MetaSesion } from "@/lib/storage";
+import { MANUAL_GUIA_PSICOLOGO } from "@/lib/manuales";
 import s from "./pruebas.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Hartman",
-  mabe: "MABE",
-};
+const ETIQUETAS: Record<Instrumento, string> = NOMBRE_INSTRUMENTO;
 
 const COLORES: Record<Instrumento, string> = {
   papi: "var(--papi)",
   hartman: "var(--hartman)",
   mabe: "var(--mabe)",
+  cleaver: "var(--cleaver)",
 };
 
 function fmt(iso: string) {
@@ -80,11 +79,23 @@ export default function PruebasPage() {
         breadcrumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Pruebas" }]}
         action={
           <div className={s.actions}>
+            <a
+              href={MANUAL_GUIA_PSICOLOGO.apiHref}
+              className="btn"
+              download={MANUAL_GUIA_PSICOLOGO.filename}
+            >
+              <Download size={16} />
+              Manual PDF
+            </a>
+            <Link href="/admin/pruebas/perfiles" className="btn">
+              <Briefcase size={16} />
+              Perfiles
+            </Link>
             <Link href="/admin/pruebas/codigos" className="btn">
               <KeyRound size={16} />
               Códigos
             </Link>
-            <Link href="/" className="btn btn-primary">
+            <Link href="/admin/participantes" className="btn btn-primary">
               <Plus size={16} />
               Nueva Evaluación
             </Link>
@@ -106,7 +117,7 @@ export default function PruebasPage() {
 
       <div className={s.filters}>
         <span>Filtrar:</span>
-        {(["", "papi", "hartman", "mabe"] as const).map((f) => (
+        {(["", "papi", "hartman", "mabe", "cleaver"] as const).map((f) => (
           <button
             key={f || "all"}
             type="button"
@@ -129,7 +140,7 @@ export default function PruebasPage() {
             title="No hay sesiones guardadas"
             description="Las evaluaciones aparecerán aquí una vez aplicadas"
             action={
-              <Link href="/" className="btn btn-primary">
+              <Link href="/admin/participantes" className="btn btn-primary">
                 Aplicar Prueba
               </Link>
             }

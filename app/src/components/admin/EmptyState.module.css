@@ -26,14 +26,14 @@
 }
 
 .emptyTitle {
-  font-size: 1.25rem;
+  font-size: var(--admin-fs-lg);
   font-weight: 600;
   color: var(--admin-text);
   margin: 0 0 0.5rem 0;
 }
 
 .emptyDescription {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   max-width: 400px;
   margin: 0 0 1.5rem 0;

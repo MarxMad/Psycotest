@@ -46,20 +46,20 @@
 }
 
 .detailLabel {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   font-weight: 600;
   color: var(--admin-text-muted);
   min-width: 120px;
 }
 
 .detailValue {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text);
   font-weight: 500;
 }
 
 .description {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text);
   line-height: 1.6;
   margin: 0;
@@ -68,7 +68,7 @@
 .badge {
   padding: 0.25rem 0.75rem;
   border-radius: var(--r);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;

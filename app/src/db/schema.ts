@@ -1,16 +1,25 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import {
+  pgTable,
+  text,
+  integer,
+  boolean,
+  jsonb,
+} from "drizzle-orm/pg-core";
 
-export const users = sqliteTable("users", {
+export const users = pgTable("users", {
   id: text("id").primaryKey(),
   email: text("email").notNull().unique(),
   nombre: text("nombre").notNull(),
+  /** Vacío cuando la cuenta entra por Privy: ahí no hay contraseña local. */
   passwordHash: text("password_hash").notNull(),
+  /** Identificador de Privy (did:privy:...), si la cuenta se creó por ahí. */
+  privyId: text("privy_id").unique(),
   rol: text("rol", { enum: ["admin", "psicologo", "aplicador"] }).notNull().default("psicologo"),
-  emailVerified: integer("email_verified", { mode: "boolean" }).notNull().default(false),
+  emailVerified: boolean("email_verified").notNull().default(false),
   createdAt: text("created_at").notNull(),
 });
 
-export const participants = sqliteTable("participants", {
+export const participants = pgTable("participants", {
   id: text("id").primaryKey(),
   nombre: text("nombre").notNull(),
   edad: text("edad"),
@@ -24,37 +33,41 @@ export const participants = sqliteTable("participants", {
   updatedAt: text("updated_at").notNull(),
 });
 
-export const jobProfiles = sqliteTable("job_profiles", {
+export const jobProfiles = pgTable("job_profiles", {
   id: text("id").primaryKey(),
   titulo: text("titulo").notNull(),
   empresa: text("empresa"),
   /** Respuestas MABE del bloque puesto (proc + valores) */
-  mabePuesto: text("mabe_puesto", { mode: "json" }).$type<Record<string, number>>(),
+  mabePuesto: jsonb("mabe_puesto").$type<Record<string, number>>(),
+  /** Perfil Cleaver Factor Humano del puesto (R/A/D%/gráfica) */
+  cleaverPuesto: jsonb("cleaver_puesto").$type<Record<string, unknown>>(),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const accessCodes = sqliteTable("access_codes", {
+export const accessCodes = pgTable("access_codes", {
   id: text("id").primaryKey(),
   label: text("label").notNull(),
   empresa: text("empresa"),
+  /** Cuenta de la empresa que contrató; le da acceso a los resultados de sus candidatos. */
+  clienteUserId: text("cliente_user_id").references(() => users.id),
   /** SHA-256 con pepper — búsqueda sin almacenar el código en claro */
   lookupHash: text("lookup_hash").notNull().unique(),
   /** Últimos 4 caracteres para identificación en panel (no secretos) */
   codeSuffix: text("code_suffix").notNull(),
-  allowedInstruments: text("allowed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+  allowedInstruments: jsonb("allowed_instruments")
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull(),
   maxUses: integer("max_uses").notNull(),
   usedCount: integer("used_count").notNull().default(0),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  active: boolean("active").notNull().default(true),
   expiresAt: text("expires_at"),
   createdById: text("created_by_id").references(() => users.id),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const accessRedemptions = sqliteTable("access_redemptions", {
+export const accessRedemptions = pgTable("access_redemptions", {
   id: text("id").primaryKey(),
   accessCodeId: text("access_code_id")
     .notNull()
@@ -63,66 +76,72 @@ export const accessRedemptions = sqliteTable("access_redemptions", {
   empresa: text("empresa"),
   puesto: text("puesto"),
   /** Instrumentos ya completados por esta persona */
-  completedInstruments: text("completed_instruments", { mode: "json" })
-    .$type<Array<"papi" | "hartman" | "mabe">>()
+  completedInstruments: jsonb("completed_instruments")
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
     .notNull()
     .default([]),
   ipHash: text("ip_hash"),
   createdAt: text("created_at").notNull(),
 });
 
-export const assessmentSessions = sqliteTable("assessment_sessions", {
+export const assessmentSessions = pgTable("assessment_sessions", {
   id: text("id").primaryKey(),
-  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe"] }).notNull(),
+  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe", "cleaver"] }).notNull(),
   estado: text("estado", { enum: ["borrador", "calificada", "aprobada"] }).notNull().default("calificada"),
   participantId: text("participant_id").references(() => participants.id),
   participantNombre: text("participant_nombre").notNull(),
   jobProfileId: text("job_profile_id").references(() => jobProfiles.id),
   puesto: text("puesto"),
   empresa: text("empresa"),
-  respuestas: text("respuestas", { mode: "json" }).notNull(),
-  calificacion: text("calificacion", { mode: "json" }),
+  respuestas: jsonb("respuestas").notNull(),
+  calificacion: jsonb("calificacion"),
   interpretacion: text("interpretacion"),
   notasPsicologo: text("notas_psicologo"),
-  aprobada: integer("aprobada", { mode: "boolean" }).notNull().default(false),
-  validityFlags: text("validity_flags", { mode: "json" }).$type<string[]>(),
+  aprobada: boolean("aprobada").notNull().default(false),
+  validityFlags: jsonb("validity_flags").$type<string[]>(),
   createdById: text("created_by_id").references(() => users.id),
   approvedById: text("approved_by_id").references(() => users.id),
   accessCodeId: text("access_code_id").references(() => accessCodes.id),
   accessRedemptionId: text("access_redemption_id").references(() => accessRedemptions.id),
   iniciada: text("iniciada").notNull(),
   actualizada: text("actualizada").notNull(),
-  terminada: integer("terminada", { mode: "boolean" }).notNull().default(true),
+  terminada: boolean("terminada").notNull().default(true),
 });
 
-export const auditLog = sqliteTable("audit_log", {
+export const auditLog = pgTable("audit_log", {
   id: text("id").primaryKey(),
   userId: text("user_id").references(() => users.id),
   action: text("action").notNull(),
   entity: text("entity").notNull(),
   entityId: text("entity_id"),
-  detail: text("detail", { mode: "json" }),
+  detail: jsonb("detail"),
   createdAt: text("created_at").notNull(),
 });
 
-// Categorías de cursos (CONOCER / consultorio)
-export const courseCategories = sqliteTable("course_categories", {
+// Categorías de cursos: la «escuela» de cada canal
+export const courseCategories = pgTable("course_categories", {
   id: text("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   description: text("description"),
   sortOrder: integer("sort_order").notNull().default(0),
+  /**
+   * Canal al que pertenece esta escuela: ceduct | psicologia | ige.
+   * Determina en qué zona de alumno aparecen sus cursos, para que quien
+   * compró formación en un canal no vea el catálogo de otro.
+   */
+  channelId: text("channel_id").notNull().default("ige"),
 });
 
 // Cursos
-export const courses = sqliteTable("courses", {
+export const courses = pgTable("courses", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
   slug: text("slug").notNull().unique(),
-  /** En Turso de producción es NOT NULL (sin default). */
+  /** NOT NULL con default vacío. */
   description: text("description").notNull().default(""),
   subtitle: text("subtitle"),
-  /** En Turso de producción es NOT NULL. */
+  /** NOT NULL. */
   categoryId: text("category_id")
     .notNull()
     .references(() => courseCategories.id),
@@ -133,20 +152,26 @@ export const courses = sqliteTable("courses", {
   instructorBio: text("instructor_bio"),
   instructorId: text("instructor_id").references(() => users.id),
   level: text("level", { enum: ["basico", "intermedio", "avanzado"] }).notNull().default("basico"),
+  /** Cómo se cursa. Define qué se promete en la ficha del diplomado. */
+  modalidad: text("modalidad", { enum: ["online", "presencial", "mixta"] })
+    .notNull()
+    .default("online"),
+  /** Clave del estándar CONOCER al que prepara, si aplica (EC0217, EC0301…). */
+  estandarClave: text("estandar_clave"),
   durationMinutes: integer("duration_minutes").notNull().default(0),
-  published: integer("published", { mode: "boolean" }).notNull().default(true),
+  published: boolean("published").notNull().default(true),
   status: text("status", { enum: ["draft", "published", "archived"] }).notNull().default("draft"),
   inventoryLimit: integer("inventory_limit"), // null = ilimitado
   soldCount: integer("sold_count").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
   /** Compat con LMS quizzes: no desbloquear siguiente lección sin aprobar quiz */
-  requireQuizPass: integer("require_quiz_pass", { mode: "boolean" }).notNull().default(false),
+  requireQuizPass: boolean("require_quiz_pass").notNull().default(false),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
 // Módulos de curso
-export const courseModules = sqliteTable("course_modules", {
+export const courseModules = pgTable("course_modules", {
   id: text("id").primaryKey(),
   courseId: text("course_id")
     .notNull()
@@ -155,8 +180,8 @@ export const courseModules = sqliteTable("course_modules", {
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
-// Lecciones (nombre principal del consultorio CONOCER)
-export const courseLessons = sqliteTable("course_lessons", {
+// Lecciones
+export const courseLessons = pgTable("course_lessons", {
   id: text("id").primaryKey(),
   moduleId: text("module_id")
     .notNull()
@@ -171,14 +196,14 @@ export const courseLessons = sqliteTable("course_lessons", {
   videoUrl: text("video_url"),
   durationSeconds: integer("duration_seconds").notNull().default(0),
   sortOrder: integer("sort_order").notNull().default(0),
-  freePreview: integer("free_preview", { mode: "boolean" }).notNull().default(false),
+  freePreview: boolean("free_preview").notNull().default(false),
 });
 
 /** Alias para APIs del panel admin */
 export const lessons = courseLessons;
 
 // Inscripciones a cursos
-export const courseEnrollments = sqliteTable("course_enrollments", {
+export const courseEnrollments = pgTable("course_enrollments", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -202,7 +227,7 @@ export const courseEnrollments = sqliteTable("course_enrollments", {
 export const enrollments = courseEnrollments;
 
 // Progreso por lección
-export const lessonProgress = sqliteTable("lesson_progress", {
+export const lessonProgress = pgTable("lesson_progress", {
   id: text("id").primaryKey(),
   enrollmentId: text("enrollment_id")
     .notNull()
@@ -210,7 +235,7 @@ export const lessonProgress = sqliteTable("lesson_progress", {
   lessonId: text("lesson_id")
     .notNull()
     .references(() => courseLessons.id, { onDelete: "cascade" }),
-  completed: integer("completed", { mode: "boolean" }).notNull().default(false),
+  completed: boolean("completed").notNull().default(false),
   lastPositionSeconds: integer("last_position_seconds").notNull().default(0),
   /** Segundos reales de reproducción (play/heartbeat VOD) */
   watchedSeconds: integer("watched_seconds").notNull().default(0),
@@ -220,7 +245,7 @@ export const lessonProgress = sqliteTable("lesson_progress", {
 });
 
 /** Eventos de permanencia VOD (play / pause / heartbeat / ended) */
-export const vodEvents = sqliteTable("vod_events", {
+export const vodEvents = pgTable("vod_events", {
   id: text("id").primaryKey(),
   enrollmentId: text("enrollment_id")
     .notNull()
@@ -236,7 +261,7 @@ export const vodEvents = sqliteTable("vod_events", {
 });
 
 // Clases en vivo (provider-agnostic: jitsi | daily | none)
-export const liveClasses = sqliteTable("live_classes", {
+export const liveClasses = pgTable("live_classes", {
   id: text("id").primaryKey(),
   courseId: text("course_id").references(() => courses.id),
   title: text("title").notNull(),
@@ -254,7 +279,7 @@ export const liveClasses = sqliteTable("live_classes", {
 });
 
 // Asistencia a clases en vivo
-export const liveClassAttendances = sqliteTable("live_class_attendances", {
+export const liveClassAttendances = pgTable("live_class_attendances", {
   id: text("id").primaryKey(),
   liveClassId: text("live_class_id")
     .notNull()
@@ -273,7 +298,7 @@ export const liveClassAttendances = sqliteTable("live_class_attendances", {
 });
 
 /** Salas de división (breakouts) dentro de una clase en vivo */
-export const liveBreakoutRooms = sqliteTable("live_breakout_rooms", {
+export const liveBreakoutRooms = pgTable("live_breakout_rooms", {
   id: text("id").primaryKey(),
   liveClassId: text("live_class_id")
     .notNull()
@@ -286,7 +311,7 @@ export const liveBreakoutRooms = sqliteTable("live_breakout_rooms", {
   createdAt: text("created_at").notNull(),
 });
 
-export const liveBreakoutAssignments = sqliteTable("live_breakout_assignments", {
+export const liveBreakoutAssignments = pgTable("live_breakout_assignments", {
   id: text("id").primaryKey(),
   breakoutRoomId: text("breakout_room_id")
     .notNull()
@@ -298,7 +323,7 @@ export const liveBreakoutAssignments = sqliteTable("live_breakout_assignments", 
 });
 
 /** Documento colaborativo de pizarra (tldraw JSON) */
-export const liveWhiteboardDocs = sqliteTable("live_whiteboard_docs", {
+export const liveWhiteboardDocs = pgTable("live_whiteboard_docs", {
   id: text("id").primaryKey(),
   liveClassId: text("live_class_id")
     .notNull()
@@ -307,12 +332,12 @@ export const liveWhiteboardDocs = sqliteTable("live_whiteboard_docs", {
   breakoutRoomId: text("breakout_room_id").references(() => liveBreakoutRooms.id, {
     onDelete: "cascade",
   }),
-  documentJson: text("document_json", { mode: "json" }).$type<Record<string, unknown>>(),
+  documentJson: jsonb("document_json").$type<Record<string, unknown>>(),
   updatedBy: text("updated_by").references(() => users.id),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const liveWhiteboardSnapshots = sqliteTable("live_whiteboard_snapshots", {
+export const liveWhiteboardSnapshots = pgTable("live_whiteboard_snapshots", {
   id: text("id").primaryKey(),
   liveClassId: text("live_class_id")
     .notNull()
@@ -327,7 +352,7 @@ export const liveWhiteboardSnapshots = sqliteTable("live_whiteboard_snapshots", 
   createdAt: text("created_at").notNull(),
 });
 
-export const liveIcebreakerSessions = sqliteTable("live_icebreaker_sessions", {
+export const liveIcebreakerSessions = pgTable("live_icebreaker_sessions", {
   id: text("id").primaryKey(),
   liveClassId: text("live_class_id")
     .notNull()
@@ -336,7 +361,7 @@ export const liveIcebreakerSessions = sqliteTable("live_icebreaker_sessions", {
     enum: ["pregunta_rapida", "dos_verdades", "asociacion"],
   }).notNull(),
   prompt: text("prompt").notNull(),
-  stateJson: text("state_json", { mode: "json" })
+  stateJson: jsonb("state_json")
     .$type<Record<string, unknown>>()
     .notNull()
     .default({}),
@@ -347,7 +372,7 @@ export const liveIcebreakerSessions = sqliteTable("live_icebreaker_sessions", {
 });
 
 // Cupones
-export const coupons = sqliteTable("coupons", {
+export const coupons = pgTable("coupons", {
   id: text("id").primaryKey(),
   code: text("code").notNull().unique(),
   type: text("type", { enum: ["percentage", "fixed"] }).notNull(),
@@ -355,9 +380,9 @@ export const coupons = sqliteTable("coupons", {
   maxUses: integer("max_uses"),
   currentUses: integer("current_uses").notNull().default(0),
   expiresAt: text("expires_at"),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  active: boolean("active").notNull().default(true),
   /** Cupón auto-generado al completar 100% de un curso */
-  grantOnCourseComplete: integer("grant_on_course_complete", { mode: "boolean" })
+  grantOnCourseComplete: boolean("grant_on_course_complete")
     .notNull()
     .default(false),
   sourceEnrollmentId: text("source_enrollment_id"),
@@ -365,7 +390,7 @@ export const coupons = sqliteTable("coupons", {
 });
 
 // Órdenes de compra
-export const orders = sqliteTable("orders", {
+export const orders = pgTable("orders", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -383,7 +408,7 @@ export const orders = sqliteTable("orders", {
 });
 
 // Items de orden
-export const orderItems = sqliteTable("order_items", {
+export const orderItems = pgTable("order_items", {
   id: text("id").primaryKey(),
   orderId: text("order_id")
     .notNull()
@@ -396,7 +421,7 @@ export const orderItems = sqliteTable("order_items", {
 });
 
 // ——— CONOCER: quizzes ———
-export const courseQuizzes = sqliteTable("course_quizzes", {
+export const courseQuizzes = pgTable("course_quizzes", {
   id: text("id").primaryKey(),
   lessonId: text("lesson_id")
     .notNull()
@@ -404,28 +429,28 @@ export const courseQuizzes = sqliteTable("course_quizzes", {
     .references(() => courseLessons.id, { onDelete: "cascade" }),
   passScore: integer("pass_score").notNull().default(70),
   maxAttempts: integer("max_attempts").notNull().default(3),
-  shuffleQuestions: integer("shuffle_questions", { mode: "boolean" }).notNull().default(false),
+  shuffleQuestions: boolean("shuffle_questions").notNull().default(false),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const quizQuestions = sqliteTable("quiz_questions", {
+export const quizQuestions = pgTable("quiz_questions", {
   id: text("id").primaryKey(),
   quizId: text("quiz_id")
     .notNull()
     .references(() => courseQuizzes.id, { onDelete: "cascade" }),
   prompt: text("prompt").notNull(),
   type: text("type", { enum: ["single", "multiple", "true_false"] }).notNull().default("single"),
-  options: text("options", { mode: "json" })
+  options: jsonb("options")
     .$type<Array<{ key: string; label: string }>>()
     .notNull()
     .default([]),
-  correctKeys: text("correct_keys", { mode: "json" }).$type<string[]>().notNull().default([]),
+  correctKeys: jsonb("correct_keys").$type<string[]>().notNull().default([]),
   explanation: text("explanation"),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
-export const quizAttempts = sqliteTable("quiz_attempts", {
+export const quizAttempts = pgTable("quiz_attempts", {
   id: text("id").primaryKey(),
   enrollmentId: text("enrollment_id")
     .notNull()
@@ -433,18 +458,18 @@ export const quizAttempts = sqliteTable("quiz_attempts", {
   quizId: text("quiz_id")
     .notNull()
     .references(() => courseQuizzes.id, { onDelete: "cascade" }),
-  answers: text("answers", { mode: "json" })
+  answers: jsonb("answers")
     .$type<Record<string, string[]>>()
     .notNull()
     .default({}),
   score: integer("score").notNull().default(0),
-  passed: integer("passed", { mode: "boolean" }).notNull().default(false),
+  passed: boolean("passed").notNull().default(false),
   attemptNumber: integer("attempt_number").notNull().default(1),
   createdAt: text("created_at").notNull(),
 });
 
 // ——— CONOCER: expediente formal (tipo EC) ———
-export const certificationPrograms = sqliteTable("certification_programs", {
+export const certificationPrograms = pgTable("certification_programs", {
   id: text("id").primaryKey(),
   courseId: text("course_id")
     .notNull()
@@ -455,12 +480,12 @@ export const certificationPrograms = sqliteTable("certification_programs", {
   description: text("description"),
   minPresencePercent: integer("min_presence_percent").notNull().default(80),
   minAprovechamientoPercent: integer("min_aprovechamiento_percent").notNull().default(70),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  active: boolean("active").notNull().default(true),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const studentExpedientes = sqliteTable("student_expedientes", {
+export const studentExpedientes = pgTable("student_expedientes", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -481,7 +506,7 @@ export const studentExpedientes = sqliteTable("student_expedientes", {
   updatedAt: text("updated_at").notNull(),
 });
 
-export const expedienteEvaluations = sqliteTable("expediente_evaluations", {
+export const expedienteEvaluations = pgTable("expediente_evaluations", {
   id: text("id").primaryKey(),
   expedienteId: text("expediente_id")
     .notNull()
@@ -489,7 +514,7 @@ export const expedienteEvaluations = sqliteTable("expediente_evaluations", {
   type: text("type", {
     enum: ["diagnostico", "inicial", "final", "satisfaccion", "clinica"],
   }).notNull(),
-  answersJson: text("answers_json", { mode: "json" })
+  answersJson: jsonb("answers_json")
     .$type<Record<string, unknown>>()
     .notNull()
     .default({}),
@@ -498,7 +523,7 @@ export const expedienteEvaluations = sqliteTable("expediente_evaluations", {
   reviewedBy: text("reviewed_by").references(() => users.id),
 });
 
-export const portfolioEvidences = sqliteTable("portfolio_evidences", {
+export const portfolioEvidences = pgTable("portfolio_evidences", {
   id: text("id").primaryKey(),
   expedienteId: text("expediente_id")
     .notNull()
@@ -511,11 +536,11 @@ export const portfolioEvidences = sqliteTable("portfolio_evidences", {
     .notNull()
     .default("documento"),
   fileUrl: text("file_url"),
-  metaJson: text("meta_json", { mode: "json" }).$type<Record<string, unknown>>(),
+  metaJson: jsonb("meta_json").$type<Record<string, unknown>>(),
   createdAt: text("created_at").notNull(),
 });
 
-export const courseCertificates = sqliteTable("course_certificates", {
+export const courseCertificates = pgTable("course_certificates", {
   id: text("id").primaryKey(),
   expedienteId: text("expediente_id").references(() => studentExpedientes.id),
   userId: text("user_id")
@@ -526,13 +551,13 @@ export const courseCertificates = sqliteTable("course_certificates", {
     .references(() => courses.id),
   folio: text("folio").notNull().unique(),
   verificationCode: text("verification_code").notNull().unique(),
-  dictamenJson: text("dictamen_json", { mode: "json" }).$type<Record<string, unknown>>(),
+  dictamenJson: jsonb("dictamen_json").$type<Record<string, unknown>>(),
   issuedAt: text("issued_at").notNull(),
   revokedAt: text("revoked_at"),
 });
 
 // ——— Fase C: documentos legales ———
-export const legalDocuments = sqliteTable("legal_documents", {
+export const legalDocuments = pgTable("legal_documents", {
   id: text("id").primaryKey(),
   type: text("type", {
     enum: ["finiquito", "liquidacion", "aviso_privacidad", "terminos", "otro"],
@@ -540,12 +565,12 @@ export const legalDocuments = sqliteTable("legal_documents", {
   title: text("title").notNull(),
   bodyMarkdown: text("body_markdown").notNull(),
   version: text("version").notNull().default("1.0"),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  active: boolean("active").notNull().default(true),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
 
-export const legalAcknowledgements = sqliteTable("legal_acknowledgements", {
+export const legalAcknowledgements = pgTable("legal_acknowledgements", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -558,7 +583,7 @@ export const legalAcknowledgements = sqliteTable("legal_acknowledgements", {
 });
 
 // Confirmación de emails
-export const emailVerifications = sqliteTable("email_verifications", {
+export const emailVerifications = pgTable("email_verifications", {
   id: text("id").primaryKey(),
   userId: text("user_id")
     .notNull()
@@ -573,6 +598,7 @@ export type User = typeof users.$inferSelect;
 export type Participant = typeof participants.$inferSelect;
 export type AccessCode = typeof accessCodes.$inferSelect;
 export type AccessRedemption = typeof accessRedemptions.$inferSelect;
+export type JobProfile = typeof jobProfiles.$inferSelect;
 export type AssessmentSession = typeof assessmentSessions.$inferSelect;
 export type Course = typeof courses.$inferSelect;
 export type CourseCategory = typeof courseCategories.$inferSelect;
@@ -582,8 +608,27 @@ export type CourseLesson = typeof courseLessons.$inferSelect;
 export type Enrollment = typeof enrollments.$inferSelect;
 export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
 export type LiveClass = typeof liveClasses.$inferSelect;
+
+/**
+ * Contenido editable de cada página pública (canal), administrado desde
+ * /admin/canales. Vive en la base porque el sistema de archivos de Vercel
+ * es efímero: lo que se escriba en disco se pierde en el siguiente deploy.
+ */
+export const channelPages = pgTable("channel_pages", {
+  /** ID del canal: martin | ceduct | psicologia | ige */
+  channelId: text("channel_id").primaryKey(),
+  seoTitle: text("seo_title").notNull(),
+  seoDescription: text("seo_description").notNull(),
+  published: boolean("published").notNull().default(true),
+  hero: jsonb("hero").notNull(),
+  sections: jsonb("sections").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export type Coupon = typeof coupons.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type StudentExpediente = typeof studentExpedientes.$inferSelect;
 export type CourseCertificate = typeof courseCertificates.$inferSelect;
 export type CertificationProgram = typeof certificationPrograms.$inferSelect;
+
+export type ChannelPageRow = typeof channelPages.$inferSelect;

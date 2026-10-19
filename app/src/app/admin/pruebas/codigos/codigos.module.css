@@ -11,7 +11,7 @@
 }
 
 .reveal p {
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   color: var(--muted);
   margin: 0.25rem 0 0.65rem;
 }
@@ -19,7 +19,7 @@
 .plainCode {
   display: block;
   font-family: var(--mono);
-  font-size: 1.35rem;
+  font-size: var(--admin-fs-xl);
   letter-spacing: 0.08em;
   margin-bottom: 0.75rem;
   color: var(--ink);
@@ -31,7 +31,7 @@
   right: 0.65rem;
   border: none;
   background: none;
-  font-size: 1.25rem;
+  font-size: var(--admin-fs-lg);
   cursor: pointer;
   color: var(--muted);
 }
@@ -47,14 +47,14 @@
 }
 
 .form h2 {
-  font-size: 1.05rem;
+  font-size: var(--admin-fs-md);
   margin-bottom: 0.25rem;
 }
 
 .form label {
   display: grid;
   gap: 0.35rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
 }
 
@@ -76,7 +76,7 @@
 
 .checks legend {
   width: 100%;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
   margin-bottom: 0.25rem;
 }
@@ -85,19 +85,19 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
   color: var(--ink);
 }
 
 .error {
   color: #c45c4a;
-  font-size: 0.88rem;
+  font-size: var(--admin-fs-base);
 }
 
 .securityNote {
   margin-top: 2rem;
   padding: 1rem;
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   color: var(--muted);
   line-height: 1.55;
   border: 1px solid var(--rule-soft);
@@ -131,7 +131,7 @@
 
 .statN {
   font-family: var(--mono);
-  font-size: 1.35rem;
+  font-size: var(--admin-fs-xl);
   font-weight: 700;
   color: var(--ink);
 }
@@ -142,7 +142,7 @@
 }
 
 .stat span:last-child {
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
 }
 
@@ -155,7 +155,7 @@
 .tagDone,
 .tagPending,
 .tagAllDone {
-  font-size: 0.72rem;
+  font-size: var(--admin-fs-xs);
   font-family: var(--mono);
   padding: 0.15rem 0.4rem;
   border-radius: 3px;
@@ -182,7 +182,7 @@
   padding: 0;
   display: grid;
   gap: 0.25rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
 }
 
 .sessionList li {

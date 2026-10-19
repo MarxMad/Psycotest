@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { users } from "@/db/schema";
-
-const db = getDb();
+import { requireUser } from "@/lib/auth";
 
 export async function GET() {
   try {
+    await requireUser(["admin"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const allUsers = await db.select().from(users);
 
     const sanitizedUsers = allUsers.map((user) => ({

@@ -1,0 +1,264 @@
+/* ================================================================== *
+ * Índice interno de marcas.
+ *
+ * No es una página de venta: es la superficie desde la que se entra a
+ * cada sitio y a su administración. Por eso usa los tokens del panel y
+ * no la paleta de los canales.
+ * ================================================================== */
+
+.pagina {
+  min-height: 100dvh;
+  background: var(--admin-bg);
+  color: var(--admin-text);
+  font-family: var(--admin-font);
+}
+
+/* ---------- cabecera ---------- */
+
+.cabecera {
+  border-bottom: 1px solid var(--admin-border);
+  background: var(--admin-card-bg);
+}
+
+.cabeceraInterior {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: 1.5rem clamp(1rem, 4vw, 2.5rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.3rem;
+  font-size: var(--admin-fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--admin-text-muted);
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--admin-font-head);
+  font-size: var(--admin-fs-xl);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.cabeceraAcciones {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.quien {
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
+}
+
+.botonPanel {
+  padding: 0.6rem 1.2rem;
+  border-radius: 7px;
+  background: var(--admin-primary);
+  color: #fff;
+  font-size: var(--admin-fs-base);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+
+.botonPanel:hover {
+  background: var(--admin-primary-hover);
+}
+
+/* ---------- cuerpo ---------- */
+
+.principal {
+  max-width: 68rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2.5rem) 4rem;
+}
+
+.intro {
+  max-width: 58ch;
+  margin: 0 0 2rem;
+  font-size: var(--admin-fs-base);
+  line-height: 1.6;
+  color: var(--admin-text-muted);
+}
+
+/* ---------- las cuatro marcas ---------- */
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--admin-border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--admin-border);
+}
+
+.fila {
+  display: grid;
+  gap: 1.25rem 2rem;
+  align-items: center;
+  padding: 1.5rem clamp(1rem, 3vw, 1.75rem);
+  background: var(--admin-card-bg);
+  border-left: 3px solid var(--acento, var(--admin-border));
+  transition: background 0.15s ease;
+}
+
+.fila:hover {
+  background: var(--admin-bg);
+}
+
+@media (min-width: 860px) {
+  .fila {
+    grid-template-columns: minmax(0, 1fr) 9rem;
+  }
+}
+
+/* Cada marca conserva su color, pero sólo como filo: el resto es neutro */
+.fila[data-canal="ceduct"] {
+  --acento: #3e5a6e;
+}
+.fila[data-canal="psicologia"] {
+  --acento: #1b806b;
+}
+.fila[data-canal="ige"] {
+  --acento: #c21e17;
+}
+.fila[data-canal="martin"] {
+  --acento: #a8821f;
+}
+
+.filaTexto {
+  min-width: 0;
+}
+
+.rol {
+  margin: 0 0 0.35rem;
+  font-size: var(--admin-fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.nombre {
+  margin: 0;
+  font-family: var(--admin-font-head);
+  font-size: var(--admin-fs-lg);
+  font-weight: 650;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+}
+
+.descripcion {
+  max-width: 54ch;
+  margin: 0.45rem 0 0;
+  font-size: var(--admin-fs-base);
+  line-height: 1.55;
+  color: var(--admin-text-muted);
+}
+
+/* ---------- cifras ---------- */
+
+.cifras {
+  display: flex;
+  gap: 1.75rem;
+  margin: 0;
+}
+
+@media (min-width: 860px) {
+  .cifras {
+    justify-content: flex-start;
+  }
+}
+
+.cifras div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.cifras dt {
+  font-family: var(--admin-font-head);
+  font-size: var(--admin-fs-lg);
+  font-weight: 650;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.cifras dd {
+  margin: 0;
+  font-size: var(--admin-fs-xs);
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+}
+
+/* ---------- acciones ---------- */
+
+.acciones {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (min-width: 860px) {
+  .acciones {
+    justify-content: flex-end;
+  }
+}
+
+.accionPrimaria,
+.accionSecundaria {
+  padding: 0.55rem 1.05rem;
+  border-radius: 7px;
+  font-size: var(--admin-fs-base);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.accionPrimaria {
+  border: 1px solid var(--admin-border);
+  background: var(--admin-surface);
+  color: var(--admin-text);
+}
+
+.accionPrimaria:hover {
+  border-color: var(--acento);
+  color: var(--acento);
+}
+
+.accionSecundaria {
+  border: 1px solid transparent;
+  color: var(--admin-text-muted);
+}
+
+.accionSecundaria:hover {
+  color: var(--admin-text);
+  background: var(--admin-bg);
+}
+
+.aviso {
+  margin: 1.5rem 0 0;
+  padding: 0.8rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--admin-warn) 35%, transparent);
+  border-left: 3px solid var(--admin-warn);
+  border-radius: 8px;
+  background: var(--admin-warn-bg);
+  color: var(--admin-warn);
+  font-size: var(--admin-fs-base);
+}

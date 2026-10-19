@@ -11,7 +11,7 @@ import { markRedemptionInstrumentComplete } from "@/lib/access-code-store";
 import { rateLimit } from "@/lib/rate-limit";
 import { clientIp } from "@/lib/access-codes";
 
-const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe"];
+const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
 
 /** Envío de aplicación terminada — requiere sesión de aplicante con código válido. */
 export async function POST(request: Request) {

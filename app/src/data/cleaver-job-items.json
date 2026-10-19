@@ -1,0 +1,173 @@
+{
+  "fuente": "Manual Cleaver §5 (Factor Humano / Job Analysis) + plantilla Análisis del Trabajo (clave factorial 24 ítems)",
+  "instrumento": "cleaver-job",
+  "escala": {
+    "min": 1,
+    "max": 5,
+    "etiqueta": "Importancia / intensidad requerida en el puesto (1=mínima … 5=máxima)"
+  },
+  "multiplicadorPorPromedioA": [
+    {
+      "min": 12,
+      "max": 13,
+      "x": 8
+    },
+    {
+      "min": 13.5,
+      "max": 15,
+      "x": 7
+    },
+    {
+      "min": 15.5,
+      "max": 17.5,
+      "x": 6
+    },
+    {
+      "min": 18,
+      "max": 18.5,
+      "x": 5.5
+    },
+    {
+      "min": 19,
+      "max": 21.5,
+      "x": 5
+    },
+    {
+      "min": 22,
+      "max": 23,
+      "x": 4.5
+    },
+    {
+      "min": 23.5,
+      "max": 26.5,
+      "x": 4
+    },
+    {
+      "min": 27,
+      "max": 28,
+      "x": 3.5
+    }
+  ],
+  "items": [
+    {
+      "id": 1,
+      "factor": "C",
+      "texto": "Seguir normas, políticas y estándares de calidad del puesto."
+    },
+    {
+      "id": 2,
+      "factor": "D",
+      "texto": "Obtener resultados pese a oposición o circunstancias adversas."
+    },
+    {
+      "id": 3,
+      "factor": "S",
+      "texto": "Mantener un ritmo estable y constancia en las tareas."
+    },
+    {
+      "id": 4,
+      "factor": "I",
+      "texto": "Influir, persuadir o motivar a otras personas."
+    },
+    {
+      "id": 5,
+      "factor": "C",
+      "texto": "Revisar detalles y evitar errores antes de decidir."
+    },
+    {
+      "id": 6,
+      "factor": "D",
+      "texto": "Tomar decisiones con autoridad y asumir riesgos calculados."
+    },
+    {
+      "id": 7,
+      "factor": "D",
+      "texto": "Aceptar retos y acelerar la acción hacia metas."
+    },
+    {
+      "id": 8,
+      "factor": "I",
+      "texto": "Generar contactos y un clima social favorable."
+    },
+    {
+      "id": 9,
+      "factor": "S",
+      "texto": "Ser paciente y leal al equipo / proceso establecido."
+    },
+    {
+      "id": 10,
+      "factor": "C",
+      "texto": "Documentar, verificar hechos y apegarse a procedimientos."
+    },
+    {
+      "id": 11,
+      "factor": "I",
+      "texto": "Comunicar con entusiasmo y ganar colaboración."
+    },
+    {
+      "id": 12,
+      "factor": "C",
+      "texto": "Operar con cautela y control de calidad."
+    },
+    {
+      "id": 13,
+      "factor": "I",
+      "texto": "Representar al área ante terceros con desenvoltura."
+    },
+    {
+      "id": 14,
+      "factor": "S",
+      "texto": "Profundizar en una tarea antes de pasar a otra."
+    },
+    {
+      "id": 15,
+      "factor": "S",
+      "texto": "Estabilizar el entorno ante cambios bruscos."
+    },
+    {
+      "id": 16,
+      "factor": "D",
+      "texto": "Cuestionar el status quo para mejorar resultados."
+    },
+    {
+      "id": 17,
+      "factor": "C",
+      "texto": "Exigir precisión y evidencia antes de cerrar un tema."
+    },
+    {
+      "id": 18,
+      "factor": "I",
+      "texto": "Promover ideas y proyectos ante grupos diversos."
+    },
+    {
+      "id": 19,
+      "factor": "D",
+      "texto": "Resolver problemas con iniciativa e independencia."
+    },
+    {
+      "id": 20,
+      "factor": "D",
+      "texto": "Competir y sostener una posición ante presión."
+    },
+    {
+      "id": 21,
+      "factor": "I",
+      "texto": "Facilitar acuerdos y relaciones interpersonales."
+    },
+    {
+      "id": 22,
+      "factor": "C",
+      "texto": "Cumplir requisitos formales y auditorías del puesto."
+    },
+    {
+      "id": 23,
+      "factor": "S",
+      "texto": "Apoyar de forma constante sin urgencia agresiva."
+    },
+    {
+      "id": 24,
+      "factor": "S",
+      "texto": "Preferir predicibilidad y continuidad operativa."
+    }
+  ]
+}

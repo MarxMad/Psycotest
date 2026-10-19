@@ -8,12 +8,12 @@
 }
 
 .sectionTitle {
-  font-size: 1.15rem;
+  font-size: var(--admin-fs-md);
   margin-bottom: 0.25rem;
 }
 
 .sectionHint {
-  font-size: 0.85rem;
+  font-size: var(--admin-fs-base);
   color: var(--muted);
   margin: 0;
 }
@@ -26,7 +26,7 @@
 
 .tab,
 .tabActive {
-  font-size: 0.78rem;
+  font-size: var(--admin-fs-sm);
   padding: 0.4rem 0.75rem;
   border-radius: 999px;
   border: 1px solid var(--rule-soft);
@@ -49,7 +49,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  font-size: 0.82rem;
+  font-size: var(--admin-fs-sm);
   color: var(--muted);
   margin-bottom: 1rem;
 }
@@ -76,7 +76,7 @@
 }
 
 .chartBlock h3 {
-  font-size: 1.05rem;
+  font-size: var(--admin-fs-md);
   margin-bottom: 0.75rem;
 }
 

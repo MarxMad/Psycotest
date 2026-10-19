@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import type { LiveClass } from "@/db/schema";
+import { salaEsAdivinable } from "@/lib/salas";
 import s from "../clases-vivo.module.css";
 
 type AttendanceRow = {
@@ -81,6 +82,33 @@ export default function LiveClassDetailPage() {
     }
   }
 
+  async function regenerarSala() {
+    if (
+      !confirm(
+        "Se cambiará el enlace de la sala. Quien ya tenga el anterior dejará de poder entrar y habrá que repartir el nuevo. ¿Continuar?",
+      )
+    ) {
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/live-classes/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ regenerarSala: true }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "No se pudo cambiar el enlace");
+        return;
+      }
+      const data = await res.json();
+      setLiveClass(data.liveClass);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (loading) return <p className={s.muted}>Cargando…</p>;
   if (!liveClass) {
     return (
@@ -108,11 +136,13 @@ export default function LiveClassDetailPage() {
             {liveClass.status === "scheduled" && (
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn"
                 disabled={busy}
                 onClick={() => void setStatus("live")}
               >
-                Iniciar sesión
+                {/* Decía «Iniciar sesión», igual que el botón de identificarse
+                    de Jitsi que aparece al lado. Esto es empezar la clase. */}
+                Marcar como en curso
               </button>
             )}
             {liveClass.status === "live" && (
@@ -126,7 +156,7 @@ export default function LiveClassDetailPage() {
               </button>
             )}
             <Link href={`/admin/clases-vivo/${id}/sala`} className="btn btn-primary">
-              Abrir sala
+              Entrar a la sala
             </Link>
           </div>
         }
@@ -157,6 +187,22 @@ export default function LiveClassDetailPage() {
           <p>
             <strong>Grabación:</strong> {liveClass.recordingUrl ?? "Pendiente"}
           </p>
+
+          {/* Las salas creadas antes llevaban el nombre derivado de la fecha:
+              se adivinaban probando marcas de tiempo. */}
+          {salaEsAdivinable(roomUrl) && (
+            <div className={s.avisoSala}>
+              <strong>Este enlace se puede adivinar</strong>
+              <p>
+                Se generó con el patrón anterior, derivado de la hora de creación: alguien podría
+                dar con él sin invitación y entrar a una clase donde se registra asistencia.
+                Cámbialo por uno nuevo y reparte el enlace otra vez.
+              </p>
+              <button type="button" className="btn" disabled={busy} onClick={() => void regenerarSala()}>
+                Cambiar el enlace de la sala
+              </button>
+            </div>
+          )}
         </Card>
 
         <Card>

@@ -38,7 +38,7 @@ export function clientIp(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
-export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe"];
+export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
 
 export function parseAllowedInstruments(raw: unknown): Instrumento[] {
   if (!Array.isArray(raw) || raw.length === 0) return [...ALL_INSTRUMENTOS];

@@ -3,9 +3,19 @@ import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
+import { psycotest } from "@/lib/routes";
+import { getChannelFromHost, isPlatformPath } from "@/lib/channels";
+import { esSoloAdmin, operaElPanel, type Rol } from "@/lib/auth-rutas";
 
 const COOKIE = "psycotest_session";
-const TEST_PATHS = ["/papi", "/hartman", "/mabe"] as const;
+
+/** Rutas de aplicación de prueba: exigen un código de candidato vigente. */
+const TEST_PATHS = [
+  "/evaluacion/papi",
+  "/evaluacion/hartman",
+  "/evaluacion/mabe",
+  "/evaluacion/cleaver",
+] as const;
 
 function secret() {
   const s = process.env.AUTH_SECRET;
@@ -17,26 +27,45 @@ function secret() {
 
 function instrumentFromPath(pathname: string): Instrumento | null {
   for (const p of TEST_PATHS) {
-    if (pathname === p || pathname.startsWith(`${p}/`)) return p.slice(1) as Instrumento;
+    if (pathname === p || pathname.startsWith(`${p}/`)) {
+      const slug = p.split("/").pop();
+      if (slug === "papi" || slug === "hartman" || slug === "mabe" || slug === "cleaver") {
+        return slug;
+      }
+    }
   }
   return null;
 }
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const host = request.headers.get("host");
+
+  // --- Multi-canal: rewrite por subdominio ---
+  if (!isPlatformPath(pathname) && !pathname.includes(".")) {
+    const channel = getChannelFromHost(host);
+    if (channel) {
+      const url = request.nextUrl.clone();
+      const suffix = pathname === "/" ? "" : pathname;
+      url.pathname = `/sites/${channel.id}${suffix}`;
+      const res = NextResponse.rewrite(url);
+      res.headers.set("x-channel", channel.id);
+      return res;
+    }
+  }
 
   const instrumento = instrumentFromPath(pathname);
   if (instrumento) {
     const token = request.cookies.get(APPLICANT_COOKIE)?.value;
     if (!token) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("next", pathname);
       return NextResponse.redirect(acceso);
     }
 
     const session = await verifyApplicantToken(token);
     if (!session) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("next", pathname);
       acceso.searchParams.set("error", "sesion");
       const res = NextResponse.redirect(acceso);
@@ -45,13 +74,13 @@ export async function middleware(request: NextRequest) {
     }
 
     if (!session.allowed.includes(instrumento)) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("error", "prueba");
       return NextResponse.redirect(acceso);
     }
 
     if (session.completed.includes(instrumento)) {
-      const acceso = new URL("/acceso", request.url);
+      const acceso = new URL(psycotest.acceso, request.url);
       acceso.searchParams.set("error", "completada");
       return NextResponse.redirect(acceso);
     }
@@ -59,7 +88,8 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!pathname.startsWith("/admin") && !pathname.startsWith("/participantes")) {
+  // Sólo el panel exige sesión. La raíz es el índice público de marcas.
+  if (!pathname.startsWith("/admin")) {
     return NextResponse.next();
   }
 
@@ -73,10 +103,17 @@ export async function middleware(request: NextRequest) {
   try {
     const { payload } = await jwtVerify(token, secret());
     const rol = payload.rol as string | undefined;
-    // Solo el rol admin entra al panel profesional / participantes
-    if (rol !== "admin") {
-      return NextResponse.redirect(new URL("/consultorio/cursos", request.url));
+
+    // El aplicador no opera el panel: solo acompaña la aplicación de pruebas.
+    if (!operaElPanel(rol as Rol)) {
+      return NextResponse.redirect(new URL("/mi-cuenta", request.url));
     }
+
+    // Personas, dinero y marca quedan para el administrador.
+    if (rol !== "admin" && esSoloAdmin(pathname)) {
+      return NextResponse.redirect(new URL("/admin", request.url));
+    }
+
     return NextResponse.next();
   } catch {
     const login = new URL("/login", request.url);
@@ -87,13 +124,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/admin/:path*",
-    "/participantes/:path*",
-    "/papi",
-    "/papi/:path*",
-    "/hartman",
-    "/hartman/:path*",
-    "/mabe",
-    "/mabe/:path*",
+    /*
+     * Host rewrites + auth. Excluye estáticos.
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|pdf|ico|mp4|webm)$).*)",
   ],
 };

@@ -4,9 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { APP_NAME } from "@/lib/brand";
-import { ConsultorioNav } from "@/app/consultorio/ConsultorioNav";
-import { BrandShell } from "@/app/consultorio/BrandShell";
-import styles from "@/app/consultorio/conocer-pages.module.css";
+import styles from "@/styles/conocer-pages.module.css";
 
 type Result = {
   valid: boolean;
@@ -31,8 +29,7 @@ export default function VerificarPage() {
   }, [code]);
 
   return (
-    <BrandShell>
-      <ConsultorioNav />
+    <>
       <div className={styles.shell} data-anime="page">
         <main className={styles.main}>
           <header className={styles.hero} data-anime="hero">
@@ -44,7 +41,7 @@ export default function VerificarPage() {
           {result && !result.valid && (
             <div className={styles.card}>
               <p>No se encontró una constancia válida con ese código.</p>
-              <Link href="/consultorio/constancias" className={styles.btnPrimary}>
+              <Link href="/verificar" className={styles.btnPrimary}>
                 Ir a constancias
               </Link>
             </div>
@@ -69,7 +66,7 @@ export default function VerificarPage() {
                 <a className={styles.btnPrimary} href={`/api/certificates/${code}/pdf`}>
                   Descargar PDF
                 </a>
-                <Link href="/consultorio/constancias" className={styles.btnSecondary}>
+                <Link href="/verificar" className={styles.btnSecondary}>
                   Más información
                 </Link>
               </div>
@@ -77,6 +74,6 @@ export default function VerificarPage() {
           )}
         </main>
       </div>
-    </BrandShell>
+    </>
   );
 }

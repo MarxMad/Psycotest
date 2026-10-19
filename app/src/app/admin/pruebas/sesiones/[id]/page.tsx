@@ -3,15 +3,24 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { MabeGraficas } from "@/app/psycotest/mabe/MabeGraficas";
-import { MabeCalificacion } from "@/app/psycotest/mabe/MabeCalificacion";
-import { PapiGraficas } from "@/app/psycotest/papi/PapiGraficas";
-import { HartmanGraficas } from "@/app/psycotest/hartman/HartmanGraficas";
-import { HartmanCalificacion } from "@/app/psycotest/hartman/HartmanCalificacion";
+import { CleaverGraficas } from "@/app/evaluacion/cleaver/CleaverGraficas";
+import { MabeGraficas } from "@/app/evaluacion/mabe/MabeGraficas";
+import { MabeCalificacion } from "@/app/evaluacion/mabe/MabeCalificacion";
+import { PapiGraficas } from "@/app/evaluacion/papi/PapiGraficas";
+import { HartmanGraficas } from "@/app/evaluacion/hartman/HartmanGraficas";
+import { HartmanCalificacion } from "@/app/evaluacion/hartman/HartmanCalificacion";
 import { calificarPapi, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/mabe";
-import { dbSessionToSesion, fetchSession } from "@/lib/api-client";
+import { calificarCleaver, type RespuestasCleaver, type ResultadoCleaver } from "@/lib/cleaver";
+import { asCleaverPuesto, type ResultadoCleaverJob } from "@/lib/cleaver-job";
+import {
+  dbSessionToSesion,
+  fetchJobProfile,
+  fetchJobProfiles,
+  fetchSession,
+  type JobProfileRow,
+} from "@/lib/api-client";
 import { actualizarSesionServidor } from "@/lib/persist-server";
 import {
   actualizarSesion,
@@ -29,17 +38,29 @@ export default function AdminDetallePage() {
   const [notas, setNotas] = useState("");
   const [tab, setTab] = useState<"calif" | "resp" | "interp">("calif");
   const [loading, setLoading] = useState(true);
+  const [profiles, setProfiles] = useState<JobProfileRow[]>([]);
+  const [puestoActivo, setPuestoActivo] = useState<JobProfileRow | null>(null);
+  const [linking, setLinking] = useState(false);
 
   useEffect(() => {
     let cancel = false;
     async function load() {
       setLoading(true);
-      const remota = await fetchSession(id);
+      const [remota, jobs] = await Promise.all([fetchSession(id), fetchJobProfiles()]);
       if (cancel) return;
+      setProfiles(jobs.filter((p) => asCleaverPuesto(p.cleaverPuesto)?.resultado?.completo));
       if (remota) {
         const mapped = dbSessionToSesion(remota);
         setSesion(mapped);
         setNotas(mapped.notasPsicologo ?? "");
+        if (mapped.jobProfileId) {
+          const jp =
+            jobs.find((p) => p.id === mapped.jobProfileId) ??
+            (await fetchJobProfile(mapped.jobProfileId));
+          if (!cancel) setPuestoActivo(jp);
+        } else {
+          setPuestoActivo(null);
+        }
         setLoading(false);
         return;
       }
@@ -91,8 +112,26 @@ export default function AdminDetallePage() {
     if (next) setSesion(next);
   }
 
+  async function vincularPuesto(jobProfileId: string | null) {
+    setLinking(true);
+    const ok = await actualizarSesionServidor(ses.id, { jobProfileId });
+    setLinking(false);
+    if (!ok) return;
+    const next = actualizarSesion(ses.id, { jobProfileId: jobProfileId ?? undefined });
+    if (next) setSesion({ ...next, jobProfileId: jobProfileId ?? undefined });
+    else setSesion({ ...ses, jobProfileId: jobProfileId ?? undefined });
+    if (jobProfileId) {
+      const jp =
+        profiles.find((p) => p.id === jobProfileId) ?? (await fetchJobProfile(jobProfileId));
+      setPuestoActivo(jp);
+    } else {
+      setPuestoActivo(null);
+    }
+  }
+
   const titulo = ses.participante;
   const flags = ses.validityFlags ?? [];
+  const cleaverPuesto = asCleaverPuesto(puestoActivo?.cleaverPuesto ?? null);
 
   return (
     <main className={s.main}>
@@ -118,6 +157,30 @@ export default function AdminDetallePage() {
             Volver
           </button>
         </header>
+
+        {ses.instrumento === "cleaver" && (
+          <div className={s.jobLinkBox}>
+            <label>
+              Factor Humano (Análisis del Trabajo)
+              <select
+                value={ses.jobProfileId ?? ""}
+                disabled={linking}
+                onChange={(e) => void vincularPuesto(e.target.value || null)}
+              >
+                <option value="">Sin perfil de puesto</option>
+                {profiles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.titulo}
+                    {p.empresa ? ` · ${p.empresa}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Link href="/admin/pruebas/perfiles" className="btn btn-sm">
+              Gestionar perfiles
+            </Link>
+          </div>
+        )}
 
         {flags.length > 0 && (
           <div className={s.alertBox} role="alert">
@@ -149,7 +212,13 @@ export default function AdminDetallePage() {
           ))}
         </div>
 
-        {tab === "calif" && <DetalleCalificacion sesion={ses} />}
+        {tab === "calif" && (
+          <DetalleCalificacion
+            sesion={ses}
+            puestoResultado={cleaverPuesto?.resultado}
+            puestoTitulo={puestoActivo?.titulo}
+          />
+        )}
 
         {tab === "resp" && (
           <div className={s.respBox}>
@@ -171,7 +240,15 @@ export default function AdminDetallePage() {
   );
 }
 
-function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
+function DetalleCalificacion({
+  sesion,
+  puestoResultado,
+  puestoTitulo,
+}: {
+  sesion: Sesion<unknown, unknown>;
+  puestoResultado?: ResultadoCleaverJob;
+  puestoTitulo?: string;
+}) {
   if (sesion.instrumento === "papi") {
     const resp = sesion.respuestas as Respuestas;
     const cal = sesion.calificacion
@@ -216,6 +293,21 @@ function DetalleCalificacion({ sesion }: { sesion: Sesion<unknown, unknown> }) {
           combinaciones={cal.combinaciones}
         />
         <MabeCalificacion resultado={cal} />
+      </div>
+    );
+  }
+
+  if (sesion.instrumento === "cleaver") {
+    const resp = sesion.respuestas as RespuestasCleaver;
+    const cal =
+      (sesion.calificacion as ResultadoCleaver) ?? calificarCleaver(resp);
+    return (
+      <div>
+        <CleaverGraficas
+          cal={cal}
+          puesto={puestoResultado}
+          puestoTitulo={puestoTitulo}
+        />
       </div>
     );
   }

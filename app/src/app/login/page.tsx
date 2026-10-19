@@ -2,31 +2,23 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
+import { resolvePostLoginPath } from "@/lib/auth-rutas";
+import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
+import { PARAM_SALIDA } from "@/lib/salir";
 import s from "./login.module.css";
 
-type LoginUser = { id: string; email: string; nombre: string; rol: string };
-
-function homeForRole(rol: string) {
-  return rol === "admin" ? "/admin" : "/consultorio/cursos";
-}
-
-function resolveNext(rol: string, next: string | null) {
-  const fallback = homeForRole(rol);
-  if (!next || !next.startsWith("/") || next.startsWith("//")) return fallback;
-  if (next.startsWith("/admin") || next.startsWith("/participantes")) {
-    return rol === "admin" ? next : fallback;
-  }
-  return next;
-}
+type Rol = "admin" | "psicologo" | "aplicador";
+type LoginUser = { id: string; email: string; nombre: string; rol: Rol };
 
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const nextParam = params.get("next");
+  // Llega de pulsar «Salir»: hay que cerrar también la sesión de Privy.
+  const salir = params.get(PARAM_SALIDA) === "1";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -48,8 +40,8 @@ function LoginForm() {
       return;
     }
     const data = (await res.json()) as { user?: LoginUser };
-    const rol = data.user?.rol ?? "psicologo";
-    router.push(resolveNext(rol, nextParam));
+    const rol: Rol = data.user?.rol ?? "psicologo";
+    router.push(resolvePostLoginPath({ rol }, nextParam));
     router.refresh();
   }
 
@@ -63,11 +55,12 @@ function LoginForm() {
     >
       <span className="eyebrow">{APP_NAME}</span>
       <h1>Inicio de sesión</h1>
-      <p className={s.sub}>
-        Portal único para miembros. Según tu cuenta entrarás al panel de administración o a tus
-        cursos.
-      </p>
 
+      <PrivyLoginButton next={nextParam || undefined} salir={salir} />
+
+      <div className={s.separador}>
+        <span>o con tu contraseña</span>
+      </div>
       <label>
         Correo
         <input
@@ -111,13 +104,6 @@ function LoginForm() {
         {loading ? "Entrando…" : "Entrar"}
       </motion.button>
 
-      <p className={s.hint}>
-        ¿Primera vez? Usa la cuenta que te asignó el administrador. Admin inicial:{" "}
-        <code>admin@sistemapsic.local</code>
-      </p>
-      <Link href="/" className={s.back}>
-        ← Volver al inicio
-      </Link>
     </motion.form>
   );
 }

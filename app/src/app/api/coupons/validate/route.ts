@@ -3,10 +3,9 @@ import { getDb } from "@/db/index";
 import { coupons } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
-const db = getDb();
-
 export async function POST(request: Request) {
   try {
+    const db = getDb();
     const body = await request.json();
     const { code } = body;
 

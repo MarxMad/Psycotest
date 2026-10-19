@@ -1,0 +1,617 @@
+.page {
+  --psi-pad: clamp(1rem, 4vw, 3.5rem);
+  --psi-ink: #e8edf4;
+  --psi-muted: #9aa6b6;
+  --psi-copper: #d4895a;
+  --psi-slate: #0e141c;
+  --psi-panel: #161d28;
+  --psi-line: rgba(232, 237, 244, 0.12);
+  color: var(--psi-ink);
+  background: var(--psi-slate);
+  overflow-x: clip;
+}
+
+/* ---------- portada ---------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: min(90svh, 840px);
+  padding: clamp(3.75rem, 7.5vh, 4.75rem) var(--psi-pad) clamp(1.75rem, 4vh, 2.75rem);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 85% 15%, rgba(212, 137, 90, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 10% 80%, rgba(91, 124, 153, 0.18), transparent 50%),
+    linear-gradient(165deg, #0b1017 0%, #121925 50%, #0e141c 100%);
+}
+
+.heroGlow {
+  position: absolute;
+  inset: -10% 0 0;
+  background-image:
+    linear-gradient(rgba(232, 237, 244, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232, 237, 244, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 75% 70% at 40% 40%, #000 15%, transparent 75%);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.heroGrid {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(260px, 0.88fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+.copy {
+  min-width: 0;
+}
+
+.puertasZona {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-top: clamp(1.1rem, 2.5vw, 1.85rem);
+}
+
+.kicker,
+.eyebrow,
+.panelEyebrow {
+  margin: 0 0 0.7rem;
+  color: var(--psi-copper);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4.6vw, 3.2rem);
+  line-height: 1.06;
+  max-width: 13ch;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.lead,
+.sectionBody {
+  margin: 1rem 0 0;
+  color: var(--psi-muted);
+  line-height: 1.55;
+  font-size: clamp(0.98rem, 1.8vw, 1.08rem);
+  max-width: 48ch;
+}
+
+/* Tres hechos cortos que sostienen la promesa del titular. */
+.confianza {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.5rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+}
+
+.confianza li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.75rem;
+  border: 1px solid var(--psi-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--psi-ink);
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.confianza svg {
+  color: var(--psi-copper);
+  flex: none;
+}
+
+.heroPanel {
+  position: relative;
+  min-width: 0;
+  padding: 1.1rem 1.15rem 1.2rem;
+  border: 1px solid var(--psi-line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--psi-panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 26px 60px -34px rgba(0, 0, 0, 0.95);
+}
+
+.panelList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.panelList li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--psi-line);
+}
+
+.panelList li:last-child {
+  border-bottom: none;
+}
+
+.panelIndex {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--psi-copper);
+  font-weight: 700;
+}
+
+.panelList strong {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.panelList em {
+  font-style: normal;
+  color: var(--psi-muted);
+  font-size: 0.78rem;
+}
+
+.panelTime {
+  color: var(--psi-muted);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* El precio de entrada vive en el panel: es la pregunta que sigue a la lista. */
+.panelCta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.95rem;
+  border: 1px solid color-mix(in srgb, var(--psi-copper) 45%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--psi-copper) 10%, transparent);
+  color: var(--psi-copper);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.panelCta:hover {
+  background: color-mix(in srgb, var(--psi-copper) 18%, transparent);
+  border-color: var(--psi-copper);
+}
+
+.panelCta svg {
+  transition: transform 0.2s ease;
+}
+
+.panelCta:hover svg {
+  transform: translateX(3px);
+}
+
+/* Respaldo de la Sociedad: acompaña al sistema, no compite con él */
+.respaldo {
+  --ch-accent: var(--psi-copper);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--psi-line);
+}
+
+.sello {
+  width: 54px;
+  height: 54px;
+  flex: none;
+  color: color-mix(in srgb, var(--psi-copper) 42%, #e8edf5);
+}
+
+.respaldo strong {
+  display: block;
+  font-size: 0.84rem;
+  line-height: 1.25;
+}
+
+.respaldo span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--psi-muted);
+  font-size: 0.74rem;
+  line-height: 1.4;
+}
+
+/* ---------- secciones ---------- */
+
+.section {
+  padding: clamp(2.75rem, 8vh, 5rem) var(--psi-pad);
+  border-top: 1px solid var(--psi-line);
+}
+
+.sectionAlt {
+  background: #121925;
+}
+
+.section h2 {
+  margin: 0.3rem 0 0;
+  font-size: clamp(1.55rem, 3.5vw, 2.45rem);
+  max-width: 18ch;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+  margin-top: 1.9rem;
+}
+
+.item {
+  position: relative;
+  padding: 1.3rem 1.2rem 1.35rem;
+  border: 1px solid var(--psi-line);
+  border-radius: 14px;
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--psi-panel) 88%, transparent),
+    color-mix(in srgb, var(--psi-panel) 45%, transparent)
+  );
+  min-width: 0;
+  overflow: hidden;
+  transition: border-color 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Una regla de acento que crece al pasar por encima: la tarjeta responde. */
+.item::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--psi-copper);
+  transform: scaleY(0.22);
+  transform-origin: top;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.item:hover {
+  border-color: color-mix(in srgb, var(--psi-copper) 45%, transparent);
+  transform: translateY(-3px);
+}
+
+.item:hover::before {
+  transform: scaleY(1);
+}
+
+.itemNum {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--psi-copper);
+}
+
+.item h3 {
+  margin: 0.45rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.item p {
+  margin: 0.5rem 0 0;
+  color: var(--psi-muted);
+  line-height: 1.5;
+  font-size: 0.94rem;
+}
+
+/* Cada sección cierra con su acción, en vez de dejarla toda al final. */
+.enlaceAccion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.6rem;
+  padding: 0.7rem 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--psi-copper) 50%, transparent);
+  border-radius: 999px;
+  color: var(--psi-ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.enlaceAccion svg {
+  color: var(--psi-copper);
+  transition: transform 0.2s ease;
+}
+
+.enlaceAccion:hover {
+  background: color-mix(in srgb, var(--psi-copper) 14%, transparent);
+  border-color: var(--psi-copper);
+}
+
+.enlaceAccion:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- la brecha: texto y radar ---------- */
+
+.brecha {
+  padding: clamp(3rem, 8vh, 5.5rem) var(--psi-pad);
+  border-top: 1px solid var(--psi-line);
+}
+
+.brechaGrid {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .brechaGrid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  }
+}
+
+.tituloSplit {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+/* ---------- cierre comercial ---------- */
+
+.contacto {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(3rem, 9vh, 5.5rem) var(--psi-pad);
+  border-top: 1px solid var(--psi-line);
+  background:
+    radial-gradient(ellipse 60% 70% at 80% 10%, rgba(212, 137, 90, 0.16), transparent 60%),
+    #101722;
+}
+
+.contactoTrama {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.35;
+  color: var(--psi-copper);
+  pointer-events: none;
+}
+
+.contactoPanel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .contactoPanel {
+    grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  }
+}
+
+/* Lo que pasa después de escribir: el primer paso deja de dar pereza. */
+.queSigue {
+  padding: 1.3rem 1.35rem 1.4rem;
+  border: 1px solid var(--psi-line);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--psi-panel) 80%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.queSigueTitulo {
+  margin: 0 0 0.9rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--psi-copper);
+}
+
+.queSigue ol {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+}
+
+.queSigue li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--psi-ink);
+}
+
+.queSigue li span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--psi-copper);
+}
+
+.queSiguePie {
+  margin: 1.1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--psi-line);
+  font-size: 0.8rem;
+  color: var(--psi-muted);
+}
+
+.contactoPanel h2 {
+  margin: 0.3rem 0 0;
+  font-size: clamp(1.75rem, 4vw, 2.7rem);
+  max-width: 16ch;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.contactoActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.9rem;
+}
+
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.9rem;
+  padding: 0.75rem 1.3rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btnPrimary {
+  background: var(--psi-copper);
+  color: #1a100c;
+  box-shadow: 0 16px 36px -22px rgba(212, 137, 90, 0.9);
+}
+
+.btnPrimary:hover {
+  background: #e09a6d;
+  transform: translateY(-2px);
+}
+
+.btnGhost {
+  border: 1px solid var(--psi-line);
+  color: var(--psi-ink);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.btnGhost:hover {
+  border-color: var(--psi-copper);
+  transform: translateY(-2px);
+}
+
+.contactoNota {
+  margin: 1.4rem 0 0;
+  color: var(--psi-muted);
+  font-size: 0.9rem;
+}
+
+.contactoNota a {
+  color: var(--psi-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--psi-copper);
+}
+
+.contactoNota a:hover {
+  color: var(--psi-copper);
+}
+
+/* ---------- adaptación ---------- */
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: auto;
+    padding-bottom: 2.5rem;
+    gap: 1.6rem;
+  }
+
+  /* La rejilla se deshace para que las puertas se cuelen entre el texto y el
+     panel: en vertical, lo primero que hay que poder tocar es la acción. */
+  .heroGrid {
+    display: contents;
+  }
+
+  .copy {
+    order: 1;
+  }
+
+  .puertasZona {
+    order: 2;
+    margin-top: 0;
+  }
+
+  .heroPanel {
+    order: 3;
+  }
+
+  .copy h1 {
+    max-width: 14ch;
+  }
+}
+
+@media (max-width: 520px) {
+  .hero,
+  .section,
+  .brecha,
+  .contacto {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .contactoActions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contactoActions a {
+    justify-content: center;
+  }
+
+  .sello {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .item::before,
+  .item:hover,
+  .btnPrimary,
+  .btnGhost,
+  .enlaceAccion,
+  .panelCta {
+    transform: none;
+    transition: none;
+  }
+}

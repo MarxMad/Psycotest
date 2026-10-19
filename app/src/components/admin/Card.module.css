@@ -23,21 +23,23 @@
 
 .cardHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .cardTitle {
-  font-size: 1.25rem;
+  font-size: var(--admin-fs-lg);
   font-weight: 600;
   color: var(--admin-text);
   margin: 0;
 }
 
 .cardSubtitle {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   margin: 0.25rem 0 0 0;
 }

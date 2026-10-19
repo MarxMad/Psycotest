@@ -1,0 +1,331 @@
+.ruta {
+  position: relative;
+  padding: clamp(3rem, 8vw, 5.5rem) clamp(1rem, 4vw, 3rem);
+  background: linear-gradient(180deg, #0d0d3d 0%, #14145c 55%, #0d0d3d 100%);
+  color: #f4f6fb;
+  overflow: hidden;
+}
+
+.interior {
+  position: relative;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.encabezado {
+  max-width: 46rem;
+  margin-bottom: clamp(2rem, 5vw, 3rem);
+}
+
+.eyebrow {
+  margin: 0 0 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e8c96a;
+}
+
+.titulo {
+  margin: 0;
+  font-family: var(--ch-font-display, Georgia, serif);
+  font-size: clamp(1.9rem, 4.6vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.titulo em {
+  font-style: italic;
+  color: #e8c96a;
+}
+
+.entrada {
+  margin: 1rem 0 0;
+  max-width: 52ch;
+  font-size: clamp(0.98rem, 1.6vw, 1.08rem);
+  line-height: 1.6;
+  color: rgba(244, 246, 251, 0.78);
+}
+
+/* ---------- las tres etapas ---------- */
+
+.etapas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.85rem;
+}
+
+.etapa {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.15rem 1.2rem 1.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(22px);
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+.ruta[data-en="si"] .etapa {
+  animation: entraEtapa 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+@keyframes entraEtapa {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.etapa:hover {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.etapa[data-activa="true"] {
+  border-color: #e8c96a;
+  background: rgba(232, 201, 106, 0.09);
+}
+
+/* El ordinal manda: es lo que se lee de lejos. */
+.ordinal {
+  font-family: var(--ch-font-display, Georgia, serif);
+  font-size: clamp(2.1rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: rgba(244, 246, 251, 0.3);
+  transition: color 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.etapa[data-activa="true"] .ordinal {
+  color: #e8c96a;
+  transform: translateX(2px) scale(1.04);
+}
+
+.etapaTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.etapaTexto strong {
+  font-size: 1.02rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.etapaTexto span {
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: rgba(244, 246, 251, 0.66);
+}
+
+/* Barra que se llena en la etapa elegida. */
+.etapaBarra {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #c9a227, #f3dc92);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.etapa[data-activa="true"] .etapaBarra {
+  transform: scaleX(1);
+}
+
+/* ---------- detalle de la etapa ---------- */
+
+.detalle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+@media (min-width: 900px) {
+  .detalle {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.85fr);
+    align-items: start;
+  }
+}
+
+.pasos {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: paso;
+}
+
+.paso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.9rem;
+  align-items: start;
+  padding: 0.95rem 1rem;
+  border-left: 2px solid rgba(232, 201, 106, 0.45);
+  background: rgba(255, 255, 255, 0.035);
+  border-radius: 0 10px 10px 0;
+  /* anime.js las revela; sin JS se ven igual. */
+}
+
+.pasoNum {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: rgba(232, 201, 106, 0.16);
+  color: #e8c96a;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.paso strong {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 650;
+}
+
+.paso p {
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: rgba(244, 246, 251, 0.7);
+}
+
+/* ---------- lo que se obtiene ---------- */
+
+.logros {
+  padding: 1.25rem 1.3rem 1.4rem;
+  border: 1px solid rgba(232, 201, 106, 0.3);
+  border-radius: 14px;
+  background: rgba(232, 201, 106, 0.06);
+}
+
+.logrosTitulo {
+  margin: 0 0 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #e8c96a;
+}
+
+.logros ul {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.logros li {
+  position: relative;
+  padding-left: 1.3rem;
+  font-size: 0.94rem;
+  line-height: 1.45;
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+.ruta[data-en="si"] .logros li {
+  animation: entraLogro 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(400ms + var(--i, 0) * 80ms);
+}
+
+@keyframes entraLogro {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.logros li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e8c96a;
+}
+
+.logrosCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.3rem;
+  background: #fff;
+  color: #14145c;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+
+.logrosCta svg {
+  transition: transform 0.2s ease;
+}
+
+.logrosCta:hover {
+  background: #e8c96a;
+  transform: translateY(-2px);
+}
+
+.logrosCta:hover svg {
+  transform: translateX(3px);
+}
+
+.arranque {
+  margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.95rem;
+  color: rgba(244, 246, 251, 0.72);
+}
+
+.arranque span {
+  font-weight: 700;
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .etapa,
+  .ruta[data-en="si"] .etapa,
+  .logros li,
+  .ruta[data-en="si"] .logros li {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .etapaBarra,
+  .ordinal,
+  .logrosCta,
+  .logrosCta:hover {
+    transition: none;
+    transform: none;
+  }
+}

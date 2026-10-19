@@ -4,14 +4,14 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
 }
 
@@ -51,4 +51,46 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------- transacciones recientes ---------- */
+
+.recientes {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recientes li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--admin-border-soft);
+}
+
+.recientes li:last-child {
+  border-bottom: none;
+}
+
+.recienteNombre {
+  font-size: var(--admin-fs-base);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recienteFecha {
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+}
+
+.recienteTotal {
+  font-size: var(--admin-fs-base);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }

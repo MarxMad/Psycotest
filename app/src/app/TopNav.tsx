@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { rutaDeSalida } from "@/lib/salir";
 
 interface AuthUser {
   nombre: string;
@@ -51,19 +52,19 @@ export function TopNav() {
   async function logout() {
     await fetch("/api/auth/login", { method: "DELETE" });
     setUser(null);
-    router.push("/login");
+    router.push(rutaDeSalida());
     router.refresh();
   }
 
   const enPanel = pathname.startsWith("/admin");
-  const enParticipantes = pathname.startsWith("/evaluacion/participantes");
+  const enParticipantes = pathname.startsWith("/admin/participantes");
   const enLogin = pathname.startsWith("/login");
 
   return (
     <nav className="topnav" aria-label="Navegación principal">
       {ready && user ? (
         <>
-          <NavLink href="/evaluacion/participantes" active={enParticipantes}>
+          <NavLink href="/admin/participantes" active={enParticipantes}>
             Participantes
           </NavLink>
           <div className="topnav-user">
@@ -80,7 +81,7 @@ export function TopNav() {
           href="/login"
           className={enLogin ? "topnav-cta topnav-cta--active" : "topnav-cta"}
         >
-          Acceder
+          Acceso profesional
         </Link>
       ) : (
         <span className="topnav-skeleton" aria-hidden />

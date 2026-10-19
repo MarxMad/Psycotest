@@ -2,11 +2,17 @@ import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
 import { coupons } from "@/db/schema";
 import { eq } from "drizzle-orm";
-
-const db = getDb();
+import { requireUser } from "@/lib/auth";
 
 export async function GET() {
   try {
+    await requireUser(["admin", "psicologo"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const allCoupons = await db.select().from(coupons);
 
     return NextResponse.json({ coupons: allCoupons });
@@ -18,6 +24,13 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    await requireUser(["admin", "psicologo"]);
+  } catch {
+    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  }
+
+  try {
+    const db = getDb();
     const body = await request.json();
     const { code, type, value, maxUses, expiresAt } = body;
 

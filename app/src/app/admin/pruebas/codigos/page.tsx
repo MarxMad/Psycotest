@@ -6,12 +6,11 @@ import { Copy, KeyRound, Plus } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "../../admin.module.css";
 import c from "./codigos.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const INSTRUMENTOS: { id: Instrumento; label: string }[] = [
-  { id: "papi", label: "PAPI" },
-  { id: "hartman", label: "Hartman" },
-  { id: "mabe", label: "MABE" },
-];
+const INSTRUMENTOS: { id: Instrumento; label: string }[] = (
+  ["papi", "hartman", "mabe", "cleaver"] as Instrumento[]
+).map((id) => ({ id, label: NOMBRE_INSTRUMENTO[id] }));
 
 interface CodeRow {
   id: string;
@@ -41,7 +40,7 @@ export default function CodigosPage() {
   const [label, setLabel] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [maxUses, setMaxUses] = useState(30);
-  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe"]);
+  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe", "cleaver"]);
   const [nuevoCodigo, setNuevoCodigo] = useState<string | null>(null);
   const [error, setError] = useState("");
 

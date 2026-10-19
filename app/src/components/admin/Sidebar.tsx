@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard,
+  UserRound,
   FlaskConical,
   GraduationCap,
   Video,
@@ -14,30 +15,34 @@ import {
   ChevronLeft,
   LogOut,
   FolderOpen,
+  Globe2,
+  X,
 } from "lucide-react";
-import { useAdminSidebar } from "@/hooks/useAdmin";
 import s from "./Sidebar.module.css";
+import type { ReactNode } from "react";
 
 interface SidebarItemProps {
   href: string;
   icon: React.ReactNode;
   label: string;
-  isCollapsed: boolean;
-  badge?: number;
+  compact: boolean;
+  onNavigate?: () => void;
 }
 
-function SidebarItem({ href, icon, label, isCollapsed, badge }: SidebarItemProps) {
+function SidebarItem({ href, icon, label, compact, onNavigate }: SidebarItemProps) {
   const pathname = usePathname();
-  const isActive = pathname === href || pathname.startsWith(href + "/");
+  const isActive =
+    href === "/admin" ? pathname === "/admin" : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <Link
       href={href}
       className={`${s.item} ${isActive ? s.itemActive : ""}`}
-      title={isCollapsed ? label : undefined}
+      title={compact ? label : undefined}
+      onClick={onNavigate}
     >
       <span className={s.itemIcon}>{icon}</span>
-      {!isCollapsed && (
+      {!compact && (
         <motion.span
           className={s.itemLabel}
           initial={{ opacity: 0, width: 0 }}
@@ -47,31 +52,56 @@ function SidebarItem({ href, icon, label, isCollapsed, badge }: SidebarItemProps
           {label}
         </motion.span>
       )}
-      {badge !== undefined && badge > 0 && !isCollapsed && (
-        <span className={s.badge}>{badge}</span>
-      )}
     </Link>
   );
 }
 
 interface SidebarProps {
-  user: { nombre: string; email: string } | null;
+  user: { nombre: string; email: string; rol?: string } | null;
   onLogout: () => void;
+  isCollapsed: boolean;
+  onToggleCollapse: () => void;
+  mobileOpen: boolean;
+  onCloseMobile: () => void;
 }
 
-export function Sidebar({ user, onLogout }: SidebarProps) {
-  const { isCollapsed, toggle, mounted } = useAdminSidebar();
+/**
+ * Menú del panel. `soloAdmin` marca las secciones que el psicólogo no abre
+ * (el middleware también las bloquea; esto solo evita mostrar un camino muerto).
+ */
+const NAV: { href: string; label: string; icon: ReactNode; soloAdmin?: boolean }[] = [
+  { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+  { href: "/admin/pruebas", label: "Pruebas", icon: <FlaskConical size={20} /> },
+  { href: "/admin/participantes", label: "Participantes", icon: <UserRound size={20} /> },
+  { href: "/admin/cursos", label: "Cursos", icon: <GraduationCap size={20} /> },
+  { href: "/admin/clases-vivo", label: "Clases en Vivo", icon: <Video size={20} /> },
+  { href: "/admin/expedientes", label: "Expedientes", icon: <FolderOpen size={20} /> },
+  { href: "/admin/canales", label: "Canales", icon: <Globe2 size={20} /> },
+  { href: "/admin/pagos", label: "Pagos", icon: <CreditCard size={20} />, soloAdmin: true },
+  { href: "/admin/marketing", label: "Marketing", icon: <Mail size={20} />, soloAdmin: true },
+  { href: "/admin/usuarios", label: "Usuarios", icon: <Users size={20} />, soloAdmin: true },
+];
 
-  if (!mounted) {
-    return <div className={s.sidebar} />;
-  }
+export function Sidebar({
+  user,
+  onLogout,
+  isCollapsed,
+  onToggleCollapse,
+  mobileOpen,
+  onCloseMobile,
+}: SidebarProps) {
+  // En drawer móvil siempre mostramos labels aunque el desktop esté colapsado
+  const compact = isCollapsed && !mobileOpen;
+  const esAdmin = user?.rol === "admin";
+  const navVisible = NAV.filter((item) => !item.soloAdmin || esAdmin);
 
   return (
-    <aside className={`${s.sidebar} ${isCollapsed ? s.sidebarCollapsed : ""}`}>
+    <aside
+      className={`${s.sidebar} ${isCollapsed ? s.sidebarCollapsed : ""} ${mobileOpen ? s.open : ""}`}
+    >
       <div className={s.sidebarInner}>
-        {/* Header */}
         <div className={s.header}>
-          {!isCollapsed && (
+          {!compact && (
             <motion.div
               className={s.headerContent}
               initial={{ opacity: 0 }}
@@ -84,8 +114,8 @@ export function Sidebar({ user, onLogout }: SidebarProps) {
           )}
           <button
             type="button"
-            onClick={toggle}
-            className={s.toggleBtn}
+            onClick={onToggleCollapse}
+            className={`${s.toggleBtn} ${s.toggleDesktop}`}
             aria-label={isCollapsed ? "Expandir sidebar" : "Contraer sidebar"}
           >
             <ChevronLeft
@@ -96,61 +126,29 @@ export function Sidebar({ user, onLogout }: SidebarProps) {
               }}
             />
           </button>
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className={`${s.toggleBtn} ${s.toggleMobile}`}
+            aria-label="Cerrar menú"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        {/* Navigation */}
-        <nav className={s.nav}>
-          <SidebarItem
-            href="/admin"
-            icon={<LayoutDashboard size={20} />}
-            label="Dashboard"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/pruebas"
-            icon={<FlaskConical size={20} />}
-            label="Pruebas"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/cursos"
-            icon={<GraduationCap size={20} />}
-            label="Cursos"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/clases-vivo"
-            icon={<Video size={20} />}
-            label="Clases en Vivo"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/expedientes"
-            icon={<FolderOpen size={20} />}
-            label="Expedientes"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/pagos"
-            icon={<CreditCard size={20} />}
-            label="Pagos"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/marketing"
-            icon={<Mail size={20} />}
-            label="Marketing"
-            isCollapsed={isCollapsed}
-          />
-          <SidebarItem
-            href="/admin/usuarios"
-            icon={<Users size={20} />}
-            label="Usuarios"
-            isCollapsed={isCollapsed}
-          />
+        <nav className={s.nav} aria-label="Navegación admin">
+          {navVisible.map((item) => (
+            <SidebarItem
+              key={item.href}
+              href={item.href}
+              icon={item.icon}
+              label={item.label}
+              compact={compact}
+              onNavigate={onCloseMobile}
+            />
+          ))}
         </nav>
 
-        {/* Footer */}
         <div className={s.footer}>
           {user && (
             <div className={s.user}>
@@ -161,7 +159,7 @@ export function Sidebar({ user, onLogout }: SidebarProps) {
                   .map((n) => n[0])
                   .join("")}
               </div>
-              {!isCollapsed && (
+              {!compact && (
                 <motion.div
                   className={s.userInfo}
                   initial={{ opacity: 0, width: 0 }}
@@ -178,10 +176,10 @@ export function Sidebar({ user, onLogout }: SidebarProps) {
             type="button"
             onClick={onLogout}
             className={s.logoutBtn}
-            title={isCollapsed ? "Cerrar sesión" : undefined}
+            title={compact ? "Cerrar sesión" : undefined}
           >
             <LogOut size={18} />
-            {!isCollapsed && <span>Salir</span>}
+            {!compact && <span>Salir</span>}
           </button>
         </div>
       </div>

@@ -8,101 +8,211 @@ import styles from "./LiveWhiteboard.module.css";
 type Props = {
   liveClassId: string;
   breakoutRoomId?: string | null;
+  /** El instructor dibuja; el resto ve la pizarra y se le actualiza sola. */
   isAdmin?: boolean;
 };
 
-export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin }: Props) {
-  const editorRef = useRef<Editor | null>(null);
-  const [ready, setReady] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
-  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const loadedRef = useRef(false);
+type Documento = {
+  documentJson?: Record<string, unknown> | null;
+  updatedAt?: string | null;
+};
 
-  const persist = useCallback(
-    async (editor: Editor) => {
+const ESPERA_GUARDADO = 1500;
+const ESPERA_REFRESCO = 6000;
+
+export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin = false }: Props) {
+  const editorRef = useRef<Editor | null>(null);
+  const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Marca del documento sobre el que estamos trabajando: detecta pisadas. */
+  const base = useRef<string | null>(null);
+  /** Mientras cargamos o aplicamos cambios ajenos, no se guarda nada. */
+  const silencio = useRef(true);
+
+  const [inicial, setInicial] = useState<Documento | null>(null);
+  const [fallo, setFallo] = useState<string | null>(null);
+  const [estado, setEstado] = useState<string | null>(null);
+
+  const ruta = useCallback(
+    (extra = "") => {
+      const q = breakoutRoomId
+        ? `?breakoutRoomId=${encodeURIComponent(breakoutRoomId)}${extra ? `&${extra}` : ""}`
+        : extra
+          ? `?${extra}`
+          : "";
+      return `/api/live-classes/${liveClassId}/whiteboard${q}`;
+    },
+    [liveClassId, breakoutRoomId],
+  );
+
+  /**
+   * El documento se trae ANTES de montar el lienzo.
+   *
+   * Antes se montaba vacío y se cargaba después: lo que alguien dibujara en
+   * ese hueco lo borraba `loadSnapshot` al llegar la respuesta, y el guardado
+   * siguiente mandaba la pizarra vacía al servidor. Eso perdía el trabajo.
+   */
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
       try {
-        const snapshot = getSnapshot(editor.store);
-        const res = await fetch(`/api/live-classes/${liveClassId}/whiteboard`, {
+        const res = await fetch(ruta());
+        if (!vivo) return;
+        if (!res.ok) {
+          setFallo("No se pudo cargar la pizarra");
+          return;
+        }
+        const data = await res.json();
+        setInicial({
+          documentJson: data.document?.documentJson ?? null,
+          updatedAt: data.document?.updatedAt ?? null,
+        });
+      } catch {
+        if (vivo) setFallo("No se pudo cargar la pizarra");
+      }
+    })();
+    return () => {
+      vivo = false;
+    };
+  }, [ruta]);
+
+  const guardar = useCallback(
+    async (editor: Editor) => {
+      if (!isAdmin) return;
+      const snapshot = getSnapshot(editor.store);
+      try {
+        const res = await fetch(ruta(), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             documentJson: snapshot,
             breakoutRoomId: breakoutRoomId || null,
+            baseUpdatedAt: base.current,
           }),
         });
-        if (!res.ok) throw new Error("save failed");
-        setStatus("Guardado");
+
+        if (res.status === 409) {
+          // Otra pestaña del instructor guardó encima. Se avisa en vez de
+          // pisarlo en silencio, que es como se pierde una clase entera.
+          setEstado("Otro dispositivo actualizó la pizarra · recarga para verla");
+          return;
+        }
+        if (!res.ok) {
+          setEstado("Error al guardar");
+          return;
+        }
+        const data = await res.json();
+        base.current = data.document?.updatedAt ?? base.current;
+        setEstado("Guardado");
       } catch {
-        setStatus("Error al guardar");
+        setEstado("Sin conexión · se reintentará");
       }
     },
-    [liveClassId, breakoutRoomId],
+    [isAdmin, ruta, breakoutRoomId],
   );
 
   const onMount = useCallback(
     (editor: Editor) => {
       editorRef.current = editor;
-      setReady(true);
 
-      void (async () => {
-        const q = breakoutRoomId ? `?breakoutRoomId=${encodeURIComponent(breakoutRoomId)}` : "";
-        const res = await fetch(`/api/live-classes/${liveClassId}/whiteboard${q}`);
-        if (res.ok) {
-          const data = await res.json();
-          const doc = data.document?.documentJson;
-          if (doc && !loadedRef.current) {
-            try {
-              loadSnapshot(editor.store, doc);
-            } catch {
-              /* snapshot inválido: pizarra vacía */
-            }
-            loadedRef.current = true;
-          }
+      // El documento ya está en memoria: se aplica de golpe, sin ventana en
+      // la que el usuario pueda dibujar sobre algo que luego se reemplaza.
+      if (inicial?.documentJson) {
+        try {
+          loadSnapshot(editor.store, inicial.documentJson as never);
+        } catch {
+          /* instantánea inválida: se empieza en blanco */
         }
-      })();
+      }
+      base.current = inicial?.updatedAt ?? null;
 
+      if (!isAdmin) {
+        editor.updateInstanceState({ isReadonly: true });
+        silencio.current = true;
+        return;
+      }
+
+      silencio.current = false;
       editor.store.listen(
         () => {
-          if (saveTimer.current) clearTimeout(saveTimer.current);
-          saveTimer.current = setTimeout(() => void persist(editor), 2000);
+          if (silencio.current) return;
+          if (temporizador.current) clearTimeout(temporizador.current);
+          temporizador.current = setTimeout(() => void guardar(editor), ESPERA_GUARDADO);
         },
         { source: "user", scope: "document" },
       );
     },
-    [liveClassId, breakoutRoomId, persist],
+    [inicial, isAdmin, guardar],
   );
 
+  // Quien mira recibe los trazos del instructor sin tener que recargar.
+  useEffect(() => {
+    if (isAdmin || !inicial) return;
+    const t = setInterval(async () => {
+      try {
+        const res = await fetch(ruta());
+        if (!res.ok) return;
+        const data = await res.json();
+        const marca = data.document?.updatedAt ?? null;
+        if (!marca || marca === base.current) return;
+        const editor = editorRef.current;
+        if (!editor || !data.document?.documentJson) return;
+        silencio.current = true;
+        try {
+          // Solo el documento: cargar también la sesión arrastraría la cámara
+          // y la herramienta del instructor, y le movería la vista a quien
+          // está mirando cada seis segundos.
+          const entrante = data.document.documentJson as { document?: unknown };
+          loadSnapshot(
+            editor.store,
+            (entrante?.document ? { document: entrante.document } : entrante) as never,
+          );
+          editor.updateInstanceState({ isReadonly: true });
+        } catch {
+          /* instantánea inválida: se deja la que ya estaba */
+        }
+        base.current = marca;
+      } catch {
+        /* un fallo de red no debe romper la clase */
+      }
+    }, ESPERA_REFRESCO);
+    return () => clearInterval(t);
+  }, [isAdmin, inicial, ruta]);
+
+  // Al cerrar se guarda lo que quedó pendiente en el temporizador.
   useEffect(() => {
     return () => {
-      if (saveTimer.current) clearTimeout(saveTimer.current);
+      if (!temporizador.current) return;
+      clearTimeout(temporizador.current);
+      temporizador.current = null;
+      const editor = editorRef.current;
+      if (editor && isAdmin && !silencio.current) void guardar(editor);
     };
-  }, []);
+  }, [guardar, isAdmin]);
 
-  async function takeSnapshot() {
+  async function capturar() {
     const editor = editorRef.current;
     if (!editor) return;
-    setStatus("Capturando…");
+    setEstado("Capturando…");
     try {
-      const shapeIds = [...editor.getCurrentPageShapeIds()];
-      if (shapeIds.length === 0) {
-        setStatus("Dibuja algo en la pizarra antes de capturar");
+      const formas = [...editor.getCurrentPageShapeIds()];
+      if (formas.length === 0) {
+        setEstado("Dibuja algo en la pizarra antes de capturar");
         return;
       }
-      const result = await editor.toImage(shapeIds, { format: "png", background: true, scale: 1 });
-      const blob = result.blob;
-      const reader = new FileReader();
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(String(reader.result));
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
+      const resultado = await editor.toImage(formas, { format: "png", background: true, scale: 1 });
+      const lector = new FileReader();
+      const dataUrl = await new Promise<string>((resolver, rechazar) => {
+        lector.onload = () => resolver(String(lector.result));
+        lector.onerror = rechazar;
+        lector.readAsDataURL(resultado.blob);
       });
 
       if (dataUrl.length > 2_400_000) {
-        setStatus("Captura demasiado grande; reduce el contenido de la pizarra");
+        setEstado("Captura demasiado grande; reduce el contenido de la pizarra");
         return;
       }
 
-      const res = await fetch(`/api/live-classes/${liveClassId}/whiteboard`, {
+      const res = await fetch(ruta(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -112,28 +222,46 @@ export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin }: Props) 
           label: `Pizarra ${new Date().toLocaleString("es-MX")}`,
         }),
       });
-      setStatus(res.ok ? "Captura guardada" : "Error al capturar");
+      setEstado(res.ok ? "Captura guardada" : "Error al capturar");
     } catch {
-      setStatus("No se pudo generar la captura");
+      setEstado("No se pudo generar la captura");
     }
+  }
+
+  if (fallo) {
+    return <p className={styles.loading}>{fallo}</p>;
+  }
+
+  if (!inicial) {
+    return <p className={styles.loading}>Cargando pizarra…</p>;
   }
 
   return (
     <div className={styles.shell}>
       <div className={styles.toolbar}>
-        <button type="button" onClick={() => editorRef.current && void persist(editorRef.current)}>
-          Guardar ahora
-        </button>
-        <button type="button" onClick={() => void takeSnapshot()}>
-          Captura (screenshot)
-        </button>
-        {status && <span className={styles.status}>{status}</span>}
-        {isAdmin && <span className={styles.badge}>Instructor</span>}
+        {isAdmin ? (
+          <>
+            <button
+              type="button"
+              onClick={() => editorRef.current && void guardar(editorRef.current)}
+            >
+              Guardar ahora
+            </button>
+            <button type="button" onClick={() => void capturar()}>
+              Captura (screenshot)
+            </button>
+          </>
+        ) : (
+          <span className={styles.status}>
+            Dibuja el instructor · se actualiza sola
+          </span>
+        )}
+        {estado && <span className={styles.status}>{estado}</span>}
+        <span className={styles.badge}>{isAdmin ? "Instructor" : "Solo lectura"}</span>
       </div>
-      <div className={styles.canvas}>
+      <div className={styles.canvas} data-lectura={!isAdmin}>
         <Tldraw onMount={onMount} />
       </div>
-      {!ready && <p className={styles.loading}>Inicializando…</p>}
     </div>
   );
 }

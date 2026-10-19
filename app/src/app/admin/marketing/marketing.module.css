@@ -4,14 +4,14 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
 }
 
@@ -41,14 +41,14 @@
 }
 
 .autoItem strong {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text);
   display: block;
   margin-bottom: 0.25rem;
 }
 
 .autoDesc {
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   color: var(--admin-text-muted);
   margin: 0;
 }
@@ -56,7 +56,7 @@
 .badge {
   padding: 0.25rem 0.625rem;
   border-radius: var(--r);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -73,4 +73,31 @@
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.cardHead {
+  padding: 1.25rem 1.25rem 0;
+}
+
+.code {
+  padding: 0.14rem 0.45rem;
+  border-radius: 5px;
+  background: var(--admin-bg);
+  font-family: var(--mono);
+  font-size: var(--admin-fs-sm);
+  font-weight: 650;
+}
+
+.cargando {
+  margin: 0;
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: var(--admin-fs-base);
+  color: var(--admin-text-muted);
 }

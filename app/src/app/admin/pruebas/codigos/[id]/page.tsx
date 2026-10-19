@@ -7,12 +7,9 @@ import { ArrowLeft, Download, Users } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "../../../admin.module.css";
 import c from "../codigos.module.css";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
-const ETIQUETAS: Record<Instrumento, string> = {
-  papi: "PAPI",
-  hartman: "Hartman",
-  mabe: "MABE",
-};
+const ETIQUETAS: Record<Instrumento, string> = NOMBRE_INSTRUMENTO;
 
 interface CodeInfo {
   id: string;
@@ -136,7 +133,7 @@ export default function CodigoReportePage() {
       <main className={s.main}>
         <div className={s.wrap}>
           <p>Código no encontrado.</p>
-          <Link href="/admin/codigos" className="btn">
+          <Link href="/admin/pruebas/codigos" className="btn">
             Volver
           </Link>
         </div>
@@ -150,7 +147,7 @@ export default function CodigoReportePage() {
         <nav className={s.crumb}>
           <Link href="/admin">Panel</Link>
           <span>/</span>
-          <Link href="/admin/codigos">Códigos</Link>
+          <Link href="/admin/pruebas/codigos">Códigos</Link>
           <span>/</span>
           <span>Reporte</span>
         </nav>
@@ -167,7 +164,7 @@ export default function CodigoReportePage() {
             </p>
           </div>
           <div className={s.row}>
-            <Link href="/admin/codigos" className="btn">
+            <Link href="/admin/pruebas/codigos" className="btn">
               <ArrowLeft size={16} />
               Volver
             </Link>

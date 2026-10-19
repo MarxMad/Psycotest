@@ -1,0 +1,411 @@
+/* ================================================================== *
+ * Arquetipos de sección.
+ * Antes toda la página era el mismo bloque repetido: encabezado +
+ * rejilla de tarjetas con borde. Esto da variedad de ritmo.
+ * ================================================================== */
+
+.wrap {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-inline: clamp(1rem, 4vw, 3.5rem);
+}
+
+/* ---------- declaración: una frase a gran escala ---------- */
+
+.declaracion {
+  position: relative;
+  padding-block: clamp(4rem, 10vw, 7rem);
+  overflow: hidden;
+}
+
+.declaracionCompacta {
+  padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.declaracionTrama {
+  position: absolute;
+  inset: 0;
+  color: var(--ch-accent);
+  opacity: 0.09;
+  pointer-events: none;
+}
+
+.declaracionTexto {
+  position: relative;
+  max-width: 20ch;
+  margin: 0;
+  font-family: var(--ch-font-display);
+  font-size: clamp(2rem, 5.6vw, 4rem);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+
+.declaracionTexto em {
+  font-style: normal;
+  color: var(--ch-accent);
+}
+
+.declaracionPie {
+  position: relative;
+  max-width: 44ch;
+  margin: 1.75rem 0 0;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+  color: var(--ch-muted);
+}
+
+/* ---------- split: texto + obra, asimétrico ---------- */
+
+.split {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  align-items: center;
+  padding-block: clamp(3.5rem, 9vw, 6.5rem);
+}
+
+@media (min-width: 900px) {
+  .split {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  }
+
+  .splitInverso > *:first-child {
+    order: 2;
+  }
+}
+
+.obra {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  color: var(--ch-ink);
+}
+
+.obra svg {
+  width: 100%;
+  height: auto;
+  max-width: 26rem;
+}
+
+.obraHalo {
+  position: absolute;
+  inset: 8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ch-accent) 22%, transparent), transparent 68%);
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+/* ---------- cifras a gran escala ---------- */
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(3rem, 7vw, 5rem);
+  border-block: 1px solid var(--ch-rule);
+}
+
+.cifra {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Entran escalonadas cuando la fila asoma. */
+.cifras[data-en="si"] .cifra {
+  animation: subeCifra 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+
+@keyframes subeCifra {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Una regla de acento que se traza bajo el número. */
+.cifraRegla {
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-top: 0.1rem;
+  background: var(--ch-accent-2, var(--ch-accent));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.cifras[data-en="si"] .cifraRegla {
+  animation: trazaRegla 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 90ms + 420ms);
+}
+
+@keyframes trazaRegla {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cifra,
+  .cifras[data-en="si"] .cifra {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .cifraRegla,
+  .cifras[data-en="si"] .cifraRegla {
+    transform: none;
+    animation: none;
+  }
+}
+
+.cifraValor {
+  font-family: var(--ch-font-display);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--ch-accent);
+  font-variant-numeric: tabular-nums;
+  /* Una cifra es corta; una palabra larga desbordaba la columna y se encimaba con la vecina. */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* Valores que son palabra, no número: bajan de tamaño para caber en su columna. */
+.cifraValor[data-largo="medio"] {
+  font-size: clamp(1.45rem, 2.8vw, 1.95rem);
+}
+
+.cifraValor[data-largo="largo"] {
+  font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+/* Las tres filas se comparten: aunque un valor ocupe dos líneas, las reglas
+   y las etiquetas de todas las cifras quedan a la misma altura. */
+@supports (grid-template-rows: subgrid) {
+  .cifras {
+    grid-template-rows: auto auto auto;
+  }
+
+  .cifra {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    align-content: start;
+  }
+
+  .cifraValor {
+    align-self: end;
+  }
+}
+
+.cifraEtiqueta {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ch-muted);
+}
+
+/* ---------- pasos en línea de tiempo ---------- */
+
+.pasos {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 2.25rem 1.75rem;
+  padding-block: clamp(2rem, 4vw, 3rem);
+}
+
+/* Sigue a una declaración: no hace falta aire arriba */
+.declaracion + * .pasos,
+.pasosPegado {
+  padding-top: 0;
+}
+
+/* La línea sólo cuando todos caben en una fila */
+@media (min-width: 1100px) {
+  .pasosFila {
+    grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* La línea une el primer punto con el último; no sobra ni sugiere un paso de más. */
+  .pasosFila::before {
+    --gap: 1.5rem;
+    --pista: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+    --ultimo: calc((var(--n) - 1) * (var(--pista) + var(--gap)));
+    content: "";
+    position: absolute;
+    top: 13px;
+    left: 7px;
+    right: calc(100% - var(--ultimo) - 7px);
+    height: 1px;
+    background: var(--ch-accent);
+    opacity: 0.35;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  /* La línea se traza de un extremo a otro cuando el bloque asoma. */
+  .pasosFila[data-en="si"]::before {
+    animation: trazaRuta 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+}
+
+@keyframes trazaRuta {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.paso {
+  position: relative;
+  padding-top: 2.5rem;
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.pasos[data-en="si"] .paso {
+  animation: subePaso 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+
+@keyframes subePaso {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pasoPunto {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid var(--ch-accent);
+  background: var(--ch-bg);
+}
+
+/* Anillo que se expande una vez: el paso "prende" al llegar. */
+.pasos[data-en="si"] .pasoPunto::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid var(--ch-accent);
+  animation: prendePunto 1.1s ease-out forwards;
+  animation-delay: calc(var(--i, 0) * 110ms + 180ms);
+  opacity: 0;
+}
+
+@keyframes prendePunto {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.pasoPunto::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--ch-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paso,
+  .pasos[data-en="si"] .paso {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .pasos[data-en="si"] .pasoPunto::before {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+.pasoNum {
+  position: absolute;
+  top: 2px;
+  left: 26px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--ch-accent);
+}
+
+.paso h3 {
+  margin: 0;
+  font-family: var(--ch-font-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.paso p {
+  margin: 0.5rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--ch-muted);
+}
+
+/* ---------- cita a sangre ---------- */
+
+.cita {
+  position: relative;
+  padding-block: clamp(4rem, 10vw, 7rem);
+  overflow: hidden;
+}
+
+.citaTrama {
+  position: absolute;
+  inset: 0;
+  color: var(--ch-accent);
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.citaTexto {
+  position: relative;
+  max-width: 24ch;
+  margin: 0 auto;
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.5rem, 3.8vw, 2.6rem);
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: -0.025em;
+  line-height: 1.26;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.citaAutor {
+  position: relative;
+  margin: 1.75rem 0 0;
+  text-align: center;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ch-accent);
+}

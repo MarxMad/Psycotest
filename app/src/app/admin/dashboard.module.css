@@ -29,14 +29,14 @@
 
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
 
 .sectionsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -60,25 +60,25 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
 }
 
 .statValue {
-  font-size: 1.5rem;
+  font-size: var(--admin-fs-xl);
   font-weight: 700;
   color: var(--admin-text);
 }
 
 .noData {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   text-align: center;
   padding: 1rem;
 }
 
 .linkAction {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-primary);
   text-decoration: none;
   font-weight: 500;
@@ -96,7 +96,7 @@
   padding: 0.5rem 0.75rem;
   background: color-mix(in srgb, var(--admin-primary) 10%, transparent);
   border-radius: var(--r);
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-primary);
   font-weight: 500;
 }
@@ -127,4 +127,61 @@
   .sectionsGrid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ---------- actividad reciente ---------- */
+
+.activityList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.activityItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.activityItem:last-child {
+  border-bottom: none;
+}
+
+.activityDot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--admin-primary);
+}
+
+.activityText {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--admin-fs-base);
+  line-height: 1.45;
+}
+
+.activityTime {
+  flex: none;
+  font-size: var(--admin-fs-sm);
+  color: var(--admin-text-muted);
+  white-space: nowrap;
+}
+
+/* ---------- error ---------- */
+
+.errorBanner {
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #dc2626;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-size: var(--admin-fs-base);
 }

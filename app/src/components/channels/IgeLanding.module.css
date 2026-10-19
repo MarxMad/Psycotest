@@ -1,0 +1,511 @@
+.page {
+  --ige-pad: clamp(1rem, 4vw, 3.5rem);
+  --ige-ancho: 1160px;
+  color: var(--ch-ink);
+  background: var(--ch-bg);
+  overflow-x: clip;
+}
+
+.limite {
+  width: 100%;
+  max-width: var(--ige-ancho);
+  margin: 0 auto;
+}
+
+/* ---------- portada ---------- */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: min(88svh, 820px);
+  padding: clamp(5rem, 12vh, 8rem) var(--ige-pad) clamp(2.5rem, 6vh, 4rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* El video es fondo, no contenido: va en silencio, en bucle y sin controles. */
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6) contrast(1.05);
+}
+
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(100deg, rgba(10, 13, 16, 0.95) 0%, rgba(10, 13, 16, 0.78) 45%, rgba(10, 13, 16, 0.35) 100%),
+    linear-gradient(0deg, var(--ch-bg) 2%, transparent 45%),
+    radial-gradient(ellipse 60% 50% at 80% 10%, rgba(34, 211, 238, 0.18), transparent 60%);
+}
+
+.heroInner {
+  position: relative;
+  width: 100%;
+  max-width: var(--ige-ancho);
+  margin: 0 auto;
+}
+
+.kicker,
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: var(--ch-accent);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.heroTitulo {
+  margin: 0;
+  max-width: 16ch;
+  font-size: clamp(2.1rem, 5.4vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.lead,
+.cuerpo {
+  margin: 1.1rem 0 0;
+  max-width: 52ch;
+  color: var(--ch-muted);
+  font-size: clamp(1rem, 1.8vw, 1.12rem);
+  line-height: 1.6;
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.8rem;
+}
+
+.btnPrimary,
+.btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.9rem;
+  padding: 0.75rem 1.35rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btnPrimary {
+  background: var(--ch-accent);
+  color: #06212a;
+  box-shadow: 0 18px 40px -22px rgba(34, 211, 238, 0.85);
+}
+
+.btnPrimary svg {
+  transition: transform 0.2s ease;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+}
+
+.btnPrimary:hover svg {
+  transform: translateX(3px);
+}
+
+.btnGhost {
+  border: 1px solid var(--ch-rule);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ch-ink);
+}
+
+.btnGhost:hover {
+  border-color: var(--ch-accent);
+  transform: translateY(-2px);
+}
+
+/* Tres datos duros bajo los botones: tamaño del catálogo de un vistazo. */
+.heroDatos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2.5rem;
+  margin: 2.2rem 0 0;
+  padding: 1.2rem 0 0;
+  border-top: 1px solid var(--ch-rule);
+  list-style: none;
+}
+
+.heroDatos li {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.heroDatos strong {
+  font-family: var(--ch-font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ch-accent);
+}
+
+.heroDatos span {
+  font-size: 0.82rem;
+  color: var(--ch-muted);
+}
+
+/* ---------- secciones ---------- */
+
+.seccion {
+  padding: clamp(3rem, 8vh, 5.5rem) var(--ige-pad);
+  border-top: 1px solid color-mix(in srgb, var(--ch-rule) 60%, transparent);
+}
+
+.seccionAlt {
+  background: color-mix(in srgb, var(--ch-surface) 55%, transparent);
+}
+
+.cabecera {
+  margin-bottom: 2rem;
+}
+
+.seccion h2,
+.contactoGrid h2,
+.consultoraGrid h2 {
+  margin: 0;
+  max-width: 20ch;
+  font-size: clamp(1.7rem, 3.8vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.nota {
+  margin: 1.6rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ch-muted);
+}
+
+.nota a {
+  color: var(--ch-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ch-accent);
+}
+
+.nota a:hover {
+  color: var(--ch-accent);
+}
+
+.enlaceAccion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.7rem;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--ch-accent) 50%, transparent);
+  border-radius: 999px;
+  color: var(--ch-ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.enlaceAccion svg {
+  color: var(--ch-accent);
+  transition: transform 0.2s ease;
+}
+
+.enlaceAccion:hover {
+  background: color-mix(in srgb, var(--ch-accent) 12%, transparent);
+  border-color: var(--ch-accent);
+}
+
+.enlaceAccion:hover svg {
+  transform: translateX(4px);
+}
+
+/* ---------- tarjetas de contenido ---------- */
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  gap: 1rem;
+}
+
+.tarjeta {
+  position: relative;
+  padding: 1.35rem 1.25rem 1.4rem;
+  border: 1px solid var(--ch-rule);
+  border-radius: 16px;
+  background: linear-gradient(
+    170deg,
+    color-mix(in srgb, var(--ch-surface) 92%, transparent),
+    color-mix(in srgb, var(--ch-surface) 45%, transparent)
+  );
+  transition: border-color 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tarjeta:hover {
+  border-color: color-mix(in srgb, var(--ch-accent) 55%, transparent);
+  transform: translateY(-3px);
+}
+
+.tarjetaIcono {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ch-accent) 16%, transparent);
+  color: var(--ch-accent);
+}
+
+.tarjetaNum {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ch-accent);
+}
+
+.tarjeta h3 {
+  margin: 0.8rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.tarjeta p {
+  margin: 0.5rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ch-muted);
+}
+
+/* ---------- video ---------- */
+
+.videoGrid {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+
+@media (min-width: 960px) {
+  .videoGrid {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  }
+}
+
+/* ---------- la consultora ---------- */
+
+.consultora {
+  background:
+    radial-gradient(ellipse 50% 60% at 15% 0%, rgba(249, 115, 22, 0.12), transparent 60%),
+    color-mix(in srgb, var(--ch-surface) 45%, transparent);
+}
+
+.consultoraGrid {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.25rem);
+  align-items: center;
+}
+
+@media (min-width: 960px) {
+  .consultoraGrid {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+
+.consultoraFoto {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--ch-rule);
+}
+
+.foto {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  filter: saturate(0.8);
+}
+
+.listaConsultora {
+  display: grid;
+  gap: 0.9rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaConsultora li {
+  display: grid;
+  gap: 0.2rem;
+  padding-left: 1rem;
+  border-left: 2px solid color-mix(in srgb, var(--ch-accent) 55%, transparent);
+}
+
+.listaConsultora strong {
+  font-size: 1rem;
+}
+
+.listaConsultora span {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ch-muted);
+}
+
+/* ---------- especialidades (dentro de SplitObra) ---------- */
+
+.tituloSplit {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.7rem, 3.6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.listaSplit {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.listaSplit li {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.listaSplit strong {
+  font-size: 0.98rem;
+}
+
+.listaSplit span {
+  font-size: 0.89rem;
+  line-height: 1.5;
+  color: var(--ch-muted);
+}
+
+/* ---------- contacto ---------- */
+
+.contacto {
+  background:
+    radial-gradient(ellipse 60% 70% at 85% 0%, rgba(34, 211, 238, 0.14), transparent 60%),
+    var(--ch-bg);
+}
+
+.contactoGrid {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .contactoGrid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+  }
+}
+
+.contactoAcciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.9rem;
+}
+
+.queIncluye {
+  padding: 1.35rem 1.4rem 1.45rem;
+  border: 1px solid var(--ch-rule);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--ch-surface) 80%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.queIncluyeTitulo {
+  margin: 0 0 1rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ch-accent);
+}
+
+.queIncluye ol {
+  display: grid;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.queIncluye li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.7rem;
+  align-items: baseline;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.queIncluye li span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ch-accent);
+}
+
+.queIncluyePie {
+  margin: 1.1rem 0 0;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--ch-rule);
+  font-size: 0.82rem;
+  color: var(--ch-muted);
+}
+
+/* ---------- adaptación ---------- */
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: auto;
+    padding-top: clamp(4rem, 14vh, 6rem);
+  }
+
+  .heroDatos {
+    gap: 0.9rem 1.5rem;
+  }
+
+  .contactoAcciones,
+  .acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contactoAcciones a,
+  .acciones a {
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarjeta,
+  .tarjeta:hover,
+  .btnPrimary,
+  .btnGhost,
+  .enlaceAccion {
+    transform: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,54 @@
+.valor {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  /* La cuenta cambia de ancho con cada cuadro: sin esto, la etiqueta baila. */
+  min-width: 0;
+}
+
+.letras {
+  display: inline-flex;
+  flex-wrap: wrap;
+  perspective: 600px;
+}
+
+.palabra {
+  display: inline-flex;
+  white-space: nowrap;
+}
+
+/* El espacio es su propio elemento: marca dónde puede saltar la línea. */
+.espacio {
+  white-space: pre;
+}
+
+.letra {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em) rotateX(-70deg);
+  transform-origin: 50% 100%;
+  will-change: transform, opacity;
+}
+
+.listo .letra {
+  animation: caeLetra 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--r, 0ms) + var(--i, 0) * 42ms);
+}
+
+@keyframes caeLetra {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .letra {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  .listo .letra {
+    animation: none;
+  }
+}

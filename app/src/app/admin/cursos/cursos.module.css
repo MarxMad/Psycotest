@@ -4,6 +4,7 @@
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   align-items: center;
 }
@@ -35,7 +36,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 1.5rem;
 }
 
@@ -90,7 +91,7 @@
 }
 
 .cardTitle {
-  font-size: 1.125rem;
+  font-size: var(--admin-fs-md);
   font-weight: 600;
   color: var(--admin-text);
   margin: 0;
@@ -100,7 +101,7 @@
 .badge {
   padding: 0.25rem 0.625rem;
   border-radius: var(--r);
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -123,7 +124,7 @@
 }
 
 .cardDescription {
-  font-size: 0.875rem;
+  font-size: var(--admin-fs-base);
   color: var(--admin-text-muted);
   line-height: 1.5;
   margin: 0;
@@ -139,7 +140,7 @@
 }
 
 .cardPrice {
-  font-size: 1.25rem;
+  font-size: var(--admin-fs-lg);
   font-weight: 700;
   color: var(--admin-text);
 }
@@ -149,12 +150,13 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 0.25rem;
-  font-size: 0.75rem;
+  font-size: var(--admin-fs-xs);
   color: var(--admin-text-muted);
 }
 
 .cardActions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
