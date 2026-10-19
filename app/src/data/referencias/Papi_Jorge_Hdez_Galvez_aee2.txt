@@ -1,0 +1,47 @@
+LIDERAZGO
+P: 	NECESIDAD DE CONTROLAR A OTROS
+Nota Alta 
+I: 	ROL: APTITUD PARA TOMAR DECISIONES
+Aptitud para tomar decisiones rápidamente. 
+Capacidad para asumir riesgos.
+Nota Alta 
+DINAMISMO
+T: 	ROL DE TRABAJADOR DE RITMO RAPIDO
+Ritmo de vida, animación y entusiasmo. Energía mental.
+Nota Baja 
+SOCIABILIDAD
+B: 	NECESIDAD DE PERTENECER A GRUPOS
+Necesidad de integrarse en un equipo y de que éste le acepte.
+Nota Baja 
+TEMPERAMENTO
+Z: 	NECESIDAD DE CAMBIO – IGUALDAD 
+Capacidad para adaptarse fácilmente a los cambios.
+Nota Alta
+SUBORDINACIÓN
+F: 	NECESIDAD DE APOYO EN SUS SUPERIORES
+Nivel de autonomía. Necesidad de mantener buenas relaciones con la jerarquía y de ayudar a ésta de manera eficaz.
+Nota Baja 
+
+--- TABLE 0 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+Respeta la libertad de los demás. | No se hace fácilmente responsable de los demás y posiblemente ni de si mismo.
+
+--- TABLE 1 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+Toma decisiones rápidamente, con entusiasmo. Acepta asumir riesgos. Confía en su intuición a la hora de decidirse. | Impaciente, quiere pasar enseguida a las conclusiones (con baja T) Impulsivo: puede tomar decisiones irreflexivas. Tiende a conceder mayor importancia a la rapidez que a la precisión.
+
+--- TABLE 2 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+Personalidad más bien tranquila. Pausado. Trabaja con esmero. | No le interesan los detalles. No tiene el sentido de lo urgente. Trabaja a un ritmo lento, independientemente de las circunstancias.
+
+--- TABLE 3 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+Independiente: no hace lo que hace la gente. Poco sensible a las presiones del grupo: anticonformista. Seguro de sí mismo. | Solitario. No comparte las necesidades del grupo y puede cometer errores de apreciación. Puede tener problemas de integración. Escaso espíritu de equipo. Individualista.
+
+--- TABLE 4 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+Le gusta el cambio.  Abierto a las ideas nuevas, a la variedad, innovador. Adaptable a muy diversas situaciones: mente ágil. | Agitado e inestable: se aburre con facilidad. Incapaz de adaptarse a la rutina. Inquieto. Puede no mantenerse en una situación durante el tiempo suficiente para aprovecharla al máximo. Puede sentirse insatisfecho o frustrado con su trabajo. Huida hacia delante.
+
+--- TABLE 5 ---
+INTERPRETACIÓN POSITIVA | INTERPRETACIÓN NEGATIVA
+No necesita que su jefe le anime para triunfar. Motivado por el trabajo, no por los elogios. Independiente con respecto a la autoridad. | Propenso a discutir. No respeta mucho la jerarquía. Crítico.

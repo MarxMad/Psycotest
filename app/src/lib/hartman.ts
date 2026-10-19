@@ -50,11 +50,13 @@ export interface ResultadoParte {
   DIS: number;
   /** Suma de los tres DIM. Vale 171 en todo protocolo válido: es la comprobación de integridad. */
   DIF: number;
+  /** Σ|P−H| (diferenciación de perfil, pares 0–80). Distinto de la integridad 171. */
+  DIFperfil: number;
   DIM: number;
   INT: number;
   DIMpct: number;
   INTpct: number;
-  /** Componente de cantidad: DIF + DIM + INT + DIS */
+  /** Componente de cantidad: DIFperfil + DIM + INT + DIS */
   Q1: number;
   /** Componente de calidad: DIM + INT + DIS */
   Q2: number;
@@ -143,6 +145,7 @@ export function calificarParte(respuestas: number[]): ResultadoParte {
   const ejes = { I: agregar("I"), E: agregar("E"), S: agregar("S") };
 
   const DIF = ejes.I.DIM + ejes.E.DIM + ejes.S.DIM; // = 171, integridad
+  const DIFperfil = items.reduce((s, i) => s + i.magnitud, 0);
   const DIM = ejes.I.balance + ejes.E.balance + ejes.S.balance;
   const INT = ejes.I.INT + ejes.E.INT + ejes.S.INT;
 
@@ -158,11 +161,12 @@ export function calificarParte(respuestas: number[]): ResultadoParte {
     ejes,
     DIS,
     DIF,
+    DIFperfil,
     DIM,
     INT,
     DIMpct: DIF === 0 ? 0 : (DIM * 100) / DIF,
     INTpct: DIF === 0 ? 0 : (INT * 100) / DIF,
-    Q1: DIF + DIM + INT + DIS,
+    Q1: DIFperfil + DIM + INT + DIS, // DIF de perfil (no la integridad 171)
     Q2: DIM + INT + DIS,
     alertas,
     interpretable,
@@ -187,7 +191,7 @@ export function calificarHartman(parteI: number[], parteII: number[]): Resultado
   const compuestos = ([1, 2] as const).map((componente) => {
     const v = componente === 1 ? VQ.Q1 : VQ.Q2;
     const s = componente === 1 ? SQ.Q1 : SQ.Q2;
-    const BQr = v === 0 ? 0 : s / v;
+    const BQr = v === 0 && s === 0 ? 1 : v === 0 ? 0 : s / v;
     const BQa = (s + v) / 2;
     return { componente, BQr, BQa, CQ: BQr * BQa };
   });
@@ -219,6 +223,8 @@ const BANDAS: Record<string, { inicio: number[]; max: number }> = {
   INT: { inicio: [1, 8, 15, 22, 29, 36], max: 42 },
   INT_PCT: { inicio: [2, 12, 22, 32, 42, 52], max: 60 },
   DI: { inicio: [0, 4, 8, 12, 16, 20], max: 23 },
+  /** Valores observados: 0, 2, 4, 6 (pares). Ver nivel() para el mapeo. */
+  DIS: { inicio: [0, 2, 2, 4, 6, 6], max: 6 },
   Q1: { inicio: [1, 56, 71, 86, 101, 116], max: 130 },
   Q2: { inicio: [1, 8, 15, 22, 29, 36], max: 42 },
   BQr: { inicio: [0.1, 1.6, 2.1, 2.6, 3.1, 3.6], max: 4.0 },
@@ -230,9 +236,17 @@ const BANDAS: Record<string, { inicio: number[]; max: number }> = {
 
 /** Devuelve el nivel de desarrollo 1–7 para una columna del perfil. */
 export function nivel(columna: keyof typeof BANDAS, valor: number): number {
+  const v = Math.abs(valor);
+  // DIS solo admite pares 0/2/4/6 → Excelente / Bueno / Promedio / Muy pobre (doc §4.3).
+  if (columna === "DIS") {
+    if (v <= 0) return 1;
+    if (v <= 2) return 3;
+    if (v <= 4) return 4;
+    if (v <= 6) return 6;
+    return 7;
+  }
   const b = BANDAS[columna];
   if (!b) return 0;
-  const v = Math.abs(valor);
   if (v > b.max) return 7;
   for (let n = 6; n >= 1; n--) if (v >= b.inicio[n - 1]) return n;
   return 1;
