@@ -1,0 +1,178 @@
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.imagen {
+  position: absolute;
+  inset: 0;
+}
+
+.imagen svg,
+.imagen img {
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tarjeta:hover .imagen svg,
+.tarjeta:hover .imagen img {
+  transform: scale(1.05);
+}
+
+.media::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  background: linear-gradient(180deg, transparent, rgba(6, 26, 74, 0.55));
+  pointer-events: none;
+}
+
+.chips {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.promo {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cuerpo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 12px;
+  padding: 20px 22px 22px;
+}
+
+.categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mk-muted);
+}
+
+.categoria::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--tono);
+}
+
+.titulo {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+}
+
+.enlace {
+  text-decoration: none;
+}
+
+/* Enlace estirado: toda la tarjeta es clicable. */
+.enlace::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.enlace:focus-visible {
+  outline: none;
+}
+
+.enlace:focus-visible::after {
+  outline: 3px solid var(--mk-yellow);
+  outline-offset: -3px;
+  border-radius: var(--mk-radius);
+}
+
+/* Meta separada por puntos medios: «120 h · 12 semanas · En línea». */
+.datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  color: var(--mk-muted);
+}
+
+.datos li + li::before {
+  content: "·";
+  margin: 0 8px;
+  color: var(--mk-soft);
+}
+
+.cupo {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--mk-orange-text);
+}
+
+.pie {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--mk-line);
+}
+
+.precio {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 0 8px;
+}
+
+.precio strong {
+  font: 700 24px/1.1 var(--mk-font-display), sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.precio del {
+  font-size: 14px;
+  color: var(--mk-soft);
+}
+
+.precio small {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  color: var(--mk-soft);
+  letter-spacing: 0.02em;
+}
+
+/* El botón queda por encima del enlace estirado. */
+.accion {
+  position: relative;
+  z-index: 2;
+}

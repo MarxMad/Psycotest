@@ -263,6 +263,34 @@ export function getChannelPlatformCtas(
   return map[channelId];
 }
 
+/**
+ * Rutas de plataforma que pertenecen a un canal concreto.
+ *
+ * `/diplomados` o `/carrito` son inequívocamente de CEDUCT y viven en la lista
+ * global de `isPlatformPath`. Pero `/nosotros`, `/contacto`, `/acceso` y
+ * `/mis-cursos` son nombres que cualquiera de las cuatro marcas va a querer:
+ * reservarlos en global haría que martin.* o ige.* sirvieran la página de
+ * CEDUCT. Hoy esas marcas resuelven su contacto con un ancla (`#contacto`),
+ * así que la colisión es cuestión de tiempo.
+ *
+ * Declarados aquí, la ruta sólo se libra del rewrite en el subdominio de su
+ * dueño. En los demás canales cae al rewrite normal hacia
+ * /sites/<canal>/<ruta>, que da 404 mientras esa marca no publique la suya.
+ */
+const CHANNEL_PATHS: Record<ChannelId, readonly string[]> = {
+  ceduct: ["/nosotros", "/contacto", "/acceso", "/mis-cursos"],
+  martin: [],
+  psicologia: [],
+  ige: [],
+};
+
+/** ¿`pathname` es una ruta propia de `channelId`? */
+export function isChannelPath(channelId: ChannelId, pathname: string): boolean {
+  return CHANNEL_PATHS[channelId].some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`),
+  );
+}
+
 export function isPlatformPath(pathname: string): boolean {
   const skip = [
     "/admin",

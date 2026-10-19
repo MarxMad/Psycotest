@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { CeductShell } from "@/components/ceduct/CeductShell";
-import { FormularioInscripcion } from "./FormularioInscripcion";
+import { Checkout } from "@/components/marketplace/compra/Checkout";
+import { MarketShell } from "@/components/marketplace/MarketShell";
 
 export const metadata: Metadata = {
-  title: "Inscripción — CEDUCT",
+  title: "Pago — CEDUCT",
   robots: { index: false, follow: false },
 };
 
 export default function CheckoutPage() {
   return (
-    <CeductShell>
-      <FormularioInscripcion />
-    </CeductShell>
+    <MarketShell>
+      <Checkout />
+    </MarketShell>
   );
 }

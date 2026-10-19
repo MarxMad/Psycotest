@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CeductLanding } from "@/components/channels/CeductLanding";
+import { Landing as CeductMarketplace } from "@/components/marketplace/landing/Landing";
+import { MarketShell } from "@/components/marketplace/MarketShell";
+import { obtenerCatalogo } from "@/lib/ceduct/catalogo";
 import { IgeLanding } from "@/components/channels/IgeLanding";
 import { MartinLanding } from "@/components/channels/MartinLanding";
 import { ChannelLanding } from "@/components/channels/ChannelLanding";
@@ -8,7 +10,6 @@ import { ChannelShell } from "@/components/channels/ChannelShell";
 import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
 import { getChannelPage } from "@/lib/channel-store";
-import { listarAreas, listarDiplomados } from "@/lib/diplomados";
 import { levelLabel, listPublishedCoursesByChannel } from "@/lib/courses";
 import { courseThumbnail } from "@/lib/course-marketing";
 import type { CursoVista } from "@/components/channels/RejillaCursos";
@@ -32,16 +33,22 @@ export default async function ChannelSitePage({ params }: Props) {
   const { channel: id } = await params;
   const channel = getChannel(id);
   if (!channel) notFound();
+
+  // CEDUCT es un marketplace con su propia cáscara (navbar con carrito,
+  // buscador y pie): no usa ChannelShell.
+  if (channel.id === "ceduct") {
+    const { programas } = await obtenerCatalogo();
+    return (
+      <MarketShell>
+        <CeductMarketplace programas={programas} />
+      </MarketShell>
+    );
+  }
+
   const content = await getChannelPage(channel.id);
 
   let landing = <ChannelLanding channel={channel} content={content} />;
-  if (channel.id === "ceduct") {
-    // El catálogo es lo principal de esta portada, así que viaja con ella.
-    const [diplomados, areas] = await Promise.all([listarDiplomados(), listarAreas()]);
-    landing = (
-      <CeductLanding channel={channel} content={content} diplomados={diplomados} areas={areas} />
-    );
-  } else if (channel.id === "psicologia") {
+  if (channel.id === "psicologia") {
     landing = <PsicologiaLanding channel={channel} content={content} />;
   } else if (channel.id === "ige") {
     // La academia es el centro de esta portada: su catálogo viaja con ella.

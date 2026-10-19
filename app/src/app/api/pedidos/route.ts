@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db/index";
-import { courseCategories, courses, orderItems, orders, users } from "@/db/schema";
+import { courseCategories, coupons, courses, orderItems, orders, users } from "@/db/schema";
 import { getSessionUser, logAudit } from "@/lib/auth";
 import { crearSesionDePago, origenDe } from "@/lib/pagos";
 import { isStripeConfigured } from "@/lib/stripe";
@@ -22,7 +22,21 @@ export async function POST(request: Request) {
     email?: string;
     telefono?: string;
     notas?: string;
+    /** Código de cupón; se valida aquí, nunca se confía en el navegador. */
+    cupon?: string | null;
+    /** tarjeta (Stripe) · transferencia · oxxo. Por defecto, tarjeta. */
+    metodoPago?: string;
+    factura?: { rfc?: string; razonSocial?: string; cp?: string | null } | null;
   };
+
+  const metodoPago = (["tarjeta", "transferencia", "oxxo"] as const).find((m) => m === body.metodoPago) ?? "tarjeta";
+  const factura = body.factura
+    ? {
+        rfc: String(body.factura.rfc ?? "").trim().toUpperCase().slice(0, 13),
+        razonSocial: String(body.factura.razonSocial ?? "").trim().slice(0, 200),
+        cp: body.factura.cp ? String(body.factura.cp).trim().slice(0, 5) : null,
+      }
+    : null;
 
   const slugs = (body.slugs ?? []).filter((s) => typeof s === "string").slice(0, 20);
   const nombre = body.nombre?.trim();
@@ -65,6 +79,29 @@ export async function POST(request: Request) {
     const subtotal = elegidos.reduce((suma, c) => suma + c.precio, 0);
     const ahora = new Date().toISOString();
 
+    // Cupón: mismas reglas que /api/coupons/validate. Uno inválido no tumba
+    // el pedido; simplemente no descuenta.
+    let descuento = 0;
+    let cuponAplicado: string | null = null;
+    const codigo = body.cupon?.trim().toUpperCase();
+    if (codigo && subtotal > 0) {
+      const [cupon] = await db.select().from(coupons).where(eq(coupons.code, codigo)).limit(1);
+      const vigente =
+        cupon &&
+        cupon.active &&
+        (!cupon.expiresAt || new Date(cupon.expiresAt) >= new Date()) &&
+        (!cupon.maxUses || cupon.currentUses < cupon.maxUses);
+      if (vigente) {
+        descuento =
+          cupon.type === "percentage"
+            ? Math.round((subtotal * Math.min(100, Math.max(0, cupon.value))) / 100)
+            : Math.max(0, cupon.value);
+        descuento = Math.min(descuento, subtotal);
+        cuponAplicado = cupon.code;
+      }
+    }
+    const total = subtotal - descuento;
+
     // Si hay sesión se liga al usuario; si no, se registra a nombre del correo.
     const sesion = await getSessionUser();
     let userId = sesion?.id ?? null;
@@ -98,8 +135,8 @@ export async function POST(request: Request) {
       id: pedidoId,
       userId,
       subtotal,
-      discount: 0,
-      total: subtotal,
+      discount: descuento,
+      total,
       status: "pending",
       createdAt: ahora,
     });
@@ -116,7 +153,10 @@ export async function POST(request: Request) {
 
     await logAudit(userId, "create", "order", pedidoId, {
       diplomados: elegidos.map((c) => c.titulo),
-      total: subtotal,
+      total,
+      cupon: cuponAplicado,
+      metodoPago,
+      factura,
       telefono: body.telefono?.trim() || null,
       notas: body.notas?.trim() || null,
     });
@@ -124,7 +164,8 @@ export async function POST(request: Request) {
     // El pago solo se abre si hay precio que cobrar; lo demás se acuerda
     // por contacto y el pedido se queda pendiente para eso.
     let pagoUrl: string | null = null;
-    if (isStripeConfigured() && subtotal > 0) {
+    // Transferencia y OXXO se concilian a mano desde el panel.
+    if (metodoPago === "tarjeta" && isStripeConfigured() && total > 0) {
       const sesion = await crearSesionDePago({
         pedidoId,
         origen: origenDe(request),
@@ -140,7 +181,16 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { pedidoId, total: subtotal, pagoUrl, diplomados: elegidos.map((c) => c.titulo) },
+      {
+        pedidoId,
+        subtotal,
+        descuento,
+        total,
+        cupon: cuponAplicado,
+        metodoPago,
+        pagoUrl,
+        diplomados: elegidos.map((c) => c.titulo),
+      },
       { status: 201 },
     );
   } catch (error) {
