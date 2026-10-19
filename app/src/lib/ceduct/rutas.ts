@@ -2,8 +2,18 @@
  * Rutas del marketplace. Un único lugar para que navbar, tarjetas y
  * pie nunca apunten a sitios distintos.
  *
- * Todas son rutas de plataforma (ver `isPlatformPath` en channels.ts): en el
- * subdominio de CEDUCT no se reescriben a /sites/ceduct/...
+ * Ninguna se reescribe a /sites/ceduct/... en el subdominio de CEDUCT, pero por
+ * dos vías distintas (ambas en channels.ts):
+ *
+ * - `/diplomados`, `/carrito`, `/checkout`, `/gracias`, `/legal` y `/verificar`
+ *   son rutas de plataforma: valen igual en cualquier host (`isPlatformPath`).
+ * - `/nosotros`, `/contacto`, `/acceso` y `/mis-cursos` son rutas propias del
+ *   canal (`CHANNEL_PATHS`): sólo se libran del rewrite en el subdominio de
+ *   CEDUCT. En martin.* o ige.* esos nombres quedan libres para esas marcas.
+ *
+ * Sin subdominios configurados (previews *.vercel.app, localhost sin
+ * ROOT_DOMAIN) no hay canal en el host, no hay rewrite, y las dos clases se
+ * sirven igual desde el dominio principal.
  */
 
 import { channelPublicUrl } from "@/lib/channels";
