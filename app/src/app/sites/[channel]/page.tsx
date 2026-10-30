@@ -58,7 +58,8 @@ export default async function ChannelSitePage({ params }: Props) {
     );
   }
 
-  let landing = <ChannelLanding channel={channel} content={content} />;
+  // IGE también trae encabezado y pie propios: la cabecera flota sobre el
+  // cielo de la portada y se encoge al bajar.
   if (channel.id === "ige") {
     // La academia es el centro de esta portada: su catálogo viaja con ella.
     const filas = await listPublishedCoursesByChannel(channel.id);
@@ -76,8 +77,15 @@ export default async function ChannelSitePage({ params }: Props) {
       // Lo grabado se cursa en línea; lo demás se imparte con el grupo delante.
       formato: course.modalidad === "online" ? "grabado" : "vivo",
     }));
-    landing = <IgeLanding channel={channel} content={content} cursos={cursos} />;
-  } else if (channel.id === "martin") {
+    return (
+      <div className={clasesDeCanal(channel.id)} style={estiloDeCanal(channel.id)} data-channel={channel.id}>
+        <IgeLanding channel={channel} content={content} cursos={cursos} />
+      </div>
+    );
+  }
+
+  let landing = <ChannelLanding channel={channel} content={content} />;
+  if (channel.id === "martin") {
     landing = <MartinLanding channel={channel} content={content} />;
   }
 

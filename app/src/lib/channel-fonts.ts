@@ -94,8 +94,9 @@ export const FUENTES_CANAL: Record<ChannelId, ParTipografico> = {
     display: "var(--f-dm-sans), system-ui, sans-serif",
     body: "var(--f-dm-sans), system-ui, sans-serif",
   },
+  // Fraunces entra como voz editorial en las tarjetas y los textos largos.
   ige: {
-    className: `${outfit.variable} ${manrope.variable}`,
+    className: `${outfit.variable} ${manrope.variable} ${fraunces.variable}`,
     display: "var(--f-outfit), system-ui, sans-serif",
     body: "var(--f-manrope), system-ui, sans-serif",
   },
