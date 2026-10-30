@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { animate, stagger } from "animejs";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
@@ -117,6 +117,19 @@ function useWebGL() {
     }
   }, []);
   return hay;
+}
+
+/** ¿Pantalla de teléfono? Ahí el titular y el manifiesto se acomodan distinto. */
+function useMovil() {
+  const [movil, setMovil] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const cambiar = () => setMovil(mq.matches);
+    cambiar();
+    mq.addEventListener("change", cambiar);
+    return () => mq.removeEventListener("change", cambiar);
+  }, []);
+  return movil;
 }
 
 /** ¿Está el nodo (o cerca de estarlo) en pantalla? Para pausar los lienzos. */
@@ -300,6 +313,35 @@ function TitularGigante({ frases }: { frases: string[][] }) {
   const [i, setI] = useState(0);
   const visible = useEnPantalla(caja, "0px");
   const entro = useRef(false);
+  const movil = useMovil();
+
+  // En el teléfono cada renglón crece hasta llenar el ancho: centrado y a un
+  // solo tamaño, el titular se perdía en medio de la pantalla.
+  useLayoutEffect(() => {
+    const nodo = caja.current;
+    if (!nodo) return;
+    const mascaras = Array.from(nodo.querySelectorAll<HTMLElement>("[data-mascara]"));
+    if (!movil) {
+      mascaras.forEach((m) => (m.style.fontSize = ""));
+      return;
+    }
+    const medir = () => {
+      // Primero todos a su tamaño base: si no, los renglones grandes de la
+      // frase anterior ensanchan la caja y la medida se retroalimenta.
+      mascaras.forEach((m) => (m.style.fontSize = ""));
+      const ancho = nodo.clientWidth;
+      mascaras.forEach((m) => {
+        const linea = m.firstElementChild as HTMLElement | null;
+        if (!linea?.offsetWidth) return;
+        const base = parseFloat(getComputedStyle(m).fontSize);
+        m.style.fontSize = `${Math.min((base * ancho * 0.97) / linea.offsetWidth, base * 2.6)}px`;
+      });
+    };
+    medir();
+    document.fonts?.ready.then(medir);
+    window.addEventListener("resize", medir);
+    return () => window.removeEventListener("resize", medir);
+  }, [i, movil]);
 
   // Entrada la primera vez que se ve.
   useEffect(() => {
@@ -345,7 +387,7 @@ function TitularGigante({ frases }: { frases: string[][] }) {
       <h2 className={s.oculto}>{frases.map((f) => f.join(" ")).join(". ")}</h2>
       <p className={s.titularLineas} aria-hidden>
         {frases[i].map((linea, k) => (
-          <span key={k} className={s.mascara}>
+          <span key={k} className={s.mascara} data-mascara>
             <span className={s.linea} data-linea>
               {linea}
             </span>
@@ -557,6 +599,31 @@ function Manifiesto() {
       </div>
 
       <TitularGigante frases={MANIFIESTO} />
+
+      {/* Sólo en el teléfono: la cinta de instrumentos y tres datos llenan lo que en escritorio es aire. */}
+      <div className={s.cinta} aria-hidden>
+        <div className={s.cintaPista}>
+          {[0, 1].map((vuelta) => (
+            <span key={vuelta} className={s.cintaLista}>
+              {PRUEBAS.map((p) => (
+                <span key={p.id}>
+                  {p.nombre}
+                  <span className={s.cintaAsterisco}>*</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <dl className={s.manifiestoDatos}>
+        {RESPALDO.slice(0, 3).map((r) => (
+          <div key={r.etiqueta}>
+            <dt>{r.etiqueta}</dt>
+            <dd>{r.valor}</dd>
+          </div>
+        ))}
+      </dl>
 
       <p className={s.nota}>En línea, desde donde estés · Informe en 72 h</p>
     </section>

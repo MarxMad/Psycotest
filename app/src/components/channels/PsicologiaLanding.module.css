@@ -605,6 +605,12 @@
   text-align: right;
 }
 
+/* La cinta y los datos son del teléfono; en escritorio el titular manda solo. */
+.cinta,
+.manifiestoDatos {
+  display: none;
+}
+
 @media (max-width: 640px) {
   .esquinas {
     grid-template-columns: 1fr;
@@ -615,6 +621,170 @@
   }
   .derecha {
     text-align: left;
+  }
+
+  .manifiesto {
+    min-height: auto;
+    grid-template-rows: none;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 34px;
+    padding: 92px var(--g) 40px;
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 46%, rgba(242, 214, 75, 0.22), transparent 70%),
+      var(--p-papel);
+  }
+
+  .esquinas {
+    font-size: 14px;
+  }
+
+  /* Los datos de abajo ya dicen lo mismo. */
+  .manifiesto > .nota {
+    display: none;
+  }
+
+  .esquinas p:first-child {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  /* Cada renglón llena el ancho (lo mide TitularGigante); se alinean a la izquierda y el del medio va subrayado en amarillo. */
+  .titular {
+    min-width: 0;
+  }
+
+  /* Las frases miden distinto: se reserva la más alta para que nada brinque al cambiar. */
+  .manifiesto > .titular {
+    display: flex;
+    align-items: center;
+    min-height: 54vw;
+  }
+
+  .manifiesto > .titular .titularLineas {
+    width: 100%;
+  }
+
+  .titularLineas {
+    text-align: left;
+    line-height: 0.88;
+  }
+
+  .titularLineas .linea {
+    white-space: nowrap;
+  }
+
+  .titularLineas .mascara:nth-child(2) .linea {
+    padding: 0 0.06em;
+    border-radius: 0.08em;
+    background: var(--p-amarillo);
+  }
+
+  .cinta {
+    display: block;
+    margin: 6px calc(var(--g) * -1 - 24px) 0;
+    padding: 12px 0;
+    background: var(--p-verde);
+    color: var(--p-crema);
+    transform: rotate(-3.5deg);
+    overflow: hidden;
+    box-shadow: 0 18px 30px -22px rgba(15, 58, 46, 0.9);
+  }
+
+  .cintaPista {
+    display: flex;
+    width: max-content;
+    animation: cinta 26s linear infinite;
+  }
+
+  .cintaLista {
+    display: flex;
+  }
+
+  .cintaLista > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding-right: 18px;
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .cintaAsterisco {
+    color: var(--p-amarillo);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .manifiestoDatos {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 4px 0 0;
+    border-top: 1px solid var(--p-regla);
+  }
+
+  .manifiestoDatos > div {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 14px 10px 0 0;
+  }
+
+  .manifiestoDatos > div + div {
+    padding-left: 12px;
+    border-left: 1px solid var(--p-regla);
+  }
+
+  .manifiestoDatos dt {
+    font-size: 12px;
+    line-height: 1.3;
+    color: var(--p-tenue);
+  }
+
+  .manifiestoDatos dd {
+    order: -1;
+    margin: 0;
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+}
+
+@keyframes cinta {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* En el teléfono el cierre se alinea con su titular, que ya va a la izquierda y a todo lo ancho. */
+@media (max-width: 640px) {
+  .cierre {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cierreAcciones {
+    justify-content: flex-start;
+  }
+
+  .cierreAcciones .botonPrincipal {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cierre > .nota {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .cintaPista {
+    animation: none;
   }
 }
 
