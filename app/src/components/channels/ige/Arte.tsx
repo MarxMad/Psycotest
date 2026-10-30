@@ -423,7 +423,7 @@ function radar(valores: number[]): [number, number][] {
   });
 }
 
-const ETIQUETA_PASO = ["Reunión inicial", "Diagnóstico", "Propuesta · costo cerrado", "En sitio o en línea", "Volvemos a medir"];
+export const ETIQUETA_PASO = ["Reunión inicial", "Diagnóstico", "Propuesta · costo cerrado", "En sitio o en línea", "Volvemos a medir"];
 
 /*
  * El hilo del método: las cinco etapas viven a lo largo de una sola línea y
@@ -469,6 +469,20 @@ export function EscenaMetodo({ paso, avance }: { paso: number; avance: RefObject
   const viajero = useRef<SVGGElement>(null);
   const grupo = useRef<(SVGGElement | null)[]>([]);
   const [nudos, setNudos] = useState<[number, number][]>([]);
+  const lienzo = useRef<SVGSVGElement>(null);
+  // En un panel vertical (teléfono) se encuadra más cerca: el mundo sigue
+  // siendo el mismo, sólo que la ventana es más angosta.
+  const [angosto, setAngosto] = useState(false);
+
+  useEffect(() => {
+    const nodo = lienzo.current;
+    if (!nodo) return;
+    const medir = () => setAngosto(nodo.clientWidth < nodo.clientHeight);
+    medir();
+    const obs = new ResizeObserver(medir);
+    obs.observe(nodo);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
     const ruta = hilo.current;
@@ -539,7 +553,7 @@ export function EscenaMetodo({ paso, avance }: { paso: number; avance: RefObject
   const en = (n: number) => `translate(${ESTACIONES[n][0] - CENTRO[0]} ${ESTACIONES[n][1] - CENTRO[1]})`;
 
   return (
-    <svg viewBox="0 0 600 480" aria-hidden className="escena-metodo">
+    <svg ref={lienzo} viewBox={angosto ? "80 0 440 480" : "0 0 600 480"} aria-hidden className="escena-metodo">
       <defs>
         <filter id={`b${id}`} x="-100%" y="-100%" width="300%" height="300%">
           <feGaussianBlur stdDeviation="7" />
@@ -603,7 +617,7 @@ export function EscenaMetodo({ paso, avance }: { paso: number; avance: RefObject
                   stroke={LUZ}
                   strokeOpacity="0.2"
                 />
-                <text x={x} y={y + 4} fill={LUZ} fontSize="12" textAnchor="middle" opacity="0.75">
+                <text x={x} y={y + 4} fill={LUZ} fontSize={angosto ? 15 : 12} textAnchor="middle" opacity="0.75">
                   {eje}
                 </text>
               </g>
@@ -699,12 +713,6 @@ export function EscenaMetodo({ paso, avance }: { paso: number; avance: RefObject
         </g>
       </g>
 
-      <g transform="translate(36 36)">
-        <rect width={ETIQUETA_PASO[paso].length * 7.4 + 28} height="30" rx="8" fill="#233046" stroke={LUZ} strokeOpacity="0.6" />
-        <text x="14" y="20" fill={LUZ} fontSize="12.5">
-          {ETIQUETA_PASO[paso]}
-        </text>
-      </g>
     </svg>
   );
 }

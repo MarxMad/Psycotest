@@ -24,6 +24,7 @@ import {
   ArteFormato,
   ArteServicio,
   EscenaMetodo,
+  ETIQUETA_PASO,
   MarcaIge,
   Nube,
   type FormatoArte,
@@ -425,6 +426,9 @@ function Metodo({ metodo }: { metodo: ChannelSection }) {
         </div>
         <div className={s.panelMetodo}>
           <EscenaMetodo paso={Math.min(paso, 4)} avance={avance} />
+          <span key={paso} className={s.panelEtiqueta}>
+            {ETIQUETA_PASO[Math.min(paso, 4)]}
+          </span>
           <span className={s.panelContador}>
             {String(paso + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
           </span>

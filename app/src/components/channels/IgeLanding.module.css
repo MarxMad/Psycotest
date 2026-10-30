@@ -802,6 +802,35 @@
   to { stroke-dashoffset: -24; }
 }
 
+/* La etapa en curso, en texto de verdad: legible igual en el teléfono que en el escritorio. */
+.panelEtiqueta {
+  position: absolute;
+  top: clamp(0.9rem, 2.5vw, 1.6rem);
+  left: clamp(0.9rem, 2.5vw, 1.6rem);
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(205, 238, 224, 0.55);
+  border-radius: 8px;
+  background: rgba(35, 48, 70, 0.75);
+  backdrop-filter: blur(4px);
+  color: #cdeee0;
+  font-family: var(--sans);
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  animation: etiquetaEntra 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes etiquetaEntra {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panelEtiqueta {
+    animation: none;
+  }
+}
+
 .panelContador {
   position: absolute;
   right: 1.2rem;
