@@ -831,6 +831,7 @@ const ENFOQUES = {
 function Camara({ enfoque }: { enfoque: Enfoque }) {
   const destino = useMemo(() => new THREE.Vector3(), []);
   const mira = useMemo(() => new THREE.Vector3(0, 2.55, -1), []);
+  const primera = useRef(true);
   useFrame(({ camera, pointer, size }, dt) => {
     const e = ENFOQUES[enfoque ?? "centro"];
     // En vertical (teléfono) se aleja: si no, la Ψ llena la pantalla.
@@ -845,7 +846,11 @@ function Camara({ enfoque }: { enfoque: Enfoque }) {
       2.7 + pointer.y * 0.25 + progreso * 0.4 - (enfoque ? 0.35 : 0),
       12.6 + lejos + e.z - progreso * 3.6,
     );
-    const suave = 1 - Math.exp(-dt * 2.4);
+    // El primer cuadro sale ya en su sitio: así coincide con la imagen fija
+    // que la portada muestra mientras carga, y en el teléfono no hay un
+    // acercamiento que luego se aleja.
+    const suave = primera.current ? 1 : 1 - Math.exp(-dt * 2.4);
+    primera.current = false;
     camera.position.lerp(destino, suave);
     mira.lerp(new THREE.Vector3(e.mira + (e.foco - e.mira) * centrar, 2.55 + progreso * 0.45 - (enfoque ? 0.5 : 0), -1), suave);
     camera.lookAt(mira);
@@ -854,6 +859,22 @@ function Camara({ enfoque }: { enfoque: Enfoque }) {
 }
 
 /* ----------------------------------------------------------------- lienzo */
+
+/**
+ * Avisa cuando la escena ya está en pantalla. El primer cuadro es el caro
+ * (compila materiales y sombras); el aviso sale en el cuadro siguiente,
+ * cuando ese ya se pintó, para que la portada cambie la imagen fija por el
+ * 3D sin un hueco en medio.
+ */
+function AvisoListo({ onListo }: { onListo?: () => void }) {
+  const avisado = useRef(false);
+  useFrame(() => {
+    if (avisado.current) return;
+    avisado.current = true;
+    requestAnimationFrame(() => onListo?.());
+  });
+  return null;
+}
 
 /** Rótulo flotante sobre cada rincón: también sirve para elegir. */
 function Rotulo({
@@ -908,7 +929,6 @@ export default function EscenaConsultorio({
       gl={{ antialias: true, powerPreference: "high-performance", toneMappingExposure: 1.05 }}
       onCreated={({ camera }) => {
         camera.lookAt(0, 2.55, -1);
-        requestAnimationFrame(() => onListo?.());
       }}
       aria-hidden
     >
@@ -982,6 +1002,7 @@ export default function EscenaConsultorio({
       )}
 
       {!quieta && <Camara enfoque={enfoque} />}
+      <AvisoListo onListo={onListo} />
     </Canvas>
   );
 }

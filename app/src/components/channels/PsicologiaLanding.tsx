@@ -39,7 +39,10 @@ import s from "./PsicologiaLanding.module.css";
  * algo que la empresa necesita saber antes de escribirnos.
  */
 
-const EscenaConsultorio = dynamic(() => import("./psico/EscenaConsultorio"), { ssr: false });
+const cargarEscena = () => import("./psico/EscenaConsultorio");
+const EscenaConsultorio = dynamic(cargarEscena, { ssr: false });
+// El arte pesa: se pide en cuanto llega este módulo, sin esperar a hidratar.
+if (typeof window !== "undefined") void cargarEscena();
 
 /** A quién le hablamos: la empresa que contrata o la persona que quiere conocerse. */
 type Publico = Exclude<Enfoque, null>;
@@ -202,29 +205,38 @@ function Cargador({ listo }: { listo: boolean }) {
     const contador = { v: 0 };
     const anim = animate(contador, {
       v: 100,
-      duration: 1500,
+      duration: 1200,
       ease: "inOut(2)",
       onUpdate: () => {
         if (cifra.current) cifra.current.textContent = String(Math.round(contador.v)).padStart(2, "0");
       },
     });
-    // Nunca más de 3 s: si la escena tarda, la página ya se puede leer.
-    const tope = window.setTimeout(() => setFase("saliendo"), 3000);
+    // Nunca más de 2.5 s: si la escena tarda, el póster ya ocupa su lugar.
+    const tope = window.setTimeout(() => setFase("saliendo"), 2500);
     return () => {
       anim.pause();
       window.clearTimeout(tope);
     };
   }, [fase]);
 
+  // En cuanto la escena pinta se va, pero no antes de 1 s: es lo que tarda
+  // el texto de la portada en entrar (300 + 680 ms), y así al abrir ya todo
+  // está en su sitio en vez de verse llegar.
+  const inicio = useRef(0);
+  useEffect(() => {
+    inicio.current = performance.now();
+  }, []);
   useEffect(() => {
     if (!listo || fase !== "visible") return;
-    const t = window.setTimeout(() => setFase("saliendo"), 1300);
+    if (cifra.current) cifra.current.textContent = "100";
+    const espera = Math.max(0, 1000 - (performance.now() - inicio.current));
+    const t = window.setTimeout(() => setFase("saliendo"), espera);
     return () => window.clearTimeout(t);
   }, [listo, fase]);
 
   useEffect(() => {
     if (fase !== "saliendo") return;
-    const t = window.setTimeout(() => setFase("fuera"), 700);
+    const t = window.setTimeout(() => setFase("fuera"), 500);
     return () => window.clearTimeout(t);
   }, [fase]);
 
@@ -503,11 +515,13 @@ function Portada({
   publico,
   onCambiar,
   onListo,
+  lista,
 }: {
   content: ChannelPageContent;
   publico: Publico | null;
   onCambiar: (p: Publico) => void;
   onListo: () => void;
+  lista: boolean;
 }) {
   const zona = useRef<HTMLElement>(null);
   const webgl = useWebGL();
@@ -528,21 +542,24 @@ function Portada({
   return (
     <section id="acceso" ref={zona} className={s.portada} aria-label="Inicio">
       <div className={s.escena}>
-        {webgl ? (
-          <EscenaConsultorio
-            activa={visible}
-            ligera={ligera}
-            quieta={estatica}
-            enfoque={publico}
-            onElegir={onCambiar}
-            claseRotulo={s.rotulo}
-            onListo={onListo}
-          />
-        ) : webgl === false ? (
-          <div className={s.escenaRespaldo} aria-hidden>
-            Ψ
+        {/* Un cuadro de la escena misma: se ve desde el primer byte y la 3D entra encima. */}
+        <picture className={s.poster} aria-hidden>
+          <source media="(max-width: 760px) and (orientation: portrait)" srcSet="/psico/escena-movil.webp" />
+          <img src="/psico/escena-escritorio.webp" alt="" fetchPriority="high" decoding="async" />
+        </picture>
+        {webgl && (
+          <div className={s.lienzo} data-lista={lista}>
+            <EscenaConsultorio
+              activa={visible}
+              ligera={ligera}
+              quieta={estatica}
+              enfoque={publico}
+              onElegir={onCambiar}
+              claseRotulo={s.rotulo}
+              onListo={onListo}
+            />
           </div>
-        ) : null}
+        )}
       </div>
 
       <a className={s.pildoraGirada} href={evaluacion.acceso} data-oculta={publico ? "" : undefined}>
@@ -1059,7 +1076,7 @@ export function PsicologiaLanding({ channel, content }: { channel: ChannelDef; c
       <Cargador listo={escenaLista} />
       <Cabecera />
       <PildoraCursor raiz={raiz} />
-      <Portada content={content} publico={publico} onCambiar={setPublico} onListo={alListo} />
+      <Portada content={content} publico={publico} onCambiar={setPublico} onListo={alListo} lista={escenaLista} />
       <Manifiesto />
       <Saludo content={content} onCambiar={setPublico} />
       <Instrumentos />

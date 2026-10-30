@@ -9,6 +9,7 @@
  * pública nunca se caiga por un problema de persistencia.
  */
 
+import { cache } from "react";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/db";
 import { channelPages } from "@/db/schema";
@@ -68,7 +69,8 @@ async function asegurarFila(id: ChannelId): Promise<ChannelPageContent> {
   return base;
 }
 
-export async function getChannelPage(id: ChannelId): Promise<ChannelPageContent> {
+/** Una sola consulta por petición aunque la pidan los metadatos y la página. */
+export const getChannelPage = cache(async (id: ChannelId): Promise<ChannelPageContent> => {
   if (enBuild()) return semilla(id);
   try {
     const db = getDb();
@@ -79,7 +81,7 @@ export async function getChannelPage(id: ChannelId): Promise<ChannelPageContent>
     console.error(`[canales] no se pudo leer "${id}" de la base, se usa el contenido base:`, error);
     return semilla(id);
   }
-}
+});
 
 export async function listChannelPages(): Promise<ChannelPageContent[]> {
   if (enBuild()) return CHANNEL_IDS.map((id) => semilla(id));
