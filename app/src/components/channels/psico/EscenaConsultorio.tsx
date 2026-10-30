@@ -2,9 +2,8 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
+import { Html, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-import { Mariposa } from "./Mariposa";
 
 /**
  * La portada: un aula-consultorio de barro con luz de mañana.
@@ -13,8 +12,15 @@ import { Mariposa } from "./Mariposa";
  * que cargue rápido y no dependa de nadie. El sol entra por detrás de los
  * ventanales; su sombra recorta los arcos sobre el piso y esa luz es la que
  * da la sensación de calma. Al centro, una Ψ de barro que flota y mira al
- * cursor; alrededor, mariposas (ψυχή: alma y mariposa).
+ * cursor.
+ *
+ * El cuarto tiene dos rincones, porque atendemos a dos públicos: a la
+ * izquierda el personal (sillón, lámpara, planta) y a la derecha el de la
+ * empresa (escritorio con laptop, silla de oficina y pizarrón). Al elegir
+ * uno, la cámara se acerca a ese rincón.
  */
+
+export type Enfoque = "personas" | "empresas" | null;
 
 const C = {
   fondo: "#efe7da",
@@ -461,7 +467,7 @@ function texturaPizarra() {
 function Pizarra() {
   const mapa = useMemo(texturaPizarra, []);
   return (
-    <group position={[-3.5, 0, 0.5]} rotation={[0, 0.42, 0]}>
+    <group position={[5.6, 0, -1.0]} rotation={[0, -0.5, 0]} scale={0.9}>
       <RoundedBox args={[2.3, 1.62, 0.1]} radius={0.04} position={[0, 2.05, 0]} rotation={[-0.08, 0, 0]} castShadow>
         <meshStandardMaterial color={C.madera} roughness={0.8} />
       </RoundedBox>
@@ -495,10 +501,18 @@ const LIBROS: { color: string; largo: number; alto: number; giro: number }[] = [
   { color: C.mostaza, largo: 0.72, alto: 0.11, giro: -0.04 },
 ];
 
-function PilaDeLibros({ position, rotacion = 0 }: { position: [number, number, number]; rotacion?: number }) {
+function PilaDeLibros({
+  position,
+  rotacion = 0,
+  escala = 1,
+}: {
+  position: [number, number, number];
+  rotacion?: number;
+  escala?: number;
+}) {
   let y = 0;
   return (
-    <group position={position} rotation={[0, rotacion, 0]}>
+    <group position={position} rotation={[0, rotacion, 0]} scale={escala}>
       {LIBROS.map((l, i) => {
         const centro = y + l.alto / 2;
         y += l.alto;
@@ -521,6 +535,208 @@ function PilaDeLibros({ position, rotacion = 0 }: { position: [number, number, n
   );
 }
 
+function texturaPantalla() {
+  const lienzo = document.createElement("canvas");
+  lienzo.width = 512;
+  lienzo.height = 320;
+  const ctx = lienzo.getContext("2d")!;
+  ctx.fillStyle = "#fbf8f2";
+  ctx.fillRect(0, 0, 512, 320);
+  ctx.fillStyle = "#12302a";
+  ctx.font = "700 26px sans-serif";
+  ctx.fillText("Informe integral", 28, 46);
+  ctx.fillStyle = "rgba(18,48,42,0.45)";
+  ctx.font = "16px sans-serif";
+  ctx.fillText("3 candidatos · mismo puesto", 28, 72);
+  // Barras comparativas
+  const filas = [
+    [0.86, 0.7, 0.52],
+    [0.62, 0.8, 0.44],
+    [0.74, 0.58, 0.9],
+  ];
+  const colores = ["#1d5244", "#e9c75e", "#bba8da"];
+  filas.forEach((fila, i) => {
+    fila.forEach((v, j) => {
+      ctx.fillStyle = colores[j];
+      ctx.fillRect(28, 104 + i * 66 + j * 16, 260 * v, 11);
+    });
+  });
+  ctx.strokeStyle = "#1d5244";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  for (let i = 0; i <= 5; i++) {
+    const a = -Math.PI / 2 + ((i % 5) * Math.PI * 2) / 5;
+    const r = [70, 52, 64, 40, 58][i % 5];
+    const x = 410 + Math.cos(a) * r;
+    const y = 190 + Math.sin(a) * r;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  const t = new THREE.CanvasTexture(lienzo);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+function Laptop() {
+  const pantalla = useMemo(texturaPantalla, []);
+  return (
+    <group position={[-0.45, 1.08, 0.05]} rotation={[0, 0.25, 0]}>
+      <RoundedBox args={[0.92, 0.04, 0.62]} radius={0.015} position={[0, 0.02, 0]} castShadow>
+        <meshStandardMaterial color="#c9ccd0" roughness={0.45} metalness={0.3} />
+      </RoundedBox>
+      <group position={[0, 0.04, -0.3]} rotation={[-0.28, 0, 0]}>
+        <RoundedBox args={[0.92, 0.6, 0.03]} radius={0.015} position={[0, 0.3, 0]} castShadow>
+          <meshStandardMaterial color="#c9ccd0" roughness={0.45} metalness={0.3} />
+        </RoundedBox>
+        <mesh position={[0, 0.3, 0.017]}>
+          <planeGeometry args={[0.84, 0.52]} />
+          <meshBasicMaterial map={pantalla} toneMapped={false} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+function Carpetas() {
+  const colores = ["#e8cf96", "#9fbaa4", "#e8cf96", "#d48d6a"];
+  return (
+    <group position={[0.75, 1.08, -0.15]} rotation={[0, -0.2, 0]}>
+      {colores.map((c, i) => (
+        <RoundedBox
+          key={i}
+          args={[0.62, 0.05, 0.46]}
+          radius={0.012}
+          position={[i % 2 ? 0.03 : 0, 0.025 + i * 0.052, 0]}
+          rotation={[0, i * 0.08, 0]}
+          castShadow
+        >
+          <meshStandardMaterial color={c} roughness={0.85} />
+        </RoundedBox>
+      ))}
+    </group>
+  );
+}
+
+function SillaOficina() {
+  return (
+    <group position={[3.0, 0, 1.45]} rotation={[0, Math.PI - 0.5, 0]}>
+      {Array.from({ length: 5 }, (_, i) => {
+        const a = (i * Math.PI * 2) / 5;
+        return (
+          <mesh key={i} position={[Math.cos(a) * 0.26, 0.06, Math.sin(a) * 0.26]} rotation={[0, -a, Math.PI / 2]} castShadow>
+            <capsuleGeometry args={[0.035, 0.42, 4, 8]} />
+            <meshStandardMaterial color="#2f3a36" roughness={0.6} />
+          </mesh>
+        );
+      })}
+      <mesh position={[0, 0.34, 0]} castShadow>
+        <cylinderGeometry args={[0.04, 0.05, 0.56, 12]} />
+        <meshStandardMaterial color="#2f3a36" roughness={0.5} metalness={0.3} />
+      </mesh>
+      <RoundedBox args={[0.72, 0.14, 0.68]} radius={0.06} smoothness={4} position={[0, 0.66, 0]} castShadow receiveShadow>
+        <meshStandardMaterial color="#3e5b52" roughness={0.8} />
+      </RoundedBox>
+      <RoundedBox args={[0.68, 0.78, 0.12]} radius={0.06} smoothness={4} position={[0, 1.12, -0.32]} rotation={[-0.12, 0, 0]} castShadow>
+        <meshStandardMaterial color="#3e5b52" roughness={0.8} />
+      </RoundedBox>
+    </group>
+  );
+}
+
+/* ------------------------------------------------------ rincón personal */
+
+function Tapete() {
+  return (
+    <mesh position={[-3.5, 0.012, 0.8]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+      <circleGeometry args={[1.9, 48]} />
+      <meshStandardMaterial color="#eadbc7" roughness={1} />
+    </mesh>
+  );
+}
+
+function Sillon() {
+  const tela = "#d9a184";
+  const cojin = "#e7b89c";
+  return (
+    <group position={[-3.7, 0, 0.55]} rotation={[0, 0.55, 0]}>
+      <RoundedBox args={[1.6, 0.5, 1.3]} radius={0.16} smoothness={5} position={[0, 0.5, 0]} castShadow receiveShadow>
+        <meshStandardMaterial color={tela} roughness={0.9} />
+      </RoundedBox>
+      <RoundedBox args={[1.38, 0.24, 1.0]} radius={0.11} smoothness={5} position={[0, 0.84, 0.08]} castShadow receiveShadow>
+        <meshStandardMaterial color={cojin} roughness={0.95} />
+      </RoundedBox>
+      <RoundedBox args={[1.6, 1.15, 0.36]} radius={0.17} smoothness={5} position={[0, 1.1, -0.52]} castShadow receiveShadow>
+        <meshStandardMaterial color={tela} roughness={0.9} />
+      </RoundedBox>
+      {[-0.72, 0.72].map((x) => (
+        <RoundedBox key={x} args={[0.34, 0.78, 1.3]} radius={0.15} smoothness={5} position={[x, 0.74, 0]} castShadow receiveShadow>
+          <meshStandardMaterial color={tela} roughness={0.9} />
+        </RoundedBox>
+      ))}
+      {/* Cojín suelto */}
+      <RoundedBox args={[0.5, 0.42, 0.16]} radius={0.08} smoothness={4} position={[0.3, 1.12, -0.28]} rotation={[-0.2, -0.2, 0.15]} castShadow>
+        <meshStandardMaterial color={C.salvia} roughness={0.95} />
+      </RoundedBox>
+      {[
+        [-0.65, -0.5],
+        [0.65, -0.5],
+        [-0.65, 0.5],
+        [0.65, 0.5],
+      ].map(([x, z]) => (
+        <mesh key={`${x}${z}`} position={[x, 0.11, z]} castShadow>
+          <cylinderGeometry args={[0.05, 0.035, 0.22, 10]} />
+          <meshStandardMaterial color={C.maderaOscura} roughness={0.8} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function Lampara() {
+  return (
+    <group position={[-5.05, 0, -0.35]}>
+      <mesh position={[0, 0.03, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.32, 0.36, 0.06, 28]} />
+        <meshStandardMaterial color="#2f3a36" roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 1.3, 0]} castShadow>
+        <cylinderGeometry args={[0.025, 0.025, 2.55, 10]} />
+        <meshStandardMaterial color="#2f3a36" roughness={0.5} metalness={0.3} />
+      </mesh>
+      <mesh position={[0, 2.62, 0]} castShadow>
+        <cylinderGeometry args={[0.26, 0.46, 0.48, 32, 1, true]} />
+        <meshStandardMaterial color="#fbf1df" emissive="#ffe2b0" emissiveIntensity={0.35} roughness={0.9} side={THREE.DoubleSide} />
+      </mesh>
+      <pointLight position={[0, 2.35, 0]} intensity={4} distance={4.5} decay={2} color="#ffd9a0" />
+    </group>
+  );
+}
+
+function MesaLateral() {
+  return (
+    <group position={[-2.05, 0, 1.45]}>
+      <mesh position={[0, 0.62, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.4, 0.4, 0.06, 32]} />
+        <meshStandardMaterial color={C.madera} roughness={0.75} />
+      </mesh>
+      <mesh position={[0, 0.3, 0]} castShadow>
+        <cylinderGeometry args={[0.04, 0.05, 0.6, 10]} />
+        <meshStandardMaterial color={C.maderaOscura} roughness={0.8} />
+      </mesh>
+      <mesh position={[0, 0.02, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.24, 0.26, 0.04, 24]} />
+        <meshStandardMaterial color={C.maderaOscura} roughness={0.8} />
+      </mesh>
+      <PilaDeLibros position={[-0.06, 0.65, 0]} rotacion={0.4} escala={0.45} />
+      <mesh position={[0.2, 0.83, 0.12]} castShadow>
+        <cylinderGeometry args={[0.08, 0.07, 0.16, 20]} />
+        <meshStandardMaterial color={C.barro} roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
 function Escritorio() {
   const patas: [number, number][] = [
     [-1.1, -0.45],
@@ -539,43 +755,13 @@ function Escritorio() {
           <meshStandardMaterial color={C.maderaOscura} roughness={0.8} />
         </mesh>
       ))}
-      <PilaDeLibros position={[-0.55, 1.08, 0]} rotacion={0.2} />
-      {/* Taza */}
-      <mesh position={[0.55, 1.22, 0.1]} castShadow>
-        <cylinderGeometry args={[0.13, 0.11, 0.28, 24]} />
-        <meshStandardMaterial color={C.barro} roughness={0.6} />
-      </mesh>
+      <Laptop />
+      <Carpetas />
       {/* Hojas de evaluación */}
-      <mesh position={[0.2, 1.085, -0.15]} rotation={[-Math.PI / 2, 0, 0.25]} receiveShadow>
-        <planeGeometry args={[0.5, 0.66]} />
+      <mesh position={[0.15, 1.085, 0.3]} rotation={[-Math.PI / 2, 0, 0.25]} receiveShadow>
+        <planeGeometry args={[0.42, 0.56]} />
         <meshStandardMaterial color="#fbf8f2" roughness={0.95} />
       </mesh>
-    </group>
-  );
-}
-
-function Taburete() {
-  return (
-    <group position={[-2.5, 0, 0.7]}>
-      <mesh position={[0, 0.96, 0]} castShadow receiveShadow>
-        <cylinderGeometry args={[0.36, 0.36, 0.09, 28]} />
-        <meshStandardMaterial color={C.madera} roughness={0.75} />
-      </mesh>
-      {[0, 1, 2].map((i) => {
-        const a = (i * Math.PI * 2) / 3;
-        return (
-          <mesh
-            key={i}
-            position={[Math.cos(a) * 0.2, 0.46, Math.sin(a) * 0.2]}
-            rotation={[Math.sin(a) * 0.14, 0, -Math.cos(a) * 0.14]}
-            castShadow
-          >
-            <cylinderGeometry args={[0.03, 0.04, 0.95, 8]} />
-            <meshStandardMaterial color={C.maderaOscura} roughness={0.8} />
-          </mesh>
-        );
-      })}
-      <PilaDeLibros position={[0, 1.0, 0]} rotacion={-0.5} />
     </group>
   );
 }
@@ -591,7 +777,7 @@ function Planta() {
     [],
   );
   return (
-    <group position={[5.4, 0, -1.7]}>
+    <group position={[-5.7, 0, -1.6]}>
       <mesh position={[0, 0.36, 0]} castShadow receiveShadow>
         <cylinderGeometry args={[0.46, 0.34, 0.72, 28]} />
         <meshStandardMaterial color={C.terracota} roughness={0.85} />
@@ -620,7 +806,7 @@ function Bloques() {
     { pos: [0.24, 0.69, 0.05], giro: 0.5, color: C.salvia },
   ];
   return (
-    <group position={[1.9, 0, 0.9]}>
+    <group position={[-1.25, 0, 1.55]} scale={0.8}>
       {bloques.map((b, i) => (
         <RoundedBox key={i} args={[0.46, 0.46, 0.46]} radius={0.07} smoothness={4} position={b.pos} rotation={[0, b.giro, 0]} castShadow receiveShadow>
           <meshStandardMaterial color={b.color} roughness={0.7} />
@@ -630,56 +816,81 @@ function Bloques() {
   );
 }
 
-/* ----------------------------------------------------------- mariposas */
-
-const VUELOS = [
-  { color: C.lavanda, borde: "#4b3a78", radio: 1.9, alto: 3.4, velocidad: 0.45, fase: 0 },
-  { color: C.mostaza, borde: "#7a5a12", radio: 2.5, alto: 2.4, velocidad: -0.32, fase: 2.1 },
-  { color: "#f2b7a0", borde: "#8a3f22", radio: 3.2, alto: 4.0, velocidad: 0.26, fase: 4.2 },
-];
-
-function MariposaEnVuelo({ color, borde, radio, alto, velocidad, fase }: (typeof VUELOS)[number]) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame(({ clock }) => {
-    const g = ref.current;
-    if (!g) return;
-    const t = clock.elapsedTime * velocidad + fase;
-    const x = Math.cos(t) * radio;
-    const z = -0.4 + Math.sin(t) * radio * 0.55;
-    const y = alto + Math.sin(t * 2.3) * 0.3;
-    g.position.set(x, y, z);
-    // Mira hacia donde va.
-    const dx = -Math.sin(t) * radio * Math.sign(velocidad);
-    const dz = Math.cos(t) * radio * 0.55 * Math.sign(velocidad);
-    g.rotation.set(-0.9, Math.atan2(dx, dz), 0);
-  });
-  return <Mariposa ref={ref} color={color} borde={borde} escala={0.32} ritmo={2.4} fase={fase} sombras />;
-}
-
 /* ---------------------------------------------------------------- cámara */
 
-function Camara() {
+/**
+ * Hacia dónde mira la cámara según el público elegido. `foco` es la pieza
+ * principal del rincón: en vertical la cámara se centra en ella.
+ */
+const ENFOQUES = {
+  centro: { x: 0, z: 0, mira: 0, foco: 0 },
+  personas: { x: -2.6, z: -2.4, mira: -2.6, foco: -3.6 },
+  empresas: { x: 2.7, z: -2.4, mira: 2.8, foco: 3.4 },
+};
+
+function Camara({ enfoque }: { enfoque: Enfoque }) {
   const destino = useMemo(() => new THREE.Vector3(), []);
+  const mira = useMemo(() => new THREE.Vector3(0, 2.55, -1), []);
   useFrame(({ camera, pointer, size }, dt) => {
+    const e = ENFOQUES[enfoque ?? "centro"];
     // En vertical (teléfono) se aleja: si no, la Ψ llena la pantalla.
-    const lejos = Math.max(0, 1 - size.width / size.height) * 7;
+    const vertical = Math.max(0, 1 - size.width / size.height);
+    const lejos = vertical * 7;
+    const centrar = Math.min(1, vertical * 2);
+    const x = e.x + (e.foco - e.x) * centrar;
     const alto = typeof window === "undefined" ? 1 : window.innerHeight;
     const progreso = Math.min(1, Math.max(0, (typeof window === "undefined" ? 0 : window.scrollY) / alto));
-    destino.set(pointer.x * 0.6, 2.7 + pointer.y * 0.25 + progreso * 0.4, 12.6 + lejos - progreso * 3.6);
-    camera.position.lerp(destino, 1 - Math.exp(-dt * 3));
-    camera.lookAt(0, 2.55 + progreso * 0.45, -1);
+    destino.set(
+      x + pointer.x * 0.6,
+      2.7 + pointer.y * 0.25 + progreso * 0.4 - (enfoque ? 0.35 : 0),
+      12.6 + lejos + e.z - progreso * 3.6,
+    );
+    const suave = 1 - Math.exp(-dt * 2.4);
+    camera.position.lerp(destino, suave);
+    mira.lerp(new THREE.Vector3(e.mira + (e.foco - e.mira) * centrar, 2.55 + progreso * 0.45 - (enfoque ? 0.5 : 0), -1), suave);
+    camera.lookAt(mira);
   });
   return null;
 }
 
 /* ----------------------------------------------------------------- lienzo */
 
+/** Rótulo flotante sobre cada rincón: también sirve para elegir. */
+function Rotulo({
+  posicion,
+  texto,
+  activo,
+  clase,
+  onClick,
+}: {
+  posicion: [number, number, number];
+  texto: string;
+  activo: boolean;
+  clase?: string;
+  onClick?: () => void;
+}) {
+  return (
+    <Html position={posicion} center zIndexRange={[4, 0]}>
+      <button type="button" className={clase} data-activo={activo} onClick={onClick}>
+        {texto}
+      </button>
+    </Html>
+  );
+}
+
 export default function EscenaConsultorio({
   activa = true,
   ligera = false,
   quieta = false,
+  enfoque = null,
+  onElegir,
+  claseRotulo,
   onListo,
 }: {
+  enfoque?: Enfoque;
+  onElegir?: (e: Exclude<Enfoque, null>) => void;
+  /** Clase CSS de los rótulos (vive en el módulo de la portada). */
+  claseRotulo?: string;
   /** Fuera de pantalla no se dibuja: ahorra batería. */
   activa?: boolean;
   /** Teléfonos y equipos modestos: menos sombra y menos partículas. */
@@ -737,16 +948,40 @@ export default function EscenaConsultorio({
 
       <Pedestal />
       <Psi />
-      <Pizarra />
-      <Escritorio />
-      <Taburete />
+
+      {/* Rincón personal */}
+      <Tapete />
+      <Sillon />
+      <Lampara />
+      <MesaLateral />
       <Planta />
       <Bloques />
-      {VUELOS.slice(0, ligera ? 2 : 3).map((v) => (
-        <MariposaEnVuelo key={v.fase} {...v} />
-      ))}
 
-      {!quieta && <Camara />}
+      {/* Rincón de la empresa */}
+      <Escritorio />
+      <SillaOficina />
+      <Pizarra />
+
+      {onElegir && (
+        <>
+          <Rotulo
+            posicion={[-3.6, 2.35, 0.6]}
+            texto="Para ti"
+            activo={enfoque === "personas"}
+            clase={claseRotulo}
+            onClick={() => onElegir("personas")}
+          />
+          <Rotulo
+            posicion={[3.4, 2.45, 0.3]}
+            texto="Para tu empresa"
+            activo={enfoque === "empresas"}
+            clase={claseRotulo}
+            onClick={() => onElegir("empresas")}
+          />
+        </>
+      )}
+
+      {!quieta && <Camara enfoque={enfoque} />}
     </Canvas>
   );
 }

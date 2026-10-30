@@ -5,7 +5,18 @@ import { useEffect, useRef, useState, type ReactNode, type RefObject } from "rea
 import { animate, stagger } from "animejs";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { ArrowDown, ArrowRight, ArrowUpRight, ChevronDown, KeyRound, Menu, MessageCircle, Users, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  Building2,
+  ChevronDown,
+  KeyRound,
+  Menu,
+  MessageCircle,
+  User,
+  X,
+} from "lucide-react";
 import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { evaluacion } from "@/lib/routes";
@@ -16,6 +27,7 @@ import { Cotizador } from "./Cotizador";
 import { RadarVivo } from "./RadarVivo";
 import { SelloSociedad } from "./arte";
 import { BARRAS, PRESENTACION } from "./psico/datos";
+import type { Enfoque } from "./psico/EscenaConsultorio";
 import s from "./PsicologiaLanding.module.css";
 
 /*
@@ -28,26 +40,61 @@ import s from "./PsicologiaLanding.module.css";
  */
 
 const EscenaConsultorio = dynamic(() => import("./psico/EscenaConsultorio"), { ssr: false });
-const MariposaCursor = dynamic(() => import("./psico/MariposaCursor"), { ssr: false });
+
+/** A quién le hablamos: la empresa que contrata o la persona que quiere conocerse. */
+type Publico = Exclude<Enfoque, null>;
 
 const NAV = [
   { label: "Instrumentos", href: "#instrumentos" },
   { label: "Cómo trabajamos", href: "#como-funciona" },
+  { label: "Para personas", href: "#personas" },
   { label: "Cotizar", href: "#bateria" },
-  { label: "Nosotros", href: "#nosotros" },
   { label: "Contacto", href: "#contacto" },
 ];
 
+/** Lo que dice la portada según el público elegido. */
+const PORTADA: Record<Publico, { titular: string; accion: string }> = {
+  empresas: {
+    titular: "Elige a tu próximo colaborador con evidencia, no con intuición.",
+    accion: "Evaluar a mis candidatos",
+  },
+  personas: {
+    titular: "Conócete con método: tu perfil psicológico, interpretado por un psicólogo.",
+    accion: "Quiero evaluarme",
+  },
+};
+
 const MANIFIESTO = [
   ["Evaluar", "personas", "con método"],
+  ["Conocerte", "para decidir", "mejor"],
   ["Contratar", "con certeza,", "no a ciegas"],
-  ["Leer lo que", "un CV", "no dice"],
 ];
 
 const CIERRE = [
   ["Hablemos de", "tu próxima", "contratación"],
-  ["Tu equipo", "empieza con", "una buena decisión"],
+  ["O de tu", "siguiente", "paso"],
 ];
+
+/** Para quien se evalúa a sí mismo. Se suma a los grupos editables desde el admin. */
+const PARA_PERSONAS = {
+  id: "personas",
+  eyebrow: "Para personas",
+  title: "Si la evaluación es para ti",
+  items: [
+    {
+      title: "Conócete con método",
+      text: "Respondes los mismos instrumentos que usan las empresas y recibes tu perfil interpretado por un psicólogo: cómo trabajas, qué te mueve y cómo decides.",
+    },
+    {
+      title: "Decide tu siguiente paso",
+      text: "Útil si estás por cambiar de empleo, buscas un ascenso o quieres orientar tu carrera con algo más que una corazonada.",
+    },
+    {
+      title: "Tus resultados son tuyos",
+      text: "Nadie más los ve. Recibes tu código, contestas desde donde estés y tu informe llega en 72 horas.",
+    },
+  ],
+};
 
 const RESPALDO = [
   { etiqueta: "Instrumentos en la batería", valor: "5" },
@@ -58,11 +105,6 @@ const RESPALDO = [
 ];
 
 /* ------------------------------------------------------------ utilidades */
-
-/** `menosMovimiento` lee matchMedia: en el servidor responde que no. */
-function quieto() {
-  return typeof window !== "undefined" && menosMovimiento();
-}
 
 function useWebGL() {
   const [hay, setHay] = useState<boolean | null>(null);
@@ -91,14 +133,6 @@ function useEnPantalla(ref: RefObject<HTMLElement | null>, margen = "200px") {
     return () => io.disconnect();
   }, [ref, margen]);
   return visible;
-}
-
-function usePunteroFino() {
-  const [fino, setFino] = useState(false);
-  useEffect(() => {
-    setFino(window.matchMedia("(pointer: fine)").matches);
-  }, []);
-  return fino;
 }
 
 /* --------------------------------------------------------------- piezas */
@@ -400,7 +434,39 @@ function Carrusel({ etiqueta, children }: { etiqueta: string; children: ReactNod
 
 /* ------------------------------------------------------------ secciones */
 
-function Portada({ content, onListo }: { content: ChannelPageContent; onListo: () => void }) {
+/** Interruptor de público. Se repite en la portada y en el cotizador. */
+function Interruptor({
+  publico,
+  onCambiar,
+  etiqueta,
+}: {
+  publico: Publico | null;
+  onCambiar: (p: Publico) => void;
+  etiqueta: string;
+}) {
+  return (
+    <div className={s.interruptor} role="group" aria-label={etiqueta}>
+      <button type="button" aria-pressed={publico === "empresas"} onClick={() => onCambiar("empresas")}>
+        <Building2 size={14} aria-hidden /> Para tu empresa
+      </button>
+      <button type="button" aria-pressed={publico === "personas"} onClick={() => onCambiar("personas")}>
+        <User size={14} aria-hidden /> Para ti
+      </button>
+    </div>
+  );
+}
+
+function Portada({
+  content,
+  publico,
+  onCambiar,
+  onListo,
+}: {
+  content: ChannelPageContent;
+  publico: Publico | null;
+  onCambiar: (p: Publico) => void;
+  onListo: () => void;
+}) {
   const zona = useRef<HTMLElement>(null);
   const webgl = useWebGL();
   const visible = useEnPantalla(zona, "0px");
@@ -421,7 +487,15 @@ function Portada({ content, onListo }: { content: ChannelPageContent; onListo: (
     <section id="acceso" ref={zona} className={s.portada} aria-label="Inicio">
       <div className={s.escena}>
         {webgl ? (
-          <EscenaConsultorio activa={visible} ligera={ligera} quieta={estatica} onListo={onListo} />
+          <EscenaConsultorio
+            activa={visible}
+            ligera={ligera}
+            quieta={estatica}
+            enfoque={publico}
+            onElegir={onCambiar}
+            claseRotulo={s.rotulo}
+            onListo={onListo}
+          />
         ) : webgl === false ? (
           <div className={s.escenaRespaldo} aria-hidden>
             Ψ
@@ -429,21 +503,31 @@ function Portada({ content, onListo }: { content: ChannelPageContent; onListo: (
         ) : null}
       </div>
 
-      <a className={s.pildoraGirada} href={evaluacion.acceso}>
+      <a className={s.pildoraGirada} href={evaluacion.acceso} data-oculta={publico ? "" : undefined}>
         Entra <span aria-hidden>—</span> con tu código
       </a>
 
       <div className={s.portadaTexto} ref={texto}>
-        <h1>{content.hero.headline}</h1>
-        <a href="#manifiesto" className={s.desliza}>
-          <ArrowDown size={13} aria-hidden /> Desliza
-        </a>
+        <Interruptor publico={publico} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
+        <h1 key={publico ?? "ambos"} className={s.portadaTitular}>
+          {publico ? PORTADA[publico].titular : content.hero.headline}
+        </h1>
+        <div className={s.portadaAcciones}>
+          {publico && (
+            <a href="#bateria" className={s.portadaAccion}>
+              {PORTADA[publico].accion} <ArrowRight size={15} aria-hidden />
+            </a>
+          )}
+          <a href="#manifiesto" className={s.desliza}>
+            <ArrowDown size={13} aria-hidden /> Desliza
+          </a>
+        </div>
       </div>
 
       <p className={s.portadaPie}>
-        Pruebas psicométricas
+        Selección de personal
         <br />
-        Estudios socioeconómicos
+        Evaluación individual
         <br />
         Informe en 72 h
       </p>
@@ -452,18 +536,13 @@ function Portada({ content, onListo }: { content: ChannelPageContent; onListo: (
 }
 
 function Manifiesto() {
-  const zona = useRef<HTMLElement>(null);
-  const visible = useEnPantalla(zona);
-  const fino = usePunteroFino();
-  const webgl = useWebGL();
-
   return (
-    <section id="manifiesto" ref={zona} className={s.manifiesto}>
+    <section id="manifiesto" className={s.manifiesto}>
       <div className={s.esquinas}>
         <p>
-          Evaluamos en línea,
+          Para empresas que contratan
           <br />
-          desde donde esté el candidato
+          y personas que quieren conocerse
         </p>
         <span className={s.asterisco} aria-hidden>
           *
@@ -479,16 +558,12 @@ function Manifiesto() {
 
       <TitularGigante frases={MANIFIESTO} />
 
-      <p className={s.nota}>
-        {fino ? "(Haz clic: la mariposa es ψυχή, «alma» en griego)" : "(ψυχή: en griego, alma y mariposa)"}
-      </p>
-
-      {webgl && !quieto() && <MariposaCursor zona={zona} activa={visible} />}
+      <p className={s.nota}>En línea, desde donde estés · Informe en 72 h</p>
     </section>
   );
 }
 
-function Saludo({ content }: { content: ChannelPageContent }) {
+function Saludo({ content, onCambiar }: { content: ChannelPageContent; onCambiar: (p: Publico) => void }) {
   const izquierda = useAparicion<HTMLDivElement>({ y: 26 });
   const derecha = useAparicion<HTMLDivElement>({ y: 26, retraso: 140 });
 
@@ -509,15 +584,18 @@ function Saludo({ content }: { content: ChannelPageContent }) {
               Somos un equipo de psicólogos dedicado a la evaluación y el desarrollo organizacional. Aplicamos
               instrumentos que se leen juntos y te entregamos una recomendación por escrito que se puede explicar.
             </p>
-            <p>Si vienes a evaluar candidatos, empieza por aquí. Si traes un código, entra directo.</p>
+            <p>
+              Atendemos a empresas que necesitan elegir bien y a personas que quieren conocerse para decidir su
+              siguiente paso. Si traes un código, entra directo.
+            </p>
           </div>
         </div>
       </div>
 
       <div ref={derecha} className={s.puertas}>
-        <a href="#bateria" className={s.puerta} data-tono="verde">
+        <a href="#bateria" className={s.puerta} data-tono="verde" onClick={() => onCambiar("empresas")}>
           <span className={s.puertaEtiqueta}>
-            <Users size={14} aria-hidden /> Quiero evaluar
+            <Building2 size={14} aria-hidden /> Para tu empresa
           </span>
           <strong>Necesito evaluar candidatos</strong>
           <span className={s.puertaTexto}>
@@ -525,6 +603,18 @@ function Saludo({ content }: { content: ChannelPageContent }) {
           </span>
           <span className={s.puertaAccion}>
             Armar mi evaluación <ArrowRight size={16} aria-hidden />
+          </span>
+        </a>
+        <a href="#bateria" className={s.puerta} data-tono="lavanda" onClick={() => onCambiar("personas")}>
+          <span className={s.puertaEtiqueta}>
+            <User size={14} aria-hidden /> Para ti
+          </span>
+          <strong>Quiero conocerme</strong>
+          <span className={s.puertaTexto}>
+            Tu perfil psicológico completo, interpretado por un psicólogo, para decidir tu siguiente paso.
+          </span>
+          <span className={s.puertaAccion}>
+            Armar mi evaluación personal <ArrowRight size={16} aria-hidden />
           </span>
         </a>
         <a href={evaluacion.acceso} className={s.puerta} data-tono="amarillo">
@@ -588,7 +678,7 @@ function Instrumento({ prueba, n }: { prueba: (typeof PRUEBAS)[number]; n: numbe
             </span>
           </div>
           <p className={s.diapoPie} style={{ color: p.tinta }}>
-            Así lo responde el candidato · ejemplo ilustrativo
+            Así se responde · ejemplo ilustrativo
           </p>
         </div>
 
@@ -650,8 +740,8 @@ function Instrumentos() {
           Instrumentos <span className={s.cuenta}>({PRUEBAS.length})</span>
         </h2>
         <p>
-          Cada uno responde una pregunta distinta sobre la persona. Arrastra para ver qué contesta el candidato y qué
-          recibes tú.
+          Cada uno responde una pregunta distinta sobre la persona, sea un candidato o tú mismo. Arrastra para ver
+          qué se contesta y qué se recibe.
         </p>
       </div>
       {PRUEBAS.map((p, i) => (
@@ -691,10 +781,10 @@ function ComoTrabajamos({ content }: { content: ChannelPageContent }) {
     <section id="como-funciona" className={s.archivo}>
       <div className={s.seccionCabeza} ref={cabeza}>
         <h2>Cómo trabajamos</h2>
-        <p>Servicios, proceso y lo que se verifica en campo. Toca una fila para leerla completa.</p>
+        <p>Servicios para empresas, el proceso, lo que se verifica en campo y lo que ofrecemos a personas. Toca una fila para leerla completa.</p>
       </div>
 
-      {content.sections.map((sec) => (
+      {[...content.sections, PARA_PERSONAS].map((sec) => (
         <div key={sec.id} id={sec.id} className={s.grupo}>
           <div className={s.grupoCabeza}>
             <span>{sec.eyebrow ?? sec.title}</span>
@@ -732,37 +822,30 @@ function ComoTrabajamos({ content }: { content: ChannelPageContent }) {
   );
 }
 
-function Cotizar() {
+function Cotizar({ publico, onCambiar }: { publico: Publico | null; onCambiar: (p: Publico) => void }) {
   const cabeza = useAparicion<HTMLDivElement>({ y: 20 });
+  const personal = publico === "personas";
   return (
     <section id="bateria" className={s.cotizar}>
       <div className={s.seccionCabeza} ref={cabeza}>
-        <h2>Arma tu evaluación</h2>
+        <div>
+          <h2>{personal ? "Arma tu evaluación personal" : "Arma tu evaluación"}</h2>
+          <Interruptor publico={publico ?? "empresas"} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
+        </div>
         <p>
-          Marca los instrumentos que necesitas, dinos a cuántas personas evalúas y el precio se arma solo. El estudio
-          socioeconómico se cotiza aparte.
+          {personal
+            ? "Marca los instrumentos que quieres responder y el precio se arma solo. Respondes en línea y tu informe llega en 72 horas."
+            : "Marca los instrumentos que necesitas, dinos a cuántas personas evalúas y el precio se arma solo. El estudio socioeconómico se cotiza aparte."}
         </p>
       </div>
-      <Cotizador />
+      <Cotizador modo={personal ? "persona" : "empresa"} />
     </section>
   );
 }
 
-/** Mariposa en línea, dibujada: aletea con CSS entre palabras. */
-function MariposaEnLinea({ color }: { color: string }) {
-  return (
-    <span className={s.enLinea} aria-hidden>
-      <svg viewBox="0 0 64 48">
-        <g className={s.alaIzq}>
-          <path d="M32 24 C20 4 4 6 6 18 C8 28 20 28 32 26 C22 30 12 40 20 44 C28 47 31 34 32 28Z" fill={color} />
-        </g>
-        <g className={s.alaDer}>
-          <path d="M32 24 C44 4 60 6 58 18 C56 28 44 28 32 26 C42 30 52 40 44 44 C36 47 33 34 32 28Z" fill={color} />
-        </g>
-        <rect x="30.5" y="14" width="3" height="22" rx="1.5" fill="#2b2420" />
-      </svg>
-    </span>
-  );
+/** Bloque de barro en línea, como los del aula: gira despacio entre palabras. */
+function BloqueEnLinea({ color }: { color: string }) {
+  return <span className={s.enLinea} style={{ background: color }} aria-hidden />;
 }
 
 function Nosotros() {
@@ -796,15 +879,15 @@ function Nosotros() {
           <p aria-hidden>
             {[
               <>
-                Evaluamos <MariposaEnLinea color="#bba8da" />
+                Evaluamos <BloqueEnLinea color="#bba8da" />
               </>,
               <>con método.</>,
               <>Interpretamos</>,
               <>
-                con <MariposaEnLinea color="#f2d64b" /> criterio.
+                con <BloqueEnLinea color="#f2d64b" /> criterio.
               </>,
               <>
-                Cuidamos <MariposaEnLinea color="#f2b7a0" />
+                Cuidamos <BloqueEnLinea color="#f2b7a0" />
               </>,
               <>cada dato.</>,
             ].map((linea, i) => (
@@ -845,18 +928,14 @@ function Nosotros() {
 }
 
 function Cierre({ channel }: { channel: ChannelDef }) {
-  const zona = useRef<HTMLElement>(null);
-  const visible = useEnPantalla(zona);
-  const webgl = useWebGL();
-
   return (
-    <section id="contacto" ref={zona} className={s.cierre}>
+    <section id="contacto" className={s.cierre}>
       <TitularGigante frases={CIERRE} />
 
       <div className={s.cierreAcciones}>
         <a
           className={s.botonPrincipal}
-          href={whatsapp("Hola, necesito evaluar candidatos para una vacante.")}
+          href={whatsapp("Hola, me interesa una evaluación psicológica.")}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -888,7 +967,6 @@ function Cierre({ channel }: { channel: ChannelDef }) {
         <span>© {new Date().getFullYear()}</span>
       </footer>
 
-      {webgl && !quieto() && <MariposaCursor zona={zona} activa={visible} color="#f2d64b" borde="#7a5a12" />}
     </section>
   );
 }
@@ -898,6 +976,8 @@ function Cierre({ channel }: { channel: ChannelDef }) {
 export function PsicologiaLanding({ channel, content }: { channel: ChannelDef; content: ChannelPageContent }) {
   const raiz = useRef<HTMLDivElement>(null);
   const [escenaLista, setEscenaLista] = useState(false);
+  // Sin elegir, la portada habla a los dos y la cámara muestra el cuarto entero.
+  const [publico, setPublico] = useState<Publico | null>(null);
   const alListo = useRef(() => setEscenaLista(true)).current;
 
   // Desplazamiento suave; quien pidió menos movimiento conserva el nativo.
@@ -912,13 +992,13 @@ export function PsicologiaLanding({ channel, content }: { channel: ChannelDef; c
       <Cargador listo={escenaLista} />
       <Cabecera />
       <PildoraCursor raiz={raiz} />
-      <Portada content={content} onListo={alListo} />
+      <Portada content={content} publico={publico} onCambiar={setPublico} onListo={alListo} />
       <Manifiesto />
-      <Saludo content={content} />
+      <Saludo content={content} onCambiar={setPublico} />
       <Instrumentos />
       <Brecha />
       <ComoTrabajamos content={content} />
-      <Cotizar />
+      <Cotizar publico={publico} onCambiar={setPublico} />
       <Nosotros />
       <Cierre channel={channel} />
     </div>

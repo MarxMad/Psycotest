@@ -27,14 +27,27 @@ const pesos = (centavos: number) =>
  * necesita y cuánto le cuesta. Antes las dos respuestas estaban detrás de una
  * llamada; aquí se arman en el momento y el precio se recalcula al tocar.
  */
-export function Cotizador() {
+/**
+ * `persona`: alguien que quiere evaluarse a sí mismo. Es una sola evaluación,
+ * así que desaparece el control de candidatos y cambia el lenguaje.
+ */
+export function Cotizador({
+  modo = "empresa",
+}: {
+  modo?: "empresa" | "persona";
+}) {
+  const personal = modo === "persona";
   const [elegidas, setElegidas] = useState<string[]>(BATERIA_COMPLETA);
   const bateriaPuesta = BATERIA_COMPLETA.every((id) => elegidas.includes(id));
-  const [candidatos, setCandidatos] = useState(5);
+  const [cuantos, setCandidatos] = useState(5);
+  const candidatos = personal ? 1 : cuantos;
   const total = useRef<HTMLSpanElement>(null);
   const anterior = useRef<number | null>(null);
 
-  const cuenta = useMemo(() => cotizar(elegidas, candidatos), [elegidas, candidatos]);
+  const cuenta = useMemo(
+    () => cotizar(elegidas, candidatos),
+    [elegidas, candidatos],
+  );
   const descuento = descuentoPorVolumen(candidatos);
 
   // El total cuenta hasta su nuevo valor en vez de saltar: se ve qué cambió.
@@ -80,19 +93,27 @@ export function Cotizador() {
 
   const nada = elegidas.length === 0;
   const mensaje = nada
-    ? "Hola, quiero cotizar evaluaciones de personal."
-    : `Hola, quiero ${candidatos} ${candidatos === 1 ? "evaluación" : "evaluaciones"} con: ${PRUEBAS.filter(
-        (p) => elegidas.includes(p.id),
-      )
+    ? personal
+      ? "Hola, quiero hacer una evaluación psicológica para mí."
+      : "Hola, quiero cotizar evaluaciones de personal."
+    : `Hola, ${
+        personal
+          ? "quiero evaluarme"
+          : `quiero ${candidatos} ${candidatos === 1 ? "evaluación" : "evaluaciones"}`
+      } con: ${PRUEBAS.filter((p) => elegidas.includes(p.id))
         .map((p) => p.nombre)
         .join(", ")}. Total estimado ${pesos(cuenta.total)}${
-        cuenta.porCotizar.length ? `, más ${cuenta.porCotizar.map((p) => p.nombre).join(", ")} por cotizar` : ""
+        cuenta.porCotizar.length
+          ? `, más ${cuenta.porCotizar.map((p) => p.nombre).join(", ")} por cotizar`
+          : ""
       }.`;
 
   return (
     <div className={s.caja} id="cotizador">
       <div className={s.panel}>
-        <p className={s.titulo}>Arma tu evaluación</p>
+        <p className={s.titulo}>
+          {personal ? "Arma tu evaluación personal" : "Arma tu evaluación"}
+        </p>
 
         <fieldset className={s.grupo}>
           <legend className={s.leyenda}>
@@ -117,7 +138,12 @@ export function Cotizador() {
                   data-puesta={puesta}
                   aria-pressed={puesta}
                   onClick={(e) =>
-                    alternar(p.id, e.currentTarget.querySelector<HTMLElement>("[data-marca]"))
+                    alternar(
+                      p.id,
+                      e.currentTarget.querySelector<HTMLElement>(
+                        "[data-marca]",
+                      ),
+                    )
                   }
                 >
                   <span className={s.marca} data-marca aria-hidden>
@@ -136,27 +162,29 @@ export function Cotizador() {
           </div>
         </fieldset>
 
-        <fieldset className={s.grupo}>
-          <legend className={s.leyenda}>
-            Candidatos
-            <span className={s.contador}>{candidatos}</span>
-          </legend>
-          <input
-            className={s.rango}
-            type="range"
-            min={1}
-            max={50}
-            value={candidatos}
-            onChange={(e) => setCandidatos(Number(e.target.value))}
-            aria-label="Número de candidatos a evaluar"
-          />
-          <div className={s.tramos} aria-hidden>
-            <span>1</span>
-            <span>10</span>
-            <span>25</span>
-            <span>50</span>
-          </div>
-        </fieldset>
+        {!personal && (
+          <fieldset className={s.grupo}>
+            <legend className={s.leyenda}>
+              Candidatos
+              <span className={s.contador}>{candidatos}</span>
+            </legend>
+            <input
+              className={s.rango}
+              type="range"
+              min={1}
+              max={50}
+              value={candidatos}
+              onChange={(e) => setCandidatos(Number(e.target.value))}
+              aria-label="Número de candidatos a evaluar"
+            />
+            <div className={s.tramos} aria-hidden>
+              <span>1</span>
+              <span>10</span>
+              <span>25</span>
+              <span>50</span>
+            </div>
+          </fieldset>
+        )}
       </div>
 
       <aside className={s.resumen}>
@@ -171,27 +199,37 @@ export function Cotizador() {
             </span>
           )}
           <span className={s.totalPie}>
-            {cuenta.porCotizar.length ? "IVA no incluido · más lo que se cotiza aparte" : "IVA no incluido"}
+            {cuenta.porCotizar.length
+              ? "IVA no incluido · más lo que se cotiza aparte"
+              : "IVA no incluido"}
           </span>
         </p>
 
         {nada ? (
-          <p className={s.vacio}>Elige al menos una prueba para ver el precio.</p>
+          <p className={s.vacio}>
+            Elige al menos una prueba para ver el precio.
+          </p>
         ) : (
           <ul className={s.desglose}>
-            <li>
-              <span>Por candidato</span>
-              <strong>{pesos(cuenta.porCandidato)}</strong>
-            </li>
-            <li>
-              <span>
-                {candidatos} candidato{candidatos === 1 ? "" : "s"}
-              </span>
-              <strong>{pesos(cuenta.subtotal)}</strong>
-            </li>
+            {!personal && (
+              <>
+                <li>
+                  <span>Por candidato</span>
+                  <strong>{pesos(cuenta.porCandidato)}</strong>
+                </li>
+                <li>
+                  <span>
+                    {candidatos} candidato{candidatos === 1 ? "" : "s"}
+                  </span>
+                  <strong>{pesos(cuenta.subtotal)}</strong>
+                </li>
+              </>
+            )}
             {descuento > 0 && (
               <li className={s.ahorro}>
-                <span>Descuento por volumen ({Math.round(descuento * 100)}%)</span>
+                <span>
+                  Descuento por volumen ({Math.round(descuento * 100)}%)
+                </span>
                 <strong>−{pesos(cuenta.descuento)}</strong>
               </li>
             )}
@@ -203,7 +241,8 @@ export function Cotizador() {
             ))}
             <li className={s.tiempo}>
               <span>
-                <Clock size={13} aria-hidden /> Tiempo por candidato
+                <Clock size={13} aria-hidden />{" "}
+                {personal ? "Tiempo para responder" : "Tiempo por candidato"}
               </span>
               <strong>~{cuenta.minutos} min</strong>
             </li>
@@ -216,12 +255,13 @@ export function Cotizador() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Comprar estas evaluaciones
+          {personal ? "Quiero evaluarme" : "Comprar estas evaluaciones"}
           <ArrowRight size={16} aria-hidden />
         </a>
         <p className={s.letraChica}>
-          Te mandamos los códigos de acceso en cuanto se confirma el pago. El informe interpretado
-          por un psicólogo llega en 72 horas.
+          {personal
+            ? "Te mandamos tu código en cuanto se confirma el pago; respondes desde donde estés. Tu informe, interpretado por un psicólogo, llega en 72 horas y solo lo ves tú."
+            : "Te mandamos los códigos de acceso en cuanto se confirma el pago. El informe interpretado por un psicólogo llega en 72 horas."}
         </p>
       </aside>
     </div>

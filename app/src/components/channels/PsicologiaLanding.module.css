@@ -346,13 +346,112 @@
 }
 
 .portadaTexto h1 {
-  margin: 0 0 14px;
+  margin: 14px 0 14px;
+  animation: entrarTitular 0.6s cubic-bezier(0.2, 0.9, 0.3, 1) both;
   font-family: var(--ch-font-body);
   font-size: clamp(20px, 2.1vw, 28px);
   font-weight: 500;
   line-height: 1.18;
   letter-spacing: -0.015em;
   color: var(--p-tinta);
+}
+
+@keyframes entrarTitular {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.portadaTexto {
+  max-width: 460px;
+}
+
+.portadaAcciones {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.portadaAccion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--p-verde);
+  color: var(--p-crema) !important;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Interruptor empresa / persona */
+.interruptor {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.78);
+  box-shadow: 0 8px 24px -16px rgba(18, 48, 42, 0.45);
+  backdrop-filter: blur(8px);
+}
+
+.interruptor button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--p-tinta);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.interruptor button:hover {
+  background: rgba(18, 48, 42, 0.06);
+}
+
+.interruptor button[aria-pressed="true"] {
+  background: var(--p-tinta);
+  color: var(--p-crema);
+}
+
+.interruptor button:focus-visible {
+  outline: 2px solid var(--p-tinta);
+  outline-offset: 2px;
+}
+
+/* Rótulos flotantes sobre los rincones de la escena */
+.rotulo {
+  padding: 6px 13px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 253, 249, 0.92);
+  color: var(--p-tinta, #12302a);
+  font: 600 12px/1.2 var(--ch-font-body);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 10px 26px -14px rgba(18, 48, 42, 0.55);
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.rotulo:hover {
+  transform: translateY(-2px);
+}
+
+.rotulo[data-activo="true"] {
+  background: #12302a;
+  color: #f1e3cf;
 }
 
 .desliza {
@@ -404,8 +503,16 @@
   text-transform: uppercase;
   text-decoration: none;
   box-shadow: 0 10px 30px -14px rgba(18, 48, 42, 0.5);
-  transition: rotate 0.35s cubic-bezier(0.3, 1.6, 0.5, 1), scale 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+  transition:
+    rotate 0.35s cubic-bezier(0.3, 1.6, 0.5, 1),
+    scale 0.35s cubic-bezier(0.3, 1.6, 0.5, 1),
+    opacity 0.3s ease;
   animation: flotar 5s ease-in-out infinite;
+}
+
+.pildoraGirada[data-oculta] {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .pildoraGirada:hover {
@@ -566,6 +673,11 @@
   color: var(--p-crema);
 }
 
+.puerta[data-tono="lavanda"] {
+  background: #e0d7f0;
+  color: #2c2150;
+}
+
 .puerta[data-tono="amarillo"] {
   background: var(--p-amarillo);
   color: var(--p-tinta);
@@ -640,6 +752,11 @@
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1;
+}
+
+.seccionCabeza .interruptor {
+  margin-top: 18px;
+  background: #fffdf9;
 }
 
 .seccionCabeza p {
@@ -1189,45 +1306,22 @@
 
 .enLinea {
   display: inline-block;
-  width: calc(var(--mariposa) * 1.33);
-  height: var(--mariposa);
-  vertical-align: -0.04em;
+  width: 0.62em;
+  height: 0.62em;
+  margin: 0 0.06em;
+  border-radius: 0.16em;
+  vertical-align: 0.02em;
+  box-shadow: inset -0.06em -0.08em 0 rgba(0, 0, 0, 0.12);
+  animation: girar 9s ease-in-out infinite;
 }
 
-.enLinea svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-.alaIzq,
-.alaDer {
-  transform-box: view-box;
-  transform-origin: 32px 26px;
-  animation: aletear 0.9s ease-in-out infinite;
-}
-
-.alaDer {
-  animation-name: aletearDer;
-}
-
-@keyframes aletear {
+@keyframes girar {
   0%,
   100% {
-    transform: scaleX(1);
+    transform: rotate(-8deg) translateY(0);
   }
   50% {
-    transform: scaleX(0.35);
-  }
-}
-
-@keyframes aletearDer {
-  0%,
-  100% {
-    transform: scaleX(1);
-  }
-  50% {
-    transform: scaleX(0.35);
+    transform: rotate(10deg) translateY(-0.06em);
   }
 }
 
@@ -1393,8 +1487,7 @@
 @media (prefers-reduced-motion: reduce) {
   .pildoraGirada,
   .desliza svg,
-  .alaIzq,
-  .alaDer {
+  .enLinea {
     animation: none;
   }
 }
