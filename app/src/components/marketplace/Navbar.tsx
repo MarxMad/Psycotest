@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { ArrowRight, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, LogOut, Menu, Search, ShoppingBag, UserRound, X } from "lucide-react";
 import { useCarrito } from "@/lib/carrito";
 import { RUTAS } from "@/lib/ceduct/rutas";
 import { Emblema } from "./Iconos";
@@ -80,6 +80,7 @@ function Buscador({ id, autoFocus }: { id: string; autoFocus?: boolean }) {
 }
 
 export function Navbar({ conSesion }: { conSesion: boolean }) {
+  const router = useRouter();
   const ruta = usePathname() || "";
   const params = useSearchParams();
   const tipo = params.get("tipo");
@@ -106,6 +107,13 @@ export function Navbar({ conSesion }: { conSesion: boolean }) {
       document.body.style.overflow = "";
     };
   }, [abierto]);
+
+  // Se queda en CEDUCT: la salida genérica llevaba al acceso de la plataforma.
+  async function cerrarSesion() {
+    await fetch("/api/auth/login", { method: "DELETE" }).catch(() => {});
+    router.push(RUTAS.salida);
+    router.refresh();
+  }
 
   const cuenta = conSesion
     ? { href: RUTAS.misCursos, label: "Mis cursos" }
@@ -146,6 +154,11 @@ export function Navbar({ conSesion }: { conSesion: boolean }) {
               <UserRound size={20} aria-hidden />
               <span className={s.ocultarTablet}>{conSesion ? "Mis cursos" : "Entrar"}</span>
             </Link>
+            {conSesion && (
+              <button type="button" className={s.iconoBtn} aria-label="Cerrar sesión" title="Cerrar sesión" onClick={cerrarSesion}>
+                <LogOut size={20} aria-hidden />
+              </button>
+            )}
             <ContadorCarrito />
             <button
               type="button"
@@ -187,6 +200,13 @@ export function Navbar({ conSesion }: { conSesion: boolean }) {
                 {cuenta.label} <ArrowRight size={20} aria-hidden />
               </Link>
             </li>
+            {conSesion && (
+              <li>
+                <button type="button" className={s.menuMovilBoton} onClick={cerrarSesion}>
+                  Cerrar sesión <LogOut size={20} aria-hidden />
+                </button>
+              </li>
+            )}
           </ul>
         </nav>
       </div>

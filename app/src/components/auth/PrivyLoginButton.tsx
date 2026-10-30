@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getAccessToken, useLogin, usePrivy } from "@privy-io/react-auth";
 import { PrivyProvider } from "./PrivyProvider";
 import s from "./PrivyLoginButton.module.css";
@@ -30,6 +30,8 @@ export function PrivyLoginButton({ next, salir }: { next?: string; salir?: boole
 
 function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   const router = useRouter();
+  // Cada marca tiene su propia pantalla de acceso: al cerrar se queda en ella.
+  const ruta = usePathname() || "/login";
   const { ready, authenticated, logout } = usePrivy();
   const [canjeando, setCanjeando] = useState(false);
   /** Arranca cerrado cuando venimos de «Salir»: bloquea el canje desde el primer render. */
@@ -119,13 +121,13 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       setCerrando(false);
       // Se quita «salir» de la URL: ya no hay nada que cerrar, y sin esto una
       // recarga echaba de nuevo a quien acabara de entrar.
-      router.replace(next ? `/login?next=${encodeURIComponent(next)}` : "/login");
+      router.replace(next ? `${ruta}?next=${encodeURIComponent(next)}` : ruta);
     })();
 
     return () => {
       vivo = false;
     };
-  }, [salir, ready, authenticated, next, router]);
+  }, [salir, ready, authenticated, next, router, ruta]);
 
   // Si Privy ya tenía la sesión abierta, se canjea sin pedir nada.
   useEffect(() => {

@@ -15,12 +15,15 @@ export const metadata: Metadata = {
 };
 
 export default async function MiCuentaLayout({ children }: { children: React.ReactNode }) {
-  const user = await getSessionUser();
-  if (!user) redirect("/login?next=/mi-cuenta");
-
   // El canal del subdominio manda; si no hay, se resuelve por lo contratado.
   const host = (await headers()).get("host");
   const desdeHost = getChannelFromHost(host)?.id ?? null;
+
+  const user = await getSessionUser();
+  if (!user) {
+    // CEDUCT tiene su propia pantalla de acceso; las demás marcas usan la de la plataforma.
+    redirect(desdeHost === "ceduct" ? "/acceso?next=/mi-cuenta" : "/login?next=/mi-cuenta");
+  }
   const canal = await canalDeEntrada(user.id, desdeHost);
 
   // Sin contenido en ningún canal: no hay zona privada que mostrar.

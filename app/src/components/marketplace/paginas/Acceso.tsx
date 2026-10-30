@@ -18,7 +18,16 @@ type Modo = "entrar" | "registro";
  * por el acceso con código al correo (Privy), que crea la cuenta al vuelo; si
  * Privy no está configurado, la cuenta se crea con la primera compra.
  */
-export function Acceso({ modoInicial, siguiente }: { modoInicial: Modo; siguiente: string }) {
+export function Acceso({
+  modoInicial,
+  siguiente,
+  salir = false,
+}: {
+  modoInicial: Modo;
+  siguiente: string;
+  /** Viene de «Cerrar sesión»: Privy también se cierra antes de ofrecer entrar. */
+  salir?: boolean;
+}) {
   const router = useRouter();
   const [modo, setModo] = useState<Modo>(modoInicial);
   const [email, setEmail] = useState("");
@@ -94,7 +103,7 @@ export function Acceso({ modoInicial, siguiente }: { modoInicial: Modo; siguient
               {hayPrivy && (
                 <>
                   <div className={p.privy}>
-                    <PrivyLoginButton next={siguiente} />
+                    <PrivyLoginButton next={siguiente} salir={salir} />
                   </div>
                   <p className={p.separador}><span>o con tu contraseña</span></p>
                 </>
@@ -149,7 +158,7 @@ export function Acceso({ modoInicial, siguiente }: { modoInicial: Modo; siguient
               </p>
               {hayPrivy ? (
                 <div className={p.privy}>
-                  <PrivyLoginButton next={siguiente} />
+                  <PrivyLoginButton next={siguiente} salir={salir} />
                 </div>
               ) : (
                 <p className={p.nota}>

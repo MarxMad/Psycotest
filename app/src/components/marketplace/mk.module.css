@@ -723,7 +723,8 @@
     padding: 0;
     display: grid;
   }
-  .menuMovil li a {
+  .menuMovil li a,
+  .menuMovilBoton {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -731,6 +732,15 @@
     border-bottom: 1px solid var(--mk-line);
     font: 600 22px var(--mk-font-display), sans-serif;
     text-decoration: none;
+  }
+
+  .menuMovilBoton {
+    width: 100%;
+    padding: 0;
+    border-width: 0 0 1px;
+    background: none;
+    color: inherit;
+    cursor: pointer;
   }
 }
 

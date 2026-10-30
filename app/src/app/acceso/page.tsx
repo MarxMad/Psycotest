@@ -4,6 +4,7 @@ import { MarketShell } from "@/components/marketplace/MarketShell";
 import { Acceso } from "@/components/marketplace/paginas/Acceso";
 import { getSessionUser } from "@/lib/auth";
 import { RUTAS } from "@/lib/ceduct/rutas";
+import { PARAM_SALIDA } from "@/lib/salir";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,11 @@ export default async function AccesoPage({ searchParams }: Props) {
 
   return (
     <MarketShell>
-      <Acceso modoInicial={sp.modo === "registro" ? "registro" : "entrar"} siguiente={siguiente} />
+      <Acceso
+        modoInicial={sp.modo === "registro" ? "registro" : "entrar"}
+        siguiente={siguiente}
+        salir={sp[PARAM_SALIDA] === "1"}
+      />
     </MarketShell>
   );
 }

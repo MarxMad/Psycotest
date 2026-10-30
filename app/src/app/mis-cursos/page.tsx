@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import {
   courseCategories,
@@ -11,7 +11,9 @@ import {
 } from "@/db/schema";
 import { MarketShell } from "@/components/marketplace/MarketShell";
 import { MisCursos, type CursoInscrito } from "@/components/marketplace/paginas/MisCursos";
+import { inicioDelArea } from "@/lib/area-alumno";
 import { getSessionUser } from "@/lib/auth";
+import { contenidoPorCanal } from "@/lib/canal-del-alumno";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +39,8 @@ async function cursosDe(userId: string): Promise<CursoInscrito[]> {
     .from(courseEnrollments)
     .innerJoin(courses, eq(courseEnrollments.courseId, courses.id))
     .leftJoin(courseCategories, eq(courses.categoryId, courseCategories.id))
-    .where(eq(courseEnrollments.userId, userId));
+    // Sólo lo de CEDUCT: lo comprado en otra marca no tiene por qué asomarse aquí.
+    .where(and(eq(courseEnrollments.userId, userId), eq(courseCategories.channelId, "ceduct")));
 
   return Promise.all(
     inscritos
@@ -79,9 +82,12 @@ async function cursosDe(userId: string): Promise<CursoInscrito[]> {
 export default async function MisCursosPage() {
   const usuario = await getSessionUser().catch(() => null);
   let cursos: CursoInscrito[] | null = null;
+  let area: string | null = null;
   if (usuario) {
     try {
-      cursos = await cursosDe(usuario.id);
+      const [lista, conteo] = await Promise.all([cursosDe(usuario.id), contenidoPorCanal(usuario.id)]);
+      cursos = lista;
+      if (conteo.ceduct > 0) area = inicioDelArea("ceduct");
     } catch (error) {
       console.error("[mis-cursos]", error);
       cursos = [];
@@ -89,7 +95,7 @@ export default async function MisCursosPage() {
   }
   return (
     <MarketShell>
-      <MisCursos nombre={usuario?.nombre ?? null} cursos={cursos} />
+      <MisCursos nombre={usuario?.nombre ?? null} cursos={cursos} area={area} />
     </MarketShell>
   );
 }

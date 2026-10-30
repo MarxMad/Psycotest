@@ -21,7 +21,20 @@ export type CursoInscrito = {
   total: number;
 };
 
-export function MisCursos({ nombre, cursos }: { nombre: string | null; cursos: CursoInscrito[] | null }) {
+export function MisCursos({
+  nombre,
+  cursos,
+  area,
+}: {
+  nombre: string | null;
+  cursos: CursoInscrito[] | null;
+  /**
+   * Inicio de su zona de CEDUCT (expediente, constancias), o null si todavía
+   * no tiene nada ahí: sin contenido, /mi-cuenta muestra la página genérica
+   * de la plataforma, con las demás marcas.
+   */
+  area: string | null;
+}) {
   // Sin sesión: invitación a entrar.
   if (cursos === null) {
     return (
@@ -111,9 +124,11 @@ export function MisCursos({ nombre, cursos }: { nombre: string | null; cursos: C
         </ul>
       )}
 
-      <p className={s.meta} style={{ marginTop: 32 }}>
-        ¿Buscas tus constancias o expediente? Están en <Link href="/mi-cuenta">tu cuenta</Link>.
-      </p>
+      {area && (
+        <p className={s.meta} style={{ marginTop: 32 }}>
+          ¿Buscas tus constancias o expediente? Están en <Link href={area}>tu cuenta</Link>.
+        </p>
+      )}
     </div>
   );
 }

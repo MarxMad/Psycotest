@@ -17,6 +17,7 @@
  */
 
 import { channelPublicUrl } from "@/lib/channels";
+import { PARAM_SALIDA } from "@/lib/salir";
 import type { TipoPrograma } from "./tipos";
 
 export const RUTAS = {
@@ -37,6 +38,8 @@ export const RUTAS = {
   empresas: "/contacto?asunto=empresas",
   acceso: "/acceso",
   registro: "/acceso?modo=registro",
+  /** Vuelve al acceso de CEDUCT avisando que hay que cerrar también Privy (ver salir.ts). */
+  salida: `/acceso?${PARAM_SALIDA}=1`,
   misCursos: "/mis-cursos",
   legal: "/legal",
   verificar: "/verificar",
