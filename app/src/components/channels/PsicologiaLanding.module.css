@@ -1440,6 +1440,56 @@
   transform: translateY(-2px);
 }
 
+/*
+ * Las piezas que se levantan al pasar el cursor dejan una copia invisible de
+ * su área en el lugar original. Sin ella, con el cursor en el borde la pieza
+ * se aparta, pierde el hover, regresa y lo recupera: el cursor parpadea
+ * entre flecha y mano.
+ */
+.pildoraCodigo,
+.rotulo,
+.puerta,
+.botonPrincipal,
+.botonSecundario {
+  position: relative;
+}
+
+.pildoraCodigo::before,
+.rotulo::before,
+.puerta::before,
+.botonPrincipal::before,
+.botonSecundario::before,
+.pildoraGirada::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.pildoraCodigo:hover::before {
+  transform: rotate(2deg) translateY(1px);
+}
+
+.rotulo:hover::before,
+.botonPrincipal:hover::before,
+.botonSecundario:hover::before {
+  transform: translateY(2px);
+}
+
+.puerta:hover::before {
+  transform: rotate(0.6deg) translateY(4px);
+}
+
+.pildoraGirada:hover {
+  animation-play-state: paused;
+}
+
+.pildoraGirada:hover::before {
+  rotate: -6deg;
+  scale: 0.943;
+}
+
 .pie {
   position: relative;
   z-index: 1;

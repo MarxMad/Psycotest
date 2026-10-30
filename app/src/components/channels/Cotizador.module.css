@@ -290,6 +290,29 @@
   color: var(--ch-muted);
 }
 
+/* Copia invisible del área original: evita que el cursor parpadee en el borde. */
+.prueba,
+.comprar {
+  position: relative;
+}
+
+.prueba::before,
+.comprar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.prueba:hover::before {
+  transform: translateX(-2px);
+}
+
+.comprar:hover::before {
+  transform: translateY(2px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .prueba,
   .prueba:hover,
