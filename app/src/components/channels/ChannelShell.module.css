@@ -108,23 +108,24 @@
   background: #fff;
 }
 
+/* Psicología: claro, igual que su portada. */
 .navPsico {
-  background: rgba(14, 20, 28, 0.88);
-  border-bottom-color: rgba(232, 237, 244, 0.1);
-  color: #e8edf4;
+  background: rgba(245, 242, 236, 0.86);
+  border-bottom-color: rgba(18, 48, 42, 0.1);
+  color: #12302a;
   backdrop-filter: blur(14px);
 }
 
 .navPsico .brandMark {
-  color: #d4895a;
+  color: #1d5244;
 }
 
 .navPsico .links a {
-  color: rgba(232, 237, 244, 0.72);
+  color: rgba(18, 48, 42, 0.72);
 }
 
 .navPsico .links a:hover {
-  color: #fff;
+  color: #12302a;
 }
 
 .footerLight {
@@ -146,13 +147,13 @@
 }
 
 .footerPsico {
-  background: #0a0e14;
-  color: #e8edf4;
-  border-top-color: rgba(232, 237, 244, 0.1);
+  background: #0f3a2e;
+  color: #f1e3cf;
+  border-top-color: rgba(241, 227, 207, 0.12);
 }
 
 .footerPsico p {
-  color: #9aa6b6;
+  color: rgba(241, 227, 207, 0.72);
 }
 
 .eceFooter {

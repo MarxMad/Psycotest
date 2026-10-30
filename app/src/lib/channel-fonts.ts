@@ -10,7 +10,7 @@
  *
  * Los archivos viven ahora en `src/fuentes`. Se bajó la variante variable de
  * cada familia cuando existe, así que un archivo cubre todos los pesos; las
- * dos que no tienen variable traen un archivo por peso. Son 321 kB en total y
+ * dos que no tienen variable traen un archivo por peso. Pesan unos cientos de kB en total y
  * el navegador solo pide el par del canal que esté viendo.
  */
 
@@ -51,25 +51,6 @@ const sourceSans = localFont({
   adjustFontFallback: "Arial",
 });
 
-const spaceGrotesk = localFont({
-  src: "../fuentes/space-grotesk-variable.woff2",
-  weight: "300 700",
-  display: "swap",
-  variable: "--f-space",
-  adjustFontFallback: "Arial",
-});
-
-const ibmPlex = localFont({
-  src: [
-    { path: "../fuentes/ibm-plex-sans-400.woff2", weight: "400", style: "normal" },
-    { path: "../fuentes/ibm-plex-sans-500.woff2", weight: "500", style: "normal" },
-    { path: "../fuentes/ibm-plex-sans-600.woff2", weight: "600", style: "normal" },
-  ],
-  display: "swap",
-  variable: "--f-ibm-plex",
-  adjustFontFallback: "Arial",
-});
-
 const outfit = localFont({
   src: "../fuentes/outfit-variable.woff2",
   weight: "100 900",
@@ -106,10 +87,12 @@ export const FUENTES_CANAL: Record<ChannelId, ParTipografico> = {
     display: "var(--f-libre), Georgia, serif",
     body: "var(--f-source-sans), system-ui, sans-serif",
   },
+  // Una grotesca de peso alto para los titulares enormes y la serif como
+  // acento cálido («Hola,»).
   psicologia: {
-    className: `${spaceGrotesk.variable} ${ibmPlex.variable}`,
-    display: "var(--f-space), system-ui, sans-serif",
-    body: "var(--f-ibm-plex), system-ui, sans-serif",
+    className: `${dmSans.variable} ${fraunces.variable}`,
+    display: "var(--f-dm-sans), system-ui, sans-serif",
+    body: "var(--f-dm-sans), system-ui, sans-serif",
   },
   ige: {
     className: `${outfit.variable} ${manrope.variable}`,

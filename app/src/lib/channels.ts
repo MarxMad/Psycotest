@@ -124,18 +124,19 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
       "Resultados de un conjunto de pruebas psicológicas en minutos: solicita tus códigos, da acceso a tus candidatos y recibe el reporte.",
     accentLabel: "Evaluación",
     theme: {
-      fontDisplay: '"Space Grotesk", "DM Sans", sans-serif',
-      fontBody: '"IBM Plex Sans", "DM Sans", sans-serif',
+      fontDisplay: '"DM Sans", sans-serif',
+      fontBody: '"DM Sans", sans-serif',
+      // Claro y cálido: papel, verde bosque y amarillo mantequilla. El sitio
+      // oscuro de antes no transmitía confianza a quien va a evaluar personas.
       vars: {
-        "--ch-bg": "#0e141c",
-        "--ch-surface": "#161d28",
-        "--ch-ink": "#e8edf4",
-        "--ch-muted": "#9aa6b6",
-        "--ch-accent": "#d4895a",
-        "--ch-accent-2": "#5b7c99",
-        "--ch-rule": "rgba(232,237,244,0.12)",
-        "--ch-hero-overlay":
-          "linear-gradient(115deg, rgba(14,20,28,0.94) 0%, rgba(14,20,28,0.65) 55%, rgba(14,20,28,0.2) 100%)",
+        "--ch-bg": "#f5f2ec",
+        "--ch-surface": "#ffffff",
+        "--ch-ink": "#12302a",
+        "--ch-muted": "#5b6a64",
+        "--ch-accent": "#1d5244",
+        "--ch-accent-2": "#f2d64b",
+        "--ch-rule": "rgba(18,48,42,0.12)",
+        "--ch-hero-overlay": "linear-gradient(180deg, rgba(245,242,236,0) 0%, rgba(245,242,236,0.6) 100%)",
       },
     },
     primaryCta: { label: "Entrar con código", href: "#acceso" },

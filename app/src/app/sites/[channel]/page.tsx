@@ -9,6 +9,7 @@ import { ChannelLanding } from "@/components/channels/ChannelLanding";
 import { ChannelShell } from "@/components/channels/ChannelShell";
 import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
+import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
 import { getChannelPage } from "@/lib/channel-store";
 import { levelLabel, listPublishedCoursesByChannel } from "@/lib/courses";
 import { courseThumbnail } from "@/lib/course-marketing";
@@ -47,10 +48,18 @@ export default async function ChannelSitePage({ params }: Props) {
 
   const content = await getChannelPage(channel.id);
 
-  let landing = <ChannelLanding channel={channel} content={content} />;
+  // Psicología trae su propio encabezado y pie: la portada es una sola pieza
+  // con la escena 3D, y la cáscara genérica le estorbaba.
   if (channel.id === "psicologia") {
-    landing = <PsicologiaLanding channel={channel} content={content} />;
-  } else if (channel.id === "ige") {
+    return (
+      <div className={clasesDeCanal(channel.id)} style={estiloDeCanal(channel.id)} data-channel={channel.id}>
+        <PsicologiaLanding channel={channel} content={content} />
+      </div>
+    );
+  }
+
+  let landing = <ChannelLanding channel={channel} content={content} />;
+  if (channel.id === "ige") {
     // La academia es el centro de esta portada: su catálogo viaja con ella.
     const filas = await listPublishedCoursesByChannel(channel.id);
     const cursos: CursoVista[] = filas.map(({ course, category }) => ({

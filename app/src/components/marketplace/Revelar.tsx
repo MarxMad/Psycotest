@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ElementType, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import s from "./mk.module.css";
 
 /**
@@ -18,7 +18,9 @@ export function Revelar({
 }: {
   children: ReactNode;
   retraso?: number;
-  como?: ElementType;
+  // Etiquetas HTML concretas: con `ElementType` entran también las de
+  // react-three-fiber y TypeScript ya no puede tipar las props.
+  como?: "div" | "li" | "section" | "article";
   className?: string;
 }) {
   const ref = useRef<HTMLElement>(null);
@@ -46,7 +48,7 @@ export function Revelar({
 
   return (
     <Etiqueta
-      ref={ref}
+      ref={ref as React.RefObject<HTMLDivElement & HTMLLIElement>}
       className={`${s.revelar} ${className ?? ""}`}
       data-estado={estado}
       style={{ "--retraso": `${retraso}ms` } as React.CSSProperties}
