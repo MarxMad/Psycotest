@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
@@ -10,12 +11,17 @@ import {
   getCourseBySlug,
   getCourseCurriculum,
   levelLabel,
+  listCategoriesByChannel,
 } from "@/lib/courses";
 import { courseThumbnail, evaluationFocus } from "@/lib/course-marketing";
 import { formatMxn, isStripeConfigured } from "@/lib/stripe";
 import { whatsapp } from "@/lib/contacto";
 import { CHANNELS, channelPublicUrl } from "@/lib/channels";
 import { ChannelShell } from "@/components/channels/ChannelShell";
+import { FichaIge } from "@/components/channels/ige/FichaIge";
+import { tinteDeBloque } from "@/components/channels/ige/tintes";
+import { cursosVistaDeCanal } from "@/lib/cursos-vista";
+import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
 import { canalDelCurso } from "../canal";
 import { CourseCheckout } from "../CourseCheckout";
 import c from "../cursos.module.css";
@@ -28,6 +34,17 @@ const LEGACY_SLUGS: Record<string, string> = {
 };
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const row = await getCourseBySlug(LEGACY_SLUGS[slug] ?? slug);
+  if (!row?.course.published) return {};
+  const canal = CHANNELS[canalDelCurso(row.category?.channelId)];
+  return {
+    title: `${row.course.title} — ${canal.name}`,
+    description: row.course.subtitle ?? row.course.description.slice(0, 160),
+  };
+}
 
 export default async function CourseDetailPage({ params }: Props) {
   const { slug } = await params;
@@ -46,6 +63,39 @@ export default async function CourseDetailPage({ params }: Props) {
   const thumb = courseThumbnail(course.id, course.thumbnailUrl);
   const focus = evaluationFocus(course.id);
   const canal = canalDelCurso(category?.channelId);
+
+  // IGE trae su propia ficha, con la cabecera y el cielo de su portada.
+  if (canal === "ige") {
+    const [catalogo, bloques] = await Promise.all([cursosVistaDeCanal("ige"), listCategoriesByChannel("ige")]);
+    const tinte = (categoriaId: string | undefined) => tinteDeBloque(bloques.findIndex((b) => b.id === categoriaId));
+    // Primero los del mismo bloque, luego el resto del catálogo.
+    const otros = catalogo.filter((x) => x.id !== course.id);
+    const relacionados = [
+      ...otros.filter((x) => x.categoriaId === category?.id),
+      ...otros.filter((x) => x.categoriaId !== category?.id),
+    ]
+      .slice(0, 3)
+      .map((curso) => ({ curso, tinte: tinte(curso.categoriaId) }));
+
+    return (
+      <div className={clasesDeCanal(canal)} style={estiloDeCanal(canal)} data-channel={canal}>
+        <FichaIge
+          base={channelPublicUrl(canal)}
+          course={course}
+          category={category}
+          curriculum={curriculum}
+          lessonCount={lessonCount}
+          enrolled={enrolled}
+          stripeReady={isStripeConfigured()}
+          priceLabel={formatMxn(course.priceMxn)}
+          thumb={thumb}
+          focus={focus}
+          tinte={tinte(category?.id)}
+          relacionados={relacionados}
+        />
+      </div>
+    );
+  }
 
   let lessonIndex = 0;
 

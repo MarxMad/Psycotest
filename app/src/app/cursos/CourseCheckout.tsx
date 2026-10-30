@@ -3,16 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import styles from "./cursos.module.css";
+import cursos from "./cursos.module.css";
 
 type Props = {
   courseSlug: string;
   priceLabel: string;
   stripeReady: boolean;
   enrolled: boolean;
+  /** Hoja con las mismas clases, para que cada marca vista su propio botón. */
+  estilos?: Record<string, string>;
 };
 
-export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled }: Props) {
+export function CourseCheckout({ courseSlug, priceLabel, stripeReady, enrolled, estilos }: Props) {
+  const styles = estilos ?? cursos;
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

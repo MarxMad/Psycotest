@@ -1,6 +1,20 @@
+/*
+ * El catálogo de IGE: tarjetas de cielo pastel sobre el bloque azul.
+ * Cada bloque del catálogo trae su tinte (--tinte) y la tarjeta entera
+ * lleva a la ficha del curso.
+ */
+
+.caja,
+.tarjeta {
+  --t-tinta: #1f2a3d;
+  --t-tinta-2: #4a5468;
+  --t-serif: var(--serif, Georgia, serif);
+  --t-sans: var(--sans, var(--ch-font-display), system-ui, sans-serif);
+}
+
 .caja {
   display: grid;
-  gap: 1.6rem;
+  gap: 1.8rem;
 }
 
 /* ---------- filtros ---------- */
@@ -8,224 +22,208 @@
 .filtros {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .filtro {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.55rem 0.95rem;
+  padding: 0.5rem 0.9rem;
   border: 1px solid var(--ch-rule);
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--ch-surface) 70%, transparent);
+  border-radius: 7px;
+  background: transparent;
   color: var(--ch-muted);
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 650;
+  font-family: var(--t-sans);
+  font-size: 0.84rem;
+  font-weight: 500;
   cursor: pointer;
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
 .filtro:hover {
   color: var(--ch-ink);
-  border-color: color-mix(in srgb, var(--ch-accent) 50%, transparent);
+  border-color: color-mix(in srgb, var(--ch-ink) 40%, transparent);
 }
 
 .filtro[data-activo="true"] {
-  background: var(--ch-accent);
-  border-color: var(--ch-accent);
-  color: #06212a;
+  background: #fbf6ec;
+  border-color: #fbf6ec;
+  color: var(--t-tinta);
 }
 
 .filtro:focus-visible {
-  outline: 2px solid var(--ch-accent);
+  outline: 2px solid #fbf6ec;
   outline-offset: 2px;
 }
 
 .cuenta {
+  font-family: var(--t-serif);
   font-size: 0.72rem;
-  font-weight: 700;
-  padding: 0.1rem 0.4rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, currentColor 16%, transparent);
+  opacity: 0.7;
 }
 
 /* ---------- rejilla ---------- */
 
 .rejilla {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 1.1rem;
 }
 
 .tarjeta {
+  --tinte: #d9d6f7;
+  position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--ch-rule);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--ch-surface) 88%, transparent);
-  transition: border-color 0.22s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.22s ease;
+  padding: 0.6rem;
+  border-radius: 14px;
+  background: linear-gradient(170deg, var(--tinte) 0%, color-mix(in srgb, var(--tinte) 35%, #fbf6ec) 55%, #fbf6ec 100%);
+  color: var(--t-tinta);
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 24px 50px -34px rgba(0, 0, 0, 0.9);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
 }
 
 .tarjeta:hover {
-  border-color: color-mix(in srgb, var(--ch-accent) 55%, transparent);
-  transform: translateY(-4px);
-  box-shadow: 0 22px 46px -28px rgba(0, 0, 0, 0.95);
+  transform: translateY(-6px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 34px 60px -30px rgba(0, 0, 0, 0.95);
+}
+
+.tarjeta:focus-visible {
+  outline: 2px solid #fbf6ec;
+  outline-offset: 3px;
 }
 
 .media {
   position: relative;
-  aspect-ratio: 16 / 9;
+  display: block;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: #0b1114;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--tinte) 60%, #1f2a3d);
 }
 
 .foto {
   object-fit: cover;
-  /* La foto es soporte, no protagonista: entintada deja leer el título. */
-  filter: saturate(0.75) contrast(1.05);
-  opacity: 0.68;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  filter: saturate(0.85) contrast(1.02);
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .tarjeta:hover .foto {
   transform: scale(1.05);
-  opacity: 0.85;
 }
 
+/* Un velo del tinte sobre la foto: amarra las imágenes de bancos distintos. */
 .media::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--ch-bg) 20%, transparent),
-    color-mix(in srgb, var(--ch-bg) 85%, transparent)
-  );
+  background: linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--tinte) 55%, transparent));
+  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
 .formato {
   position: absolute;
   z-index: 1;
-  top: 0.7rem;
-  left: 0.7rem;
+  top: 0.6rem;
+  left: 0.6rem;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.3rem 0.6rem;
+  padding: 0.28rem 0.6rem;
   border-radius: 999px;
+  background: rgba(251, 246, 236, 0.92);
+  color: var(--t-tinta);
+  font-family: var(--t-sans);
   font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 600;
   backdrop-filter: blur(6px);
 }
 
-.formato[data-formato="vivo"] {
-  background: color-mix(in srgb, var(--ch-accent-2, #f97316) 88%, transparent);
-  color: #1a0e04;
-}
-
-.formato[data-formato="grabado"] {
-  background: color-mix(in srgb, var(--ch-accent) 88%, transparent);
-  color: #06212a;
+.formato[data-formato="vivo"] svg {
+  color: #d8322c;
 }
 
 .cuerpo {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  padding: 1rem 1.1rem 1.15rem;
   flex: 1;
+  padding: 1rem 0.55rem 0.4rem;
 }
 
 .categoria {
-  margin: 0;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ch-accent);
+  font-family: var(--t-serif);
+  font-size: 0.74rem;
+  color: var(--t-tinta-2);
 }
 
 .titulo {
-  margin: 0;
-  font-family: var(--ch-font-display);
-  font-size: 1.12rem;
-  font-weight: 650;
-  line-height: 1.22;
-  letter-spacing: -0.015em;
+  margin-top: 0.35rem;
+  font-family: var(--t-sans);
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
 }
 
 .resumen {
-  margin: 0;
-  font-size: 0.87rem;
+  margin-top: 0.5rem;
+  font-family: var(--t-serif);
+  font-size: 0.9rem;
   line-height: 1.5;
-  color: var(--ch-muted);
+  color: var(--t-tinta-2);
+}
+
+.pie {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "meta ir"
+    "precio ir";
+  align-items: center;
+  gap: 0.15rem 0.8rem;
+  margin-top: auto;
+  padding-top: 1.1rem;
 }
 
 .meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.9rem;
-  margin: 0.35rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 0.78rem;
-  color: var(--ch-muted);
-}
-
-.meta li {
+  grid-area: meta;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.35rem;
+  font-family: var(--t-serif);
+  font-size: 0.76rem;
+  color: var(--t-tinta-2);
 }
 
-.acciones {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: auto;
-  padding-top: 0.9rem;
+.precio {
+  grid-area: precio;
+  font-family: var(--t-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
-.principal {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 0.95rem;
-  border-radius: 999px;
-  background: var(--ch-accent);
-  color: #06212a;
-  font-size: 0.85rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: transform 0.2s ease, filter 0.2s ease;
+.ir {
+  grid-area: ir;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 8px;
+  background: var(--t-tinta);
+  color: #fbf6ec;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
 }
 
-.principal:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.08);
+.tarjeta:hover .ir {
+  transform: rotate(45deg);
+  background: #d8322c;
 }
 
-.secundaria {
-  font-size: 0.85rem;
-  font-weight: 650;
-  color: var(--ch-muted);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-}
+/* ---------- ver todos ---------- */
 
-.secundaria:hover {
-  color: var(--ch-ink);
-  border-bottom-color: var(--ch-accent);
-}
-
-/* Botón para abrir el resto del catálogo sin que la portada se vuelva infinita. */
 .masCaja {
   display: flex;
   justify-content: center;
@@ -235,30 +233,31 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.4rem;
-  border: 1px solid color-mix(in srgb, var(--ch-accent) 50%, transparent);
-  border-radius: 999px;
+  padding: 0.75rem 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--ch-ink) 35%, transparent);
+  border-radius: 7px;
   background: transparent;
   color: var(--ch-ink);
-  font: inherit;
-  font-size: 0.92rem;
-  font-weight: 700;
+  font-family: var(--t-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 
 .mas:hover {
-  background: color-mix(in srgb, var(--ch-accent) 12%, transparent);
-  border-color: var(--ch-accent);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--ch-ink);
 }
 
 .mas:focus-visible {
-  outline: 2px solid var(--ch-accent);
+  outline: 2px solid #fbf6ec;
   outline-offset: 2px;
 }
 
 .vacio {
   margin: 0;
+  font-family: var(--t-serif);
   color: var(--ch-muted);
 }
 
@@ -266,10 +265,8 @@
   .tarjeta,
   .tarjeta:hover,
   .foto,
-  .tarjeta:hover .foto,
-  .principal,
-  .filtro {
-    transform: none;
+  .ir {
     transition: none;
+    transform: none;
   }
 }

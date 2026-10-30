@@ -1,28 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as EventoPuntero } from "react";
-import Lenis from "lenis";
-import "lenis/dist/lenis.css";
 import {
   ArrowLeft,
   ArrowRight,
-  ArrowUpRight,
   BriefcaseBusiness,
   CalendarDays,
   Compass,
-  Mail,
-  Menu,
   MessageCircle,
   Mic,
-  Phone,
   Presentation,
   Scale,
   Users,
-  X,
 } from "lucide-react";
 import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent, ChannelSection } from "@/lib/channel-content";
-import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
+import { whatsapp } from "@/lib/contacto";
 import { menosMovimiento, useAparicion } from "@/lib/aparicion";
 import { CintaTemas } from "./CintaTemas";
 import { RejillaCursos, type CursoVista } from "./RejillaCursos";
@@ -36,6 +29,8 @@ import {
   type FormatoArte,
   type ServicioArte,
 } from "./ige/Arte";
+import { Cabecera, Pie, Suave, useScroll } from "./ige/Marco";
+import m from "./ige/Marco.module.css";
 import s from "./IgeLanding.module.css";
 
 /*
@@ -51,16 +46,6 @@ import s from "./IgeLanding.module.css";
  * consultoría, formatos, método, especialidades y contacto salen de
  * `content`. Lo fijo aquí es la puesta en escena.
  */
-
-const NAV = [
-  { label: "Servicios", href: "#servicios" },
-  { label: "Método", href: "#metodo" },
-  { label: "Formatos", href: "#capacitacion" },
-  { label: "Cursos", href: "#academia" },
-  { label: "Contacto", href: "#contacto" },
-];
-
-const DIAGNOSTICO = whatsapp("Hola, me interesa un diagnóstico organizacional.");
 
 type Servicio = {
   id: string;
@@ -185,31 +170,6 @@ function primeraOracion(texto: string) {
   return m ? m[0] : texto;
 }
 
-/** Un solo `requestAnimationFrame` por cuadro para lo que depende del scroll. */
-function useScroll(alMover: () => void) {
-  const ref = useRef(alMover);
-  ref.current = alMover;
-
-  useEffect(() => {
-    let pendiente = 0;
-    const tick = () => {
-      pendiente = 0;
-      ref.current();
-    };
-    const pedir = () => {
-      if (!pendiente) pendiente = requestAnimationFrame(tick);
-    };
-    tick();
-    window.addEventListener("scroll", pedir, { passive: true });
-    window.addEventListener("resize", pedir);
-    return () => {
-      cancelAnimationFrame(pendiente);
-      window.removeEventListener("scroll", pedir);
-      window.removeEventListener("resize", pedir);
-    };
-  }, []);
-}
-
 /* ------------------------------------------------------------------ telón */
 
 /**
@@ -231,50 +191,6 @@ function Telon() {
       <span className={`${s.telonRotulo} ${s.telonRotuloB}`}>Grupos Efectivos</span>
       <MarcaIge className={s.telonMarca} tinta="#1f2a3d" />
     </div>
-  );
-}
-
-/* --------------------------------------------------------------- cabecera */
-
-function Cabecera() {
-  const [bajo, setBajo] = useState(false);
-  const [abierto, setAbierto] = useState(false);
-  useScroll(() => setBajo(window.scrollY > 48));
-
-  return (
-    <header className={s.cabecera} data-bajo={bajo} data-abierto={abierto}>
-      <div className={s.cabeceraCaja}>
-        <a href="#inicio" className={s.marca} onClick={() => setAbierto(false)} aria-label="Ingeniería de Grupos Efectivos, inicio">
-          <MarcaIge className={s.marcaSvg} />
-          <span className={s.marcaTexto}>Ingeniería de Grupos Efectivos</span>
-        </a>
-        <nav className={s.nav} aria-label="Principal" id="menu-ige">
-          {NAV.map((n) => (
-            <a key={n.href} href={n.href} onClick={() => setAbierto(false)}>
-              {n.label}
-            </a>
-          ))}
-        </nav>
-        <div className={s.cabeceraAcciones}>
-          <a className={s.botonDurazno} href={DIAGNOSTICO} target="_blank" rel="noopener noreferrer">
-            Agendar diagnóstico
-          </a>
-          <a className={s.botonCrema} href="#academia">
-            Ver cursos
-          </a>
-        </div>
-        <button
-          type="button"
-          className={s.botonMenu}
-          aria-expanded={abierto}
-          aria-controls="menu-ige"
-          onClick={() => setAbierto((a) => !a)}
-        >
-          {abierto ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
-          <span className={s.oculto}>{abierto ? "Cerrar menú" : "Abrir menú"}</span>
-        </button>
-      </div>
-    </header>
   );
 }
 
@@ -345,7 +261,7 @@ function Portada({ content }: { content: ChannelPageContent }) {
         </p>
         <div className={s.portadaAccion}>
           <p>{primeraOracion(content.hero.lead)}</p>
-          <a className={s.botonTinta} href={content.hero.primaryCta?.href ?? "#contacto"}>
+          <a className={m.botonTinta} href={content.hero.primaryCta?.href ?? "#contacto"}>
             {content.hero.primaryCta?.label ?? "Solicitar una propuesta"}
           </a>
         </div>
@@ -427,7 +343,7 @@ function Servicios({ consultoria }: { consultoria?: ChannelSection }) {
                 </div>
               </div>
               <a
-                className={k % 2 ? s.botonTintaChico : s.botonDuraznoChico}
+                className={`${k % 2 ? m.botonTintaChico : m.botonDuraznoChico} ${s.tarjetaBoton}`}
                 href={whatsapp(sv.mensaje)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -591,7 +507,7 @@ function Formatos({ capacitacion }: { capacitacion: ChannelSection }) {
       </div>
 
       <div className={s.centro}>
-        <a className={s.botonTinta} href="#contacto">
+        <a className={m.botonTinta} href="#contacto">
           Pedir el calendario
           <ArrowRight size={16} aria-hidden />
         </a>
@@ -750,7 +666,7 @@ function Academia({ cursos }: { cursos: CursoVista[] }) {
   );
 }
 
-/* ----------------------------------------------------------- cierre y pie */
+/* ----------------------------------------------------------------- cierre */
 
 function Cierre({ contacto }: { contacto?: ChannelSection }) {
   const caja = useAparicion<HTMLDivElement>({ y: 24 });
@@ -765,7 +681,7 @@ function Cierre({ contacto }: { contacto?: ChannelSection }) {
         </p>
         <div className={s.cierreAcciones}>
           <a
-            className={s.botonTinta}
+            className={m.botonTinta}
             href={whatsapp("Hola, me interesa una propuesta de capacitación o consultoría.")}
             target="_blank"
             rel="noopener noreferrer"
@@ -773,7 +689,7 @@ function Cierre({ contacto }: { contacto?: ChannelSection }) {
             <MessageCircle size={16} aria-hidden />
             Escribir por WhatsApp
           </a>
-          <a className={s.botonDurazno} href="#academia">
+          <a className={m.botonDurazno} href="#academia">
             Ver los cursos
           </a>
         </div>
@@ -790,78 +706,6 @@ function Cierre({ contacto }: { contacto?: ChannelSection }) {
         </ol>
       </div>
     </section>
-  );
-}
-
-function Pie({ channel }: { channel: ChannelDef }) {
-  return (
-    <footer className={s.pie}>
-      <div className={s.pieRejilla}>
-        <div>
-          <p className={s.pieTitulo}>Navegación</p>
-          <ul>
-            {NAV.map((n) => (
-              <li key={n.href}>
-                <a href={n.href}>{n.label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className={s.pieTitulo}>Contacto</p>
-          <ul>
-            <li>
-              <a href={whatsapp("Hola")} target="_blank" rel="noopener noreferrer">
-                <MessageCircle size={14} aria-hidden /> WhatsApp
-              </a>
-            </li>
-            <li>
-              <a href={mailto("Contacto")}>
-                <Mail size={14} aria-hidden /> {CONTACTO.email}
-              </a>
-            </li>
-            <li>
-              <a href={tel()}>
-                <Phone size={14} aria-hidden /> {CONTACTO.phoneDisplay}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <p className={s.pieTitulo}>Plataforma</p>
-          <ul>
-            <li>
-              <a href="/mi-cuenta/en-vivo">
-                Clases en vivo <ArrowUpRight size={13} aria-hidden />
-              </a>
-            </li>
-            <li>
-              <a href="/mi-cuenta">
-                Mi cuenta <ArrowUpRight size={13} aria-hidden />
-              </a>
-            </li>
-            <li>
-              <a href="/legal">Aviso legal</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className={s.pieCielo}>
-        <span className={`${s.nube} ${s.nubeI}`}>
-          <Nube tono="lila" />
-        </span>
-        <span className={`${s.nube} ${s.nubeJ}`}>
-          <Nube tono="durazno" />
-        </span>
-        <span className={`${s.nube} ${s.nubeK}`}>
-          <Nube tono="lila" />
-        </span>
-        <p className={s.pieFirma}>
-          {channel.legalName}, S.C. © {new Date().getFullYear()}
-        </p>
-        <MarcaIge className={s.pieMarca} tinta="#1f2a3d" titulo={channel.name} />
-      </div>
-    </footer>
   );
 }
 
@@ -883,15 +727,9 @@ export function IgeLanding({
   const especialidades = seccion("especialidades");
   const contacto = seccion("contacto");
 
-  // Desplazamiento suave; quien pidió menos movimiento conserva el nativo.
-  useEffect(() => {
-    if (menosMovimiento()) return;
-    const lenis = new Lenis({ autoRaf: true, anchors: { offset: -72 }, lerp: 0.11 });
-    return () => lenis.destroy();
-  }, []);
-
   return (
-    <div className={s.pagina}>
+    <div className={`${m.tema} ${s.pagina}`}>
+      <Suave />
       <Telon />
       <Cabecera />
       <main>

@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { animate, stagger } from "animejs";
-import { ArrowRight, ChevronDown, Clock, PlayCircle, Radio } from "lucide-react";
-import { whatsapp } from "@/lib/contacto";
+import { ArrowUpRight, ChevronDown, Clock, PlayCircle, Radio } from "lucide-react";
 import { menosMovimiento, useAparicionLista } from "@/lib/aparicion";
+import { tinteDeBloque } from "./ige/tintes";
 import s from "./RejillaCursos.module.css";
 
 export type CursoVista = {
@@ -36,6 +36,65 @@ const horas = (minutos: number) => {
   return Number.isInteger(h) ? `${h} h` : `${minutos} min`;
 };
 
+/** Una tarjeta del catálogo: entera es el enlace a la ficha del curso. */
+export function TarjetaCurso({ curso, tinte }: { curso: CursoVista; tinte: string }) {
+  return (
+    <a
+      className={s.tarjeta}
+      href={`/cursos/${curso.slug}`}
+      data-tarjeta
+      style={{ "--tinte": tinte } as CSSProperties}
+    >
+      <span className={s.media}>
+        <Image
+          src={curso.imagen}
+          alt=""
+          fill
+          sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
+          className={s.foto}
+        />
+        <span className={s.formato} data-formato={curso.formato}>
+          {curso.formato === "vivo" ? (
+            <Radio size={12} aria-hidden />
+          ) : (
+            <PlayCircle size={12} aria-hidden />
+          )}
+          {curso.formato === "vivo" ? "En vivo" : "Grabado"}
+        </span>
+      </span>
+
+      <span className={s.cuerpo}>
+        <span className={s.categoria}>{curso.categoriaNombre}</span>
+        <span className={s.titulo}>{curso.titulo}</span>
+        <span className={s.resumen}>{curso.resumen}</span>
+
+        <span className={s.pie}>
+          <span className={s.meta}>
+            {horas(curso.minutos) && (
+              <>
+                <Clock size={12} aria-hidden />
+                {horas(curso.minutos)}
+                <span aria-hidden>·</span>
+              </>
+            )}
+            {curso.nivel}
+          </span>
+          <span className={s.precio}>
+            {curso.precio > 0
+            ? pesos(curso.precio)
+            : curso.formato === "vivo"
+              ? "Cotización por grupo"
+              : "Precio a consultar"}
+          </span>
+          <span className={s.ir} aria-hidden>
+            <ArrowUpRight size={16} />
+          </span>
+        </span>
+      </span>
+    </a>
+  );
+}
+
 /**
  * El catálogo de la academia.
  *
@@ -44,6 +103,7 @@ const horas = (minutos: number) => {
  * corte, y la rejilla se vuelve a acomodar en orden en vez de parpadear.
  */
 const ASOMO = 9;
+
 
 export function RejillaCursos({ cursos }: { cursos: CursoVista[] }) {
   const [filtro, setFiltro] = useState("todos");
@@ -66,6 +126,11 @@ export function RejillaCursos({ cursos }: { cursos: CursoVista[] }) {
     });
     return [...vistas.values()];
   }, [cursos]);
+
+  // Cada bloque del catálogo tiene su color de cielo: se reconoce sin leer.
+  const tinteDe = (categoriaId: string) => {
+    return tinteDeBloque(categorias.findIndex((c) => c.id === categoriaId));
+  };
 
   const filtros = useMemo(
     () => [
@@ -175,67 +240,7 @@ export function RejillaCursos({ cursos }: { cursos: CursoVista[] }) {
         }}
       >
         {visibles.map((curso) => (
-          <article key={curso.id} className={s.tarjeta} data-tarjeta>
-            <div className={s.media}>
-              <Image
-                src={curso.imagen}
-                alt=""
-                fill
-                sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                className={s.foto}
-              />
-              <span className={s.formato} data-formato={curso.formato}>
-                {curso.formato === "vivo" ? (
-                  <Radio size={13} aria-hidden />
-                ) : (
-                  <PlayCircle size={13} aria-hidden />
-                )}
-                {curso.formato === "vivo" ? "En vivo" : "Grabado"}
-              </span>
-            </div>
-
-            <div className={s.cuerpo}>
-              <p className={s.categoria}>{curso.categoriaNombre}</p>
-              <h3 className={s.titulo}>{curso.titulo}</h3>
-              <p className={s.resumen}>{curso.resumen}</p>
-
-              <ul className={s.meta}>
-                {horas(curso.minutos) && (
-                  <li>
-                    <Clock size={13} aria-hidden />
-                    {horas(curso.minutos)}
-                  </li>
-                )}
-                <li>{curso.nivel}</li>
-              </ul>
-
-              <div className={s.acciones}>
-                {curso.precio > 0 ? (
-                  <a className={s.principal} href={`/cursos/${curso.slug}`}>
-                    Comprar · {pesos(curso.precio)}
-                    <ArrowRight size={15} aria-hidden />
-                  </a>
-                ) : (
-                  <a
-                    className={s.principal}
-                    href={whatsapp(
-                      `Hola, quiero cotizar el curso «${curso.titulo}» (${
-                        curso.formato === "vivo" ? "en vivo" : "grabado"
-                      }).`,
-                    )}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Cotizar
-                    <ArrowRight size={15} aria-hidden />
-                  </a>
-                )}
-                <a className={s.secundaria} href={`/cursos/${curso.slug}`}>
-                  Ver temario
-                </a>
-              </div>
-            </div>
-          </article>
+          <TarjetaCurso key={curso.id} curso={curso} tinte={tinteDe(curso.categoriaId)} />
         ))}
       </div>
 

@@ -11,9 +11,7 @@ import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
 import { getChannel, type ChannelId, CHANNEL_IDS } from "@/lib/channels";
 import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
 import { getChannelPage } from "@/lib/channel-store";
-import { levelLabel, listPublishedCoursesByChannel } from "@/lib/courses";
-import { courseThumbnail } from "@/lib/course-marketing";
-import type { CursoVista } from "@/components/channels/RejillaCursos";
+import { cursosVistaDeCanal } from "@/lib/cursos-vista";
 
 /** El contenido se edita desde /admin/canales: no se puede prerenderizar. */
 export const dynamic = "force-dynamic";
@@ -62,21 +60,7 @@ export default async function ChannelSitePage({ params }: Props) {
   // cielo de la portada y se encoge al bajar.
   if (channel.id === "ige") {
     // La academia es el centro de esta portada: su catálogo viaja con ella.
-    const filas = await listPublishedCoursesByChannel(channel.id);
-    const cursos: CursoVista[] = filas.map(({ course, category }) => ({
-      id: course.id,
-      slug: course.slug,
-      titulo: course.title,
-      resumen: course.subtitle ?? "",
-      imagen: courseThumbnail(course.id, course.thumbnailUrl),
-      minutos: course.durationMinutes,
-      nivel: levelLabel(course.level),
-      precio: course.priceMxn,
-      categoriaId: category?.id ?? "otros",
-      categoriaNombre: category?.name ?? "Catálogo",
-      // Lo grabado se cursa en línea; lo demás se imparte con el grupo delante.
-      formato: course.modalidad === "online" ? "grabado" : "vivo",
-    }));
+    const cursos = await cursosVistaDeCanal(channel.id);
     return (
       <div className={clasesDeCanal(channel.id)} style={estiloDeCanal(channel.id)} data-channel={channel.id}>
         <IgeLanding channel={channel} content={content} cursos={cursos} />
