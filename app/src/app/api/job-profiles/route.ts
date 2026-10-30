@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { logAudit, requireUser } from "@/lib/auth";
+import { logAudit, requireStaff, requireUser } from "@/lib/auth";
 import { createJobProfile, listJobProfiles } from "@/lib/job-profiles-store";
 import type { RespuestasCleaverJob } from "@/lib/cleaver-job";
 import { ITEMS_CLEAVER_JOB } from "@/lib/cleaver-job";
 
 export async function GET() {
   try {
-    await requireUser();
+    await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

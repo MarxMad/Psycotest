@@ -4,7 +4,7 @@
  *   npx tsx src/lib/socioeconomico.test.ts
  */
 import assert from "node:assert/strict";
-import { SECCIONES_CANDIDATO } from "../data/socioeconomico";
+import { SECCIONES_CANDIDATO, textoAviso } from "../data/socioeconomico";
 import {
   faltantes,
   interpretarSocioeconomico,
@@ -111,6 +111,23 @@ prueba("referencias personales exige tres, con nombre y teléfono", () => {
 prueba("una lista con mínimo 0 está completa vacía", () => {
   const sec = SECCIONES_CANDIDATO.find((s) => s.id === "refLaborales")!;
   assert.deepEqual(faltantes(sec, {}), []);
+});
+
+console.log("4) Aviso de privacidad");
+const vacio = { empresa: "", encargado: "", telefono: "", correo: "" };
+prueba("sin razón social ni contacto: redacción neutra, sin huecos", () => {
+  const t = textoAviso(undefined, vacio);
+  assert.match(t.apertura, /^La empresa que solicita este estudio es responsable/);
+  assert.match(t.contacto, /investigador que realice la visita/);
+  assert.doesNotMatch(Object.values(t).join(" "), /pendiente|\[/);
+});
+prueba("usa la empresa del código si no hay razón social", () => {
+  assert.match(textoAviso("Acme SA", vacio).apertura, /^La empresa Acme SA es responsable/);
+  assert.match(textoAviso("Acme SA", { ...vacio, empresa: "Beta SC" }).apertura, /^La empresa Beta SC/);
+});
+prueba("contacto solo con los medios que existen", () => {
+  const t = textoAviso(undefined, { ...vacio, correo: "datos@x.mx" });
+  assert.match(t.contacto, /el encargado de protección de datos personales, al correo datos@x\.mx\.$/);
 });
 
 console.log(`\nListo: ${n} pruebas del Estudio Socioeconómico.`);

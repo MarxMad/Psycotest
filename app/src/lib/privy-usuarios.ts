@@ -70,7 +70,8 @@ export async function usuarioDesdePrivy(identidad: PrivyIdentidad): Promise<Auth
     // Sin contraseña local: esta cuenta solo entra por Privy.
     passwordHash: "",
     privyId: identidad.privyId,
-    rol: (debeSerAdmin ? "admin" : "psicologo") as AuthUser["rol"],
+    // Nadie entra al panel por registrarse: el personal lo promueve un admin.
+    rol: (debeSerAdmin ? "admin" : "cliente") as AuthUser["rol"],
     emailVerified: true,
     createdAt: new Date().toISOString(),
   };

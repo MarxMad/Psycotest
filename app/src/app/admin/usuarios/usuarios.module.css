@@ -90,7 +90,8 @@
   color: var(--blue-600);
 }
 
-.badge-aplicador {
+.badge-aplicador,
+.badge-cliente {
   background: color-mix(in srgb, var(--gray-600) 15%, transparent);
   color: var(--gray-600);
 }

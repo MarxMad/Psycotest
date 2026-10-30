@@ -3,11 +3,9 @@ import { eq } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { users } from "@/db/schema";
 import { logAudit, requireUser } from "@/lib/auth";
+import { ROLES, type Rol } from "@/lib/auth-rutas";
 
 type Params = { params: Promise<{ id: string }> };
-
-const ROLES = ["admin", "psicologo", "aplicador"] as const;
-type Rol = (typeof ROLES)[number];
 
 /** Cambia el rol de un usuario. Solo un admin puede hacerlo. */
 export async function PATCH(request: Request, { params }: Params) {

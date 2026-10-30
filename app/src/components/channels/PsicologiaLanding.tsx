@@ -7,7 +7,7 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent, ChannelSection } from "@/lib/channel-content";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
-import { BATERIA_COMPLETA, PRUEBAS } from "@/lib/pruebas-catalogo";
+import { BATERIA_COMPLETA, PRUEBAS, precioMinimo } from "@/lib/pruebas-catalogo";
 import { menosMovimiento, useAparicion, useAparicionLista } from "@/lib/aparicion";
 import { Cifras, Declaracion, Pasos } from "./Secciones";
 import { Cotizador } from "./Cotizador";
@@ -26,7 +26,7 @@ const pesos = (centavos: number) =>
   }).format(centavos / 100);
 
 /** La prueba más barata marca el piso: sirve para anclar el precio desde la portada. */
-const DESDE = pesos(Math.min(...PRUEBAS.map((p) => p.precio)));
+const DESDE = pesos(precioMinimo());
 
 const CONFIANZA = [
   { icono: Layers, texto: `${BATERIA_COMPLETA.length} instrumentos, una sola lectura` },

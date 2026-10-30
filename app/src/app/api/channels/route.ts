@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { CHANNELS, CHANNEL_IDS } from "@/lib/channels";
 import { listChannelPages } from "@/lib/channel-store";
 
 export async function GET() {
   try {
-    await requireUser();
+    await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

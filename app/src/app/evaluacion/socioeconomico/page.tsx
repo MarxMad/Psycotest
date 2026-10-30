@@ -10,7 +10,6 @@ import { ConfirmacionPrueba } from "@/components/ConfirmacionPrueba";
 import { FormularioSeccion } from "@/components/socioeconomico/Formulario";
 import { useApplicantSession } from "@/lib/applicant-client";
 import {
-  AVISO_COMPLETO,
   DATOS_RECABADOS,
   SECCIONES_CANDIDATO,
   TRANSFERENCIA,
@@ -152,7 +151,7 @@ export default function SocioeconomicoPage() {
   }
 
   if (fase === "aviso") {
-    const t = textoAviso();
+    const t = textoAviso(aplicante?.empresa);
     return (
       <>
         <AmbientBackground />
@@ -193,11 +192,6 @@ export default function SocioeconomicoPage() {
 
               <section className={s.privacidad} aria-labelledby="aviso-titulo">
                 <h2 id="aviso-titulo">Aviso de privacidad</h2>
-                {!AVISO_COMPLETO && (
-                  <p className={s.pendiente}>
-                    Falta que la empresa responsable complete sus datos de contacto en este aviso.
-                  </p>
-                )}
                 <p>{t.apertura}</p>
                 <ul className={s.datosLista}>
                   {DATOS_RECABADOS.map((d) => (

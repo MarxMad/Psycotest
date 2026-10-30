@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
-import { logAudit, requireUser } from "@/lib/auth";
+import { logAudit, requireStaff, requireUser } from "@/lib/auth";
 import { getSession, saveSession } from "@/lib/session-store";
 import { procesarSesion } from "@/lib/procesar-sesion";
 import { comoRespuestas, limpiarParte, resumirSocioeconomico } from "@/lib/socioeconomico";
@@ -10,7 +10,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_request: Request, { params }: Params) {
   try {
-    await requireUser();
+    await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

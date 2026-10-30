@@ -5,12 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
-import { resolvePostLoginPath } from "@/lib/auth-rutas";
+import { resolvePostLoginPath, type Rol } from "@/lib/auth-rutas";
 import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
 import { PARAM_SALIDA } from "@/lib/salir";
 import s from "./login.module.css";
 
-type Rol = "admin" | "psicologo" | "aplicador";
 type LoginUser = { id: string; email: string; nombre: string; rol: Rol };
 
 function LoginForm() {
@@ -40,7 +39,7 @@ function LoginForm() {
       return;
     }
     const data = (await res.json()) as { user?: LoginUser };
-    const rol: Rol = data.user?.rol ?? "psicologo";
+    const rol: Rol = data.user?.rol ?? "cliente";
     router.push(resolvePostLoginPath({ rol }, nextParam));
     router.refresh();
   }

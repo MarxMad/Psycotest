@@ -73,14 +73,6 @@
   margin: 0;
 }
 
-.pendiente {
-  padding: 8px 12px;
-  border-radius: var(--r);
-  background: color-mix(in srgb, var(--alert) 10%, transparent);
-  color: var(--alert);
-  font-weight: 600;
-}
-
 .datosLista {
   margin: 0;
   padding-left: 20px;

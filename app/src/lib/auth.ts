@@ -8,30 +8,17 @@ import {
   ensureDbReadyOnce,
 } from "@/db/bootstrap";
 import { getDb, schema } from "@/db";
+import { PERSONAL, type Rol } from "@/lib/auth-rutas";
+
+import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
 const COOKIE = "psycotest_session";
-/** Fallback alineado con middleware — permite login aunque falte AUTH_SECRET en Vercel. */
-const FALLBACK_SECRET = "dev-secret-psycotest-min16";
-
-function secret() {
-  const s = process.env.AUTH_SECRET;
-  if (!s || s.length < 16) {
-    if (process.env.NODE_ENV === "production" && !process.env.AUTH_SECRET_WARNED) {
-      console.warn(
-        "[psycotest] AUTH_SECRET ausente o corto; usando secreto de respaldo. Configure AUTH_SECRET (≥16) en Vercel.",
-      );
-      process.env.AUTH_SECRET_WARNED = "1";
-    }
-    return new TextEncoder().encode(FALLBACK_SECRET);
-  }
-  return new TextEncoder().encode(s);
-}
 
 export interface AuthUser {
   id: string;
   email: string;
   nombre: string;
-  rol: "admin" | "psicologo" | "aplicador";
+  rol: Rol;
 }
 
 export type SignInResult =
@@ -128,18 +115,30 @@ export async function clearSessionCookie() {
   jar.delete(COOKIE);
 }
 
+/**
+ * Usuario de la sesión. La cookie solo dice quién es; el rol se lee de la
+ * base en cada llamada, para que quitarle el rol o borrar la cuenta surta
+ * efecto de inmediato y no hasta que caduque el token.
+ */
 export async function getSessionUser(): Promise<AuthUser | null> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value;
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secret());
-    return {
-      id: payload.sub as string,
-      email: payload.email as string,
-      nombre: payload.nombre as string,
-      rol: payload.rol as AuthUser["rol"],
-    };
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
+    if (typeof payload.sub !== "string") return null;
+    const [user] = await getDb()
+      .select({
+        id: schema.users.id,
+        email: schema.users.email,
+        nombre: schema.users.nombre,
+        rol: schema.users.rol,
+      })
+      .from(schema.users)
+      .where(eq(schema.users.id, payload.sub))
+      .limit(1);
+    if (!user) return null;
+    return { ...user, rol: user.rol as Rol };
   } catch {
     return null;
   }
@@ -150,6 +149,11 @@ export async function requireUser(roles?: AuthUser["rol"][]): Promise<AuthUser> 
   if (!user) throw new Error("UNAUTHORIZED");
   if (roles && !roles.includes(user.rol)) throw new Error("FORBIDDEN");
   return user;
+}
+
+/** Personal del panel: administrador o psicólogo. */
+export function requireStaff(): Promise<AuthUser> {
+  return requireUser(PERSONAL);
 }
 
 export {

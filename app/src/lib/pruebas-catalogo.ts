@@ -12,8 +12,8 @@ export type Prueba = {
   nombre: string;
   etiqueta: string;
   minutos: number;
-  /** Precio por candidato, en centavos. */
-  precio: number;
+  /** Precio por candidato, en centavos. Sin precio, se cotiza aparte. */
+  precio: number | null;
   descripcion: string;
 };
 
@@ -64,8 +64,8 @@ export const PRUEBAS: Prueba[] = [
     etiqueta: "Entorno, visita y referencias",
     // Lo que tarda el candidato en su parte; la visita y las llamadas van aparte.
     minutos: 40,
-    // PROVISIONAL: lo fija el cliente. Incluye visita domiciliaria y verificación de referencias.
-    precio: 120000,
+    // Aún sin precio: lo fija el cliente. Mientras, se cotiza aparte.
+    precio: null,
     descripcion:
       "Situación familiar y económica, visita domiciliaria y verificación de referencias laborales.",
   },
@@ -87,20 +87,35 @@ export function descuentoPorVolumen(candidatos: number): number {
 }
 
 export type Cotizacion = {
+  /** Solo lo que tiene precio; lo demás va en `porCotizar`. */
   porCandidato: number;
   subtotal: number;
   descuento: number;
   total: number;
   minutos: number;
+  /** Elegidas que todavía no tienen precio. */
+  porCotizar: Prueba[];
 };
 
 export function cotizar(ids: string[], candidatos: number): Cotizacion {
   const elegidas = PRUEBAS.filter((p) => ids.includes(p.id));
-  const porCandidato = elegidas.reduce((n, p) => n + p.precio, 0);
+  const porCandidato = elegidas.reduce((n, p) => n + (p.precio ?? 0), 0);
   const minutos = elegidas.reduce((n, p) => n + p.minutos, 0);
   const subtotal = porCandidato * Math.max(1, candidatos);
   const descuento = Math.round(subtotal * descuentoPorVolumen(candidatos));
-  return { porCandidato, subtotal, descuento, total: subtotal - descuento, minutos };
+  return {
+    porCandidato,
+    subtotal,
+    descuento,
+    total: subtotal - descuento,
+    minutos,
+    porCotizar: elegidas.filter((p) => p.precio == null),
+  };
+}
+
+/** La prueba con precio más barata: el piso para anunciar «desde». */
+export function precioMinimo(): number {
+  return Math.min(...PRUEBAS.flatMap((p) => (p.precio == null ? [] : [p.precio])));
 }
 
 /**

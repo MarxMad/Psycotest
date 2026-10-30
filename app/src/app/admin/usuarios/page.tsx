@@ -108,7 +108,9 @@ export default function UsuariosPage() {
                           ? "Administrador"
                           : user.rol === "psicologo"
                             ? "Psicólogo"
-                            : "Aplicador"}
+                            : user.rol === "aplicador"
+                              ? "Aplicador"
+                              : "Cliente"}
                       </span>
                     </td>
                     <td>

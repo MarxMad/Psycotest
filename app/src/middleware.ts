@@ -6,6 +6,7 @@ import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
 import { getChannelFromHost, isChannelPath, isPlatformPath } from "@/lib/channels";
 import { esSoloAdmin, operaElPanel, type Rol } from "@/lib/auth-rutas";
+import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
 const COOKIE = "psycotest_session";
 
@@ -18,13 +19,6 @@ const TEST_PATHS = [
   "/evaluacion/socioeconomico",
 ] as const;
 
-function secret() {
-  const s = process.env.AUTH_SECRET;
-  if (!s || s.length < 16) {
-    return new TextEncoder().encode("dev-secret-psycotest-min16");
-  }
-  return new TextEncoder().encode(s);
-}
 
 function instrumentFromPath(pathname: string): Instrumento | null {
   for (const p of TEST_PATHS) {
@@ -111,7 +105,7 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const { payload } = await jwtVerify(token, secret());
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     const rol = payload.rol as string | undefined;
 
     // El aplicador no opera el panel: solo acompaña la aplicación de pruebas.

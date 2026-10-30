@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { desc, eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
-import { getSessionUser, logAudit, requireUser } from "@/lib/auth";
+import { logAudit, requireStaff } from "@/lib/auth";
 
 export async function GET() {
   try {
-    await requireUser();
+    await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: Request) {
   let user;
   try {
-    user = await requireUser();
+    user = await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

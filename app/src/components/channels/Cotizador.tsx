@@ -85,7 +85,9 @@ export function Cotizador() {
         (p) => elegidas.includes(p.id),
       )
         .map((p) => p.nombre)
-        .join(", ")}. Total estimado ${pesos(cuenta.total)}.`;
+        .join(", ")}. Total estimado ${pesos(cuenta.total)}${
+        cuenta.porCotizar.length ? `, más ${cuenta.porCotizar.map((p) => p.nombre).join(", ")} por cotizar` : ""
+      }.`;
 
   return (
     <div className={s.caja} id="cotizador">
@@ -125,7 +127,9 @@ export function Cotizador() {
                     <strong>{p.nombre}</strong>
                     <em>{p.etiqueta}</em>
                   </span>
-                  <span className={s.pruebaPrecio}>{pesos(p.precio)}</span>
+                  <span className={s.pruebaPrecio}>
+                    {p.precio == null ? "Por cotizar" : pesos(p.precio)}
+                  </span>
                 </button>
               );
             })}
@@ -159,10 +163,16 @@ export function Cotizador() {
         <p className={s.resumenEyebrow}>Tu cotización</p>
 
         <p className={s.totalLinea}>
-          <span ref={total} className={s.total}>
-            {pesos(cuenta.total)}
+          {cuenta.porCandidato === 0 && cuenta.porCotizar.length ? (
+            <span className={s.total}>Por cotizar</span>
+          ) : (
+            <span ref={total} className={s.total}>
+              {pesos(cuenta.total)}
+            </span>
+          )}
+          <span className={s.totalPie}>
+            {cuenta.porCotizar.length ? "IVA no incluido · más lo que se cotiza aparte" : "IVA no incluido"}
           </span>
-          <span className={s.totalPie}>IVA no incluido</span>
         </p>
 
         {nada ? (
@@ -185,6 +195,12 @@ export function Cotizador() {
                 <strong>−{pesos(cuenta.descuento)}</strong>
               </li>
             )}
+            {cuenta.porCotizar.map((p) => (
+              <li key={p.id}>
+                <span>{p.nombre}</span>
+                <strong>Por cotizar</strong>
+              </li>
+            ))}
             <li className={s.tiempo}>
               <span>
                 <Clock size={13} aria-hidden /> Tiempo por candidato

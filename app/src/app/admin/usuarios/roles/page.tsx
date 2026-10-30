@@ -7,7 +7,7 @@ import { Card, CardHeader } from "@/components/admin/Card";
 import { Badge, DataTable, type Columna } from "@/components/admin/DataTable";
 import s from "./roles.module.css";
 
-type Rol = "admin" | "psicologo" | "aplicador";
+import type { Rol } from "@/lib/auth-rutas";
 
 type Usuario = {
   id: string;
@@ -34,18 +34,25 @@ const ROLES: { id: Rol; label: string; descripcion: string }[] = [
     label: "Aplicador",
     descripcion: "Solo acompaña la aplicación de pruebas; no ve resultados ni interpretaciones.",
   },
+  {
+    id: "cliente",
+    label: "Cliente",
+    descripcion: "Alumno o empresa: ve sus cursos y evaluaciones en Mi cuenta. Sin acceso al panel.",
+  },
 ];
 
 const TONO: Record<Rol, "danger" | "info" | "neutral"> = {
   admin: "danger",
   psicologo: "info",
   aplicador: "neutral",
+  cliente: "neutral",
 };
 
 const LABEL: Record<Rol, string> = {
   admin: "Administrador",
   psicologo: "Psicólogo",
   aplicador: "Aplicador",
+  cliente: "Cliente",
 };
 
 export default function RolesPage() {

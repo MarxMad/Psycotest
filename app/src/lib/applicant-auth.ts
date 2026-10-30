@@ -1,16 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import type { Instrumento } from "./storage";
+import { secretoDeSesion as secret } from "./auth-secreto";
 
 export const APPLICANT_COOKIE = "psycotest_applicant";
 
-function secret() {
-  const s = process.env.AUTH_SECRET;
-  if (!s || s.length < 16) {
-    return new TextEncoder().encode("dev-secret-psycotest-min16");
-  }
-  return new TextEncoder().encode(s);
-}
 
 export interface ApplicantSession {
   redemptionId: string;
@@ -59,7 +53,7 @@ export async function getApplicantSession(): Promise<ApplicantSession | null> {
   const token = jar.get(APPLICANT_COOKIE)?.value;
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secret());
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     return {
       redemptionId: payload.rid as string,
       codeId: payload.cid as string,
@@ -86,7 +80,7 @@ export function canTakeInstrument(session: ApplicantSession, instrumento: Instru
 /** Verifica JWT desde Request (middleware / route handlers). */
 export async function verifyApplicantToken(token: string): Promise<ApplicantSession | null> {
   try {
-    const { payload } = await jwtVerify(token, secret());
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     return {
       redemptionId: payload.rid as string,
       codeId: payload.cid as string,

@@ -88,7 +88,7 @@ export async function verificarToken(token: string | undefined): Promise<PrivyId
     return {
       privyId: claims.userId,
       email,
-      rolSugerido: esAdminPorCorreo(email) ? "admin" : "psicologo",
+      rolSugerido: esAdminPorCorreo(email) ? "admin" : "cliente",
     };
   } catch {
     return null;

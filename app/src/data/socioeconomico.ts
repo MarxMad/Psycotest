@@ -565,9 +565,10 @@ export const SECCIONES_INVESTIGADOR: Seccion[] = [
 /* ------------------------------------------------------------------ */
 
 /**
- * Responsable del tratamiento de los datos. EL EXCEL LO TRAE EN BLANCO: hay
- * que llenar razón social y contacto antes de usar el estudio con candidatos
- * reales. Mientras falte, el aviso lo dice en pantalla.
+ * Responsable del tratamiento de los datos. Todo es opcional: el Excel lo
+ * trae en blanco. Sin razón social el aviso nombra a la empresa del código
+ * del candidato o, si tampoco hay, a «la empresa que solicita este estudio»;
+ * sin contacto, remite al investigador que hace la visita.
  */
 export const RESPONSABLE_DATOS = {
   empresa: "",
@@ -600,25 +601,31 @@ export const TRANSFERENCIA = {
   noAcepta: "No acepto que mis datos sean transferidos",
 } as const;
 
-/** El texto del aviso, en párrafos, con el responsable sustituido. */
-export function textoAviso(r = RESPONSABLE_DATOS) {
-  const empresa = r.empresa || "[razón social pendiente]";
+/**
+ * El texto del aviso, en párrafos. `empresaDelCodigo` es la empresa con la que
+ * se emitió el código del candidato: sirve de responsable si no hay razón social.
+ */
+export function textoAviso(empresaDelCodigo?: string, r = RESPONSABLE_DATOS) {
+  const empresa = r.empresa.trim() || empresaDelCodigo?.trim();
+  const medios = [
+    r.telefono.trim() && `al teléfono ${r.telefono.trim()}`,
+    r.correo.trim() && `al correo ${r.correo.trim()}`,
+  ].filter(Boolean);
+  const quien = r.encargado.trim()
+    ? `${r.encargado.trim()}, encargado de protección de datos personales`
+    : "el encargado de protección de datos personales";
   return {
-    apertura: `La empresa ${empresa} es responsable de recabar sus datos personales, del uso que se le dé a los mismos y de su protección. Con el fin de dar cumplimiento a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, y toda vez que contamos con información de sus datos personales, tales como:`,
+    apertura: `${
+      empresa ? `La empresa ${empresa}` : "La empresa que solicita este estudio"
+    } es responsable de recabar sus datos personales, del uso que se le dé a los mismos y de su protección. Con el fin de dar cumplimiento a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, y toda vez que contamos con información de sus datos personales, tales como:`,
     sensibles:
       "Considerando que son sensibles, según la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, el origen étnico o racial, las características morales o emocionales, la ideología y opiniones políticas, las creencias y convicciones religiosas o filosóficas y la preferencia sexual, le informamos que sus datos personales pueden ser transferidos a terceros dentro y/o fuera del país exclusivamente con el propósito de aplicar a una candidatura y/o contratación laboral.",
     consentimiento:
       "Si usted no manifiesta su oposición para que sus datos personales sean transferidos, se entenderá que ha otorgado su consentimiento para ello.",
     derechos:
       "Usted tiene derecho de acceder, rectificar y cancelar sus datos personales, así como de oponerse al tratamiento de los mismos o revocar el consentimiento que para tal fin nos haya otorgado, a través de los procedimientos que hemos implementado.",
-    contacto: `Para conocer dichos procedimientos, los requisitos y plazos, se puede poner en contacto con ${
-      r.encargado || "[encargado pendiente]"
-    }, encargado de protección de datos personales, al teléfono ${r.telefono || "[pendiente]"} o al correo ${
-      r.correo || "[pendiente]"
-    }.`,
+    contacto: medios.length
+      ? `Para conocer dichos procedimientos, los requisitos y plazos, se puede poner en contacto con ${quien}, ${medios.join(" o ")}.`
+      : "Para conocer dichos procedimientos, los requisitos y plazos, puede solicitarlos al investigador que realice la visita o a la empresa que solicita este estudio.",
   };
 }
-
-export const AVISO_COMPLETO = Boolean(
-  RESPONSABLE_DATOS.empresa && RESPONSABLE_DATOS.encargado && (RESPONSABLE_DATOS.telefono || RESPONSABLE_DATOS.correo),
-);

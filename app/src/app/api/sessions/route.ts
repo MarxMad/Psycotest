@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import type { Instrumento } from "@/lib/storage";
-import { getSessionUser, logAudit, requireUser } from "@/lib/auth";
+import { logAudit, requireStaff } from "@/lib/auth";
 import { listSessions, saveSession } from "@/lib/session-store";
 
 export async function GET(request: Request) {
   try {
-    await requireUser();
+    await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   let user;
   try {
-    user = await requireUser(["admin", "psicologo", "aplicador"]);
+    user = await requireStaff();
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

@@ -5,9 +5,19 @@
  * de alumno en vez del panel.
  */
 
-export type Rol = "admin" | "psicologo" | "aplicador";
+export type Rol = "admin" | "psicologo" | "aplicador" | "cliente";
 
-/** El personal opera el panel; el aplicante y el alumno, no. */
+/** Todos los roles, en orden de privilegio. */
+export const ROLES: readonly Rol[] = ["admin", "psicologo", "aplicador", "cliente"];
+
+/** Quienes operan el panel. */
+export const PERSONAL: Rol[] = ["admin", "psicologo"];
+
+/**
+ * El personal opera el panel; el alumno, la empresa cliente y el aplicador,
+ * no. Toda cuenta nueva nace como cliente: al panel solo se llega porque un
+ * administrador lo decidió.
+ */
 export function operaElPanel(rol: Rol): boolean {
   return rol === "admin" || rol === "psicologo";
 }

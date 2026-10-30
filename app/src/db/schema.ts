@@ -14,7 +14,8 @@ export const users = pgTable("users", {
   passwordHash: text("password_hash").notNull(),
   /** Identificador de Privy (did:privy:...), si la cuenta se creó por ahí. */
   privyId: text("privy_id").unique(),
-  rol: text("rol", { enum: ["admin", "psicologo", "aplicador"] }).notNull().default("psicologo"),
+  /** Toda cuenta nace como cliente; al panel solo se llega si un admin la promueve. */
+  rol: text("rol", { enum: ["admin", "psicologo", "aplicador", "cliente"] }).notNull().default("cliente"),
   emailVerified: boolean("email_verified").notNull().default(false),
   createdAt: text("created_at").notNull(),
 });

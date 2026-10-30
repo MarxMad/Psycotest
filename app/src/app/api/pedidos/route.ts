@@ -122,7 +122,7 @@ export async function POST(request: Request) {
             email,
             nombre,
             passwordHash: "",
-            rol: "aplicador",
+            rol: "cliente",
             emailVerified: false,
             createdAt: ahora,
           })
