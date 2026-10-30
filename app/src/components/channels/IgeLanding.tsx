@@ -376,6 +376,8 @@ function Servicios({ consultoria }: { consultoria?: ChannelSection }) {
 function Metodo({ metodo }: { metodo: ChannelSection }) {
   const caja = useRef<HTMLElement>(null);
   const [paso, setPaso] = useState(0);
+  // Lo que lleva recorrido la sección, de 0 a n: la escena lo lee en cada cuadro.
+  const avance = useRef(0);
   const pasos = (metodo.items ?? []).slice(0, 5);
   const n = Math.max(pasos.length, 1);
 
@@ -387,6 +389,7 @@ function Metodo({ metodo }: { metodo: ChannelSection }) {
     const recorrido = r.height - window.innerHeight;
     if (recorrido <= 0) return;
     const p = Math.min(Math.max(-r.top / recorrido, 0), 0.9999);
+    avance.current = p * n;
     setPaso(Math.floor(p * n));
   });
 
@@ -421,7 +424,7 @@ function Metodo({ metodo }: { metodo: ChannelSection }) {
           </ol>
         </div>
         <div className={s.panelMetodo}>
-          <EscenaMetodo paso={Math.min(paso, 4)} />
+          <EscenaMetodo paso={Math.min(paso, 4)} avance={avance} />
           <span className={s.panelContador}>
             {String(paso + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
           </span>
