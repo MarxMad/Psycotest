@@ -16,6 +16,8 @@ import { IconoDeCategoria } from "../Iconos";
 import { Revelar } from "../Revelar";
 import { TarjetaPrograma } from "../TarjetaPrograma";
 import { HeroArte } from "./HeroArte";
+import { Luz } from "./Luz";
+import { Manifiesto } from "./Manifiesto";
 import { Ruta } from "./Ruta";
 import s from "../mk.module.css";
 import l from "./landing.module.css";
@@ -33,6 +35,15 @@ export function Landing({ programas }: { programas: Programa[] }) {
   const certificaciones = destacados(programas, "certificacion", 4);
   const porCategoria = (slug: string) =>
     programas.filter((p) => p.tipo === "certificacion" && p.categoria === slug).length;
+
+  // Los estándares reales del catálogo corren en la cinta del manifiesto.
+  const estandares = [
+    ...new Set(
+      programas
+        .filter((p) => p.tipo === "certificacion" && p.estandarClave)
+        .map((p) => `${p.estandarClave} ${p.titulo}`),
+    ),
+  ];
 
   // El titular resalta su última palabra.
   const palabras = PROPUESTA.titular.split(" ");
@@ -72,6 +83,9 @@ export function Landing({ programas }: { programas: Programa[] }) {
           </div>
         </div>
       </section>
+
+      <Manifiesto estandares={estandares.length ? estandares : ["ECE 002-10"]} />
+      <Luz />
 
       {/* -------------------------------------------------- Categorías */}
       <section className={s.seccion} aria-labelledby="cat-titulo">

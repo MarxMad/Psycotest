@@ -334,6 +334,23 @@
     box-shadow 0.35s;
 }
 
+/* La luz que sigue al cursor (la mueve `Luz`); encima del contenido pero sin estorbarlo. */
+.tarjetaInteractiva::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(380px circle at var(--mx, 50%) var(--my, 50%), rgba(250, 204, 21, 0.14), transparent 45%);
+  transition: opacity 0.35s;
+}
+
+.tarjetaInteractiva:hover::after {
+  opacity: 1;
+}
+
 .tarjetaInteractiva:hover,
 .tarjetaInteractiva:focus-within {
   transform: translateY(-4px);

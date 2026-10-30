@@ -530,112 +530,209 @@
 
 /* ---------------------------------------------------------------- Ruta */
 
-.rutaIntro {
-  margin-top: 14px;
-  max-width: 62ch;
-  color: var(--mk-muted);
+/* La sección mide una pantalla por etapa: mientras se recorre, lo de adentro queda fijo. */
+.rutaHilo {
+  position: relative;
+  height: calc(var(--n) * 80vh + 100vh);
 }
 
-.ruta {
+.rutaFija {
+  position: sticky;
+  top: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
+  grid-template-columns: minmax(280px, 0.36fr) minmax(0, 1fr);
+  gap: clamp(20px, 3vw, 40px);
+  height: 100vh;
+  height: 100svh;
+  max-width: calc(var(--mk-max) + 2 * var(--mk-gutter));
+  margin-inline: auto;
+  padding: calc(var(--mk-nav-h) + 24px) var(--mk-gutter) 28px;
+  box-sizing: border-box;
+}
+
+.rutaTexto {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 0;
+}
+
+.rutaTitulo {
+  margin-top: 14px;
+  font-size: clamp(30px, 3.6vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.rutaEtapas {
+  display: grid;
+  gap: 4px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.etapa {
-  position: relative;
+.rutaEtapas > li {
+  border-left: 2px solid var(--mk-line);
+  padding-left: 18px;
+  transition: border-color 0.4s;
+}
+
+.rutaEtapas > li[data-activo="true"] {
+  border-color: var(--mk-yellow);
+}
+
+.rutaEtapas button {
   display: flex;
-  flex-direction: column;
-  padding: 32px 28px 30px;
-  border-radius: var(--mk-radius);
-  border: 1px solid var(--mk-line);
-  background: rgba(6, 26, 74, 0.35);
-  overflow: hidden;
-}
-
-.etapaOrdinal {
-  position: absolute;
-  right: 18px;
-  top: 2px;
-  font: 700 clamp(52px, 5vw, 76px) / 1 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.06em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(168, 196, 255, 0.28);
-  pointer-events: none;
-  user-select: none;
-}
-
-.etapaIcono {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: var(--mk-yellow);
-  color: var(--mk-on-yellow);
-  margin-bottom: 24px;
-}
-
-/* El ordinal fantasma ocupa la esquina: que el título no se le encime. */
-.etapa h3 {
-  font-size: clamp(22px, 2.2vw, 26px);
-  font-weight: 600;
-  padding-right: 76px;
-}
-
-.etapaResumen {
-  margin-top: 10px;
-  color: var(--mk-muted);
-}
-
-.etapaPasos {
-  counter-reset: etapaPaso;
-  display: grid;
-  gap: 16px;
-  margin: 26px 0 0;
-  padding: 24px 0 0;
-  border-top: 1px solid var(--mk-line);
-  list-style: none;
-}
-
-.etapaPaso {
-  display: grid;
-  grid-template-columns: 28px minmax(0, 1fr);
-  gap: 4px 12px;
   align-items: baseline;
+  gap: 12px;
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: var(--mk-soft);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
-.etapaPaso::before {
-  counter-increment: etapaPaso;
-  content: counter(etapaPaso);
-  grid-row: span 2;
-  align-self: start;
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--mk-line-strong);
-  color: var(--mk-yellow);
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.etapaPasoTitulo {
-  font-weight: 600;
+.rutaEtapas li[data-activo="true"] button {
   color: var(--mk-ink);
 }
 
-.etapaPasoTexto {
-  grid-column: 2;
-  color: var(--mk-soft);
+.rutaNum {
+  font: 700 18px / 1 var(--mk-font-display), sans-serif;
+  transition: font-size 0.4s var(--mk-ease), color 0.3s;
+}
+
+.rutaEtapas li[data-activo="true"] .rutaNum {
+  font-size: 40px;
+  color: var(--mk-yellow);
+}
+
+.rutaNombre {
+  font: 600 18px / 1.2 var(--mk-font-display), sans-serif;
+}
+
+.rutaDetalle {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.5s var(--mk-ease), opacity 0.4s;
+}
+
+.rutaDetalle > * {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.rutaEtapas li[data-activo="true"] .rutaDetalle {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.rutaDetalle p {
+  margin: 2px 0 10px;
+  color: var(--mk-muted);
   font-size: 15px;
-  line-height: 1.5;
+}
+
+.rutaDetalle ul {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+  color: var(--mk-soft);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.rutaDetalle strong {
+  color: var(--mk-ink);
+  font-weight: 600;
+}
+
+.rutaPanel {
+  position: relative;
+  min-height: 0;
+  border-radius: var(--mk-radius);
+  overflow: hidden;
+  border: 1px solid var(--mk-line);
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(250, 204, 21, 0.06), transparent 70%),
+    var(--mk-bg-deep);
+  box-shadow: var(--mk-shadow);
+}
+
+.rutaLienzo {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.rutaEtiqueta {
+  position: absolute;
+  top: clamp(14px, 2vw, 24px);
+  left: clamp(14px, 2vw, 24px);
+  padding: 7px 14px;
+  border: 1px solid rgba(250, 204, 21, 0.5);
+  border-radius: 999px;
+  background: rgba(6, 26, 74, 0.75);
+  backdrop-filter: blur(4px);
+  color: var(--mk-yellow);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation: rutaEtiqueta 0.5s var(--mk-ease) both;
+}
+
+@keyframes rutaEtiqueta {
+  from {
+    opacity: 0;
+    translate: 0 -6px;
+  }
+}
+
+.rutaContador {
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  color: var(--mk-soft);
+}
+
+.rutaLogros {
+  padding-bottom: clamp(64px, 9vw, 120px);
+}
+
+@media (max-width: 960px) {
+  .rutaHilo {
+    height: calc(var(--n) * 90vh + 100vh);
+  }
+
+  .rutaFija {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 14px;
+    padding-top: calc(var(--mk-nav-h) + 12px);
+  }
+
+  .rutaTitulo {
+    font-size: clamp(24px, 6.4vw, 32px);
+  }
+
+  /* En pantalla angosta sólo cabe la etapa en curso; el contador dice cuántas faltan. */
+  .rutaEtapas > li:not([data-activo="true"]) {
+    display: none;
+  }
+
+  .rutaDetalle ul {
+    display: none;
+  }
 }
 
 .logros {
@@ -679,21 +776,184 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 960px) {
-  .ruta {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (max-width: 560px) {
-  .etapa {
-    padding: 26px 20px 24px;
-  }
-  .etapa h3 {
-    padding-right: 64px;
-  }
   .logros {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* ---------------------------------------------------------- Manifiesto */
+
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.manifiesto {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  padding: 170px var(--mk-gutter) 170px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 55%, rgba(250, 204, 21, 0.1), transparent 70%),
+    var(--mk-bg-deep);
+  border-block: 1px solid var(--mk-line);
+}
+
+.manifiestoLineas {
+  margin: 0;
+  text-align: center;
+  font: 800 clamp(52px, min(10vw, 17vh), 168px) / 0.88 var(--mk-font-display), sans-serif;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+}
+
+.manifiestoMascara {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.05em;
+}
+
+.manifiestoLinea {
+  display: inline-block;
+  animation: lineaSube 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.manifiestoMascara:last-child .manifiestoLinea {
+  color: var(--mk-yellow);
+}
+
+@keyframes lineaSube {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+.manifiestoPuntos {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  translate: -50% 0;
+}
+
+.manifiestoPuntos li {
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--mk-line-strong);
+  transition: background 0.4s, width 0.4s var(--mk-ease);
+}
+
+.manifiestoPuntos li[data-activo="true"] {
+  width: 44px;
+  background: var(--mk-yellow);
+}
+
+/* Dos cintas cruzadas: los estándares del catálogo y lo que respalda el papel. */
+.cinta {
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  padding: 14px 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cintaAmarilla {
+  top: 100px;
+  background: var(--mk-yellow);
+  color: var(--mk-on-yellow);
+  rotate: -3deg;
+  box-shadow: 0 18px 40px -20px rgba(0, 0, 0, 0.7);
+}
+
+.cintaNaranja {
+  bottom: 84px;
+  background: var(--mk-orange);
+  color: #fff;
+  rotate: 2.5deg;
+}
+
+.cintaPista {
+  display: flex;
+  width: max-content;
+  animation: cinta 40s linear infinite;
+}
+
+.cintaNaranja .cintaPista {
+  animation-direction: reverse;
+  animation-duration: 30s;
+}
+
+.manifiesto[data-visible="false"] .cintaPista {
+  animation-play-state: paused;
+}
+
+.cintaLista {
+  display: flex;
+}
+
+.cintaLista > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  padding-right: 20px;
+  font: 700 15px / 1 var(--mk-font-display), sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cintaAsterisco {
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+@keyframes cinta {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .manifiesto {
+    min-height: 80svh;
+    padding: 150px 16px 130px;
+  }
+
+  .manifiestoLineas {
+    font-size: clamp(44px, 15vw, 80px);
+  }
+
+  .cintaAmarilla {
+    top: 86px;
+  }
+
+  .cintaNaranja {
+    bottom: 70px;
+  }
+
+  .cintaLista > span {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cintaPista,
+  .manifiestoLinea,
+  .rutaEtiqueta {
+    animation: none;
   }
 }
