@@ -11,7 +11,9 @@ import { markRedemptionInstrumentComplete } from "@/lib/access-code-store";
 import { rateLimit } from "@/lib/rate-limit";
 import { clientIp } from "@/lib/access-codes";
 
-const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
+import { respuestasDelCandidato } from "@/lib/socioeconomico";
+
+const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "socioeconomico"];
 
 /** Envío de aplicación terminada — requiere sesión de aplicante con código válido. */
 export async function POST(request: Request) {
@@ -42,13 +44,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "JSON inválido" }, { status: 400 });
   }
 
-  const { id, instrumento, respuestas, iniciada } = body;
+  const { id, instrumento, iniciada } = body;
+  // El estudio socioeconómico se limpia campo por campo: lleva datos sensibles
+  // y la parte del investigador nunca puede venir del candidato.
+  const respuestas =
+    instrumento === "socioeconomico" ? respuestasDelCandidato(body.respuestas) : body.respuestas;
 
   if (!id || !instrumento || !INSTRUMENTOS.includes(instrumento)) {
     return NextResponse.json({ error: "Datos incompletos" }, { status: 400 });
   }
   if (respuestas == null || !iniciada) {
     return NextResponse.json({ error: "Faltan campos obligatorios" }, { status: 400 });
+  }
+  if (instrumento === "socioeconomico" && !(respuestas as { aviso: unknown }).aviso) {
+    return NextResponse.json({ error: "Falta aceptar el aviso de privacidad" }, { status: 400 });
   }
 
   if (!canTakeInstrument(applicant, instrumento)) {
@@ -79,7 +88,8 @@ export async function POST(request: Request) {
     calificacion,
     interpretacion,
     aprobada: false,
-    estado: "calificada",
+    // El estudio queda en borrador hasta que el investigador haga su parte.
+    estado: instrumento === "socioeconomico" ? "borrador" : "calificada",
     iniciada,
     terminada: true,
     accessCodeId: applicant.codeId,

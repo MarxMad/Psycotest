@@ -1,0 +1,194 @@
+.wrap {
+  display: grid;
+  gap: 1rem;
+}
+
+.tarjeta,
+.bloque {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  background: var(--raised);
+}
+
+.tarjeta h3 {
+  margin: 0 0 0.75rem;
+  font-size: var(--admin-fs-base);
+}
+
+.tarjeta p {
+  margin: 0;
+}
+
+.resumen {
+  display: grid;
+  gap: 1rem;
+}
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.cifra {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rule-soft);
+  border-radius: var(--r);
+  background: var(--raised);
+}
+
+.cifra span {
+  font-size: var(--admin-fs-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cifra strong {
+  font-size: 1.15rem;
+}
+
+.cifra[data-tono="alerta"] strong {
+  color: var(--alert);
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.avance {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--admin-fs-sm);
+  color: var(--muted);
+}
+
+.avance li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.avance li[data-ok] {
+  color: var(--ink);
+}
+
+.avance li[data-ok] svg,
+.hecho {
+  color: var(--hartman);
+}
+
+.falta {
+  color: var(--faint);
+}
+
+.alerta {
+  color: var(--alert);
+  font-weight: 600;
+}
+
+.verificaciones {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--admin-fs-sm);
+}
+
+.verificaciones li {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.5fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 560px) {
+  .verificaciones li {
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+  }
+}
+
+/* ------------------------------------------------------ investigación */
+
+.bloque summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 32px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.bloque summary small {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.bloque[open] summary {
+  margin-bottom: 1rem;
+}
+
+.bloque > p {
+  margin: -0.5rem 0 1rem;
+}
+
+.barra {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.ok {
+  color: var(--hartman);
+  font-weight: 600;
+}
+
+.error {
+  color: var(--alert);
+  font-weight: 600;
+}
+
+.pendiente {
+  color: var(--muted);
+}
+
+/* ---------------------------------------------------------- dictamen */
+
+.texto {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.notas {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.notas textarea {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 400;
+}

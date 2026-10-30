@@ -2,7 +2,7 @@
  * Persistencia de sesiones (localStorage → mismo contrato que PostgreSQL).
  */
 
-export type Instrumento = "papi" | "hartman" | "mabe" | "cleaver";
+export type Instrumento = "papi" | "hartman" | "mabe" | "cleaver" | "socioeconomico";
 
 export interface MetaSesion {
   id: string;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { logAudit, requireUser } from "@/lib/auth";
-import { ALL_INSTRUMENTOS } from "@/lib/access-codes";
+import { ALL_INSTRUMENTOS, PSICOMETRICOS } from "@/lib/access-codes";
 import { createAccessCode, listAccessCodes } from "@/lib/access-code-store";
 import type { Instrumento } from "@/lib/storage";
 
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Cupos debe ser entre 1 y 500" }, { status: 400 });
   }
 
-  const allowed = (body.allowedInstruments ?? ALL_INSTRUMENTOS).filter((i) =>
+  const allowed = (body.allowedInstruments ?? PSICOMETRICOS).filter((i) =>
     ALL_INSTRUMENTOS.includes(i),
   );
   if (allowed.length === 0) {

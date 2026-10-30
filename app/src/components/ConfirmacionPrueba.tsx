@@ -24,9 +24,11 @@ interface Props {
   instrumento: Instrumento;
   participante: string;
   finalizadaEn: string;
+  /** Qué sigue para el candidato, si no es la revisión del psicólogo. */
+  mensaje?: string;
 }
 
-export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn }: Props) {
+export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn, mensaje }: Props) {
   return (
     <main className={s.main}>
       <div className={s.card}>
@@ -49,8 +51,8 @@ export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn }: 
         </dl>
 
         <p className={s.mensaje}>
-          Pronto sabrás tus resultados. Un psicólogo revisará tu protocolo y te compartirá el informe
-          cuando esté listo.
+          {mensaje ??
+            "Pronto sabrás tus resultados. Un psicólogo revisará tu protocolo y te compartirá el informe cuando esté listo."}
         </p>
 
         <Link href={channelPublicUrl("psicologia")} className="btn btn-primary">

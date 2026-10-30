@@ -56,7 +56,7 @@ export const accessCodes = pgTable("access_codes", {
   /** Últimos 4 caracteres para identificación en panel (no secretos) */
   codeSuffix: text("code_suffix").notNull(),
   allowedInstruments: jsonb("allowed_instruments")
-    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver" | "socioeconomico">>()
     .notNull(),
   maxUses: integer("max_uses").notNull(),
   usedCount: integer("used_count").notNull().default(0),
@@ -77,7 +77,7 @@ export const accessRedemptions = pgTable("access_redemptions", {
   puesto: text("puesto"),
   /** Instrumentos ya completados por esta persona */
   completedInstruments: jsonb("completed_instruments")
-    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver">>()
+    .$type<Array<"papi" | "hartman" | "mabe" | "cleaver" | "socioeconomico">>()
     .notNull()
     .default([]),
   ipHash: text("ip_hash"),
@@ -86,7 +86,9 @@ export const accessRedemptions = pgTable("access_redemptions", {
 
 export const assessmentSessions = pgTable("assessment_sessions", {
   id: text("id").primaryKey(),
-  instrumento: text("instrumento", { enum: ["papi", "hartman", "mabe", "cleaver"] }).notNull(),
+  instrumento: text("instrumento", {
+    enum: ["papi", "hartman", "mabe", "cleaver", "socioeconomico"],
+  }).notNull(),
   estado: text("estado", { enum: ["borrador", "calificada", "aprobada"] }).notNull().default("calificada"),
   participantId: text("participant_id").references(() => participants.id),
   participantNombre: text("participant_nombre").notNull(),

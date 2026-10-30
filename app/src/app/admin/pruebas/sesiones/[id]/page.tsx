@@ -29,6 +29,8 @@ import {
 } from "@/lib/storage";
 import { InterpretacionPanel } from "@/components/admin/InterpretacionPanel";
 import { RespuestasPanel } from "@/components/admin/RespuestasPanel";
+import { EstudioAdmin } from "@/components/socioeconomico/EstudioAdmin";
+import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 import s from "../../../admin.module.css";
 
 export default function AdminDetallePage() {
@@ -145,7 +147,9 @@ export default function AdminDetallePage() {
         <header className={s.detailHead}>
           <div>
             <span className={s.badge} data-i={ses.instrumento}>
-              {ses.instrumento.toUpperCase()}
+              {ses.instrumento === "socioeconomico"
+                ? NOMBRE_INSTRUMENTO.socioeconomico.toUpperCase()
+                : ses.instrumento.toUpperCase()}
             </span>
             <h1>{titulo}</h1>
             <p className={s.muted}>
@@ -193,6 +197,16 @@ export default function AdminDetallePage() {
           </div>
         )}
 
+        {ses.instrumento === "socioeconomico" ? (
+          <EstudioAdmin
+            sesion={ses}
+            onCambio={(next) => {
+              setSesion(next);
+              setNotas(next.notasPsicologo ?? "");
+            }}
+          />
+        ) : (
+        <>
         <div className={s.tabs}>
           {(
             [
@@ -234,6 +248,8 @@ export default function AdminDetallePage() {
             onGuardar={guardarNotas}
             onAprobar={aprobar}
           />
+        )}
+        </>
         )}
       </div>
     </main>

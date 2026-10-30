@@ -38,10 +38,16 @@ export function clientIp(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
-export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
+export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "socioeconomico"];
+
+/**
+ * La batería psicométrica. Es lo que trae un código cuando no dice nada: el
+ * estudio socioeconómico es otro servicio (lleva visita) y se pide aparte.
+ */
+export const PSICOMETRICOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
 
 export function parseAllowedInstruments(raw: unknown): Instrumento[] {
-  if (!Array.isArray(raw) || raw.length === 0) return [...ALL_INSTRUMENTOS];
+  if (!Array.isArray(raw) || raw.length === 0) return [...PSICOMETRICOS];
   const set = new Set(raw);
   return ALL_INSTRUMENTOS.filter((i) => set.has(i));
 }

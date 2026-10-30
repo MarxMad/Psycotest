@@ -15,6 +15,7 @@ export const evaluacion = {
   hartman: `${EVAL_BASE}/hartman`,
   mabe: `${EVAL_BASE}/mabe`,
   cleaver: `${EVAL_BASE}/cleaver`,
+  socioeconomico: `${EVAL_BASE}/socioeconomico`,
 } as const;
 
 /** @deprecated Prefer `evaluacion` */

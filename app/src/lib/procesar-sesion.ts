@@ -9,6 +9,7 @@ import { calificarMabe, type RespuestasMabe } from "./mabe";
 import { calificarPapi, type Respuestas } from "./papi";
 import { calificarCleaver, type RespuestasCleaver } from "./cleaver";
 import { interpretarHartman, interpretarMabe, interpretarPapi, interpretarCleaver } from "./informes";
+import { comoRespuestas, interpretarSocioeconomico, resumirSocioeconomico } from "./socioeconomico";
 
 export function procesarSesion(
   instrumento: Instrumento,
@@ -36,6 +37,12 @@ export function procesarSesion(
     case "cleaver": {
       const cal = calificarCleaver(respuestas as RespuestasCleaver);
       return { calificacion: cal, interpretacion: interpretarCleaver(cal) };
+    }
+    case "socioeconomico": {
+      // No se califica: el «resultado» es el resumen del expediente.
+      const r = comoRespuestas(respuestas);
+      const res = resumirSocioeconomico(r);
+      return { calificacion: res, interpretacion: interpretarSocioeconomico(r, res) };
     }
     default:
       throw new Error(`Instrumento no soportado: ${instrumento}`);

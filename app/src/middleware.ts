@@ -15,6 +15,7 @@ const TEST_PATHS = [
   "/evaluacion/hartman",
   "/evaluacion/mabe",
   "/evaluacion/cleaver",
+  "/evaluacion/socioeconomico",
 ] as const;
 
 function secret() {
@@ -29,7 +30,13 @@ function instrumentFromPath(pathname: string): Instrumento | null {
   for (const p of TEST_PATHS) {
     if (pathname === p || pathname.startsWith(`${p}/`)) {
       const slug = p.split("/").pop();
-      if (slug === "papi" || slug === "hartman" || slug === "mabe" || slug === "cleaver") {
+      if (
+        slug === "papi" ||
+        slug === "hartman" ||
+        slug === "mabe" ||
+        slug === "cleaver" ||
+        slug === "socioeconomico"
+      ) {
         return slug;
       }
     }

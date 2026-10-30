@@ -13,6 +13,7 @@ export const NOMBRE_INSTRUMENTO: Record<Instrumento, string> = {
   hartman: "Axiología de Valores",
   mabe: "Toma de Decisiones",
   cleaver: "Compatibilidad Puesto–Persona",
+  socioeconomico: "Estudio Socioeconómico",
 };
 
 /** Versión corta para chips, tablas y columnas estrechas. */
@@ -21,6 +22,7 @@ export const NOMBRE_CORTO: Record<Instrumento, string> = {
   hartman: "Valores",
   mabe: "Decisiones",
   cleaver: "Compatibilidad",
+  socioeconomico: "Socioeconómico",
 };
 
 /** Qué mide, en una línea. */
@@ -29,6 +31,7 @@ export const MIDE: Record<Instrumento, string> = {
   hartman: "Jerarquía de valores y motivación",
   mabe: "Criterio y razonamiento aplicado",
   cleaver: "Ajuste entre el perfil y el puesto",
+  socioeconomico: "Entorno familiar, económico y referencias",
 };
 
 /** Encabezado descriptivo para informes y PDF. */
@@ -37,6 +40,7 @@ export const SUBTITULO_INSTRUMENTO: Record<Instrumento, string> = {
   hartman: "Axiología de Valores — jerarquía de valores y motivación",
   mabe: "Toma de Decisiones — criterio y ajuste al puesto",
   cleaver: "Compatibilidad Puesto–Persona — ajuste conductual al rol",
+  socioeconomico: "Estudio Socioeconómico — entorno, economía, visita y referencias",
 };
 
 export function nombreInstrumento(slug: string): string {

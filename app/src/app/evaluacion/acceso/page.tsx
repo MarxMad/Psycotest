@@ -17,6 +17,11 @@ const PRUEBAS: Record<Instrumento, { nombre: string; tint: string; href: string 
   hartman: { nombre: NOMBRE_INSTRUMENTO.hartman, tint: "var(--hartman)", href: psycotest.hartman },
   mabe: { nombre: NOMBRE_INSTRUMENTO.mabe, tint: "var(--mabe)", href: psycotest.mabe },
   cleaver: { nombre: NOMBRE_INSTRUMENTO.cleaver, tint: "var(--cleaver)", href: psycotest.cleaver },
+  socioeconomico: {
+    nombre: NOMBRE_INSTRUMENTO.socioeconomico,
+    tint: "var(--socioeconomico)",
+    href: psycotest.socioeconomico,
+  },
 };
 
 const ERRORES: Record<string, string> = {

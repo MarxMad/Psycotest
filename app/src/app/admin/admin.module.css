@@ -182,6 +182,14 @@
   --c: var(--mabe);
 }
 
+.badge[data-i="cleaver"] {
+  --c: var(--cleaver);
+}
+
+.badge[data-i="socioeconomico"] {
+  --c: var(--socioeconomico);
+}
+
 .ok {
   color: var(--hartman);
   font-size: var(--admin-fs-sm);

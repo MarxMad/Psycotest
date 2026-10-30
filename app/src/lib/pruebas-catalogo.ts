@@ -58,6 +58,17 @@ export const PRUEBAS: Prueba[] = [
     precio: 32000,
     descripcion: "Cómo dirige, cómo delega y cómo sostiene el resultado con su equipo.",
   },
+  {
+    id: "socioeconomico",
+    nombre: "Estudio Socioeconómico",
+    etiqueta: "Entorno, visita y referencias",
+    // Lo que tarda el candidato en su parte; la visita y las llamadas van aparte.
+    minutos: 40,
+    // PROVISIONAL: lo fija el cliente. Incluye visita domiciliaria y verificación de referencias.
+    precio: 120000,
+    descripcion:
+      "Situación familiar y económica, visita domiciliaria y verificación de referencias laborales.",
+  },
 ];
 
 /**
@@ -92,5 +103,9 @@ export function cotizar(ids: string[], candidatos: number): Cotizacion {
   return { porCandidato, subtotal, descuento, total: subtotal - descuento, minutos };
 }
 
-/** La batería completa es el caso normal: se leen juntas. */
-export const BATERIA_COMPLETA = PRUEBAS.map((p) => p.id);
+/**
+ * La batería completa es el caso normal: las pruebas psicométricas se leen
+ * juntas. El estudio socioeconómico no entra: es otro servicio y se agrega
+ * a mano.
+ */
+export const BATERIA_COMPLETA = PRUEBAS.filter((p) => p.id !== "socioeconomico").map((p) => p.id);

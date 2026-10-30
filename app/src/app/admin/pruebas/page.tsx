@@ -22,6 +22,7 @@ const COLORES: Record<Instrumento, string> = {
   hartman: "var(--hartman)",
   mabe: "var(--mabe)",
   cleaver: "var(--cleaver)",
+  socioeconomico: "var(--socioeconomico)",
 };
 
 function fmt(iso: string) {
@@ -117,7 +118,7 @@ export default function PruebasPage() {
 
       <div className={s.filters}>
         <span>Filtrar:</span>
-        {(["", "papi", "hartman", "mabe", "cleaver"] as const).map((f) => (
+        {(["", "papi", "hartman", "mabe", "cleaver", "socioeconomico"] as const).map((f) => (
           <button
             key={f || "all"}
             type="button"

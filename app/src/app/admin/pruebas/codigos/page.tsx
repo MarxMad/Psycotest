@@ -9,7 +9,7 @@ import c from "./codigos.module.css";
 import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
 const INSTRUMENTOS: { id: Instrumento; label: string }[] = (
-  ["papi", "hartman", "mabe", "cleaver"] as Instrumento[]
+  ["papi", "hartman", "mabe", "cleaver", "socioeconomico"] as Instrumento[]
 ).map((id) => ({ id, label: NOMBRE_INSTRUMENTO[id] }));
 
 interface CodeRow {

@@ -29,6 +29,7 @@ const pesos = (centavos: number) =>
  */
 export function Cotizador() {
   const [elegidas, setElegidas] = useState<string[]>(BATERIA_COMPLETA);
+  const bateriaPuesta = BATERIA_COMPLETA.every((id) => elegidas.includes(id));
   const [candidatos, setCandidatos] = useState(5);
   const total = useRef<HTMLSpanElement>(null);
   const anterior = useRef<number | null>(null);
@@ -97,11 +98,9 @@ export function Cotizador() {
             <button
               type="button"
               className={s.atajo}
-              onClick={() =>
-                setElegidas(elegidas.length === PRUEBAS.length ? [] : BATERIA_COMPLETA)
-              }
+              onClick={() => setElegidas(bateriaPuesta ? [] : BATERIA_COMPLETA)}
             >
-              {elegidas.length === PRUEBAS.length ? "Quitar todas" : "Batería completa"}
+              {bateriaPuesta ? "Quitar todas" : "Batería completa"}
             </button>
           </legend>
 

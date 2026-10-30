@@ -7,7 +7,7 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent, ChannelSection } from "@/lib/channel-content";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
-import { PRUEBAS } from "@/lib/pruebas-catalogo";
+import { BATERIA_COMPLETA, PRUEBAS } from "@/lib/pruebas-catalogo";
 import { menosMovimiento, useAparicion, useAparicionLista } from "@/lib/aparicion";
 import { Cifras, Declaracion, Pasos } from "./Secciones";
 import { Cotizador } from "./Cotizador";
@@ -29,7 +29,7 @@ const pesos = (centavos: number) =>
 const DESDE = pesos(Math.min(...PRUEBAS.map((p) => p.precio)));
 
 const CONFIANZA = [
-  { icono: Layers, texto: `${PRUEBAS.length} instrumentos, una sola lectura` },
+  { icono: Layers, texto: `${BATERIA_COMPLETA.length} instrumentos, una sola lectura` },
   { icono: Clock, texto: "Informe en 72 h" },
   { icono: ShieldCheck, texto: "Confidencial" },
 ];
