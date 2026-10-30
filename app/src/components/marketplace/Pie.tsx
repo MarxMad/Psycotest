@@ -49,7 +49,7 @@ export function Pie() {
             <ul className={s.pieLista}>
               <li><Link href={RUTAS.catalogo({ tipo: "diplomado" })}>Diplomados</Link></li>
               <li><Link href={RUTAS.catalogo({ tipo: "certificacion" })}>Certificaciones</Link></li>
-              {CATEGORIAS.slice(0, 4).map((c) => (
+              {CATEGORIAS.map((c) => (
                 <li key={c.slug}>
                   <Link href={RUTAS.catalogo({ categoria: c.slug })}>{c.nombre}</Link>
                 </li>

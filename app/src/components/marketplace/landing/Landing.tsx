@@ -31,7 +31,8 @@ function destacados(programas: Programa[], tipo: Programa["tipo"], n: number) {
 export function Landing({ programas }: { programas: Programa[] }) {
   const diplomados = destacados(programas, "diplomado", 4);
   const certificaciones = destacados(programas, "certificacion", 4);
-  const porCategoria = (slug: string) => programas.filter((p) => p.categoria === slug).length;
+  const porCategoria = (slug: string) =>
+    programas.filter((p) => p.tipo === "certificacion" && p.categoria === slug).length;
 
   // El titular resalta su última palabra.
   const palabras = PROPUESTA.titular.split(" ");
@@ -77,11 +78,11 @@ export function Landing({ programas }: { programas: Programa[] }) {
         <div className={s.contenedor}>
           <Revelar className={s.cabeceraSeccion}>
             <div>
-              <p className={s.eyebrow}>Áreas de formación</p>
-              <h2 id="cat-titulo" className={s.h2}>Encuentra tu siguiente paso.</h2>
+              <p className={s.eyebrow}>Certificaciones por sector</p>
+              <h2 id="cat-titulo" className={s.h2}>Encuentra tu estándar.</h2>
             </div>
-            <Link href={RUTAS.catalogo()} className={`${s.btn} ${s.btnSecundario}`}>
-              Todo el catálogo <ArrowRight size={16} aria-hidden />
+            <Link href={RUTAS.catalogo({ tipo: "certificacion" })} className={`${s.btn} ${s.btnSecundario}`}>
+              Todas las certificaciones <ArrowRight size={16} aria-hidden />
             </Link>
           </Revelar>
 
@@ -91,7 +92,7 @@ export function Landing({ programas }: { programas: Programa[] }) {
               return (
                 <Revelar como="li" key={c.slug} retraso={i * 60}>
                   <Link
-                    href={RUTAS.catalogo({ categoria: c.slug })}
+                    href={RUTAS.catalogo({ tipo: "certificacion", categoria: c.slug })}
                     className={`${s.tarjeta} ${s.tarjetaInteractiva} ${l.categoria}`}
                     style={{ "--tono": c.tono } as React.CSSProperties}
                   >
@@ -103,7 +104,7 @@ export function Landing({ programas }: { programas: Programa[] }) {
                       <span>{c.resumen}</span>
                     </span>
                     <span className={l.categoriaPie}>
-                      <span>{n} {n === 1 ? "programa" : "programas"}</span>
+                      <span>{n} {n === 1 ? "estándar" : "estándares"}</span>
                       <ArrowUpRight size={18} aria-hidden />
                     </span>
                   </Link>
@@ -120,10 +121,11 @@ export function Landing({ programas }: { programas: Programa[] }) {
           <div className={s.contenedor}>
             <Revelar className={s.cabeceraSeccion}>
               <div>
-                <p className={s.eyebrow}>Diplomados destacados</p>
-                <h2 id="dip-titulo" className={s.h2}>Aprende a fondo. A tu ritmo.</h2>
+                <p className={s.eyebrow}>Diplomados</p>
+                <h2 id="dip-titulo" className={s.h2}>Aprende a fondo. Luego certifícate.</h2>
                 <p className={s.lead}>
-                  Programas de 90 a 160 horas con proyectos aplicados y constancia con valor curricular.
+                  104 horas en modalidad mixta, virtual y presencial: 60% práctica y 40% teoría. Al
+                  terminar puedes certificarte en el estándar que le corresponde.
                 </p>
               </div>
               <Link href={RUTAS.catalogo({ tipo: "diplomado" })} className={`${s.btn} ${s.btnSecundario}`}>

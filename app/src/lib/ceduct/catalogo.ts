@@ -18,13 +18,12 @@ const FORZAR_DEMO = process.env.CEDUCT_CATALOGO_DEMO === "1";
 
 /**
  * La base no distingue diplomado de certificación: un curso con clave de
- * estándar cuyo título habla de certificar es una certificación; lo demás,
- * diplomado.
+ * estándar es una certificación; uno sin clave, diplomado (el diplomado
+ * menciona en su texto a qué estándares prepara, pero no se evalúa en él).
  */
 function tipoDe(titulo: string, clave: string | null): TipoPrograma {
-  if (clave && /certific|evaluaci[oó]n de competencia/i.test(titulo)) return "certificacion";
-  if (/^certificaci[oó]n/i.test(titulo)) return "certificacion";
-  return "diplomado";
+  if (/^diplomado/i.test(titulo)) return "diplomado";
+  return clave ? "certificacion" : "diplomado";
 }
 
 async function desdeBase(): Promise<Programa[]> {
@@ -56,10 +55,11 @@ async function desdeBase(): Promise<Programa[]> {
 
   return filas.map((f, i) => {
     const horas = Math.round(Number(f.minutos ?? 0) / 60);
+    const tipo = tipoDe(f.titulo, f.estandarClave);
     return {
       id: f.id,
       slug: f.slug,
-      tipo: tipoDe(f.titulo, f.estandarClave),
+      tipo,
       titulo: f.titulo,
       subtitulo: f.subtitulo,
       descripcion: f.descripcion,
@@ -78,7 +78,8 @@ async function desdeBase(): Promise<Programa[]> {
       nivel: f.nivel,
       modalidad: f.modalidad,
       horas,
-      duracion: horas ? `${horas} horas` : "A tu ritmo",
+      // Una certificación no se cursa: se evalúa, y lo que tarda depende de la persona.
+      duracion: horas ? `${horas} horas` : tipo === "certificacion" ? "Según tu evaluación" : "A tu ritmo",
       fechaInicio: null,
       estandarClave: f.estandarClave,
       // El temario se carga sólo en la ficha (obtenerPrograma).

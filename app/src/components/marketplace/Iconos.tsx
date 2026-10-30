@@ -1,25 +1,25 @@
 import {
-  Briefcase,
-  Cpu,
+  Award,
+  Compass,
   GraduationCap,
   HeartPulse,
-  Megaphone,
-  Users,
+  Landmark,
+  Luggage,
   type LucideProps,
 } from "lucide-react";
 import type { IconoCategoria } from "@/lib/ceduct/config";
 
 const MAPA = {
-  megafono: Megaphone,
-  chip: Cpu,
-  maletin: Briefcase,
+  edificio: Landmark,
   pulso: HeartPulse,
+  maleta: Luggage,
+  brujula: Compass,
   birrete: GraduationCap,
-  personas: Users,
+  diploma: Award,
 } satisfies Record<IconoCategoria, React.ComponentType<LucideProps>>;
 
 export function IconoDeCategoria({ icono, ...props }: { icono: IconoCategoria } & LucideProps) {
-  const Icono = MAPA[icono] ?? Briefcase;
+  const Icono = MAPA[icono] ?? Compass;
   return <Icono aria-hidden {...props} />;
 }
 

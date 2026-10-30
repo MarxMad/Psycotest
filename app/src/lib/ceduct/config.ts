@@ -32,7 +32,7 @@ export const IMPUESTOS = {
 /* Categorías                                                          */
 /* ------------------------------------------------------------------ */
 
-export type IconoCategoria = "megafono" | "chip" | "maletin" | "pulso" | "birrete" | "personas";
+export type IconoCategoria = "edificio" | "pulso" | "maleta" | "brujula" | "birrete" | "diploma";
 
 export type Categoria = {
   slug: string;
@@ -43,71 +43,80 @@ export type Categoria = {
   tono: string;
 };
 
+/**
+ * Los sectores en que CEDUCT agrupa sus estándares de competencia. Son las
+ * categorías de las certificaciones; los diplomados van aparte (ver
+ * `CATEGORIA_DIPLOMADOS`). Los slugs coinciden con los de la base, que
+ * siembra `npm run ceduct:sembrar` desde `oferta.ts`.
+ */
 export const CATEGORIAS: Categoria[] = [
   {
-    slug: "marketing-digital",
-    nombre: "Marketing Digital",
-    resumen: "Estrategia, contenido, pauta y analítica.",
-    icono: "megafono",
-    tono: "#F97316",
-  },
-  {
-    slug: "tecnologia",
-    nombre: "Tecnología",
-    resumen: "Datos, desarrollo, nube y ciberseguridad.",
-    icono: "chip",
+    slug: "servicio-publico",
+    nombre: "Servicio Público",
+    resumen: "Atención al ciudadano en dependencias de gobierno.",
+    icono: "edificio",
     tono: "#38BDF8",
   },
   {
-    slug: "negocios",
-    nombre: "Negocios",
-    resumen: "Dirección, finanzas, ventas y proyectos.",
-    icono: "maletin",
-    tono: "#FACC15",
-  },
-  {
-    slug: "salud",
-    nombre: "Salud",
-    resumen: "Atención, seguridad y bienestar laboral.",
+    slug: "salud-y-bienestar",
+    nombre: "Salud y Bienestar",
+    resumen: "Consejería en adicciones.",
     icono: "pulso",
     tono: "#34D399",
   },
   {
-    slug: "educacion",
-    nombre: "Educación",
-    resumen: "Diseño instruccional, docencia y evaluación.",
+    slug: "turismo-y-hospitalidad",
+    nombre: "Turismo y Hospitalidad",
+    resumen: "Recepción de huéspedes y atención al comensal.",
+    icono: "maleta",
+    tono: "#F97316",
+  },
+  {
+    slug: "desarrollo-personal-y-profesional",
+    nombre: "Desarrollo Personal y Profesional",
+    resumen: "Evaluación de competencias y coaching.",
+    icono: "brujula",
+    tono: "#FACC15",
+  },
+  {
+    slug: "capacitacion-y-formacion",
+    nombre: "Capacitación y Formación",
+    resumen: "Impartición, tutoría y desarrollo de cursos.",
     icono: "birrete",
     tono: "#A78BFA",
   },
-  {
-    slug: "recursos-humanos",
-    nombre: "Recursos Humanos",
-    resumen: "Selección, capacitación y clima laboral.",
-    icono: "personas",
-    tono: "#F472B6",
-  },
 ];
 
+/** Los diplomados no son de un sector: tienen su propia sección. */
+export const CATEGORIA_DIPLOMADOS: Categoria = {
+  slug: "diplomados",
+  nombre: "Diplomados",
+  resumen: "104 horas, mixtos: 60% práctica y 40% teoría.",
+  icono: "diploma",
+  tono: "#F472B6",
+};
+
 export function categoriaPorSlug(slug: string): Categoria {
-  return CATEGORIAS.find((c) => c.slug === slug) ?? CATEGORIAS[2];
+  if (slug === CATEGORIA_DIPLOMADOS.slug) return CATEGORIA_DIPLOMADOS;
+  return CATEGORIAS.find((c) => c.slug === slug) ?? CATEGORIAS[3];
 }
 
 /**
- * Las categorías de la base tienen nombres libres («Capacitación», «RH»…).
- * Se acomodan en las del marketplace por palabras clave; lo que no encaja
- * cae en Negocios.
+ * Las categorías de la base se llaman igual que las del marketplace. Si algún
+ * día se crea una a mano con otro nombre, se acomoda por palabras clave; lo
+ * que no encaja cae en Desarrollo Personal y Profesional.
  */
 export function categoriaDesdeTexto(texto: string | null | undefined): string {
   const t = (texto ?? "").toLowerCase();
-  if (!t) return "negocios";
-  const exacta = CATEGORIAS.find((c) => c.slug === t || c.nombre.toLowerCase() === t);
+  const todas = [...CATEGORIAS, CATEGORIA_DIPLOMADOS];
+  const exacta = todas.find((c) => c.slug === t || c.nombre.toLowerCase() === t);
   if (exacta) return exacta.slug;
-  if (/(market|digital|redes|publicidad|ventas en l)/.test(t)) return "marketing-digital";
-  if (/(tecno|datos|program|software|ciber|nube|ti\b|inform)/.test(t)) return "tecnologia";
-  if (/(salud|enferm|clínic|clinic|seguridad e hig|primeros)/.test(t)) return "salud";
-  if (/(educa|docen|instruc|capacita|formaci|ec0217|enseñ)/.test(t)) return "educacion";
-  if (/(recursos humanos|\brh\b|personal|selecci|talento|psico)/.test(t)) return "recursos-humanos";
-  return "negocios";
+  if (/diplomad/.test(t)) return "diplomados";
+  if (/(públic|public|gobierno|ciudadan)/.test(t)) return "servicio-publico";
+  if (/(salud|bienestar|adicci)/.test(t)) return "salud-y-bienestar";
+  if (/(turis|hotel|hospital|restaur|comensal)/.test(t)) return "turismo-y-hospitalidad";
+  if (/(capacita|formaci|docen|instruc|curso)/.test(t)) return "capacitacion-y-formacion";
+  return "desarrollo-personal-y-profesional";
 }
 
 /* ------------------------------------------------------------------ */
@@ -154,7 +163,7 @@ export const TESTIMONIOS = [
   {
     nombre: "[Nombre del alumno]",
     rol: "Analista de datos",
-    programa: "Diplomado en Ciencia de Datos para Negocios",
+    programa: "Diplomado Formador que inspira",
     texto:
       "El temario va directo a lo que usas en el trabajo. Los proyectos del módulo cuatro los presenté tal cual a mi dirección.",
   },

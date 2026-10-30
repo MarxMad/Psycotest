@@ -40,7 +40,7 @@ export function Ficha({ programa: p, relacionados }: { programa: Programa; relac
 
   const badges = [
     { Icono: Timer, label: "Duración", valor: p.duracion },
-    { Icono: Clock, label: "Horas", valor: `${p.horas} h` },
+    ...(p.horas > 0 ? [{ Icono: Clock, label: "Horas", valor: `${p.horas} h` }] : []),
     { Icono: MapPin, label: "Modalidad", valor: MODALIDAD_LABEL[p.modalidad] },
     { Icono: BarChart3, label: "Nivel", valor: NIVEL_LABEL[p.nivel] },
     { Icono: CalendarDays, label: "Inicio", valor: fechaCorta(p.fechaInicio) },

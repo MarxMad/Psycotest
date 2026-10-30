@@ -64,7 +64,7 @@ export function TarjetaPrograma({
         </h3>
 
         <ul className={t.datos} aria-label="Detalles">
-          <li>{p.horas} h</li>
+          {p.horas > 0 && <li>{p.horas} h</li>}
           <li>{p.duracion}</li>
           <li>{MODALIDAD_LABEL[p.modalidad]}</li>
           <li>{p.fechaInicio ? `Inicia ${fechaCorta(p.fechaInicio)}` : "Inicio inmediato"}</li>
