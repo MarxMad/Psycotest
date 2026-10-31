@@ -253,7 +253,7 @@ export default function CodigoReportePage() {
                         <ul className={c.sessionList}>
                           {row.sessions.map((ses) => (
                             <li key={ses.id}>
-                              <Link href={`/admin/${ses.id}`} className={s.link}>
+                              <Link href={`/admin/pruebas/sesiones/${ses.id}`} className={s.link}>
                                 {ETIQUETAS[ses.instrumento]}
                                 {ses.aprobada ? " ✓" : ""}
                               </Link>

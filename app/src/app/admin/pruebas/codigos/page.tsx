@@ -219,7 +219,7 @@ export default function CodigosPage() {
                     <td className={s.muted}>{fmt(row.createdAt)}</td>
                     <td>
                       <div className={c.rowActions}>
-                        <Link href={`/admin/codigos/${row.id}`} className={s.link}>
+                        <Link href={`/admin/pruebas/codigos/${row.id}`} className={s.link}>
                           Reporte →
                         </Link>
                         <button

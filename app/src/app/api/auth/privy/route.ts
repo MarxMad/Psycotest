@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import {
+  COOKIE_SALIDA,
   createSessionToken,
   logAudit,
   resolvePostLoginPath,
@@ -20,10 +22,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const { token, next } = (await request.json().catch(() => ({}))) as {
+  const { token, next, manual } = (await request.json().catch(() => ({}))) as {
     token?: string;
     next?: string;
+    /** La persona pulsó «Entrar»; si no, es el canje automático de una sesión de Privy abierta. */
+    manual?: boolean;
   };
+
+  // Quien pulsó «Salir» no vuelve a entrar solo aunque Privy siga abierto en
+  // su navegador: tiene que pedirlo.
+  if (!manual && (await cookies()).get(COOKIE_SALIDA)) {
+    return NextResponse.json({ error: "Sesión cerrada.", code: "SALIDA" }, { status: 409 });
+  }
 
   const identidad = await verificarToken(token);
   if (!identidad) {

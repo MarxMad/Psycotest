@@ -14,6 +14,14 @@ import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
 const COOKIE = "psycotest_session";
 
+/**
+ * Marca de «salió a propósito». Mientras exista, la sesión de Privy que siga
+ * abierta en el navegador no puede volver a entrar sola: hace falta que la
+ * persona pulse «Entrar». Es la red de seguridad del lado del servidor, por si
+ * el cierre de Privy en el navegador falla o llega tarde.
+ */
+export const COOKIE_SALIDA = "psycotest_salida";
+
 export interface AuthUser {
   id: string;
   email: string;
@@ -108,11 +116,19 @@ export async function setSessionCookie(token: string) {
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
   });
+  jar.delete(COOKIE_SALIDA);
 }
 
 export async function clearSessionCookie() {
   const jar = await cookies();
   jar.delete(COOKIE);
+  jar.set(COOKIE_SALIDA, "1", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30,
+  });
 }
 
 /**

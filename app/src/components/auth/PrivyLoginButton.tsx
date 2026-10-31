@@ -52,7 +52,7 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   /** Evita dos canjes a la vez: el automático y el de «onComplete». */
   const canjeEnCurso = useRef(false);
 
-  const canjearSesion = useCallback(async () => {
+  const canjearSesion = useCallback(async (manual: boolean) => {
     if (canjeEnCurso.current) return;
     canjeEnCurso.current = true;
     setCanjeando(true);
@@ -62,9 +62,15 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       const r = await fetch("/api/auth/privy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, next }),
+        body: JSON.stringify({ token, next, manual }),
       });
       const d = await r.json();
+      // Salió a propósito: la sesión de Privy que quedaba se cierra en
+      // silencio y el botón espera a que la persona decida entrar.
+      if (r.status === 409 && d.code === "SALIDA") {
+        await logoutRef.current().catch(() => {});
+        return;
+      }
       if (!r.ok) throw new Error(d.error ?? "No se pudo iniciar sesión");
       // El servidor ya validó el destino contra el rol; no se sobreescribe.
       router.push(d.next);
@@ -83,9 +89,17 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   const canjearRef = useRef(canjearSesion);
   canjearRef.current = canjearSesion;
 
-  /** Estable a propósito: Privy la recibe en cada render. */
-  const alEntrar = useCallback(() => {
-    void canjearRef.current();
+  /**
+   * Estable a propósito: Privy la recibe en cada render.
+   *
+   * Privy también la llama al montar si su sesión ya estaba abierta
+   * (`wasAlreadyAuthenticated`). Ese caso no es un «Entrar»: lo atiende el
+   * efecto de abajo, que respeta el cierre en curso. Antes se canjeaba aquí
+   * sin mirar nada, y al volver de «Salir» la persona entraba de nuevo sola.
+   */
+  const alEntrar = useCallback(({ wasAlreadyAuthenticated }: { wasAlreadyAuthenticated: boolean }) => {
+    if (wasAlreadyAuthenticated) return;
+    void canjearRef.current(true);
   }, []);
   const { login } = useLogin({ onComplete: alEntrar });
 
@@ -132,7 +146,7 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
   // Si Privy ya tenía la sesión abierta, se canjea sin pedir nada.
   useEffect(() => {
     if (cerrando || !ready || !authenticated) return;
-    void canjearRef.current();
+    void canjearRef.current(false);
   }, [ready, authenticated, cerrando]);
 
   if (!ready || cerrando) {
@@ -148,7 +162,9 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       <button
         type="button"
         className={s.boton}
-        onClick={() => login()}
+        // Con Privy ya abierto, `login()` no hace nada: se canjea directo,
+        // ahora sí como decisión de la persona.
+        onClick={() => (authenticated ? void canjearRef.current(true) : login())}
         disabled={canjeando}
       >
         {canjeando ? "Entrando…" : "Entrar con mi correo"}
