@@ -119,3 +119,54 @@
     grid-template-columns: 1fr;
   }
 }
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.altaCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.alta {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 0.8fr auto;
+  align-items: end;
+  gap: 1rem;
+}
+
+.altaCampo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: var(--admin-fs-sm);
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.altaInput {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--r);
+  background: var(--admin-card-bg);
+  color: var(--admin-text);
+  font: inherit;
+  font-size: var(--admin-fs-base);
+}
+
+.altaError {
+  color: var(--admin-danger);
+  font-size: var(--admin-fs-sm);
+}
+
+@media (max-width: 800px) {
+  .alta {
+    grid-template-columns: 1fr;
+  }
+}

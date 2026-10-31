@@ -73,7 +73,8 @@ export async function signIn(email: string, password: string): Promise<SignInRes
       .where(eq(schema.users.email, email.toLowerCase().trim()))
       .limit(1);
 
-    if (!user) return { ok: false, reason: "invalid_credentials" };
+    // Sin hash = cuenta de Privy o dada de alta sin contraseña: solo entra por correo.
+    if (!user || !user.passwordHash) return { ok: false, reason: "invalid_credentials" };
     const ok = await bcrypt.compare(password, user.passwordHash);
     if (!ok) return { ok: false, reason: "invalid_credentials" };
 

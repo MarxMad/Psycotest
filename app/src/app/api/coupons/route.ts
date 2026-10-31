@@ -32,14 +32,33 @@ export async function POST(request: Request) {
   try {
     const db = getDb();
     const body = await request.json();
-    const { code, type, value, maxUses, expiresAt } = body;
+    const { type, maxUses, expiresAt } = body;
+    const code = typeof body.code === "string" ? body.code.trim().toUpperCase() : "";
+    const value = Math.round(Number(body.value));
+
+    if (!/^[A-Z0-9_-]{3,32}$/.test(code)) {
+      return NextResponse.json(
+        { error: "El código lleva de 3 a 32 letras, números, guiones o guiones bajos" },
+        { status: 400 },
+      );
+    }
+    if (type !== "percentage" && type !== "fixed") {
+      return NextResponse.json({ error: "Tipo de cupón inválido" }, { status: 400 });
+    }
+    if (!Number.isFinite(value) || value < 1 || (type === "percentage" && value > 100)) {
+      return NextResponse.json({ error: "Valor de descuento inválido" }, { status: 400 });
+    }
+    const [repetido] = await db.select({ id: coupons.id }).from(coupons).where(eq(coupons.code, code)).limit(1);
+    if (repetido) {
+      return NextResponse.json({ error: "Ya existe un cupón con ese código" }, { status: 409 });
+    }
 
     const now = new Date().toISOString();
     const couponId = `coupon_${Date.now()}`;
 
     await db.insert(coupons).values({
       id: couponId,
-      code: code.toUpperCase(),
+      code,
       type,
       value,
       maxUses: maxUses || null,
