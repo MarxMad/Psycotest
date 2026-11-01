@@ -15,7 +15,7 @@ import { Acordeon } from "../Acordeon";
 import { IconoDeCategoria } from "../Iconos";
 import { Revelar } from "../Revelar";
 import { TarjetaPrograma } from "../TarjetaPrograma";
-import { HeroArte } from "./HeroArte";
+import { Certificado } from "./Certificado";
 import { Luz } from "./Luz";
 import { Manifiesto } from "./Manifiesto";
 import { Ruta } from "./Ruta";
@@ -45,42 +45,54 @@ export function Landing({ programas }: { programas: Programa[] }) {
     ),
   ];
 
-  // El titular resalta su última palabra.
-  const palabras = PROPUESTA.titular.split(" ");
-  const ultima = palabras.pop();
+  // El punto final del titular va en el color de acento.
+  const titular = PROPUESTA.titular.replace(/\.$/, "");
+  const punto = PROPUESTA.titular.endsWith(".") ? "." : "";
 
   return (
     <>
       {/* ------------------------------------------------------- Hero */}
       <section className={l.hero} aria-labelledby="hero-titulo">
-        <div className={l.heroFondo} aria-hidden />
         <div className={`${s.contenedor} ${l.heroRejilla}`}>
           <div className={l.heroTexto}>
-            <p className={s.eyebrow}>Entidad acreditada CONOCER · ECE 002-10</p>
+            <p className={l.heroMeta}>
+              <span>Entidad de Certificación y Evaluación</span>
+              <span>Acreditación CONOCER ECE 002-10</span>
+            </p>
             <h1 id="hero-titulo" className={l.heroTitulo}>
-              {palabras.join(" ")} <span className={l.resalte}>{ultima}</span>
+              {titular}
+              <span className={l.heroPunto}>{punto}</span>
             </h1>
             <p className={l.heroSub}>{PROPUESTA.subtitulo}</p>
             <div className={l.heroBotones}>
-              <Link href={RUTAS.catalogo({ tipo: "diplomado" })} className={`${s.btn} ${s.btnPrimario} ${s.btnGrande}`}>
-                Explorar cursos <ArrowRight size={18} aria-hidden />
+              <Link href={RUTAS.catalogo({ tipo: "certificacion" })} className={`${s.btn} ${s.btnPrimario} ${s.btnGrande} ${l.heroBtn}`}>
+                Ver certificaciones <ArrowRight size={18} aria-hidden />
               </Link>
-              <Link href={RUTAS.catalogo({ tipo: "certificacion" })} className={`${s.btn} ${s.btnSecundario} ${s.btnGrande}`}>
-                Ver certificaciones
+              <Link href={RUTAS.catalogo({ tipo: "diplomado" })} className={l.heroEnlace}>
+                o empieza con un diplomado
               </Link>
             </div>
-            <ul className={l.respaldo}>
-              {RESPALDO.map((r) => (
-                <li key={r.dato}>
-                  <strong>{r.dato}</strong>
-                  <span>{r.texto}</span>
-                </li>
-              ))}
-            </ul>
           </div>
           <div className={l.heroVisual}>
-            <HeroArte />
+            <Certificado />
           </div>
+        </div>
+
+        <div className={s.contenedor}>
+          <dl className={l.heroDatos}>
+            {estandares.length > 0 && (
+              <div>
+                <dt>{estandares.length}</dt>
+                <dd>estándares de competencia en el catálogo</dd>
+              </div>
+            )}
+            {RESPALDO.map((r) => (
+              <div key={r.dato}>
+                <dt>{r.dato}</dt>
+                <dd>{r.texto}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 

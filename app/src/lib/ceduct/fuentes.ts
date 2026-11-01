@@ -24,4 +24,12 @@ export const fuenteCuerpo = localFont({
   adjustFontFallback: "Arial",
 });
 
-export const FUENTES_MK = `${fuenteDisplay.variable} ${fuenteCuerpo.variable}`;
+/** Serif sólo para piezas que imitan papel (el certificado del hero). */
+export const fuenteSerif = localFont({
+  src: "../../fuentes/fraunces-variable.woff2",
+  display: "swap",
+  variable: "--mk-font-serif",
+  adjustFontFallback: "Times New Roman",
+});
+
+export const FUENTES_MK = `${fuenteDisplay.variable} ${fuenteCuerpo.variable} ${fuenteSerif.variable}`;
