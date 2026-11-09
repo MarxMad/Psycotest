@@ -65,6 +65,17 @@ export const PRESENTACION: Record<string, Presentacion> = {
     entrega: "Ajuste persona–puesto con brechas",
     para: "Contra el perfil del puesto",
   },
+  lifo: {
+    fondo: "#f4d9c6",
+    tinta: "#5a2a12",
+    muestra: {
+      instruccion: "Ordena del 4 (más se parece a ti) al 1 (menos)",
+      opciones: ["Busco que todo salga bien", "Tomo la iniciativa", "Analizo antes de actuar", "Me adapto al grupo"],
+    },
+    ejes: ["Da y Apoya", "Toma y Controla", "Mantiene y Conserva", "Adapta y Negocia", "Estrés"],
+    entrega: "Fortalezas, excesos y patrón bajo estrés",
+    para: "Líderes, gerentes y especialistas",
+  },
   gerenciales: {
     fondo: "#f6d5c3",
     tinta: "#5f2b15",

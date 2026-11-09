@@ -8,7 +8,8 @@ import { calificarHartman } from "./hartman";
 import { calificarMabe, type RespuestasMabe } from "./mabe";
 import { calificarPapi, type Respuestas } from "./papi";
 import { calificarCleaver, type RespuestasCleaver } from "./cleaver";
-import { interpretarHartman, interpretarMabe, interpretarPapi, interpretarCleaver } from "./informes";
+import { calificarLifo, type RespuestasLifo } from "./lifo";
+import { interpretarHartman, interpretarMabe, interpretarPapi, interpretarCleaver, interpretarLifo } from "./informes";
 import { comoRespuestas, interpretarSocioeconomico, resumirSocioeconomico } from "./socioeconomico";
 
 export function procesarSesion(
@@ -37,6 +38,10 @@ export function procesarSesion(
     case "cleaver": {
       const cal = calificarCleaver(respuestas as RespuestasCleaver);
       return { calificacion: cal, interpretacion: interpretarCleaver(cal) };
+    }
+    case "lifo": {
+      const cal = calificarLifo(respuestas as RespuestasLifo);
+      return { calificacion: cal, interpretacion: interpretarLifo(cal) };
     }
     case "socioeconomico": {
       // No se califica: el «resultado» es el resumen del expediente.

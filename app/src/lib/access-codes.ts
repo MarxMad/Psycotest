@@ -38,7 +38,7 @@ export function clientIp(request: Request): string {
   return request.headers.get("x-real-ip") ?? "unknown";
 }
 
-export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "socioeconomico"];
+export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "lifo", "socioeconomico"];
 
 /**
  * La batería psicométrica. Es lo que trae un código cuando no dice nada: el

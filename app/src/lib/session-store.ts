@@ -3,6 +3,7 @@ import { getDb, schema } from "@/db";
 import type { Instrumento } from "@/lib/storage";
 import { calificarHartman } from "@/lib/hartman";
 import type { ResultadoCleaver } from "@/lib/cleaver";
+import type { ResultadoLifo } from "@/lib/lifo";
 
 export function computeValidityFlags(
   instrumento: Instrumento,
@@ -30,6 +31,10 @@ export function computeValidityFlags(
     }
     if (r.aplanado?.T) flags.push("Cleaver gráfica T aplanada (40–60)");
     for (const a of r.alertas ?? []) flags.push(`Cleaver: ${a}`);
+  }
+  if (instrumento === "lifo" && calificacion) {
+    const r = calificacion as ResultadoLifo;
+    for (const a of r.alertas ?? []) flags.push(`LIFO: ${a}`);
   }
   return flags;
 }

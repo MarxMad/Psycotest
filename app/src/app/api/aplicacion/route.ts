@@ -13,7 +13,7 @@ import { clientIp } from "@/lib/access-codes";
 
 import { respuestasDelCandidato } from "@/lib/socioeconomico";
 
-const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "socioeconomico"];
+const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "lifo", "socioeconomico"];
 
 /** Envío de aplicación terminada — requiere sesión de aplicante con código válido. */
 export async function POST(request: Request) {

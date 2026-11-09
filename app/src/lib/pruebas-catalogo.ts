@@ -51,6 +51,16 @@ export const PRUEBAS: Prueba[] = [
     descripcion: "Qué exige el puesto contra lo que la persona ofrece, y dónde habrá fricción.",
   },
   {
+    id: "lifo",
+    nombre: "Estilos de Vida y Trabajo",
+    etiqueta: "Fortalezas y estrés",
+    minutos: 25,
+    // Provisional, igual que Estilos Gerenciales: lo confirma el cliente.
+    precio: 32000,
+    descripcion:
+      "Cómo trabaja cuando todo va bien y cómo cambia bajo presión: sus fortalezas y en qué se excede.",
+  },
+  {
     id: "gerenciales",
     nombre: "Estilos Gerenciales",
     etiqueta: "Conducción de equipos",

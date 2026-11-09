@@ -13,6 +13,7 @@ export const NOMBRE_INSTRUMENTO: Record<Instrumento, string> = {
   hartman: "Axiología de Valores",
   mabe: "Toma de Decisiones",
   cleaver: "Compatibilidad Puesto–Persona",
+  lifo: "Estilos de Vida y Trabajo",
   socioeconomico: "Estudio Socioeconómico",
 };
 
@@ -22,6 +23,7 @@ export const NOMBRE_CORTO: Record<Instrumento, string> = {
   hartman: "Valores",
   mabe: "Decisiones",
   cleaver: "Compatibilidad",
+  lifo: "Estilos",
   socioeconomico: "Socioeconómico",
 };
 
@@ -31,6 +33,7 @@ export const MIDE: Record<Instrumento, string> = {
   hartman: "Jerarquía de valores y motivación",
   mabe: "Criterio y razonamiento aplicado",
   cleaver: "Ajuste entre el perfil y el puesto",
+  lifo: "Estilo de trabajo productivo y bajo estrés",
   socioeconomico: "Entorno familiar, económico y referencias",
 };
 
@@ -40,6 +43,7 @@ export const SUBTITULO_INSTRUMENTO: Record<Instrumento, string> = {
   hartman: "Axiología de Valores — jerarquía de valores y motivación",
   mabe: "Toma de Decisiones — criterio y ajuste al puesto",
   cleaver: "Compatibilidad Puesto–Persona — ajuste conductual al rol",
+  lifo: "Estilos de Vida y Trabajo — orientaciones LIFO® en condiciones habituales y de estrés",
   socioeconomico: "Estudio Socioeconómico — entorno, economía, visita y referencias",
 };
 

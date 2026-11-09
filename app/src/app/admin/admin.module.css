@@ -186,6 +186,10 @@
   --c: var(--cleaver);
 }
 
+.badge[data-i="lifo"] {
+  --c: var(--lifo);
+}
+
 .badge[data-i="socioeconomico"] {
   --c: var(--socioeconomico);
 }

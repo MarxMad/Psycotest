@@ -5,7 +5,10 @@ import { calificarMabe, type RespuestasMabe, type ResultadoMabe } from "@/lib/ma
 import { calificarPapi, DIADAS, banda, type Respuestas } from "@/lib/papi";
 import { calificarHartman } from "@/lib/hartman";
 import { calificarCleaver, type RespuestasCleaver, type ResultadoCleaver } from "@/lib/cleaver";
+import { calificarLifo, type RespuestasLifo, type ResultadoLifo } from "@/lib/lifo";
+import { PERFILES } from "@/data/lifo";
 import {
+  interpretarLifo,
   interpretarHartman,
   interpretarMabe,
   interpretarPapi,
@@ -57,7 +60,12 @@ export function InterpretacionPanel({
                 (sesion.calificacion as ResultadoCleaver) ??
                   calificarCleaver(sesion.respuestas as RespuestasCleaver),
               )
-            : "Sin interpretación generada.");
+            : sesion.instrumento === "lifo"
+              ? interpretarLifo(
+                  (sesion.calificacion as ResultadoLifo) ??
+                    calificarLifo(sesion.respuestas as RespuestasLifo),
+                )
+              : "Sin interpretación generada.");
 
   return (
     <div className={s.wrap}>
@@ -103,6 +111,16 @@ export function InterpretacionPanel({
           cal={
             (sesion.calificacion as ResultadoCleaver) ??
             calificarCleaver(sesion.respuestas as RespuestasCleaver)
+          }
+          texto={texto}
+        />
+      )}
+
+      {sesion.instrumento === "lifo" && (
+        <LifoInterpretacionResumen
+          cal={
+            (sesion.calificacion as ResultadoLifo) ??
+            calificarLifo(sesion.respuestas as RespuestasLifo)
           }
           texto={texto}
         />
@@ -222,6 +240,25 @@ function CleaverInterpretacionResumen({
             Estilo #{cal.estiloClasico.id} {cal.estiloClasico.nombre} — {cal.estiloClasico.segmento}
           </p>
         )}
+      </header>
+      <pre className={s.pre}>{texto}</pre>
+    </div>
+  );
+}
+
+function LifoInterpretacionResumen({ cal, texto }: { cal: ResultadoLifo; texto: string }) {
+  return (
+    <div className={s.resumen}>
+      <header className={s.hero}>
+        <span className={s.eyebrow}>Estilos de Vida y Trabajo — LIFO®</span>
+        <p>
+          Habitual: <strong>{PERFILES[cal.habitual.perfil].nombre}</strong> · Estrés:{" "}
+          <strong>{PERFILES[cal.estres.perfil].nombre}</strong>
+        </p>
+        <p className={s.sub}>
+          {cal.completo ? "Protocolo completo" : `Incompleto ${cal.respondidas}/18`} ·{" "}
+          {cal.cambiaBajoEstres ? "cambia de estilo bajo estrés" : "mismo patrón bajo estrés"}
+        </p>
       </header>
       <pre className={s.pre}>{texto}</pre>
     </div>

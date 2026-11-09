@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 import { animate, stagger } from "animejs";
 import Lenis from "lenis";
@@ -27,7 +26,7 @@ import { Cotizador } from "./Cotizador";
 import { RadarVivo } from "./RadarVivo";
 import { SelloSociedad } from "./arte";
 import { BARRAS, PRESENTACION } from "./psico/datos";
-import type { Enfoque } from "./psico/EscenaConsultorio";
+import { CLIPS, VideoReal, type ClipId } from "./psico/medios";
 import s from "./PsicologiaLanding.module.css";
 
 /*
@@ -39,13 +38,17 @@ import s from "./PsicologiaLanding.module.css";
  * algo que la empresa necesita saber antes de escribirnos.
  */
 
-const cargarEscena = () => import("./psico/EscenaConsultorio");
-const EscenaConsultorio = dynamic(cargarEscena, { ssr: false });
-// El arte pesa: se pide en cuanto llega este módulo, sin esperar a hidratar.
-if (typeof window !== "undefined") void cargarEscena();
-
 /** A quién le hablamos: la empresa que contrata o la persona que quiere conocerse. */
-type Publico = Exclude<Enfoque, null>;
+type Publico = "empresas" | "personas";
+
+/**
+ * El fondo de la portada es video real. Sin público elegido rota por las
+ * tres escenas del servicio; al elegir, se queda en la que le habla.
+ */
+const RONDA: ClipId[] = ["entrevista", "consulta", "candidata"];
+const CLIP_DE: Record<Publico, ClipId> = { empresas: "entrevista", personas: "consulta" };
+/** En pantalla vertical cabe un tercio del cuadro: dónde mirar en cada escena. */
+const FOCO_VERTICAL: Partial<Record<ClipId, string>> = { entrevista: "28% 50%", consulta: "80% 50%" };
 
 const NAV = [
   { label: "Instrumentos", href: "#instrumentos" },
@@ -108,19 +111,6 @@ const RESPALDO = [
 ];
 
 /* ------------------------------------------------------------ utilidades */
-
-function useWebGL() {
-  const [hay, setHay] = useState<boolean | null>(null);
-  useEffect(() => {
-    try {
-      const c = document.createElement("canvas");
-      setHay(Boolean(c.getContext("webgl2") || c.getContext("webgl")));
-    } catch {
-      setHay(false);
-    }
-  }, []);
-  return hay;
-}
 
 /** ¿Pantalla de teléfono? Ahí el titular y el manifiesto se acomodan distinto. */
 function useMovil() {
@@ -524,42 +514,35 @@ function Portada({
   lista: boolean;
 }) {
   const zona = useRef<HTMLElement>(null);
-  const webgl = useWebGL();
   const visible = useEnPantalla(zona, "0px");
-  const [ligera, setLigera] = useState(false);
-  const [estatica, setEstatica] = useState(false);
+  const [turno, setTurno] = useState(0);
   const texto = useAparicion<HTMLDivElement>({ inmediato: true, y: 18, retraso: 300 });
-
-  useEffect(() => {
-    setLigera(window.matchMedia("(max-width: 760px)").matches || (navigator.hardwareConcurrency ?? 8) <= 4);
-    setEstatica(menosMovimiento());
-  }, []);
-
-  useEffect(() => {
-    if (webgl === false) onListo();
-  }, [webgl, onListo]);
+  const actual: ClipId = publico ? CLIP_DE[publico] : RONDA[turno % RONDA.length];
 
   return (
     <section id="acceso" ref={zona} className={s.portada} aria-label="Inicio">
-      <div className={s.escena}>
-        {/* Un cuadro de la escena misma: se ve desde el primer byte y la 3D entra encima. */}
-        <picture className={s.poster} aria-hidden>
-          <source media="(max-width: 760px) and (orientation: portrait)" srcSet="/psico/escena-movil.webp" />
-          <img src="/psico/escena-escritorio.webp" alt="" fetchPriority="high" decoding="async" />
-        </picture>
-        {webgl && (
-          <div className={s.lienzo} data-lista={lista}>
-            <EscenaConsultorio
-              activa={visible}
-              ligera={ligera}
-              quieta={estatica}
-              enfoque={publico}
-              onElegir={onCambiar}
-              claseRotulo={s.rotulo}
-              onListo={onListo}
+      <div className={s.escena} data-lista={lista}>
+        {RONDA.map((id) => (
+          <div
+            key={id}
+            className={s.toma}
+            data-activa={id === actual}
+            style={{ "--foco": FOCO_VERTICAL[id] ?? "50% 50%" } as React.CSSProperties}
+          >
+            <VideoReal
+              clip={id}
+              className={s.tomaVideo}
+              decorativo
+              prioridad={id === actual}
+              reproducir={visible && id === actual}
+              // En ronda cada escena corre una vez y cede su lugar.
+              loop={Boolean(publico)}
+              onEnded={() => setTurno((t) => t + 1)}
+              onListo={id === RONDA[0] ? onListo : undefined}
             />
           </div>
-        )}
+        ))}
+        <p className={s.oculto}>{CLIPS[actual].alt}</p>
       </div>
 
       <a className={s.pildoraGirada} href={evaluacion.acceso} data-oculta={publico ? "" : undefined}>
@@ -712,6 +695,55 @@ function Saludo({ content, onCambiar }: { content: ChannelPageContent; onCambiar
           </span>
         </a>
       </div>
+    </section>
+  );
+}
+
+/** El servicio en tres escenas reales, de la entrevista al informe. */
+const ESCENAS: { clip: ClipId; paso: string; titulo: string; texto: string; encuadre: string }[] = [
+  {
+    clip: "entrevista",
+    paso: "01",
+    encuadre: "42% 50%",
+    titulo: "Conocemos el puesto y a la persona",
+    texto: "Partimos de lo que el puesto exige y elegimos los instrumentos que lo miden.",
+  },
+  {
+    clip: "candidata",
+    paso: "02",
+    encuadre: "50% 40%",
+    titulo: "Responde en línea, a su ritmo",
+    texto: "Con su código, desde donde esté. Puede pausar y retomar sin perder nada.",
+  },
+  {
+    clip: "consulta",
+    paso: "03",
+    encuadre: "96% 50%",
+    titulo: "Un psicólogo interpreta y lo explica",
+    texto: "Las pruebas se leen juntas y el informe llega firmado en 72 horas.",
+  },
+];
+
+function Escenas() {
+  const cabeza = useAparicion<HTMLDivElement>({ y: 20 });
+  return (
+    <section id="escenas" className={s.escenas} aria-labelledby="escenas-titulo">
+      <div className={s.seccionCabeza} ref={cabeza}>
+        <h2 id="escenas-titulo">Así se ve una evaluación</h2>
+        <p>Personas reales, un proceso claro. Tres momentos, de la primera conversación al informe.</p>
+      </div>
+      <ol className={s.escenasLista}>
+        {ESCENAS.map((e) => (
+          <li key={e.clip} className={s.escenaTarjeta}>
+            <div className={s.escenaMedio}>
+              <VideoReal clip={e.clip} className={s.escenaVideo} encuadre={e.encuadre} />
+              <span className={s.escenaPaso}>{e.paso}</span>
+            </div>
+            <h3>{e.titulo}</h3>
+            <p>{e.texto}</p>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
@@ -956,6 +988,10 @@ function Nosotros() {
         Detrás de cada informe hay un psicólogo que lo interpreta, lo firma y te lo puede explicar.
       </p>
 
+      <figure className={s.nosotrosMedio}>
+        <VideoReal clip="equipo" className={s.nosotrosVideo} />
+      </figure>
+
       <div className={s.nosotrosCuerpo}>
         <p className={s.nosotrosAparte}>Más allá de un puntaje: leemos a la persona completa.</p>
         <div className={s.nosotrosLineas} ref={lineas}>
@@ -1079,6 +1115,7 @@ export function PsicologiaLanding({ channel, content }: { channel: ChannelDef; c
       <Portada content={content} publico={publico} onCambiar={setPublico} onListo={alListo} lista={escenaLista} />
       <Manifiesto />
       <Saludo content={content} onCambiar={setPublico} />
+      <Escenas />
       <Instrumentos />
       <Brecha />
       <ComoTrabajamos content={content} />

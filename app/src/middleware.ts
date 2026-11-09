@@ -16,6 +16,7 @@ const TEST_PATHS = [
   "/evaluacion/hartman",
   "/evaluacion/mabe",
   "/evaluacion/cleaver",
+  "/evaluacion/lifo",
   "/evaluacion/socioeconomico",
 ] as const;
 
@@ -29,6 +30,7 @@ function instrumentFromPath(pathname: string): Instrumento | null {
         slug === "hartman" ||
         slug === "mabe" ||
         slug === "cleaver" ||
+        slug === "lifo" ||
         slug === "socioeconomico"
       ) {
         return slug;

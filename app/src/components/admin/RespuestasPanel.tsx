@@ -6,6 +6,8 @@ import { CLAVE, NOMBRES, type Respuestas } from "@/lib/papi";
 import { MabeRespuestas } from "@/app/evaluacion/mabe/MabeRespuestas";
 import type { RespuestasMabe } from "@/lib/mabe";
 import { SERIES_CLEAVER, type RespuestasCleaver } from "@/lib/cleaver";
+import { ESTILOS } from "@/data/lifo";
+import { ESTILOS_LIFO, GRUPOS_ESTRES, GRUPOS_LIFO, grupoValido, type RespuestasLifo } from "@/lib/lifo";
 import type { Sesion } from "@/lib/storage";
 import s from "./RespuestasPanel.module.css";
 
@@ -132,6 +134,47 @@ export function RespuestasPanel({ sesion }: { sesion: Sesion<unknown, unknown> }
                       ? `${serie.adjetivos[r.menos]?.texto ?? "?"} (${serie.adjetivos[r.menos]?.factor})`
                       : "—"}
                   </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  if (sesion.instrumento === "lifo") {
+    const resp = sesion.respuestas as RespuestasLifo;
+    const validos = GRUPOS_LIFO.filter((g) => grupoValido(resp[g.id])).length;
+    return (
+      <div className={s.wrap}>
+        <p className={s.meta}>{validos}/18 grupos · 4 = más se parece, 1 = menos</p>
+        <table className={s.table}>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Enunciado</th>
+              <th>Condición</th>
+              {ESTILOS_LIFO.map((e) => (
+                <th key={e}>{ESTILOS[e].sigla}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {GRUPOS_LIFO.map((g) => {
+              const v = resp[g.id];
+              const ok = grupoValido(v);
+              return (
+                <tr key={g.id} className={!ok ? s.faltante : undefined}>
+                  <td className={s.num}>{g.id}</td>
+                  <td>{g.enunciado}</td>
+                  <td className={s.mono}>{GRUPOS_ESTRES.includes(g.id) ? "Estrés" : "Habitual"}</td>
+                  {g.terminos.map((t, i) => (
+                    <td key={i} className={v?.[i] === 4 ? s.elegida : undefined} title={t}>
+                      <span className={s.num}>{v?.[i] ?? "—"}</span>
+                      <span className={s.mono}> {t}</span>
+                    </td>
+                  ))}
                 </tr>
               );
             })}

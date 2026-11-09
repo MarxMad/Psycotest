@@ -4,6 +4,8 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CleaverGraficas } from "@/app/evaluacion/cleaver/CleaverGraficas";
+import { LifoGraficas } from "@/app/evaluacion/lifo/LifoGraficas";
+import { calificarLifo, type RespuestasLifo, type ResultadoLifo } from "@/lib/lifo";
 import { MabeGraficas } from "@/app/evaluacion/mabe/MabeGraficas";
 import { MabeCalificacion } from "@/app/evaluacion/mabe/MabeCalificacion";
 import { PapiGraficas } from "@/app/evaluacion/papi/PapiGraficas";
@@ -147,8 +149,8 @@ export default function AdminDetallePage() {
         <header className={s.detailHead}>
           <div>
             <span className={s.badge} data-i={ses.instrumento}>
-              {ses.instrumento === "socioeconomico"
-                ? NOMBRE_INSTRUMENTO.socioeconomico.toUpperCase()
+              {ses.instrumento === "socioeconomico" || ses.instrumento === "lifo"
+                ? NOMBRE_INSTRUMENTO[ses.instrumento].toUpperCase()
                 : ses.instrumento.toUpperCase()}
             </span>
             <h1>{titulo}</h1>
@@ -326,6 +328,12 @@ function DetalleCalificacion({
         />
       </div>
     );
+  }
+
+  if (sesion.instrumento === "lifo") {
+    const cal =
+      (sesion.calificacion as ResultadoLifo) ?? calificarLifo(sesion.respuestas as RespuestasLifo);
+    return <LifoGraficas cal={cal} />;
   }
 
   return null;
