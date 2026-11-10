@@ -20,7 +20,7 @@ import type { ChannelDef } from "@/lib/channels";
 import type { ChannelPageContent } from "@/lib/channel-content";
 import { evaluacion } from "@/lib/routes";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
-import { PRUEBAS } from "@/lib/pruebas-catalogo";
+import { BATERIA_COMPLETA, PRUEBAS } from "@/lib/pruebas-catalogo";
 import { menosMovimiento, useAparicion } from "@/lib/aparicion";
 import { Cotizador } from "./Cotizador";
 import { RadarVivo } from "./RadarVivo";
@@ -42,13 +42,34 @@ import s from "./PsicologiaLanding.module.css";
 type Publico = "empresas" | "personas";
 
 /**
- * El fondo de la portada es video real. Sin público elegido rota por las
- * tres escenas del servicio; al elegir, se queda en la que le habla.
+ * El fondo de la portada es video real. Sin público elegido rota por todo el
+ * servicio, alternando selección y consulta; al elegir, rota sólo por las
+ * escenas que le hablan a ese público.
  */
-const RONDA: ClipId[] = ["entrevista", "consulta", "candidata"];
-const CLIP_DE: Record<Publico, ClipId> = { empresas: "entrevista", personas: "consulta" };
+const RONDA: ClipId[] = [
+  "entrevista",
+  "escucha",
+  "expediente",
+  "reflexion",
+  "acuerdo",
+  "sesion",
+  "candidata",
+  "consulta",
+];
+const RONDA_DE: Record<Publico, ClipId[]> = {
+  empresas: ["entrevista", "expediente", "candidata", "acuerdo"],
+  personas: ["consulta", "escucha", "reflexion", "sesion"],
+};
 /** En pantalla vertical cabe un tercio del cuadro: dónde mirar en cada escena. */
-const FOCO_VERTICAL: Partial<Record<ClipId, string>> = { entrevista: "28% 50%", consulta: "80% 50%" };
+const FOCO_VERTICAL: Partial<Record<ClipId, string>> = {
+  entrevista: "28% 50%",
+  consulta: "80% 50%",
+  expediente: "62% 50%",
+  acuerdo: "15% 50%",
+  escucha: "60% 50%",
+  sesion: "100% 50%",
+  reflexion: "34% 50%",
+};
 
 const NAV = [
   { label: "Instrumentos", href: "#instrumentos" },
@@ -103,7 +124,7 @@ const PARA_PERSONAS = {
 };
 
 const RESPALDO = [
-  { etiqueta: "Instrumentos en la batería", valor: "5" },
+  { etiqueta: "Instrumentos en la batería", valor: String(BATERIA_COMPLETA.length) },
   { etiqueta: "Entrega del informe", valor: "72 h" },
   { etiqueta: "Aplicación", valor: "En línea" },
   { etiqueta: "Estudio socioeconómico", valor: "Con visita" },
@@ -517,29 +538,40 @@ function Portada({
   const visible = useEnPantalla(zona, "0px");
   const [turno, setTurno] = useState(0);
   const texto = useAparicion<HTMLDivElement>({ inmediato: true, y: 18, retraso: 300 });
-  const actual: ClipId = publico ? CLIP_DE[publico] : RONDA[turno % RONDA.length];
+  const ronda = publico ? RONDA_DE[publico] : RONDA;
+  const n = ronda.length;
+  const pos = ((turno % n) + n) % n;
+  const actual = ronda[pos];
+  // Sólo se montan la escena en curso, la que se va (para el fundido) y la
+  // que sigue (para que ya esté cargando): no se bajan ocho videos de golpe.
+  const montadas = new Set([ronda[(pos + n - 1) % n], actual, ronda[(pos + 1) % n]]);
+
+  // Al cambiar de público, su ronda empieza por la escena que lo presenta.
+  useEffect(() => setTurno(0), [publico]);
 
   return (
     <section id="acceso" ref={zona} className={s.portada} aria-label="Inicio">
       <div className={s.escena} data-lista={lista}>
-        {RONDA.map((id) => (
+        {ronda.map((id) => (
           <div
             key={id}
             className={s.toma}
             data-activa={id === actual}
             style={{ "--foco": FOCO_VERTICAL[id] ?? "50% 50%" } as React.CSSProperties}
           >
-            <VideoReal
-              clip={id}
-              className={s.tomaVideo}
-              decorativo
-              prioridad={id === actual}
-              reproducir={visible && id === actual}
-              // En ronda cada escena corre una vez y cede su lugar.
-              loop={Boolean(publico)}
-              onEnded={() => setTurno((t) => t + 1)}
-              onListo={id === RONDA[0] ? onListo : undefined}
-            />
+            {montadas.has(id) && (
+              <VideoReal
+                clip={id}
+                className={s.tomaVideo}
+                decorativo
+                prioridad={id === actual}
+                reproducir={visible && id === actual}
+                // Cada escena corre una vez y cede su lugar a la siguiente.
+                loop={false}
+                onEnded={() => setTurno((t) => t + 1)}
+                onListo={id === actual ? onListo : undefined}
+              />
+            )}
           </div>
         ))}
         <p className={s.oculto}>{CLIPS[actual].alt}</p>
@@ -702,9 +734,9 @@ function Saludo({ content, onCambiar }: { content: ChannelPageContent; onCambiar
 /** El servicio en tres escenas reales, de la entrevista al informe. */
 const ESCENAS: { clip: ClipId; paso: string; titulo: string; texto: string; encuadre: string }[] = [
   {
-    clip: "entrevista",
+    clip: "expediente",
     paso: "01",
-    encuadre: "42% 50%",
+    encuadre: "55% 50%",
     titulo: "Conocemos el puesto y a la persona",
     texto: "Partimos de lo que el puesto exige y elegimos los instrumentos que lo miden.",
   },
@@ -716,9 +748,9 @@ const ESCENAS: { clip: ClipId; paso: string; titulo: string; texto: string; encu
     texto: "Con su código, desde donde esté. Puede pausar y retomar sin perder nada.",
   },
   {
-    clip: "consulta",
+    clip: "sesion",
     paso: "03",
-    encuadre: "96% 50%",
+    encuadre: "70% 50%",
     titulo: "Un psicólogo interpreta y lo explica",
     texto: "Las pruebas se leen juntas y el informe llega firmado en 72 horas.",
   },
