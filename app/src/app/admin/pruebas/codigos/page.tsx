@@ -40,7 +40,7 @@ export default function CodigosPage() {
   const [label, setLabel] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [maxUses, setMaxUses] = useState(30);
-  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe", "cleaver"]);
+  const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe", "cleaver", "lifo"]);
   const [nuevoCodigo, setNuevoCodigo] = useState<string | null>(null);
   const [error, setError] = useState("");
 

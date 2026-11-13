@@ -56,7 +56,7 @@ export const ALL_INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "clea
  * La batería psicométrica. Es lo que trae un código cuando no dice nada: el
  * estudio socioeconómico es otro servicio (lleva visita) y se pide aparte.
  */
-export const PSICOMETRICOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver"];
+export const PSICOMETRICOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "lifo"];
 
 export function parseAllowedInstruments(raw: unknown): Instrumento[] {
   if (!Array.isArray(raw) || raw.length === 0) return [...PSICOMETRICOS];

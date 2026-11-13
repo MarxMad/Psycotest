@@ -240,7 +240,7 @@ export const CHANNEL_CONTENT_SEED: Record<ChannelId, ChannelPageContent> = {
           },
           {
             title: "Batería psicológica",
-            text: "Cinco instrumentos que se leen juntos: personalidad, valores, criterio, ajuste al puesto y estilo para dirigir.",
+            text: "Seis instrumentos que se leen juntos: personalidad, valores, criterio, ajuste al puesto, conducta bajo estrés y estilo para dirigir.",
           },
           {
             title: "Estudios socioeconómicos",

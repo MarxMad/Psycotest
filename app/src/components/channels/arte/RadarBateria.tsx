@@ -1,8 +1,8 @@
 /**
- * Los cinco instrumentos como un radar.
+ * Los seis instrumentos como un radar.
  *
  * No es decoración: es la forma en que realmente se lee una batería —los
- * cinco ejes juntos, no uno por uno. Dos perfiles superpuestos muestran
+ * seis ejes juntos, no uno por uno. Dos perfiles superpuestos muestran
  * por qué el contraste importa, y el segmento marcado sobre un eje es la
  * brecha más grande: lo que habría que cuidar si se contrata.
  *
@@ -16,6 +16,7 @@ export const EJES = [
   "Valores",
   "Decisiones",
   "Compatibilidad",
+  "Bajo estrés",
   "Estilo gerencial",
 ] as const;
 
@@ -26,7 +27,7 @@ export const R = 125;
 /** Node y el navegador serializan los flotantes distinto: redondear evita el aviso de hidratación. */
 const r3 = (n: number) => Number(n.toFixed(3));
 
-/** Punto del eje i (de 5) a una distancia 0–1 del centro. */
+/** Punto del eje i (de EJES.length) a una distancia 0–1 del centro. */
 export function punto(i: number, v: number) {
   const a = (Math.PI * 2 * i) / EJES.length - Math.PI / 2;
   return [r3(CX + Math.cos(a) * R * v), r3(CY + Math.sin(a) * R * v)] as const;
@@ -37,7 +38,7 @@ export function poligono(valores: readonly number[]) {
 }
 
 /** Lo que exige la vacante del ejemplo. Es el mismo para los tres candidatos. */
-export const PUESTO = [0.86, 0.72, 0.9, 0.78, 0.68] as const;
+export const PUESTO = [0.86, 0.72, 0.9, 0.78, 0.74, 0.68] as const;
 
 /**
  * Tres candidatos de ejemplo para la misma vacante. Son datos ilustrativos:
@@ -45,9 +46,9 @@ export const PUESTO = [0.86, 0.72, 0.9, 0.78, 0.68] as const;
  * son resultados de nadie.
  */
 export const CANDIDATOS = [
-  { id: "a", nombre: "Candidata A", valores: [0.8, 0.7, 0.84, 0.76, 0.62] },
-  { id: "b", nombre: "Candidato B", valores: [0.62, 0.88, 0.58, 0.84, 0.46] },
-  { id: "c", nombre: "Candidata C", valores: [0.45, 0.52, 0.66, 0.5, 0.9] },
+  { id: "a", nombre: "Candidata A", valores: [0.8, 0.7, 0.84, 0.76, 0.7, 0.62] },
+  { id: "b", nombre: "Candidato B", valores: [0.62, 0.88, 0.58, 0.84, 0.8, 0.46] },
+  { id: "c", nombre: "Candidata C", valores: [0.45, 0.52, 0.66, 0.5, 0.55, 0.9] },
 ] as const;
 
 /** Qué tanto alcanza la persona lo que el puesto pide, en porcentaje. */
@@ -87,7 +88,7 @@ export function RadarBateria({
       className={className}
       viewBox="-45 0 490 400"
       role="img"
-      aria-label="Los cinco instrumentos de la batería, leídos como un solo perfil"
+      aria-label="Los seis instrumentos de la batería, leídos como un solo perfil"
     >
       <defs>
         <linearGradient id="rb-puesto" x1="0" y1="0" x2="1" y2="1">
