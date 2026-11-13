@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import type { Instrumento } from "@/lib/storage";
 import { procesarSesion } from "@/lib/procesar-sesion";
-import { saveSession } from "@/lib/session-store";
+import { getSession, saveSession } from "@/lib/session-store";
 import {
   canTakeInstrument,
   getApplicantSession,
   refreshApplicantCookie,
 } from "@/lib/applicant-auth";
-import { markRedemptionInstrumentComplete } from "@/lib/access-code-store";
+import { getRedemption, markRedemptionInstrumentComplete } from "@/lib/access-code-store";
 import { rateLimit } from "@/lib/rate-limit";
-import { clientIp } from "@/lib/access-codes";
+import { clientIp, parseCompletedInstruments } from "@/lib/access-codes";
 
 import { respuestasDelCandidato } from "@/lib/socioeconomico";
 
@@ -60,11 +60,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Falta aceptar el aviso de privacidad" }, { status: 400 });
   }
 
+  // El id lo genera el navegador: si ya existe, tiene que ser de este mismo
+  // candidato (un envío no puede pisar la sesión de otra persona). Si es suya,
+  // es un reintento de algo que ya llegó: se confirma sin duplicar nada.
+  const previa = await getSession(id);
+  if (previa) {
+    if (previa.accessRedemptionId !== applicant.redemptionId) {
+      return NextResponse.json({ error: "Sesión no válida" }, { status: 409 });
+    }
+    return NextResponse.json({ ok: true, id: previa.id }, { status: 200 });
+  }
+
   if (!canTakeInstrument(applicant, instrumento)) {
     return NextResponse.json(
       { error: "No tienes permiso para esta prueba o ya la completaste" },
       { status: 403 },
     );
+  }
+
+  // La cookie puede venir de antes de terminar la prueba: lo que manda es la base.
+  const canje = await getRedemption(applicant.redemptionId);
+  if (!canje || parseCompletedInstruments(canje.completedInstruments).includes(instrumento)) {
+    return NextResponse.json({ error: "Ya completaste esta prueba" }, { status: 403 });
   }
 
   const participantNombre = applicant.nombre;

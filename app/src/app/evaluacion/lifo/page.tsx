@@ -145,7 +145,7 @@ export default function LifoPage() {
 
   useEffect(() => {
     const guardada = cargarBorrador<RespuestasLifo>("lifo");
-    if (guardada && !guardada.terminada) setPrevia(guardada);
+    if (guardada && !guardada.finalizadaEn) setPrevia(guardada);
   }, []);
 
   const respuestas: RespuestasLifo = sesion?.respuestas ?? {};
@@ -388,7 +388,9 @@ function Resultado({ sesion }: { sesion: Sesion<RespuestasLifo> }) {
   const [fin, setFin] = useState<Sesion<RespuestasLifo> | null>(null);
 
   useEffect(() => {
-    if (guardado.current || sesion.terminada) {
+    // «terminada» ya viene en true al contestar lo último; lo que indica que
+    // se calificó y se envió es la fecha de finalización.
+    if (guardado.current || sesion.finalizadaEn) {
       if (sesion.finalizadaEn) setFin(sesion);
       return;
     }
@@ -400,6 +402,6 @@ function Resultado({ sesion }: { sesion: Sesion<RespuestasLifo> }) {
   if (!fin?.finalizadaEn) return null;
 
   return (
-    <ConfirmacionPrueba instrumento="lifo" participante={fin.participante} finalizadaEn={fin.finalizadaEn} />
+    <ConfirmacionPrueba sesionId={fin.id} instrumento="lifo" participante={fin.participante} finalizadaEn={fin.finalizadaEn} />
   );
 }

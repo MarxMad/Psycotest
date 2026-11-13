@@ -18,8 +18,30 @@
 }
 
 .icon {
+  /* En bloque: en línea quedaba al lado del texto y no centrado. */
+  display: block;
   color: var(--hartman);
   margin: 0 auto 1rem;
+}
+
+.iconoError {
+  color: var(--cleaver, #b4532a);
+}
+
+.girando {
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .girando {
+    animation: none;
+  }
 }
 
 .card h1 {

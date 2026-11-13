@@ -63,3 +63,13 @@ export function parseAllowedInstruments(raw: unknown): Instrumento[] {
   const set = new Set(raw);
   return ALL_INSTRUMENTOS.filter((i) => set.has(i));
 }
+
+/**
+ * Las pruebas que una persona ya terminó. A diferencia de las permitidas, una
+ * lista vacía significa «ninguna»: no se rellena con la batería por defecto.
+ */
+export function parseCompletedInstruments(raw: unknown): Instrumento[] {
+  if (!Array.isArray(raw)) return [];
+  const set = new Set(raw);
+  return ALL_INSTRUMENTOS.filter((i) => set.has(i));
+}

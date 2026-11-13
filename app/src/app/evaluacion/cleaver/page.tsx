@@ -56,7 +56,7 @@ export default function CleaverPage() {
 
   useEffect(() => {
     const guardada = cargarBorrador<RespuestasCleaver>("cleaver");
-    if (guardada && !guardada.terminada) setPrevia(guardada);
+    if (guardada && !guardada.finalizadaEn) setPrevia(guardada);
   }, []);
 
   const respuestas: RespuestasCleaver = sesion?.respuestas ?? {};
@@ -355,7 +355,9 @@ function Resultado({ sesion }: { sesion: Sesion<RespuestasCleaver> }) {
   const [fin, setFin] = useState<Sesion<RespuestasCleaver> | null>(null);
 
   useEffect(() => {
-    if (guardado.current || sesion.terminada) {
+    // «terminada» ya viene en true al contestar lo último; lo que indica que
+    // se calificó y se envió es la fecha de finalización.
+    if (guardado.current || sesion.finalizadaEn) {
       if (sesion.finalizadaEn) setFin(sesion);
       return;
     }
@@ -369,6 +371,7 @@ function Resultado({ sesion }: { sesion: Sesion<RespuestasCleaver> }) {
 
   return (
     <ConfirmacionPrueba
+        sesionId={fin.id}
       instrumento="cleaver"
       participante={fin.participante}
       finalizadaEn={fin.finalizadaEn}

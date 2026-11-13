@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { channelPublicUrl } from "@/lib/channels";
 import { AmbientBackground } from "@/components/AmbientBackground";
@@ -357,9 +357,13 @@ function Resultado({
   parteII: number[];
 }) {
   const [fin, setFin] = useState<Sesion<{ parteI: number[]; parteII: number[] }> | null>(null);
+  // Un solo envío: sin esto, un segundo montaje (React en desarrollo, o un
+  // re-render antes de guardar `fin`) creaba otra sesión con otro id.
+  const enviado = useRef(false);
 
   useEffect(() => {
-    if (fin) return;
+    if (fin || enviado.current) return;
+    enviado.current = true;
     const r = calificarHartman(parteI, parteII);
     const ses = nuevaSesion("hartman", participante, { parteI, parteII });
     setFin(finalizarSesion(ses, r, interpretarHartman(r)));
@@ -369,6 +373,7 @@ function Resultado({
 
   return (
     <ConfirmacionPrueba
+      sesionId={fin.id}
       instrumento="hartman"
       participante={fin.participante}
       finalizadaEn={fin.finalizadaEn}

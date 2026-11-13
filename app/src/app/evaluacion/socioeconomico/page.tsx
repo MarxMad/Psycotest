@@ -55,7 +55,7 @@ export default function SocioeconomicoPage() {
 
   useEffect(() => {
     const guardada = cargarBorrador<RespuestasSocioeconomico>("socioeconomico");
-    if (guardada && !guardada.terminada) setPrevia(guardada);
+    if (guardada && !guardada.finalizadaEn) setPrevia(guardada);
   }, []);
 
   useEffect(() => {

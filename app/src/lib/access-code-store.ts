@@ -6,6 +6,7 @@ import {
   hashIp,
   normalizeAccessCode,
   parseAllowedInstruments,
+  parseCompletedInstruments,
 } from "@/lib/access-codes";
 import type { Instrumento } from "@/lib/storage";
 
@@ -94,8 +95,8 @@ export async function redeemAccessCode(input: {
   const existing = await findExistingRedemption(codeRow.id, nombre);
 
   if (existing) {
-    const completed = parseAllowedInstruments(existing.completedInstruments);
-    if (completed.length >= allowed.length) {
+    const completed = parseCompletedInstruments(existing.completedInstruments);
+    if (allowed.every((i) => completed.includes(i))) {
       return { ok: false as const, error: "Ya completaste todas las pruebas de este código" };
     }
     return {
@@ -184,7 +185,7 @@ export async function markRedemptionInstrumentComplete(
   const row = await getRedemption(redemptionId);
   if (!row) return null;
 
-  const completed = parseAllowedInstruments(row.completedInstruments);
+  const completed = parseCompletedInstruments(row.completedInstruments);
   if (completed.includes(instrumento)) {
     const [codeRow] = await db
       .select()
@@ -273,7 +274,7 @@ export async function getCodeUsageReport(codeId: string) {
   }
 
   const rows: CodeUsageRow[] = redemptions.map((r) => {
-    const completed = parseAllowedInstruments(r.completedInstruments);
+    const completed = parseCompletedInstruments(r.completedInstruments);
     const pending = allowed.filter((i) => !completed.includes(i));
     return {
       id: r.id,

@@ -82,6 +82,15 @@
   color: var(--muted);
 }
 
+.notasBlock > * + * {
+  margin-top: 1rem;
+}
+
+.avisoBorrador {
+  font-size: var(--admin-fs-sm);
+  color: var(--cleaver, #b4532a);
+}
+
 .notasLabel textarea {
   font: inherit;
   padding: 0.75rem;

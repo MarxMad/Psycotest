@@ -29,7 +29,7 @@ import {
   obtenerSesion,
   type Sesion,
 } from "@/lib/storage";
-import { InterpretacionPanel } from "@/components/admin/InterpretacionPanel";
+import { InterpretacionPanel, type EstadoGuardado } from "@/components/admin/InterpretacionPanel";
 import { RespuestasPanel } from "@/components/admin/RespuestasPanel";
 import { EstudioAdmin } from "@/components/socioeconomico/EstudioAdmin";
 import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
@@ -40,11 +40,14 @@ export default function AdminDetallePage() {
   const router = useRouter();
   const [sesion, setSesion] = useState<Sesion<unknown, unknown> | null>(null);
   const [notas, setNotas] = useState("");
+  // Texto del informe que sale en el PDF; null = aún sin tocar (se usa el generado).
+  const [interp, setInterp] = useState<string | null>(null);
   const [tab, setTab] = useState<"calif" | "resp" | "interp">("calif");
   const [loading, setLoading] = useState(true);
   const [profiles, setProfiles] = useState<JobProfileRow[]>([]);
   const [puestoActivo, setPuestoActivo] = useState<JobProfileRow | null>(null);
   const [linking, setLinking] = useState(false);
+  const [guardado, setGuardado] = useState<EstadoGuardado>(null);
 
   useEffect(() => {
     let cancel = false;
@@ -57,6 +60,7 @@ export default function AdminDetallePage() {
         const mapped = dbSessionToSesion(remota);
         setSesion(mapped);
         setNotas(mapped.notasPsicologo ?? "");
+        setInterp(mapped.interpretacion ?? null);
         if (mapped.jobProfileId) {
           const jp =
             jobs.find((p) => p.id === mapped.jobProfileId) ??
@@ -104,16 +108,19 @@ export default function AdminDetallePage() {
 
   const ses = sesion;
 
-  async function guardarNotas() {
-    await actualizarSesionServidor(ses.id, { notasPsicologo: notas, aprobada: false });
-    const next = actualizarSesion(ses.id, { notasPsicologo: notas, aprobada: false });
-    if (next) setSesion(next);
-  }
-
-  async function aprobar() {
-    await actualizarSesionServidor(ses.id, { notasPsicologo: notas, aprobada: true });
-    const next = actualizarSesion(ses.id, { notasPsicologo: notas, aprobada: true });
-    if (next) setSesion(next);
+  // Las sesiones que llegan por código sólo existen en el servidor: el estado
+  // de la pantalla se actualiza con lo guardado allá, no con localStorage.
+  async function guardar(aprobada: boolean) {
+    setGuardado("guardando");
+    const interpretacion = interp ?? undefined;
+    const ok = await actualizarSesionServidor(ses.id, { notasPsicologo: notas, interpretacion, aprobada });
+    const local = actualizarSesion(ses.id, { notasPsicologo: notas, interpretacion, aprobada });
+    if (!ok && !local) {
+      setGuardado("error");
+      return;
+    }
+    setSesion(local ?? { ...ses, notasPsicologo: notas, interpretacion, aprobada });
+    setGuardado(aprobada ? "validado" : "borrador");
   }
 
   async function vincularPuesto(jobProfileId: string | null) {
@@ -247,8 +254,11 @@ export default function AdminDetallePage() {
             sesion={ses}
             notas={notas}
             setNotas={setNotas}
-            onGuardar={guardarNotas}
-            onAprobar={aprobar}
+            onGuardar={() => void guardar(false)}
+            onAprobar={() => void guardar(true)}
+            guardado={guardado}
+            interpretacion={interp}
+            setInterpretacion={setInterp}
           />
         )}
         </>

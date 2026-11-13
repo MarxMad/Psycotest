@@ -49,7 +49,7 @@ export default function MabePage() {
 
   useEffect(() => {
     const g = cargarBorrador<RespuestasMabe>("mabe");
-    if (g && !g.terminada) setPrevia(g);
+    if (g && !g.finalizadaEn) setPrevia(g);
   }, []);
 
   const respuestas = sesion?.respuestas ?? respuestasVaciasMabe();
@@ -322,6 +322,7 @@ export default function MabePage() {
   if (fase === "resultado" && sesion?.finalizadaEn) {
     return (
       <ConfirmacionPrueba
+        sesionId={sesion.id}
         instrumento="mabe"
         participante={sesion.participante}
         finalizadaEn={sesion.finalizadaEn}

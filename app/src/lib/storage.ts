@@ -193,10 +193,29 @@ export function finalizarSesion<TResp, TCalif>(
   };
   guardarSesion(next);
   borrarBorrador(sesion.instrumento);
-  if (typeof window !== "undefined") {
-    import("./persist-server").then(({ enviarAplicacionServidor }) => {
-      enviarAplicacionServidor(next);
-    });
-  }
+  if (typeof window !== "undefined") enviarFinal(next);
   return next;
+}
+
+/* Envío al servidor de una aplicación terminada. La pantalla de confirmación
+   espera su resultado: no dice «registrada» si no llegó. */
+const envios = new Map<string, Promise<boolean>>();
+
+function enviarFinal<TResp, TCalif>(sesion: Sesion<TResp, TCalif>): Promise<boolean> {
+  const envio = import("./persist-server").then(({ enviarAplicacionServidor }) =>
+    enviarAplicacionServidor(sesion),
+  );
+  envios.set(sesion.id, envio);
+  return envio;
+}
+
+/** Resultado del envío de la sesión (null si en esta pestaña no se envió nada). */
+export function envioDe(id: string): Promise<boolean> | null {
+  return envios.get(id) ?? null;
+}
+
+/** Vuelve a enviar una sesión ya finalizada en este navegador. */
+export function reenviarSesion(id: string): Promise<boolean> {
+  const sesion = obtenerSesion(id);
+  return sesion ? enviarFinal(sesion) : Promise.resolve(false);
 }

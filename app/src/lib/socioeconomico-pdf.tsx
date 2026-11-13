@@ -1,4 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { textoPdf } from "./informe-pdf";
 import {
   SECCIONES_CANDIDATO,
   SECCIONES_INVESTIGADOR,
@@ -139,11 +140,11 @@ export function SocioeconomicoPdfDocument({ data }: { data: SocioeconomicoPdfDat
         </View>
 
         <Text style={st.parte}>Informe</Text>
-        <Text style={st.cuerpo}>{data.interpretacion}</Text>
+        <Text style={st.cuerpo}>{textoPdf(data.interpretacion)}</Text>
         {data.notas?.trim() ? (
           <>
             <Text style={st.seccion}>Observaciones</Text>
-            <Text style={st.cuerpo}>{data.notas}</Text>
+            <Text style={st.cuerpo}>{textoPdf(data.notas)}</Text>
           </>
         ) : null}
 

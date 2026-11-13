@@ -47,7 +47,7 @@ export default function Papi() {
 
   useEffect(() => {
     const guardada = cargarBorrador<Respuestas>("papi");
-    if (guardada && !guardada.terminada) setPrevia(guardada);
+    if (guardada && !guardada.finalizadaEn) setPrevia(guardada);
   }, []);
 
   const respuestas: Respuestas = sesion?.respuestas ?? {};
@@ -81,7 +81,9 @@ export default function Papi() {
       const completo = Object.keys(next.respuestas).length === PARES.length;
       persistir({ ...next, terminada: completo });
       if (i < PARES.length - 1) {
-        setTimeout(() => setI((v) => v + 1), 110);
+        // Avanza sólo si sigue en el par que se contestó: un doble toque o
+        // «Siguiente» durante la pausa ya no salta pares ni se sale del final.
+        setTimeout(() => setI((v) => (v === i ? i + 1 : v)), 110);
       } else if (completo) {
         setTimeout(() => setFase("resultado"), 160);
       }
@@ -303,7 +305,9 @@ function Resultado({ sesion }: { sesion: Sesion<Respuestas> }) {
   const [fin, setFin] = useState<Sesion<Respuestas> | null>(null);
 
   useEffect(() => {
-    if (guardado.current || sesion.terminada) {
+    // «terminada» ya viene en true al contestar lo último; lo que indica que
+    // se calificó y se envió es la fecha de finalización.
+    if (guardado.current || sesion.finalizadaEn) {
       if (sesion.finalizadaEn) setFin(sesion);
       return;
     }
@@ -317,6 +321,7 @@ function Resultado({ sesion }: { sesion: Sesion<Respuestas> }) {
 
   return (
     <ConfirmacionPrueba
+        sesionId={fin.id}
       instrumento="papi"
       participante={fin.participante}
       finalizadaEn={fin.finalizadaEn}

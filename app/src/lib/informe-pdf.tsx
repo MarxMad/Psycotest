@@ -32,7 +32,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 4,
+    // Sin interlineado propio el título se encimaba con la línea de abajo.
+    lineHeight: 1.3,
+    marginBottom: 6,
   },
   meta: {
     fontSize: 9,
@@ -85,6 +87,23 @@ function fmt(iso: string) {
   });
 }
 
+/**
+ * Helvetica (la fuente base del PDF) no trae algunos signos que usan los
+ * informes: sin cambiarlos, «≥ 7» salía como «e 7».
+ */
+const SIN_GLIFO: [RegExp, string][] = [
+  [/≥/g, ">="],
+  [/≤/g, "<="],
+  [/→/g, "->"],
+  [/−/g, "-"],
+  [/═/g, "="],
+  [/⚠\uFE0F?/g, "(!)"],
+];
+
+export function textoPdf(texto: string): string {
+  return SIN_GLIFO.reduce((t, [re, por]) => t.replace(re, por), texto);
+}
+
 export interface InformePdfData {
   instrumento: string;
   participante: string;
@@ -118,14 +137,14 @@ export function InformePdfDocument({ data }: { data: InformePdfData }) {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Interpretación</Text>
-          <Text style={styles.body}>{data.interpretacion}</Text>
+          <Text style={styles.body}>{textoPdf(data.interpretacion)}</Text>
         </View>
 
         {data.notasPsicologo?.trim() ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Observaciones del psicólogo</Text>
             <View style={styles.notas}>
-              <Text style={styles.body}>{data.notasPsicologo}</Text>
+              <Text style={styles.body}>{textoPdf(data.notasPsicologo)}</Text>
             </View>
           </View>
         ) : null}

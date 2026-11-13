@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { channelPublicUrl } from "@/lib/channels";
-import { CheckCircle2 } from "lucide-react";
-import type { Instrumento } from "@/lib/storage";
+import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react";
+import { envioDe, reenviarSesion, type Instrumento } from "@/lib/storage";
 import s from "./ConfirmacionPrueba.module.css";
 import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
 
@@ -26,9 +27,62 @@ interface Props {
   finalizadaEn: string;
   /** Qué sigue para el candidato, si no es la revisión del psicólogo. */
   mensaje?: string;
+  /** Sesión enviada desde esta pestaña: la pantalla espera a que el servidor la reciba. */
+  sesionId?: string;
 }
 
-export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn, mensaje }: Props) {
+type Envio = "enviando" | "ok" | "error";
+
+export function ConfirmacionPrueba({ instrumento, participante, finalizadaEn, mensaje, sesionId }: Props) {
+  const [envio, setEnvio] = useState<Envio>(() => (sesionId && envioDe(sesionId) ? "enviando" : "ok"));
+
+  useEffect(() => {
+    const pendiente = sesionId ? envioDe(sesionId) : null;
+    if (!pendiente) return;
+    let vivo = true;
+    pendiente.then((ok) => vivo && setEnvio(ok ? "ok" : "error"));
+    return () => {
+      vivo = false;
+    };
+  }, [sesionId]);
+
+  async function reintentar() {
+    if (!sesionId) return;
+    setEnvio("enviando");
+    setEnvio((await reenviarSesion(sesionId)) ? "ok" : "error");
+  }
+
+  if (envio !== "ok") {
+    return (
+      <main className={s.main}>
+        <div className={s.card} role={envio === "error" ? "alert" : "status"}>
+          {envio === "enviando" ? (
+            <>
+              <Loader2 className={`${s.icon} ${s.girando}`} size={48} strokeWidth={1.5} aria-hidden />
+              <span className="eyebrow">Enviando</span>
+              <h1>Guardando tus respuestas…</h1>
+              <p className={s.lede}>No cierres esta ventana.</p>
+            </>
+          ) : (
+            <>
+              <AlertTriangle className={`${s.icon} ${s.iconoError}`} size={48} strokeWidth={1.5} aria-hidden />
+              <span className="eyebrow">Falta un paso</span>
+              <h1>No pudimos enviar tus respuestas</h1>
+              <p className={s.lede}>
+                Tus respuestas de <strong>{ETIQUETAS[instrumento]}</strong> siguen guardadas en este
+                navegador. Revisa tu conexión y vuelve a intentarlo; si el problema sigue, avisa a
+                quien te dio el código.
+              </p>
+              <button type="button" className="btn btn-primary" onClick={() => void reintentar()}>
+                Reintentar envío
+              </button>
+            </>
+          )}
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className={s.main}>
       <div className={s.card}>

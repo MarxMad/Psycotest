@@ -18,18 +18,38 @@ import type { Sesion } from "@/lib/storage";
 import { ExportarPdfButton } from "./ExportarPdfButton";
 import s from "./InterpretacionPanel.module.css";
 
+/** El borrador automático lleva estas marcas hasta que el psicólogo lo reescribe. */
+function esBorrador(texto: string): boolean {
+  return /Informe borrador|debe completar la interpretaci/i.test(texto);
+}
+
+export type EstadoGuardado = "guardando" | "borrador" | "validado" | "error" | null;
+
+const AVISO_GUARDADO: Record<Exclude<EstadoGuardado, null | "validado">, string> = {
+  guardando: "Guardando…",
+  borrador: "Borrador guardado. El informe queda pendiente de validar.",
+  error: "No se pudo guardar. Revisa tu conexión o tu sesión e inténtalo de nuevo.",
+};
+
 export function InterpretacionPanel({
   sesion,
   notas,
   setNotas,
   onGuardar,
   onAprobar,
+  guardado = null,
+  interpretacion = null,
+  setInterpretacion,
 }: {
   sesion: Sesion<unknown, unknown>;
   notas: string;
   setNotas: (v: string) => void;
   onGuardar: () => void;
   onAprobar: () => void;
+  guardado?: EstadoGuardado;
+  /** Texto editado del informe (null = el generado). */
+  interpretacion?: string | null;
+  setInterpretacion?: (v: string) => void;
 }) {
   const texto =
     sesion.interpretacion ??
@@ -127,6 +147,22 @@ export function InterpretacionPanel({
       )}
 
       <section className={s.notasBlock}>
+        {setInterpretacion && (
+          <label className={s.notasLabel}>
+            Interpretación del informe — es el texto que recibe el cliente en el PDF
+            <textarea
+              value={interpretacion ?? texto}
+              onChange={(e) => setInterpretacion(e.target.value)}
+              rows={14}
+            />
+          </label>
+        )}
+        {setInterpretacion && esBorrador(interpretacion ?? texto) && (
+          <p className={s.avisoBorrador} role="note">
+            El texto todavía es el borrador automático. Complétalo antes de validar: así saldrá en
+            el PDF.
+          </p>
+        )}
         <label className={s.notasLabel}>
           Notas del psicólogo
           <textarea
@@ -137,13 +173,21 @@ export function InterpretacionPanel({
           />
         </label>
         <div className={s.row}>
-          <button type="button" className="btn" onClick={onGuardar}>
+          <button type="button" className="btn" onClick={onGuardar} disabled={guardado === "guardando"}>
             Guardar borrador
           </button>
-          <button type="button" className="btn btn-primary" onClick={onAprobar}>
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={onAprobar}
+            disabled={guardado === "guardando"}
+          >
             Validar informe
           </button>
         </div>
+        {guardado && guardado !== "validado" && (
+          <p role={guardado === "error" ? "alert" : "status"}>{AVISO_GUARDADO[guardado]}</p>
+        )}
         {sesion.aprobada && (
           <p className={s.validated}>
             Informe validado. Ya puedes exportar el PDF personalizado del participante.
