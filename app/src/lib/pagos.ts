@@ -1,9 +1,10 @@
 import type Stripe from "stripe";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, ne, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { courseCategories, courseEnrollments, courses, orderItems, orders } from "@/db/schema";
+import { courseCategories, courseEnrollments, coupons, courses, orderItems, orders, users } from "@/db/schema";
 import { logAudit } from "@/lib/auth";
 import { activateEnrollment } from "@/lib/course-access";
+import { correoVentas, enviarCorreo, esMarca, pesos, plantilla, textoPlano, type Marca } from "@/lib/correo";
 import { stripe } from "@/lib/stripe";
 
 /**
@@ -16,7 +17,62 @@ import { stripe } from "@/lib/stripe";
  */
 
 /** Etiqueta para comparar flujos de cobro en el panel de Stripe. */
-const ETIQUETA_FLUJO = "psycotest-vqhtzmrk";
+export const ETIQUETA_FLUJO = "psycotest-vqhtzmrk";
+
+/**
+ * Opciones de pago comunes a todas las sesiones. Los métodos no se fijan aquí
+ * (eso lo decide el panel de Stripe: tarjeta, OXXO, SPEI…); solo se ajusta
+ * cómo se comporta cada uno si está activo.
+ *
+ * - OXXO: la ficha vence en 3 días.
+ * - SPEI: transferencia a una CLABE que Stripe asigna al cliente y concilia
+ *   sola. Necesita un cliente en Stripe, de ahí `customer_creation`.
+ */
+export const OPCIONES_DE_PAGO = {
+  customer_creation: "always",
+  payment_method_options: {
+    oxxo: { expires_after_days: 3 },
+    customer_balance: {
+      funding_type: "bank_transfer",
+      bank_transfer: { type: "mx_bank_transfer" },
+    },
+  },
+} satisfies Partial<Stripe.Checkout.SessionCreateParams>;
+
+/**
+ * Usuario por correo: el de la sesión si lo hay, uno existente con ese correo,
+ * o uno nuevo sin contraseña (entra después con «Entrar con mi correo»).
+ */
+export async function usuarioPorCorreo(opciones: {
+  sesionId?: string | null;
+  email: string;
+  nombre: string;
+}): Promise<string> {
+  if (opciones.sesionId) return opciones.sesionId;
+  const db = getDb();
+  const [existente] = await db
+    .select({ id: users.id })
+    .from(users)
+    .where(eq(users.email, opciones.email))
+    .limit(1);
+  if (existente) return existente.id;
+  const id = `usr-sol-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+  await db
+    .insert(users)
+    .values({
+      id,
+      email: opciones.email,
+      nombre: opciones.nombre,
+      passwordHash: "",
+      rol: "cliente",
+      emailVerified: false,
+      createdAt: new Date().toISOString(),
+    })
+    .onConflictDoNothing();
+  // Si otro pedido lo creó al mismo tiempo, se queda el que ganó.
+  const [final] = await db.select({ id: users.id }).from(users).where(eq(users.email, opciones.email)).limit(1);
+  return final?.id ?? id;
+}
 
 export type Resultado =
   | { ok: true; url: string }
@@ -181,8 +237,10 @@ export async function crearSesionDePago(opciones: {
       mode: "payment",
       line_items: conceptos,
       client_reference_id: pedido.id,
-      metadata: { pedidoId: pedido.id },
-      payment_intent_data: { metadata: { pedidoId: pedido.id } },
+      // `origen` sirve al webhook para armar los enlaces del correo.
+      metadata: { tipo: "curso", pedidoId: pedido.id, origen: opciones.origen },
+      payment_intent_data: { metadata: { tipo: "curso", pedidoId: pedido.id } },
+      ...OPCIONES_DE_PAGO,
       customer_email: opciones.email || undefined,
       locale: "es",
       success_url: `${opciones.origen}/gracias?pedido=${pedido.id}&session_id={CHECKOUT_SESSION_ID}`,
@@ -205,7 +263,11 @@ export async function crearSesionDePago(opciones: {
  *
  * Se llama desde el webhook, nunca desde la página de vuelta: quien paga y
  * pierde la conexión antes de que cargue esa página también tiene que recibir
- * su acceso. Es idempotente porque Stripe reintenta los eventos.
+ * su acceso. Es idempotente porque Stripe reintenta los eventos: primero se
+ * conceden las inscripciones (repetirlas no hace daño) y al final el pedido
+ * se cierra con una sola escritura condicionada. Solo quien gana ese cierre
+ * cuenta el cupón y manda el correo, así que dos avisos simultáneos no
+ * duplican nada.
  */
 export async function cumplirPedido(sesion: Stripe.Checkout.Session): Promise<void> {
   const pedidoId = sesion.metadata?.pedidoId || sesion.client_reference_id;
@@ -226,16 +288,17 @@ export async function cumplirPedido(sesion: Stripe.Checkout.Session): Promise<vo
     typeof sesion.payment_intent === "string"
       ? sesion.payment_intent
       : sesion.payment_intent?.id ?? null;
-  const ahora = new Date().toISOString();
-
-  await db
-    .update(orders)
-    .set({ status: "completed", completedAt: ahora, stripePaymentIntentId: pagoId })
-    .where(eq(orders.id, pedido.id));
 
   const items = await db
-    .select({ courseId: orderItems.courseId })
+    .select({
+      courseId: orderItems.courseId,
+      precio: orderItems.price,
+      titulo: courses.title,
+      canal: courseCategories.channelId,
+    })
     .from(orderItems)
+    .innerJoin(courses, eq(orderItems.courseId, courses.id))
+    .leftJoin(courseCategories, eq(courses.categoryId, courseCategories.id))
     .where(eq(orderItems.orderId, pedido.id));
 
   for (const item of items) {
@@ -247,10 +310,94 @@ export async function cumplirPedido(sesion: Stripe.Checkout.Session): Promise<vo
     });
   }
 
+  const cerrado = await db
+    .update(orders)
+    .set({ status: "completed", completedAt: new Date().toISOString(), stripePaymentIntentId: pagoId })
+    .where(and(eq(orders.id, pedido.id), ne(orders.status, "completed")))
+    .returning({ id: orders.id });
+  if (cerrado.length === 0) return; // Otro aviso ya lo cerró.
+
+  if (pedido.couponId) {
+    await db
+      .update(coupons)
+      .set({ currentUses: sql`${coupons.currentUses} + 1` })
+      .where(eq(coupons.id, pedido.couponId));
+  }
+
   await logAudit(pedido.userId, "update", "order", pedido.id, {
     via: "stripe",
     total: pedido.total,
     programas: items.length,
+    cupon: pedido.couponId,
+  });
+
+  await avisarCompraDeCursos({ sesion, pedido, items }).catch((e) =>
+    console.error("[pagos] correo de confirmación:", e),
+  );
+}
+
+/** Correo al alumno y aviso a ventas. Un fallo aquí no deshace el cobro. */
+async function avisarCompraDeCursos({
+  sesion,
+  pedido,
+  items,
+}: {
+  sesion: Stripe.Checkout.Session;
+  pedido: typeof orders.$inferSelect;
+  items: { titulo: string; precio: number; canal: string | null }[];
+}) {
+  const db = getDb();
+  const [usuario] = await db
+    .select({ email: users.email, nombre: users.nombre, sinClave: sql<boolean>`${users.passwordHash} = ''` })
+    .from(users)
+    .where(eq(users.id, pedido.userId))
+    .limit(1);
+  const para = sesion.customer_details?.email || usuario?.email;
+  if (!para) return;
+
+  const canal = items.find((i) => i.canal)?.canal;
+  const marca: Marca = esMarca(canal) ? canal : "ceduct";
+  const origen = sesion.metadata?.origen || (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const nombre = (usuario?.nombre || sesion.customer_details?.name || "").split(" ")[0];
+
+  const contenido = {
+    titulo: "Tu pago está confirmado",
+    intro: `${nombre ? `Hola, ${nombre}. ` : ""}Recibimos tu pago y ya tienes acceso a ${
+      items.length === 1 ? "tu programa" : `tus ${items.length} programas`
+    }.`,
+    folio: pedido.id,
+    filas: items.map((i) => ({ concepto: i.titulo, importe: pesos(i.precio) })),
+    total: pesos(sesion.amount_total ?? pedido.total),
+    boton: origen ? { texto: "Entrar a mis cursos", url: `${origen}/mi-cuenta/cursos` } : undefined,
+    nota: !usuario?.sinClave
+      ? undefined
+      : "Para entrar, usa «Entrar con mi correo» con esta misma dirección: te llega un código y listo.",
+  };
+
+  await enviarCorreo({
+    marca,
+    para,
+    asunto: `Pago confirmado · ${pedido.id}`,
+    html: plantilla(marca, contenido),
+    texto: textoPlano(marca, contenido),
+    clave: `pago-curso-${pedido.id}`,
+  });
+
+  const aviso = {
+    titulo: `Nueva venta · ${pesos(sesion.amount_total ?? pedido.total)}`,
+    intro: `${usuario?.nombre ?? "Un cliente"} (${para}) pagó en línea.`,
+    folio: pedido.id,
+    filas: contenido.filas,
+    total: contenido.total,
+  };
+  await enviarCorreo({
+    marca,
+    para: correoVentas(),
+    asunto: `Venta ${pesos(sesion.amount_total ?? pedido.total)} · ${pedido.id}`,
+    html: plantilla(marca, aviso),
+    texto: textoPlano(marca, aviso),
+    clave: `venta-curso-${pedido.id}`,
+    responderA: para,
   });
 }
 

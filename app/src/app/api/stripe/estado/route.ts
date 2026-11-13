@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { cumplirPedido } from "@/lib/pagos";
 import { stripe } from "@/lib/stripe";
 
 /**
@@ -20,6 +21,11 @@ export async function GET(request: Request) {
 
   try {
     const sesion = await stripe.checkout.sessions.retrieve(sessionId);
+    // Si el webhook aún no llega, se cumple aquí. Es idempotente y los datos
+    // vienen de Stripe, no del navegador.
+    if (sesion.payment_status !== "unpaid" && sesion.metadata?.tipo !== "psicologia") {
+      await cumplirPedido(sesion).catch((e) => console.error("[stripe/estado] cumplir:", e));
+    }
     return NextResponse.json({
       pagado: sesion.payment_status === "paid",
       estado: sesion.payment_status,

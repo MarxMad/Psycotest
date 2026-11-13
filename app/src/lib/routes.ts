@@ -8,6 +8,8 @@ export const evaluacion = {
   home: EVAL_BASE,
   login: "/login",
   acceso: `${EVAL_BASE}/acceso`,
+  /** Vuelta del pago en línea: muestra los códigos comprados. */
+  compra: `${EVAL_BASE}/compra`,
   admin: "/admin",
   codigos: "/admin/pruebas/codigos",
   participantes: `${EVAL_BASE}/participantes`,

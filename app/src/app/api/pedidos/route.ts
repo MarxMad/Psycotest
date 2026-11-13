@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db/index";
-import { courseCategories, coupons, courses, orderItems, orders, users } from "@/db/schema";
+import { courseCategories, coupons, courses, orderItems, orders } from "@/db/schema";
 import { getSessionUser, logAudit } from "@/lib/auth";
-import { crearSesionDePago, origenDe } from "@/lib/pagos";
+import { crearSesionDePago, origenDe, usuarioPorCorreo } from "@/lib/pagos";
 import { isStripeConfigured } from "@/lib/stripe";
 
 /**
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     notas?: string;
     /** Código de cupón; se valida aquí, nunca se confía en el navegador. */
     cupon?: string | null;
-    /** tarjeta (Stripe) · transferencia · oxxo. Por defecto, tarjeta. */
+    /** Preferencia declarada (tarjeta · transferencia · oxxo); todo se cobra en Stripe. */
     metodoPago?: string;
     factura?: { rfc?: string; razonSocial?: string; cp?: string | null } | null;
   };
@@ -83,6 +83,7 @@ export async function POST(request: Request) {
     // el pedido; simplemente no descuenta.
     let descuento = 0;
     let cuponAplicado: string | null = null;
+    let cuponId: string | null = null;
     const codigo = body.cupon?.trim().toUpperCase();
     if (codigo && subtotal > 0) {
       const [cupon] = await db.select().from(coupons).where(eq(coupons.code, codigo)).limit(1);
@@ -98,39 +99,16 @@ export async function POST(request: Request) {
             : Math.max(0, cupon.value);
         descuento = Math.min(descuento, subtotal);
         cuponAplicado = cupon.code;
+        cuponId = cupon.id;
       }
     }
     const total = subtotal - descuento;
 
     // Si hay sesión se liga al usuario; si no, se registra a nombre del correo.
     const sesion = await getSessionUser();
-    let userId = sesion?.id ?? null;
-    if (!userId) {
-      const [existente] = await db
-        .select({ id: users.id })
-        .from(users)
-        .where(eq(users.email, email))
-        .limit(1);
-      if (existente) {
-        userId = existente.id;
-      } else {
-        userId = `usr-sol-${Date.now().toString(36)}`;
-        await db
-          .insert(users)
-          .values({
-            id: userId,
-            email,
-            nombre,
-            passwordHash: "",
-            rol: "cliente",
-            emailVerified: false,
-            createdAt: ahora,
-          })
-          .onConflictDoNothing();
-      }
-    }
+    const userId = await usuarioPorCorreo({ sesionId: sesion?.id, email, nombre });
 
-    const pedidoId = `ord-${Date.now().toString(36)}`;
+    const pedidoId = `ord-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
     await db.insert(orders).values({
       id: pedidoId,
       userId,
@@ -138,6 +116,8 @@ export async function POST(request: Request) {
       discount: descuento,
       total,
       status: "pending",
+      // El uso del cupón se cuenta al confirmarse el pago, no aquí.
+      couponId: cuponId,
       createdAt: ahora,
     });
 
@@ -164,19 +144,20 @@ export async function POST(request: Request) {
     // El pago solo se abre si hay precio que cobrar; lo demás se acuerda
     // por contacto y el pedido se queda pendiente para eso.
     let pagoUrl: string | null = null;
-    // Transferencia y OXXO se concilian a mano desde el panel.
-    if (metodoPago === "tarjeta" && isStripeConfigured() && total > 0) {
-      const sesion = await crearSesionDePago({
+    // Tarjeta, OXXO y SPEI se cobran en la misma página de Stripe, que
+    // concilia sola los pagos en efectivo y por transferencia.
+    if (isStripeConfigured() && total > 0) {
+      const pago = await crearSesionDePago({
         pedidoId,
         origen: origenDe(request),
         email,
         cancelarEn: "/checkout",
       });
-      if (sesion.ok) {
-        pagoUrl = sesion.url;
+      if (pago.ok) {
+        pagoUrl = pago.url;
       } else {
         // Que falle el pago no debe perder la inscripción: ya está registrada.
-        console.error("[api/pedidos] no se pudo abrir el pago:", sesion.error);
+        console.error("[api/pedidos] no se pudo abrir el pago:", pago.error);
       }
     }
 

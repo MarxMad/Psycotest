@@ -4,7 +4,7 @@ import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
-import { getChannelFromHost, isChannelPath, isPlatformPath } from "@/lib/channels";
+import { dominioPrincipal, getChannelFromHost, isChannelPath, isPlatformPath } from "@/lib/channels";
 import { esSoloAdmin, operaElPanel, type Rol } from "@/lib/auth-rutas";
 import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
@@ -47,6 +47,12 @@ export async function middleware(request: NextRequest) {
   // --- Multi-canal: rewrite por subdominio ---
   if (!isPlatformPath(pathname) && !pathname.includes(".")) {
     const channel = getChannelFromHost(host);
+    // martin.* era el portafolio suelto; ahora es la portada del grupo en el
+    // dominio principal. Los enlaces viejos llegan ahí.
+    const raiz = dominioPrincipal();
+    if (channel?.id === "martin" && raiz) {
+      return NextResponse.redirect(new URL(`https://${raiz}${pathname}${request.nextUrl.search}`), 308);
+    }
     // Una ruta propia del canal (p. ej. /nosotros en CEDUCT) se sirve tal cual;
     // en los demás subdominios sí se reescribe, para que cada marca tenga la
     // suya en vez de heredar la de CEDUCT.

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { cancelarPedido, cumplirPedido } from "@/lib/pagos";
+import { cumplirCompraPsicologia } from "@/lib/pagos-psicologia";
 import { stripe } from "@/lib/stripe";
 
 /**
@@ -9,6 +10,11 @@ import { stripe } from "@/lib/stripe";
  * No se cumple desde la página de vuelta: quien paga y pierde la conexión
  * antes de que esa página cargue también tiene que recibir su acceso.
  */
+/** Cada canal cumple a su manera: cursos dan inscripción; Psicología, códigos. */
+function cumplir(sesion: Stripe.Checkout.Session) {
+  return sesion.metadata?.tipo === "psicologia" ? cumplirCompraPsicologia(sesion) : cumplirPedido(sesion);
+}
+
 export async function POST(request: Request) {
   const secreto = process.env.STRIPE_WEBHOOK_SECRET;
   if (!stripe || !secreto) {
@@ -39,11 +45,11 @@ export async function POST(request: Request) {
         const sesion = evento.data.object;
         // Con métodos de pago diferidos este evento llega sin cobrar todavía;
         // el bueno será `async_payment_succeeded`.
-        if (sesion.payment_status !== "unpaid") await cumplirPedido(sesion);
+        if (sesion.payment_status !== "unpaid") await cumplir(sesion);
         break;
       }
       case "checkout.session.async_payment_succeeded":
-        await cumplirPedido(evento.data.object);
+        await cumplir(evento.data.object);
         break;
       case "checkout.session.async_payment_failed":
       case "checkout.session.expired":

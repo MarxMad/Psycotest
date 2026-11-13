@@ -134,3 +134,45 @@ export function precioMinimo(): number {
  * a mano.
  */
 export const BATERIA_COMPLETA = PRUEBAS.filter((p) => p.id !== "socioeconomico").map((p) => p.id);
+
+/**
+ * Pruebas que se pueden pagar en línea: las que ya están digitalizadas (el
+ * código de acceso las abre) y tienen precio. Estilos Gerenciales y el
+ * estudio socioeconómico se coordinan aparte.
+ */
+export const DIGITALES = ["papi", "hartman", "mabe", "cleaver", "lifo"] as const;
+export type PruebaDigital = (typeof DIGITALES)[number];
+
+export function esDigital(id: string): id is PruebaDigital {
+  return (DIGITALES as readonly string[]).includes(id);
+}
+
+/** Los precios del catálogo van sin IVA; al cobrar en línea se suma aparte. */
+export const TASA_IVA = 0.16;
+export const MAX_CANDIDATOS_EN_LINEA = 50;
+
+export type CotizacionEnLinea = Cotizacion & {
+  /** Las elegidas que sí entran al cobro en línea. */
+  ids: PruebaDigital[];
+  /** Las elegidas que se coordinan aparte. */
+  aparte: Prueba[];
+  iva: number;
+  totalConIva: number;
+};
+
+/** Lo que se cobra en línea. El servidor la recalcula; nunca confía en el navegador. */
+export function cotizarEnLinea(ids: string[], candidatos: number): CotizacionEnLinea {
+  const validos = DIGITALES.filter(
+    (id) => ids.includes(id) && PRUEBAS.some((p) => p.id === id && p.precio != null),
+  );
+  const n = Math.min(MAX_CANDIDATOS_EN_LINEA, Math.max(1, Math.floor(candidatos) || 1));
+  const c = cotizar([...validos], n);
+  const iva = Math.round(c.total * TASA_IVA);
+  return {
+    ...c,
+    ids: validos,
+    aparte: PRUEBAS.filter((p) => ids.includes(p.id) && !validos.includes(p.id as PruebaDigital)),
+    iva,
+    totalConIva: c.total + iva,
+  };
+}

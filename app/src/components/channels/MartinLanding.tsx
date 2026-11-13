@@ -86,6 +86,60 @@ const LINEAS: Record<
   },
 };
 
+/**
+ * La puerta del grupo, organizada por lo que la persona necesita y no por el
+ * nombre de cada marca: quien llega no sabe qué es «IGE», pero sí sabe que
+ * quiere capacitar a su equipo. La marca aparece como respuesta.
+ */
+const NECESIDADES: {
+  necesidad: string;
+  acento: string;
+  marca: string;
+  que: string;
+  canal: ChannelId | null;
+  cta: string;
+}[] = [
+  {
+    necesidad: "Quiero certificar lo que",
+    acento: "ya sé hacer",
+    marca: "CEDUCT",
+    que: "Certificaciones SEP-CONOCER con validez oficial y diplomados de 104 horas.",
+    canal: "ceduct",
+    cta: "Ver certificaciones",
+  },
+  {
+    necesidad: "Necesito evaluar a",
+    acento: "quién contrato",
+    marca: "Psicología Aplicada",
+    que: "Pruebas psicométricas en línea, estudio socioeconómico e informe de un psicólogo en 72 h.",
+    canal: "psicologia",
+    cta: "Ver evaluaciones",
+  },
+  {
+    necesidad: "Quiero que mi equipo",
+    acento: "trabaje mejor",
+    marca: "Ingeniería de Grupos Efectivos",
+    que: "Cursos en línea y en vivo, talleres y consultoría para equipos de trabajo.",
+    canal: "ige",
+    cta: "Ver cursos",
+  },
+  {
+    necesidad: "Necesito un dictamen o un",
+    acento: "diagnóstico",
+    marca: "Martín Hernández",
+    que: "Valuación con dictamen técnico y diagnóstico organizacional, de alcance cerrado.",
+    canal: null,
+    cta: "Agendar conversación",
+  },
+];
+
+const TONO_DE: Record<string, string> = {
+  CEDUCT: "#c9a227",
+  "Psicología Aplicada": "#d4895a",
+  "Ingeniería de Grupos Efectivos": "#22d3ee",
+  "Martín Hernández": "#d4a24c",
+};
+
 /** El oficio activo se enciende por turnos: la firma se lee como una práctica viva. */
 function FirmaOficios() {
   const [activo, setActivo] = useState(0);
@@ -122,7 +176,7 @@ export function MartinLanding({
   const entregaCabecera = useAparicion<HTMLDivElement>({ y: 22 });
   const entregaLista = useAparicionLista<HTMLDivElement>();
   const lineasCabecera = useAparicion<HTMLDivElement>({ y: 22 });
-  const lineasLista = useAparicionLista<HTMLDivElement>();
+  const lineasLista = useAparicionLista<HTMLOListElement>();
   const cierre = useAparicion<HTMLDivElement>({ y: 24 });
   const regla = useRef<HTMLSpanElement>(null);
 
@@ -145,7 +199,6 @@ export function MartinLanding({
   const seccion = (id: string) => content.sections.find((x) => x.id === id);
   const credenciales = seccion("credenciales");
   const metodo = seccion("metodo");
-  const canales = seccion("canales");
   const contacto = seccion("contacto");
 
   return (
@@ -174,8 +227,8 @@ export function MartinLanding({
             <a className={s.btnPrimary} href="#contacto">
               Agendar una conversación
             </a>
-            <a className={s.btnGhost} href="#entregables">
-              Qué entrego
+            <a className={s.btnGhost} href="#servicios">
+              Ver servicios
             </a>
           </div>
         </div>
@@ -217,6 +270,57 @@ export function MartinLanding({
             <li key={c}>{c}</li>
           ))}
         </ul>
+      </section>
+
+      {/* ---------- SERVICIOS: la puerta del grupo ---------- */}
+      <section id="servicios" className={s.servicios} aria-labelledby="servicios-titulo">
+        <div className={s.limite}>
+          <div className={s.cabecera} ref={lineasCabecera}>
+            <p className={s.eyebrow}>Por dónde empezar</p>
+            <h2 id="servicios-titulo" className={s.titulo}>
+              ¿Qué <em>necesitas</em>?
+            </h2>
+            <p className={s.cuerpo}>
+              Cuatro líneas de trabajo bajo una misma responsable. Elige la tuya; cada una tiene su
+              propio sitio, con todo lo que ofrece.
+            </p>
+          </div>
+
+          <ol className={s.necesidades} ref={lineasLista}>
+            {NECESIDADES.map((n, i) => (
+              <li key={n.marca} style={{ ["--tono" as string]: TONO_DE[n.marca] }}>
+                <a
+                  className={s.necesidad}
+                  href={n.canal ? channelPublicUrl(n.canal) : "#contacto"}
+                >
+                  <span className={s.necesidadNum} aria-hidden>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className={s.necesidadFrase}>
+                    {n.necesidad} <em>{n.acento}</em>
+                  </span>
+                  <span className={s.necesidadMarca}>
+                    {LINEAS[n.marca] && (
+                      <span className={s.necesidadLogo} aria-hidden>
+                        {LINEAS[n.marca].sello ? (
+                          <SelloSociedad className={s.marcaSello} />
+                        ) : (
+                          <img src={LINEAS[n.marca].logo} alt="" />
+                        )}
+                      </span>
+                    )}
+                    <strong>{n.marca}</strong>
+                    <span>{n.que}</span>
+                  </span>
+                  <span className={s.necesidadCta}>
+                    {n.cta}
+                    <ArrowUpRight size={18} aria-hidden />
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
       </section>
 
       <Cifras
@@ -307,50 +411,6 @@ export function MartinLanding({
             pasos={(metodo.items ?? []).map((i) => ({ title: i.title, text: i.text }))}
           />
         </div>
-      )}
-
-      {/* ---------- LÍNEAS DE TRABAJO ---------- */}
-      {canales && (
-        <section id={canales.id} className={s.seccion}>
-          <div className={s.limite}>
-            <div className={s.cabecera} ref={lineasCabecera}>
-              <p className={s.eyebrow}>{canales.eyebrow}</p>
-              <h2 className={s.titulo}>{canales.title}</h2>
-              <p className={s.cuerpo}>{canales.body}</p>
-            </div>
-
-            <div className={s.lineas} ref={lineasLista}>
-              {(canales.items ?? []).map((item) => {
-                const linea = LINEAS[item.title];
-                return (
-                  <article
-                    key={item.title}
-                    className={s.linea}
-                    style={linea ? ({ ["--tono" as string]: linea.tono }) : undefined}
-                  >
-                    {linea && (
-                      <span className={s.lineaMarca} style={{ color: linea.tono }}>
-                        {linea.sello ? (
-                          <SelloSociedad className={s.marcaSello} />
-                        ) : (
-                          <img src={linea.logo} alt="" />
-                        )}
-                      </span>
-                    )}
-                    <h3>{item.title}</h3>
-                    <p>{item.text}</p>
-                    {linea && (
-                      <a className={s.lineaCta} href={channelPublicUrl(linea.canal)}>
-                        Abrir el sitio
-                        <ArrowUpRight size={16} aria-hidden />
-                      </a>
-                    )}
-                  </article>
-                );
-              })}
-            </div>
-          </div>
-        </section>
       )}
 
       {/* ---------- CONTACTO ---------- */}

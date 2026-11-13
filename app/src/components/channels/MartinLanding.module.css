@@ -737,3 +737,155 @@
     transition: none;
   }
 }
+
+/* ---------- servicios: la puerta del grupo ---------- */
+
+.servicios {
+  position: relative;
+  padding: clamp(3.5rem, 10vh, 6.5rem) var(--mh-pad);
+  border-top: 1px solid var(--mh-line);
+}
+
+.titulo em {
+  font-style: italic;
+  color: var(--mh-gold);
+}
+
+.necesidades {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--mh-line);
+}
+
+.necesidades li {
+  border-bottom: 1px solid var(--mh-line);
+}
+
+/* Cada fila es un enlace entero: la necesidad a la izquierda, la marca que
+   la resuelve a la derecha. Al pasar encima se enciende con el tono de la
+   marca, de izquierda a derecha. */
+.necesidad {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1.25fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.5rem;
+  padding: clamp(1.4rem, 3.4vw, 2.2rem) 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.necesidad::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tono) 16%, transparent), transparent 85%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.necesidad:hover::before,
+.necesidad:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.necesidad:focus-visible {
+  outline: 2px solid var(--tono);
+  outline-offset: -2px;
+}
+
+.necesidadNum {
+  font-family: var(--ch-font-display);
+  font-size: 0.95rem;
+  color: var(--mh-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.necesidadFrase {
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.45rem, 3.3vw, 2.35rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.necesidadFrase em {
+  font-style: italic;
+  color: var(--tono);
+}
+
+.necesidadMarca {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--mh-muted);
+}
+
+.necesidadMarca strong {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mh-ink);
+}
+
+.necesidadLogo {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  height: 2.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--tono);
+}
+
+.necesidadLogo img {
+  height: 100%;
+  width: auto;
+}
+
+.necesidadLogo .marcaSello {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+
+.necesidadCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--tono);
+}
+
+.necesidadCta svg {
+  transition: transform 0.3s ease;
+}
+
+.necesidad:hover .necesidadCta svg {
+  transform: translate(3px, -3px);
+}
+
+@media (max-width: 860px) {
+  .necesidad {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.7rem 1rem;
+  }
+  .necesidadMarca,
+  .necesidadCta {
+    grid-column: 2;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .necesidad::before {
+    transition: none;
+  }
+}

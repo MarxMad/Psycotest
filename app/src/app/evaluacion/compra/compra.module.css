@@ -1,0 +1,114 @@
+.main {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.panel {
+  width: 100%;
+  max-width: 32rem;
+  padding: 2rem 1.5rem;
+  background: color-mix(in srgb, var(--raised) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+}
+
+.panel h1 {
+  font-size: 1.65rem;
+  margin: 0.35rem 0 0.5rem;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+}
+
+.icono {
+  display: inline-flex;
+  padding: 0.6rem;
+  margin-bottom: 0.75rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #1d7a4f 14%, transparent);
+  color: #1d7a4f;
+}
+
+.icono[data-espera] {
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+  color: var(--muted);
+}
+
+.codigos {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+  max-height: 22rem;
+  overflow: auto;
+}
+
+.codigos li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--surface);
+}
+
+.codigos span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.codigos code {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+
+.codigos button {
+  display: inline-flex;
+  padding: 0.35rem;
+  border: 0;
+  border-radius: var(--r);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.codigos button:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.pie {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+@media (max-width: 420px) {
+  .codigos li {
+    grid-template-columns: 1fr auto;
+  }
+  .codigos span {
+    grid-column: 1 / -1;
+  }
+}

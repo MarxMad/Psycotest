@@ -2,23 +2,30 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animate } from "animejs";
-import { ArrowRight, Check, Clock } from "lucide-react";
+import { ArrowRight, Check, Clock, Lock } from "lucide-react";
 import {
   BATERIA_COMPLETA,
+  MAX_CANDIDATOS_EN_LINEA,
   PRUEBAS,
-  cotizar,
+  TASA_IVA,
+  cotizarEnLinea,
   descuentoPorVolumen,
 } from "@/lib/pruebas-catalogo";
 import { whatsapp } from "@/lib/contacto";
 import { menosMovimiento } from "@/lib/aparicion";
 import s from "./Cotizador.module.css";
 
-const pesos = (centavos: number) =>
-  new Intl.NumberFormat("es-MX", {
+// Con centavos solo cuando los hay: el total con IVA tiene que coincidir con
+// lo que cobra Stripe, no redondeado.
+const pesos = (centavos: number) => {
+  const decimales = centavos % 100 === 0 ? 0 : 2;
+  return new Intl.NumberFormat("es-MX", {
     style: "currency",
     currency: "MXN",
-    maximumFractionDigits: 0,
+    minimumFractionDigits: decimales,
+    maximumFractionDigits: decimales,
   }).format(centavos / 100);
+};
 
 /**
  * Cotizador de evaluaciones.
@@ -44,10 +51,46 @@ export function Cotizador({
   const total = useRef<HTMLSpanElement>(null);
   const anterior = useRef<number | null>(null);
 
+  // Lo que se paga en línea, ya con IVA. Lo que no está digitalizado
+  // (Estilos Gerenciales, socioeconómico) va en `aparte` y se coordina.
   const cuenta = useMemo(
-    () => cotizar(elegidas, candidatos),
+    () => cotizarEnLinea(elegidas, candidatos),
     [elegidas, candidatos],
   );
+  const [pagando, setPagando] = useState(false);
+  const [datos, setDatos] = useState({ nombre: "", email: "", empresa: "" });
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const sePuedePagar = cuenta.ids.length > 0 && cuenta.totalConIva > 0;
+
+  async function pagar(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (datos.nombre.trim().length < 3) return setError("Escribe tu nombre completo.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(datos.email.trim()))
+      return setError("Revisa tu correo: ahí te llegan los códigos.");
+    setEnviando(true);
+    try {
+      const r = await fetch("/api/psicologia/compra", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          pruebas: cuenta.ids,
+          candidatos,
+          modo,
+          nombre: datos.nombre.trim(),
+          email: datos.email.trim(),
+          empresa: datos.empresa.trim(),
+        }),
+      });
+      const d = (await r.json().catch(() => ({}))) as { url?: string; error?: string };
+      if (!r.ok || !d.url) throw new Error(d.error ?? "No se pudo abrir el pago. Intenta de nuevo.");
+      window.location.href = d.url;
+    } catch (err) {
+      setError((err as Error).message);
+      setEnviando(false);
+    }
+  }
   const descuento = descuentoPorVolumen(candidatos);
 
   // El total cuenta hasta su nuevo valor en vez de saltar: se ve qué cambió.
@@ -55,10 +98,10 @@ export function Cotizador({
     const nodo = total.current;
     if (!nodo) return;
     const desde = anterior.current;
-    anterior.current = cuenta.total;
+    anterior.current = cuenta.totalConIva;
 
-    if (desde === null || desde === cuenta.total || menosMovimiento()) {
-      nodo.textContent = pesos(cuenta.total);
+    if (desde === null || desde === cuenta.totalConIva || menosMovimiento()) {
+      nodo.textContent = pesos(cuenta.totalConIva);
       return;
     }
 
@@ -67,7 +110,7 @@ export function Cotizador({
 
     const objeto = { v: desde };
     const animacion = animate(objeto, {
-      v: cuenta.total,
+      v: cuenta.totalConIva,
       duration: 480,
       ease: "out(3)",
       onUpdate: () => {
@@ -76,9 +119,9 @@ export function Cotizador({
     });
     return () => {
       animacion.pause();
-      nodo.textContent = pesos(cuenta.total);
+      nodo.textContent = pesos(cuenta.totalConIva);
     };
-  }, [cuenta.total]);
+  }, [cuenta.totalConIva]);
 
   function alternar(id: string, casilla?: HTMLElement | null) {
     setElegidas((previas) =>
@@ -102,9 +145,9 @@ export function Cotizador({
           : `quiero ${candidatos} ${candidatos === 1 ? "evaluación" : "evaluaciones"}`
       } con: ${PRUEBAS.filter((p) => elegidas.includes(p.id))
         .map((p) => p.nombre)
-        .join(", ")}. Total estimado ${pesos(cuenta.total)}${
-        cuenta.porCotizar.length
-          ? `, más ${cuenta.porCotizar.map((p) => p.nombre).join(", ")} por cotizar`
+        .join(", ")}. Total estimado ${pesos(cuenta.totalConIva)} con IVA${
+        cuenta.aparte.length
+          ? `, más ${cuenta.aparte.map((p) => p.nombre).join(", ")} por cotizar`
           : ""
       }.`;
 
@@ -172,7 +215,7 @@ export function Cotizador({
               className={s.rango}
               type="range"
               min={1}
-              max={50}
+              max={MAX_CANDIDATOS_EN_LINEA}
               value={candidatos}
               onChange={(e) => setCandidatos(Number(e.target.value))}
               aria-label="Número de candidatos a evaluar"
@@ -191,17 +234,17 @@ export function Cotizador({
         <p className={s.resumenEyebrow}>Tu cotización</p>
 
         <p className={s.totalLinea}>
-          {cuenta.porCandidato === 0 && cuenta.porCotizar.length ? (
+          {!sePuedePagar && cuenta.aparte.length ? (
             <span className={s.total}>Por cotizar</span>
           ) : (
             <span ref={total} className={s.total}>
-              {pesos(cuenta.total)}
+              {pesos(cuenta.totalConIva)}
             </span>
           )}
           <span className={s.totalPie}>
-            {cuenta.porCotizar.length
-              ? "IVA no incluido · más lo que se cotiza aparte"
-              : "IVA no incluido"}
+            {cuenta.aparte.length
+              ? "IVA incluido · más lo que se cotiza aparte"
+              : "IVA incluido"}
           </span>
         </p>
 
@@ -233,10 +276,16 @@ export function Cotizador({
                 <strong>−{pesos(cuenta.descuento)}</strong>
               </li>
             )}
-            {cuenta.porCotizar.map((p) => (
+            {sePuedePagar && (
+              <li>
+                <span>IVA ({Math.round(TASA_IVA * 100)}%)</span>
+                <strong>{pesos(cuenta.iva)}</strong>
+              </li>
+            )}
+            {cuenta.aparte.map((p) => (
               <li key={p.id}>
                 <span>{p.nombre}</span>
-                <strong>Por cotizar</strong>
+                <strong>Se cotiza aparte</strong>
               </li>
             ))}
             <li className={s.tiempo}>
@@ -249,14 +298,75 @@ export function Cotizador({
           </ul>
         )}
 
+        {sePuedePagar && !pagando && (
+          <button type="button" className={s.comprar} onClick={() => setPagando(true)}>
+            {personal ? "Pagar mi evaluación" : "Pagar en línea"}
+            <ArrowRight size={16} aria-hidden />
+          </button>
+        )}
+
+        {sePuedePagar && pagando && (
+          <form className={s.pago} onSubmit={pagar} noValidate>
+            <label className={s.campo}>
+              <span>Nombre completo</span>
+              <input
+                value={datos.nombre}
+                onChange={(e) => setDatos((d) => ({ ...d, nombre: e.target.value }))}
+                autoComplete="name"
+                required
+                autoFocus
+              />
+            </label>
+            <label className={s.campo}>
+              <span>Correo (ahí llegan {personal ? "tu código" : "los códigos"})</span>
+              <input
+                type="email"
+                inputMode="email"
+                value={datos.email}
+                onChange={(e) => setDatos((d) => ({ ...d, email: e.target.value }))}
+                autoComplete="email"
+                required
+              />
+            </label>
+            {!personal && (
+              <label className={s.campo}>
+                <span>Empresa (opcional)</span>
+                <input
+                  value={datos.empresa}
+                  onChange={(e) => setDatos((d) => ({ ...d, empresa: e.target.value }))}
+                  autoComplete="organization"
+                />
+              </label>
+            )}
+            {error && (
+              <p className={s.error} role="alert">
+                {error}
+              </p>
+            )}
+            <button type="submit" className={s.comprar} disabled={enviando}>
+              {enviando ? "Abriendo el pago…" : `Pagar ${pesos(cuenta.totalConIva)}`}
+              {!enviando && <ArrowRight size={16} aria-hidden />}
+            </button>
+            <p className={s.seguro}>
+              <Lock size={12} aria-hidden /> Pago seguro con Stripe: tarjeta, OXXO o transferencia SPEI.
+            </p>
+          </form>
+        )}
+
         <a
-          className={s.comprar}
+          className={sePuedePagar ? s.contactar : s.comprar}
           href={whatsapp(mensaje)}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {personal ? "Quiero evaluarme" : "Comprar estas evaluaciones"}
-          <ArrowRight size={16} aria-hidden />
+          {sePuedePagar
+            ? cuenta.aparte.length
+              ? `Cotizar ${cuenta.aparte.map((p) => p.nombre).join(" y ")} por WhatsApp`
+              : "¿Dudas? Escríbenos por WhatsApp"
+            : personal
+              ? "Quiero evaluarme"
+              : "Cotizar por WhatsApp"}
+          {!sePuedePagar && <ArrowRight size={16} aria-hidden />}
         </a>
         <p className={s.letraChica}>
           {personal

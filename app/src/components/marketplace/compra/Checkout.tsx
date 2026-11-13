@@ -16,8 +16,8 @@ type Metodo = "tarjeta" | "transferencia" | "oxxo";
 
 const METODOS: { id: Metodo; titulo: string; texto: string; Icono: typeof CreditCard }[] = [
   { id: "tarjeta", titulo: "Tarjeta", texto: "Crédito o débito. Acceso inmediato.", Icono: CreditCard },
-  { id: "transferencia", titulo: "Transferencia SPEI", texto: "Te damos la CLABE y tu folio.", Icono: Landmark },
-  { id: "oxxo", titulo: "OXXO Pay", texto: "Paga en efectivo en cualquier OXXO.", Icono: Store },
+  { id: "transferencia", titulo: "Transferencia SPEI", texto: "CLABE única para tu pedido.", Icono: Landmark },
+  { id: "oxxo", titulo: "OXXO Pay", texto: "Efectivo en cualquier OXXO.", Icono: Store },
 ];
 
 /** RFC de persona física (13) o moral (12). Validación de forma, no del SAT. */
@@ -238,17 +238,15 @@ export function Checkout() {
                 </label>
               ))}
             </div>
-            {metodo === "tarjeta" && (
-              <p className={k.notaMetodo}>
-                <Lock size={14} aria-hidden /> Al continuar te llevamos a la página de pago seguro (Stripe). CEDUCT no guarda los datos de tu tarjeta.
-              </p>
-            )}
-            {metodo === "transferencia" && (
-              <p className={k.notaMetodo}>Al confirmar recibirás la CLABE y tu número de orden como referencia. Tu acceso se activa al conciliar el pago.</p>
-            )}
-            {metodo === "oxxo" && (
-              <p className={k.notaMetodo}>Recibirás una ficha con referencia para pagar en efectivo en OXXO. Tu acceso se activa cuando se acredita el pago (hasta 24 h).</p>
-            )}
+            <p className={k.notaMetodo}>
+              <Lock size={14} aria-hidden />{" "}
+              {metodo === "tarjeta" &&
+                "Al continuar te llevamos a la página de pago seguro (Stripe). CEDUCT no guarda los datos de tu tarjeta."}
+              {metodo === "transferencia" &&
+                "En la página de pago seguro (Stripe) eliges «Transferencia» y te da una CLABE para este pedido. Tu acceso se activa solo en cuanto llega el pago."}
+              {metodo === "oxxo" &&
+                "En la página de pago seguro (Stripe) eliges «OXXO» y te genera la ficha con referencia; vence en 3 días. Tu acceso se activa solo cuando se acredita (hasta 24 h)."}
+            </p>
           </fieldset>
 
           <label className={k.acepto}>
@@ -289,9 +287,7 @@ export function Checkout() {
             >
               {enviando
                 ? "Procesando…"
-                : metodo === "tarjeta"
-                  ? "Pagar con tarjeta"
-                  : "Confirmar pedido"}
+                : "Continuar al pago"}
               {!enviando && <ArrowRight size={18} aria-hidden />}
             </button>
             <p className={k.seguro}><Lock size={14} aria-hidden /> Conexión cifrada · Datos protegidos</p>
@@ -306,9 +302,10 @@ function PantallaConfirmacion({ c }: { c: Confirmacion }) {
   const [copiado, setCopiado] = useState(false);
   const instrucciones: Record<Metodo, string> = {
     tarjeta: "Tu pago está en proceso. En cuanto se confirme recibirás tu acceso por correo.",
+    // Sin cobro en línea disponible el pedido queda registrado y se cierra por contacto.
     transferencia:
-      "Transfiere el total a la CLABE [CLABE INTERBANCARIA] (beneficiario: CEDUCT A.C.) usando tu número de orden como referencia.",
-    oxxo: "Te enviamos la ficha de pago OXXO por correo. Preséntala en caja; tu acceso se activa al acreditarse.",
+      "Registramos tu pedido. Te escribimos con los datos para transferir; usa tu número de orden como referencia.",
+    oxxo: "Registramos tu pedido. Te escribimos con la referencia para pagar en OXXO.",
   };
 
   return (

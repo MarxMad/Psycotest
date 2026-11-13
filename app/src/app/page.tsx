@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
-import { CHANNELS, channelPublicUrl, type ChannelId } from "@/lib/channels";
-import h from "./hub.module.css";
+import { ChannelShell } from "@/components/channels/ChannelShell";
+import { MartinLanding } from "@/components/channels/MartinLanding";
+import { getChannelPage } from "@/lib/channel-store";
+import { CHANNELS } from "@/lib/channels";
+
+/** El contenido se edita desde /admin/canales: no se puede prerenderizar. */
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Martín Hernández González — Certificación, evaluación y formación",
@@ -8,54 +13,20 @@ export const metadata: Metadata = {
     "Certificación de competencias laborales, evaluación y selección de personal, capacitación y consultoría organizacional.",
 };
 
-const ORDEN: ChannelId[] = ["ceduct", "psicologia", "ige", "martin"];
-
 /**
- * Índice de marcas.
+ * Portada del grupo.
  *
- * Es la puerta del dominio principal: reparte al visitante hacia el sitio
- * que le corresponde. No lleva cifras del negocio ni accesos al panel —
- * cualquiera puede verla.
+ * Antes había dos puertas: un índice de cuatro tarjetas en el dominio
+ * principal y el portafolio de Martín aparte. Ahora es una sola: la práctica
+ * de Martín como respaldo y, desde ahí, a cada marca según lo que la
+ * persona necesita.
  */
-export default function IndicePage() {
+export default async function PortadaDelGrupo() {
+  const canal = CHANNELS.martin;
+  const content = await getChannelPage("martin");
   return (
-    <div className={h.pagina}>
-      <header className={h.cabecera}>
-        <div className={h.cabeceraInterior}>
-          <div>
-            <p className={h.eyebrow}>Cuatro líneas de trabajo</p>
-            <h1 className={h.titulo}>Martín Hernández González</h1>
-          </div>
-        </div>
-      </header>
-
-      <main className={h.principal}>
-        <p className={h.intro}>
-          Certificamos competencias, evaluamos candidatos, formamos equipos y acompañamos a la
-          dirección. Elige por dónde empezar.
-        </p>
-
-        <ul className={h.lista}>
-          {ORDEN.map((id) => {
-            const canal = CHANNELS[id];
-            return (
-              <li key={id} className={h.fila} data-canal={id}>
-                <div className={h.filaTexto}>
-                  <p className={h.rol}>{canal.accentLabel}</p>
-                  <h2 className={h.nombre}>{canal.name}</h2>
-                  <p className={h.descripcion}>{canal.description}</p>
-                </div>
-
-                <div className={h.acciones}>
-                  <a className={h.accionPrimaria} href={channelPublicUrl(id)}>
-                    Entrar
-                  </a>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      </main>
-    </div>
+    <ChannelShell channel={canal}>
+      <MartinLanding channel={canal} content={content} />
+    </ChannelShell>
   );
 }

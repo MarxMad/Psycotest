@@ -323,3 +323,68 @@
     transition: none;
   }
 }
+
+/* ----------------------------------------------------- pago en línea */
+
+.pago {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.campo {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ch-muted);
+}
+
+.campo input {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--ch-rule);
+  border-radius: 0.35rem;
+  background: var(--ch-bg);
+  color: var(--ch-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.campo input:focus-visible {
+  outline: 2px solid var(--ch-accent);
+  outline-offset: 1px;
+}
+
+.error {
+  margin: 0;
+  font-size: 0.82rem;
+  color: #b42318;
+}
+
+.comprar:disabled {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
+}
+
+.seguro {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--ch-muted);
+}
+
+.contactar {
+  display: block;
+  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ch-accent);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

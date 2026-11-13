@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from "crypto";
+import { createHash, createHmac, randomBytes } from "crypto";
 import type { Instrumento } from "@/lib/storage";
 
 const CHARSET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -19,6 +19,18 @@ export function hashAccessCodeLookup(normalized: string): string {
 export function generateAccessCodePlain(): string {
   const bytes = randomBytes(12);
   const chars = Array.from(bytes, (b) => CHARSET[b % CHARSET.length]);
+  return `${chars.slice(0, 4).join("")}-${chars.slice(4, 8).join("")}-${chars.slice(8, 12).join("")}`;
+}
+
+/**
+ * Código derivado de una semilla (p. ej. la sesión de pago y el número de
+ * candidato). Siempre sale el mismo para la misma semilla: si Stripe reintenta
+ * el aviso de pago, se regeneran los mismos códigos en vez de duplicarlos, y
+ * la página de confirmación puede volver a mostrarlos sin guardarlos en claro.
+ */
+export function derivedAccessCodePlain(semilla: string): string {
+  const bytes = createHmac("sha256", pepper()).update(`codigo:${semilla}`).digest();
+  const chars = Array.from(bytes.subarray(0, 12), (b) => CHARSET[b % CHARSET.length]);
   return `${chars.slice(0, 4).join("")}-${chars.slice(4, 8).join("")}-${chars.slice(8, 12).join("")}`;
 }
 

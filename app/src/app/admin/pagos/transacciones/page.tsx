@@ -91,7 +91,9 @@ export default function TransaccionesPage() {
       header: "Concepto",
       cell: (o) =>
         o.items.length === 0 ? (
-          <span className={s.sub}>Sin partidas</span>
+          // Las compras de Psicología no son cursos: el detalle (pruebas y
+          // candidatos) está en Stripe y los códigos en Pruebas → Códigos.
+          <span className={s.sub}>{o.id.startsWith("ord-psi-") ? "Evaluaciones · Psicología Aplicada" : "Sin partidas"}</span>
         ) : (
           <ul className={s.items}>
             {o.items.map((it, i) => (

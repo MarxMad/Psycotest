@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, BadgeCheck, CreditCard, MousePointerClick, PlayCircle, Quote } from "lucide-react";
+import { ArrowRight, CreditCard, MousePointerClick, PlayCircle, Quote } from "lucide-react";
 import {
-  CATEGORIAS,
   PASOS,
   PREGUNTAS,
   PROPUESTA,
@@ -12,10 +11,9 @@ import {
 import { RUTAS } from "@/lib/ceduct/rutas";
 import type { Programa } from "@/lib/ceduct/tipos";
 import { Acordeon } from "../Acordeon";
-import { IconoDeCategoria } from "../Iconos";
 import { Revelar } from "../Revelar";
-import { TarjetaPrograma } from "../TarjetaPrograma";
 import { Certificado } from "./Certificado";
+import { Escenarios } from "./Escenarios";
 import { Luz } from "./Luz";
 import { Manifiesto } from "./Manifiesto";
 import { Ruta } from "./Ruta";
@@ -24,18 +22,7 @@ import l from "./landing.module.css";
 
 const ICONOS_PASO = [MousePointerClick, CreditCard, PlayCircle];
 
-function destacados(programas: Programa[], tipo: Programa["tipo"], n: number) {
-  const delTipo = programas.filter((p) => p.tipo === tipo);
-  const primero = delTipo.filter((p) => p.destacado);
-  return [...primero, ...delTipo.filter((p) => !p.destacado)].slice(0, n);
-}
-
 export function Landing({ programas }: { programas: Programa[] }) {
-  const diplomados = destacados(programas, "diplomado", 4);
-  const certificaciones = destacados(programas, "certificacion", 4);
-  const porCategoria = (slug: string) =>
-    programas.filter((p) => p.tipo === "certificacion" && p.categoria === slug).length;
-
   // Los estándares reales del catálogo corren en la cinta del manifiesto.
   const estandares = [
     ...new Set(
@@ -99,107 +86,9 @@ export function Landing({ programas }: { programas: Programa[] }) {
       <Manifiesto estandares={estandares.length ? estandares : ["ECE 002-10"]} />
       <Luz />
 
-      {/* -------------------------------------------------- Categorías */}
-      <section className={s.seccion} aria-labelledby="cat-titulo">
-        <div className={s.contenedor}>
-          <Revelar className={s.cabeceraSeccion}>
-            <div>
-              <p className={s.eyebrow}>Certificaciones por sector</p>
-              <h2 id="cat-titulo" className={s.h2}>Encuentra tu estándar.</h2>
-            </div>
-            <Link href={RUTAS.catalogo({ tipo: "certificacion" })} className={`${s.btn} ${s.btnSecundario}`}>
-              Todas las certificaciones <ArrowRight size={16} aria-hidden />
-            </Link>
-          </Revelar>
-
-          <ul className={l.categorias}>
-            {CATEGORIAS.map((c, i) => {
-              const n = porCategoria(c.slug);
-              return (
-                <Revelar como="li" key={c.slug} retraso={i * 60}>
-                  <Link
-                    href={RUTAS.catalogo({ tipo: "certificacion", categoria: c.slug })}
-                    className={`${s.tarjeta} ${s.tarjetaInteractiva} ${l.categoria}`}
-                    style={{ "--tono": c.tono } as React.CSSProperties}
-                  >
-                    <span className={l.categoriaIcono}>
-                      <IconoDeCategoria icono={c.icono} size={26} strokeWidth={1.8} />
-                    </span>
-                    <span className={l.categoriaTexto}>
-                      <strong>{c.nombre}</strong>
-                      <span>{c.resumen}</span>
-                    </span>
-                    <span className={l.categoriaPie}>
-                      <span>{n} {n === 1 ? "estándar" : "estándares"}</span>
-                      <ArrowUpRight size={18} aria-hidden />
-                    </span>
-                  </Link>
-                </Revelar>
-              );
-            })}
-          </ul>
-        </div>
-      </section>
-
-      {/* ------------------------------------------ Diplomados destacados */}
-      {diplomados.length > 0 && (
-        <section className={`${s.seccion} ${s.seccionAlt}`} aria-labelledby="dip-titulo">
-          <div className={s.contenedor}>
-            <Revelar className={s.cabeceraSeccion}>
-              <div>
-                <p className={s.eyebrow}>Diplomados</p>
-                <h2 id="dip-titulo" className={s.h2}>Aprende a fondo. Luego certifícate.</h2>
-                <p className={s.lead}>
-                  104 horas en modalidad mixta, virtual y presencial: 60% práctica y 40% teoría. Al
-                  terminar puedes certificarte en el estándar que le corresponde.
-                </p>
-              </div>
-              <Link href={RUTAS.catalogo({ tipo: "diplomado" })} className={`${s.btn} ${s.btnSecundario}`}>
-                Ver diplomados <ArrowRight size={16} aria-hidden />
-              </Link>
-            </Revelar>
-            <ul className={l.rejilla4}>
-              {diplomados.map((p, i) => (
-                <Revelar como="li" key={p.id} retraso={i * 80}>
-                  <TarjetaPrograma programa={p} />
-                </Revelar>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-
-      {/* -------------------------------------- Certificaciones destacadas */}
-      {certificaciones.length > 0 && (
-        <section className={s.seccion} aria-labelledby="cert-titulo">
-          <div className={`${s.contenedor} ${l.certRejilla}`}>
-            <Revelar className={l.certIntro}>
-              <p className={s.eyebrow}>Certificaciones CONOCER</p>
-              <h2 id="cert-titulo" className={s.h2}>Tu experiencia, con papel oficial.</h2>
-              <p className={s.lead}>
-                Una certificación no te enseña desde cero: evalúa lo que ya haces. Te preparamos,
-                revisamos tus evidencias y, si resultas competente, recibes tu certificado SEP-CONOCER
-                con validez en todo México.
-              </p>
-              <ul className={l.checks}>
-                <li><BadgeCheck size={18} aria-hidden /> Taller de alineación incluido</li>
-                <li><BadgeCheck size={18} aria-hidden /> Evaluador certificado asignado</li>
-                <li><BadgeCheck size={18} aria-hidden /> Certificado verificable en línea</li>
-              </ul>
-              <Link href={RUTAS.catalogo({ tipo: "certificacion" })} className={`${s.btn} ${s.btnPrimario}`}>
-                Ver certificaciones <ArrowRight size={16} aria-hidden />
-              </Link>
-            </Revelar>
-            <ul className={l.rejilla2}>
-              {certificaciones.map((p, i) => (
-                <Revelar como="li" key={p.id} retraso={i * 80}>
-                  <TarjetaPrograma programa={p} />
-                </Revelar>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
+      {/* Todo el catálogo en una sola pieza: antes eran tres secciones
+          (sectores, diplomados y certificaciones) que se veían iguales. */}
+      <Escenarios programas={programas} />
 
       {/* ---------------------------------------------- Cómo funciona */}
       <section className={`${s.seccion} ${s.seccionAlt}`} aria-labelledby="pasos-titulo">

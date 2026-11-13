@@ -54,7 +54,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     tagline: "Consultor · Valuador · Certificador",
     description:
       "Consultoría organizacional, valuación con dictamen técnico y certificación de competencias laborales.",
-    accentLabel: "Portafolio",
+    accentLabel: "Grupo",
     theme: {
       fontDisplay: '"Fraunces", "Libre Baskerville", Georgia, serif',
       fontBody: '"DM Sans", "Segoe UI", sans-serif',
@@ -72,10 +72,10 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     primaryCta: { label: "Agendar conversación", href: "#contacto" },
     secondaryCta: { label: "Ver mi práctica", href: "#credenciales" },
     nav: [
+      { label: "Servicios", href: "#servicios" },
       { label: "Perfil", href: "#credenciales" },
       { label: "Qué entrego", href: "#entregables" },
       { label: "Método", href: "#metodo" },
-      { label: "Líneas de trabajo", href: "#canales" },
       { label: "Contacto", href: "#contacto" },
     ],
   },
@@ -215,6 +215,11 @@ export function getChannelFromHost(hostHeader: string | null): ChannelDef | null
   return getChannel(first);
 }
 
+/** El dominio principal, si hay uno con subdominios. */
+export function dominioPrincipal(): string | null {
+  return dominioConSubdominios();
+}
+
 /**
  * Dirección pública de un canal.
  *
@@ -227,6 +232,9 @@ export function channelPublicUrl(channelId: ChannelId, path = "/"): string {
   const p = path.startsWith("/") ? path : `/${path}`;
   const root = dominioConSubdominios();
 
+  // Martín es la portada del grupo: vive en el dominio principal, no en
+  // un subdominio propio.
+  if (ch.id === "martin") return root ? `https://${root}${p}` : p;
   if (!root) return `/sites/${ch.id}${p === "/" ? "" : p}`;
   return `https://${ch.hostPrefix}.${root}${p}`;
 }
