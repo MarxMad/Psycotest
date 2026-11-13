@@ -1,16 +1,6 @@
-import type { Metadata } from "next";
-import { MarketShell } from "@/components/marketplace/MarketShell";
-import { Nosotros } from "@/components/marketplace/paginas/Nosotros";
+import { permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Nosotros — CEDUCT",
-  description: "CEDUCT A.C., Entidad de Certificación y Evaluación acreditada ante CONOCER con clave ECE 002-10.",
-};
-
+/** La página "Nosotros" se retiró del sitio; los enlaces viejos llevan a la portada. */
 export default function NosotrosPage() {
-  return (
-    <MarketShell>
-      <Nosotros />
-    </MarketShell>
-  );
+  permanentRedirect("/");
 }

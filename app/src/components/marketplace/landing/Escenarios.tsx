@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Instrument_Serif } from "next/font/google";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { escenaDe } from "@/lib/ceduct/escenas";
 import { CATEGORIAS, categoriaPorSlug } from "@/lib/ceduct/config";
 import { RUTAS } from "@/lib/ceduct/rutas";
 import { MODALIDAD_LABEL, TIPO_LABEL, precio, type Programa } from "@/lib/ceduct/tipos";
@@ -33,16 +34,6 @@ const acento = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "ita
  * programa, en /public/ceduct/escenas.
  */
 
-const R = "/ceduct/escenas";
-
-/** Foto por clave de estándar o, en diplomados, por parte del slug. */
-function fotoDe(p: Programa): string | null {
-  const clave = p.estandarClave?.toLowerCase().match(/ec\d{4}/)?.[0];
-  if (clave) return `${R}/${clave}`;
-  if (p.slug.includes("coach")) return `${R}/coach-en-accion`;
-  if (p.slug.includes("formador")) return `${R}/formador-que-inspira`;
-  return null;
-}
 
 type Escena = Programa & { foto: string | null; sector: string; tono: string };
 
@@ -56,7 +47,7 @@ function ordenar(programas: Programa[]): Escena[] {
     const cat = categoriaPorSlug(p.categoria);
     return {
       ...p,
-      foto: fotoDe(p) ?? p.imagen,
+      foto: escenaDe(p) ?? p.imagen,
       sector: p.tipo === "diplomado" ? "Diplomado · 104 horas" : cat.nombre,
       tono: p.tipo === "diplomado" ? "#c9a54a" : cat.tono,
     };
@@ -66,7 +57,7 @@ function ordenar(programas: Programa[]): Escena[] {
 function Foto({ foto, alt, prioridad }: { foto: string | null; alt: string; prioridad?: boolean }) {
   if (!foto) return <span className={e.fotoVacia} aria-hidden />;
   // Las rutas de /escenas tienen dos tamaños; una imagen de la base, uno.
-  const local = foto.startsWith(R);
+  const local = foto.startsWith("/ceduct/escenas/");
   return (
     <img
       className={e.foto}

@@ -19,8 +19,11 @@ import l from "./landing.module.css";
  * de una etapa a la siguiente, del diagnóstico al certificado.
  */
 
-const AMARILLO = "#c9a54a";
-const LUZ = "#b9c0cc";
+// La sección va sobre papel marfil: oro oscuro para lo logrado y la tinta
+// del texto (currentColor, ver .rutaLienzo) para lo que falta.
+const AMARILLO = "#a8842f";
+const LUZ = "currentColor";
+const PAPEL = "#efe8da";
 const CENTRO: [number, number] = [300, 240];
 
 /** Dónde queda cada etapa en el mundo; el panel es una ventana que viaja entre ellas. */
@@ -158,7 +161,7 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
         <path ref={hilo} d={HILO} fill="none" stroke={LUZ} strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="2 6" />
         <path ref={recorrido} d={HILO} fill="none" stroke={AMARILLO} strokeOpacity="0.9" strokeWidth="2" strokeLinecap="round" />
         {nudos.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r="4.5" fill="#0d1626" stroke={LUZ} strokeOpacity="0.6" strokeWidth="1.4" />
+          <circle key={i} cx={x} cy={y} r="4.5" fill={PAPEL} stroke={LUZ} strokeOpacity="0.6" strokeWidth="1.4" />
         ))}
 
         {/* 1 · reconoce: lo que ya dominas alrededor tuyo, y lo que falta. */}
@@ -169,7 +172,7 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
           {SABERES.map((b, k) => (
             <g key={k}>
               <line x1={CENTRO[0]} y1={CENTRO[1]} x2={b.x} y2={b.y} stroke={LUZ} strokeOpacity={b.sabe ? 0.35 : 0.12} />
-              <circle cx={b.x} cy={b.y} r="17" fill={b.sabe ? AMARILLO : "#0d1626"} stroke={b.sabe ? AMARILLO : LUZ} strokeOpacity={b.sabe ? 1 : 0.5} strokeDasharray={b.sabe ? undefined : "3 4"} />
+              <circle cx={b.x} cy={b.y} r="17" fill={b.sabe ? AMARILLO : PAPEL} stroke={b.sabe ? AMARILLO : LUZ} strokeOpacity={b.sabe ? 1 : 0.5} strokeDasharray={b.sabe ? undefined : "3 4"} />
               {b.sabe && <path d={`M ${b.x - 6} ${b.y} l 4 4.5 l 8 -9`} fill="none" stroke="#12161f" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />}
             </g>
           ))}
@@ -191,12 +194,12 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
 
         <g ref={viajero} transform={`translate(${ESTACIONES[0][0]} ${ESTACIONES[0][1]})`}>
           <circle r="28" fill={AMARILLO} opacity="0.45" filter={`url(#b${id})`} />
-          <circle r="9" fill="#f5ead0" />
+          <circle r="9" fill={AMARILLO} />
         </g>
 
         {/* 2 · cursa: los módulos que te faltan se van llenando. */}
         <g transform={en(1)} style={capa(1)}>
-          <rect x="140" y="110" width="320" height="260" rx="16" fill="#0d1626" fillOpacity="0.6" stroke={LUZ} strokeOpacity="0.3" />
+          <rect x="140" y="110" width="320" height="260" rx="16" fill="#e6dece" fillOpacity="0.7" stroke={LUZ} strokeOpacity="0.3" />
           {MODULOS.map((m, k) => (
             <g key={m} transform={`translate(170 ${148 + k * 52})`}>
               <text x="0" y="-8" fill={LUZ} fontSize={angosto ? 15 : 12} opacity="0.8">
@@ -221,7 +224,7 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
         {/* 3 · certifícate: el certificado, con su sello. Como los módulos, va encima: la luz llega y se mete debajo. */}
         <g transform={en(2)} style={capa(2)}>
           <g transform="rotate(-5 300 240)">
-            <rect x="140" y="130" width="320" height="210" rx="12" fill="#f3efe6" />
+            <rect x="140" y="130" width="320" height="210" rx="12" fill="#fbf8f1" stroke="#14182a" strokeOpacity="0.18" />
             <rect x="140" y="130" width="320" height="40" rx="12" fill="#2a3d5e" />
             <rect x="140" y="158" width="320" height="12" fill="#2a3d5e" />
             <text x="160" y="156" fill="#f3efe6" fontSize="12" fontWeight="700" letterSpacing="2">
@@ -299,7 +302,7 @@ export function Ruta() {
   };
 
   return (
-    <>
+    <div className={`${l.papel} ${l.rutaPapel}`}>
       <section ref={caja} className={l.rutaHilo} aria-labelledby="ruta-titulo" style={{ "--n": n } as CSSProperties}>
         <div className={l.rutaFija}>
           <div className={l.rutaTexto}>
@@ -357,6 +360,6 @@ export function Ruta() {
           </ul>
         </Revelar>
       </div>
-    </>
+    </div>
   );
 }

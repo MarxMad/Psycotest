@@ -60,7 +60,6 @@ export function Pie() {
           <div>
             <p className={s.pieTitulo}>CEDUCT</p>
             <ul className={s.pieLista}>
-              <li><Link href={RUTAS.nosotros}>Nosotros</Link></li>
               <li><Link href={RUTAS.empresas}>Para empresas</Link></li>
               <li><Link href={RUTAS.verificar}>Verificar un certificado</Link></li>
               <li><Link href={RUTAS.misCursos}>Mis cursos</Link></li>

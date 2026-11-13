@@ -305,78 +305,8 @@
   }
 }
 
-/* --------------------------------------------------------------- Pasos */
-
-.pasos {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-top: 1px solid var(--mk-line-strong);
-}
-
-/* Cada paso es una cláusula: numeral romano, filete y texto corrido. */
-.paso {
-  position: relative;
-  padding: 34px 32px 8px;
-  border-left: 1px solid var(--mk-line);
-}
-
-.paso:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-.pasoNum {
-  display: block;
-  font: italic 400 64px/1 var(--mk-font-display), Georgia, serif;
-  color: var(--mk-yellow);
-  margin-bottom: 18px;
-}
-
-.pasoIcono {
-  position: absolute;
-  top: 38px;
-  right: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--mk-line-strong);
-  color: var(--mk-yellow);
-}
-
-.paso h3 {
-  font-size: 28px;
-  font-weight: 500;
-}
-
-.paso p {
-  margin-top: 10px;
-  color: var(--mk-muted);
-}
-
-@media (max-width: 860px) {
-  .pasos {
-    grid-template-columns: 1fr;
-  }
-
-  .paso,
-  .paso:first-child {
-    padding: 28px 0 24px;
-    border-left: 0;
-    border-top: 1px solid var(--mk-line);
-  }
-
-  .paso:first-child {
-    border-top: 0;
-  }
-}
-
 /* ------------------------------------------------------- Sección papel */
+/* "El camino" va en una hoja de papel entre las secciones oscuras. */
 
 /*
  * Marfil con fibras y un marco de doble filete. Los tokens se redefinen aquí
@@ -392,6 +322,9 @@
   --mk-yellow: #7a5c18;
   --mk-line: rgba(20, 24, 42, 0.14);
   --mk-line-strong: rgba(20, 24, 42, 0.3);
+  --mk-bg-deep: #ebe4d5;
+  --mk-surface-soft: rgba(20, 24, 42, 0.035);
+  --mk-shadow: 0 24px 50px -30px rgba(70, 52, 20, 0.35);
 
   position: relative;
   color: var(--mk-ink);
@@ -407,21 +340,6 @@
   inset: clamp(10px, 1.6vw, 22px);
   border: 3px double rgba(122, 92, 24, 0.45);
   pointer-events: none;
-}
-
-.papelCabecera {
-  display: grid;
-  justify-items: center;
-  gap: 14px;
-  margin-bottom: clamp(36px, 5vw, 56px);
-  text-align: center;
-}
-
-.papelFolio {
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mk-soft);
 }
 
 /* ----------------------------------------------------------------- FAQ */
@@ -652,6 +570,7 @@
 
 .rutaLienzo {
   display: block;
+  color: var(--mk-muted);
   width: 100%;
   height: 100%;
 }
@@ -690,7 +609,13 @@
 }
 
 .rutaLogros {
+  position: relative;
   padding-bottom: clamp(64px, 9vw, 120px);
+}
+
+.rutaPapel .rutaEtiqueta {
+  border-color: rgba(122, 92, 24, 0.45);
+  background: rgba(244, 239, 228, 0.88);
 }
 
 @media (max-width: 960px) {

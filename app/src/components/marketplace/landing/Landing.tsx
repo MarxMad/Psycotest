@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, CreditCard, MousePointerClick, PlayCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import {
-  PASOS,
   PREGUNTAS,
   PROPUESTA,
   RESPALDO,
@@ -19,7 +18,6 @@ import { Ruta } from "./Ruta";
 import s from "../mk.module.css";
 import l from "./landing.module.css";
 
-const ICONOS_PASO = [MousePointerClick, CreditCard, PlayCircle];
 
 export function Landing({ programas }: { programas: Programa[] }) {
   // Los estándares reales del catálogo corren en la cinta del manifiesto.
@@ -86,31 +84,6 @@ export function Landing({ programas }: { programas: Programa[] }) {
       {/* Todo el catálogo en una sola pieza: antes eran tres secciones
           (sectores, diplomados y certificaciones) que se veían iguales. */}
       <Escenarios programas={programas} />
-
-      {/* ---------------------------------------------- Cómo funciona */}
-      {/* Una hoja de papel entre secciones oscuras: los pasos como cláusulas. */}
-      <section className={`${s.seccion} ${l.papel}`} aria-labelledby="pasos-titulo">
-        <div className={s.contenedor}>
-          <Revelar className={l.papelCabecera}>
-            <p className={s.eyebrow}>Cómo funciona</p>
-            <h2 id="pasos-titulo" className={s.h2}>Tres pasos. Cero vueltas.</h2>
-            <p className={l.papelFolio}>Procedimiento de inscripción · ECE 002-10</p>
-          </Revelar>
-          <ol className={l.pasos}>
-            {PASOS.map((p, i) => {
-              const Icono = ICONOS_PASO[i];
-              return (
-                <Revelar como="li" key={p.titulo} retraso={i * 100} className={l.paso}>
-                  <span className={l.pasoNum} aria-hidden>{["I", "II", "III"][i]}</span>
-                  <span className={l.pasoIcono}><Icono size={20} strokeWidth={1.6} aria-hidden /></span>
-                  <h3>{p.titulo}</h3>
-                  <p>{p.texto}</p>
-                </Revelar>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
 
       {/* ------------------------------------------------------- Ruta */}
       <Ruta />

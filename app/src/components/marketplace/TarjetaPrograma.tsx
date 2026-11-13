@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { imagenDe } from "@/lib/ceduct/escenas";
 import { categoriaPorSlug } from "@/lib/ceduct/config";
 import { RUTAS } from "@/lib/ceduct/rutas";
 import {
@@ -34,7 +35,7 @@ export function TarjetaPrograma({
     <article className={`${s.tarjeta} ${s.tarjetaInteractiva} ${t.tarjeta}`} data-variante={variante}>
       <div className={t.media}>
         <Imagen
-          src={p.imagen}
+          src={imagenDe(p, "chica")}
           alt=""
           prioridad={prioridad}
           className={t.imagen}
@@ -65,7 +66,8 @@ export function TarjetaPrograma({
 
         <ul className={t.datos} aria-label="Detalles">
           {p.horas > 0 && <li>{p.horas} h</li>}
-          <li>{p.duracion}</li>
+          {/* La duración a veces repite las horas ("104 horas"): no se dice dos veces. */}
+          {!(p.horas > 0 && /hora/i.test(p.duracion)) && <li>{p.duracion}</li>}
           <li>{MODALIDAD_LABEL[p.modalidad]}</li>
           <li>{p.fechaInicio ? `Inicia ${fechaCorta(p.fechaInicio)}` : "Inicio inmediato"}</li>
         </ul>

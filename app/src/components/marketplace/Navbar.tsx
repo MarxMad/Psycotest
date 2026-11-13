@@ -23,7 +23,6 @@ const ENLACES: Enlace[] = [
     activo: (r, t) => r.startsWith("/diplomados") && t === "certificacion",
   },
   { label: "Empresas", href: RUTAS.empresas, activo: () => false },
-  { label: "Nosotros", href: RUTAS.nosotros, activo: (r) => r === RUTAS.nosotros },
 ];
 
 function ContadorCarrito() {

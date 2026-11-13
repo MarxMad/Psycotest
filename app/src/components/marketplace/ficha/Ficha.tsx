@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Timer,
 } from "lucide-react";
+import { imagenDe } from "@/lib/ceduct/escenas";
 import { categoriaPorSlug } from "@/lib/ceduct/config";
 import { RUTAS } from "@/lib/ceduct/rutas";
 import {
@@ -56,7 +57,7 @@ export function Ficha({ programa: p, relacionados }: { programa: Programa; relac
       {/* -------------------------------------------------- Encabezado */}
       <header className={f.encabezado}>
         <Imagen
-          src={p.imagen}
+          src={imagenDe(p, "grande")}
           alt=""
           prioridad
           className={f.encabezadoMedia}

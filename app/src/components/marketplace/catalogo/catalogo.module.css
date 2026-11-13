@@ -124,7 +124,9 @@
   align-items: start;
 }
 
-.abrirFiltros {
+/* Con `.cuerpo` delante: al navegar entre pestañas Next puede cargar mk.module.css
+   después de esta hoja, y `.btn { display: inline-flex }` ganaba por orden. */
+.cuerpo .abrirFiltros {
   display: none;
 }
 
@@ -377,7 +379,7 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  .abrirFiltros {
+  .cuerpo .abrirFiltros {
     display: inline-flex;
     justify-self: start;
   }
