@@ -31,7 +31,7 @@
   position: absolute;
   inset: auto 0 0 0;
   height: 45%;
-  background: linear-gradient(180deg, transparent, rgba(6, 26, 74, 0.55));
+  background: linear-gradient(180deg, transparent, rgba(7, 13, 24, 0.55));
   pointer-events: none;
 }
 
@@ -155,8 +155,8 @@
 }
 
 .precio strong {
-  font: 700 24px/1.1 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.02em;
+  font: 600 24px/1.1 var(--mk-font-display), sans-serif;
+  letter-spacing: -0.01em;
 }
 
 .precio del {

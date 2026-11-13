@@ -2,18 +2,19 @@
  * Tipografías del marketplace, alojadas en src/fuentes (mismo motivo que
  * channel-fonts.ts: no depender de Google en cada build).
  *
- * Space Grotesk para titulares —geométrica, con carácter técnico— y Manrope
- * para el cuerpo: muy legible en tamaños chicos sobre fondo oscuro.
+ * Fraunces (serif de óptica variable) para titulares: el tono de un documento
+ * oficial, que es lo que se vende. Manrope para el cuerpo: muy legible en
+ * tamaños chicos sobre fondo oscuro. `--mk-font-serif` apunta a la misma
+ * Fraunces desde mk.module.css, así que se descarga una sola vez.
  */
 
 import localFont from "next/font/local";
 
 export const fuenteDisplay = localFont({
-  src: "../../fuentes/space-grotesk-variable.woff2",
-  weight: "300 700",
+  src: "../../fuentes/fraunces-variable.woff2",
   display: "swap",
   variable: "--mk-font-display",
-  adjustFontFallback: "Arial",
+  adjustFontFallback: "Times New Roman",
 });
 
 export const fuenteCuerpo = localFont({
@@ -24,12 +25,4 @@ export const fuenteCuerpo = localFont({
   adjustFontFallback: "Arial",
 });
 
-/** Serif sólo para piezas que imitan papel (el certificado del hero). */
-export const fuenteSerif = localFont({
-  src: "../../fuentes/fraunces-variable.woff2",
-  display: "swap",
-  variable: "--mk-font-serif",
-  adjustFontFallback: "Times New Roman",
-});
-
-export const FUENTES_MK = `${fuenteDisplay.variable} ${fuenteCuerpo.variable} ${fuenteSerif.variable}`;
+export const FUENTES_MK = `${fuenteDisplay.variable} ${fuenteCuerpo.variable}`;

@@ -1,7 +1,7 @@
 .titulo {
   font-size: clamp(36px, 5vw, 64px);
   font-weight: 700;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
 }
 
 .formTitulo {
@@ -27,9 +27,9 @@
   overflow: hidden;
   border: 1px solid var(--mk-line);
   background:
-    radial-gradient(500px 300px at 100% 0%, rgba(250, 204, 21, 0.2), transparent 60%),
-    radial-gradient(500px 300px at 0% 100%, rgba(59, 130, 246, 0.35), transparent 60%),
-    linear-gradient(135deg, #17469f, #0b2a6f);
+    radial-gradient(500px 300px at 100% 0%, rgba(201, 165, 74, 0.2), transparent 60%),
+    radial-gradient(500px 300px at 0% 100%, rgba(64, 86, 128, 0.35), transparent 60%),
+    linear-gradient(135deg, #1c2c49, #0d1626);
   min-height: 420px;
   display: flex;
   flex-direction: column;
@@ -41,8 +41,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(168, 196, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(168, 196, 255, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(226, 214, 186, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(226, 214, 186, 0.08) 1px, transparent 1px);
   background-size: 48px 48px;
   mask-image: linear-gradient(180deg, #000, transparent 70%);
   -webkit-mask-image: linear-gradient(180deg, #000, transparent 70%);
@@ -50,8 +50,8 @@
 
 .accesoCita {
   position: relative;
-  font: 700 clamp(28px, 3.4vw, 44px) / 1.08 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.035em;
+  font: 600 clamp(28px, 3.4vw, 44px) / 1.08 var(--mk-font-display), sans-serif;
+  letter-spacing: -0.01em;
   max-width: 14ch;
 }
 
@@ -86,7 +86,7 @@
   gap: 4px;
   padding: 4px;
   border-radius: 999px;
-  background: rgba(6, 26, 74, 0.55);
+  background: rgba(7, 13, 24, 0.55);
   border: 1px solid var(--mk-line);
 }
 
@@ -108,7 +108,7 @@
 .accesoTitulo {
   font-size: clamp(28px, 3vw, 36px);
   font-weight: 700;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   margin: 8px 0 16px !important;
 }
 
@@ -194,7 +194,7 @@
   margin-top: 16px !important;
   padding: 14px 16px;
   border-radius: 12px;
-  background: rgba(6, 26, 74, 0.5);
+  background: rgba(7, 13, 24, 0.5);
   color: var(--mk-muted);
   font-size: 14px;
 }
@@ -332,13 +332,13 @@
 .heroSimple {
   padding-block: clamp(56px, 9vw, 128px) clamp(48px, 7vw, 96px);
   background:
-    radial-gradient(800px 420px at 90% 0%, rgba(59, 130, 246, 0.3), transparent 65%);
+    radial-gradient(800px 420px at 90% 0%, rgba(64, 86, 128, 0.3), transparent 65%);
 }
 
 .tituloGrande {
   font-size: clamp(42px, 6.6vw, 92px);
   font-weight: 700;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.015em;
   line-height: 1;
   max-width: 16ch;
 }
@@ -363,8 +363,8 @@
 }
 
 .hechos strong {
-  font: 700 clamp(24px, 2.6vw, 32px) var(--mk-font-display), sans-serif;
-  letter-spacing: -0.02em;
+  font: 600 clamp(24px, 2.6vw, 32px) var(--mk-font-display), sans-serif;
+  letter-spacing: -0.01em;
   color: var(--mk-yellow);
 }
 
@@ -422,7 +422,7 @@
   left: 56px;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--mk-yellow), rgba(250, 204, 21, 0.1));
+  background: linear-gradient(90deg, var(--mk-yellow), rgba(201, 165, 74, 0.1));
 }
 
 .proceso > li:last-child::before {
@@ -581,7 +581,7 @@
 .barra > div {
   height: 8px;
   border-radius: 999px;
-  background: rgba(168, 196, 255, 0.2);
+  background: rgba(226, 214, 186, 0.2);
   overflow: hidden;
 }
 

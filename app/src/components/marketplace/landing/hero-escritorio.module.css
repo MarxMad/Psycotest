@@ -1,0 +1,429 @@
+/*
+ * Portada en escena. Geometría del papel medida sobre las fotos
+ * (public/ceduct/hero): centro, ancho y giro en % de la imagen.
+ *   escritorio.webp        1376×768  centro 68.06% 37.83%  ancho 35.59%  alto/ancho 0.791  giro −13.58°
+ *   escritorio-movil.webp  768×1376  centro 48.44% 67.88%  ancho 58.14%  alto/ancho 0.801  giro −13.60°
+ * Si se cambian las fotos, se vuelven a medir con scratchpad/hero/capas.py.
+ */
+
+.hero {
+  position: relative;
+  border-bottom: 1px solid var(--mk-line);
+}
+
+.pista {
+  position: relative;
+}
+
+.hero[data-modo="escena"] .pista {
+  height: 380svh;
+}
+
+.escena {
+  /* Fases, todas derivadas del recorrido --p (0 → 1). */
+  --p: 0.58;
+  --n: clamp(0, (var(--p) - 0.03) / 0.12, 1); /* nombre */
+  --e: clamp(0, (var(--p) - 0.11) / 0.1, 1); /* estándar */
+  --f: clamp(0, (var(--p) - 0.17) / 0.14, 1); /* firmas */
+  --s: clamp(0, (var(--p) - 0.31) / 0.11, 1); /* sello */
+  --b: clamp(0, (var(--p) - 0.42) / 0.14, 1); /* destello */
+  --t: clamp(0, (var(--p) - 0.5) / 0.08, 1); /* sale el titular */
+  --a: clamp(0, (var(--p) - 0.58) / 0.26, 1); /* se abre la tercera escena */
+  --c: clamp(0, (var(--p) - 0.8) / 0.1, 1); /* frase final */
+
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  background: #07090e;
+}
+
+.hero[data-modo="escena"] .escena {
+  position: sticky;
+  top: 0;
+}
+
+/* ------------------------------------------------------------ Lienzo */
+
+.lienzo {
+  --cx: 68.06%;
+  --cy: 37.83%;
+  --ancho: 35.59%;
+  --alto: 0.791;
+  --giro: -13.58deg;
+
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: max(100%, calc(100svh * 1376 / 768));
+  aspect-ratio: 1376 / 768;
+  translate: 0 -50%;
+  /* La cámara se acerca al papel mientras se imprime y se sella. */
+  transform-origin: var(--cx) var(--cy);
+  scale: calc(1 + min(var(--p), 0.58) * 0.16);
+  will-change: scale;
+}
+
+.foto {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.papel {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: var(--ancho);
+  aspect-ratio: 1 / var(--alto);
+  translate: -50% -50%;
+  rotate: var(--giro);
+  container-type: inline-size;
+}
+
+/* ------------------------------------------------------- Lo impreso */
+
+.impreso {
+  position: absolute;
+  inset: 14.5% 13% 10.5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #1f2638;
+  mix-blend-mode: multiply;
+  /* La tinta absorbe un poco: casi nada de nitidez de pantalla. */
+  filter: blur(0.15px);
+}
+
+.impreso p {
+  margin: 0;
+}
+
+.impCabeza {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font: 600 1.45cqw/1 var(--mk-font-body), sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4a5266;
+  animation: imprime 1.4s 0.3s both;
+}
+
+.impTitulo {
+  margin-top: 5.5cqw !important;
+  font: 500 4.2cqw/1.05 var(--mk-font-display), Georgia, serif;
+  letter-spacing: -0.01em;
+  animation: imprime 1.4s 0.5s both;
+}
+
+.impOtorga {
+  margin-top: 3cqw !important;
+  font: 400 1.9cqw/1 var(--mk-font-body), sans-serif;
+  color: #4a5266;
+  animation: imprime 1.4s 0.7s both;
+}
+
+/* El nombre se escribe de izquierda a derecha. */
+.impNombre {
+  margin-top: 1.4cqw !important;
+  padding-bottom: 1cqw;
+  min-width: 56%;
+  border-bottom: 1px solid rgba(31, 38, 56, 0.35);
+  font: italic 500 5.2cqw/1.15 var(--mk-font-display), Georgia, serif;
+  color: #7a5718;
+}
+
+.impNombre span {
+  display: inline-block;
+  clip-path: inset(-30% calc((1 - var(--n)) * 100%) -30% 0);
+}
+
+.impTexto {
+  margin-top: 2.4cqw !important;
+  font: 400 1.85cqw/1.2 var(--mk-font-body), sans-serif;
+  color: #4a5266;
+  opacity: var(--e);
+}
+
+.impEstandar {
+  display: grid;
+  gap: 0.8cqw;
+  margin-top: 1.4cqw !important;
+  max-width: 82%;
+  opacity: var(--e);
+  translate: 0 calc((1 - var(--e)) * 1.5cqw);
+}
+
+.impEstandar strong {
+  font: 600 3.4cqw/1 var(--mk-font-display), Georgia, serif;
+}
+
+.impEstandar span {
+  font: 400 1.75cqw/1.3 var(--mk-font-body), sans-serif;
+  color: #4a5266;
+}
+
+.impPie {
+  display: grid;
+  grid-template-columns: 1fr 24% 1fr;
+  align-items: end;
+  gap: 3cqw;
+  width: 100%;
+  margin-top: auto;
+}
+
+.impFirma {
+  display: grid;
+  justify-items: center;
+  gap: 0.6cqw;
+  font: 600 1.25cqw/1 var(--mk-font-body), sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #4a5266;
+}
+
+.impFirma svg {
+  width: 82%;
+  height: auto;
+  overflow: visible;
+}
+
+.impFirma path {
+  fill: none;
+  stroke: #1d2a50;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: calc(1 - var(--f));
+}
+
+.impFirma span {
+  width: 100%;
+  padding-top: 0.8cqw;
+  border-top: 1px solid rgba(31, 38, 56, 0.35);
+}
+
+.impCabeza b {
+  font-weight: 700;
+  color: #9e3b32;
+}
+
+@keyframes imprime {
+  from {
+    opacity: 0;
+    filter: blur(3px);
+  }
+}
+
+/* ------------------------------------------------------------- Sello */
+
+.sello {
+  position: absolute;
+  left: 50%;
+  top: 83%;
+  width: 18%;
+  translate: -50% -50%;
+  /* Baja desde arriba, girando, y se asienta sobre el papel. */
+  scale: calc(1 + (1 - var(--s)) * (1 - var(--s)) * 2.2);
+  rotate: calc((1 - var(--s)) * -50deg);
+  opacity: min(1, calc(var(--s) * 2.5));
+}
+
+.sello > svg {
+  width: 100%;
+}
+
+/* Destello de luz que cruza el papel al estampar. Vive en el lienzo, recortado
+   con la máscara del papel visible, así que coincide con la foto. */
+.destello {
+  --mascara: url("/ceduct/hero/papel-mascara.png");
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask: var(--mascara) 0 0 / 100% 100% no-repeat;
+  mask: var(--mascara) 0 0 / 100% 100% no-repeat;
+  mix-blend-mode: soft-light;
+  opacity: calc(var(--b) * (1 - var(--b)) * 4);
+  overflow: hidden;
+}
+
+.destello::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  width: 14%;
+  left: calc(44% + var(--b) * 50%);
+  translate: -50% 0;
+  rotate: 14deg;
+  background: linear-gradient(90deg, transparent, rgba(255, 244, 210, 0.95), transparent);
+}
+
+/* -------------------------------------------------------- El titular */
+
+.sombraTexto {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(5, 7, 12, 0.72) 0%, rgba(5, 7, 12, 0.35) 38%, transparent 56%);
+}
+
+.texto {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: max(var(--mk-gutter), calc((100% - var(--mk-max)) / 2));
+  width: min(560px, 42%);
+  translate: 0 calc(-50% - var(--t) * 40px);
+  opacity: calc(1 - var(--t));
+}
+
+.aviso {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  translate: -50% 0;
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--mk-soft);
+  opacity: clamp(0, 1 - var(--p) * 12, 1);
+}
+
+.aviso::after {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 28px;
+  margin: 10px auto 0;
+  background: linear-gradient(var(--mk-yellow), transparent);
+  animation: baja 1.8s ease-in-out infinite;
+  transform-origin: top;
+}
+
+@keyframes baja {
+  0% { scale: 1 0; }
+  50% { scale: 1 1; }
+  100% { scale: 1 1; opacity: 0; }
+}
+
+.hero[data-modo="fijo"] .aviso {
+  display: none;
+}
+
+/* ---------------------------------------------------- Tercera escena */
+
+.final {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  clip-path: circle(calc(var(--a) * 150vmax) at var(--sx, 70%) var(--sy, 60%));
+  pointer-events: none;
+}
+
+.hero[data-modo="fijo"] .final {
+  display: none;
+}
+
+.finalFoto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: calc(1.15 - var(--a) * 0.15);
+}
+
+.final::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(5, 7, 12, 0.82), rgba(5, 7, 12, 0.2) 55%, transparent),
+    linear-gradient(0deg, rgba(5, 7, 12, 0.6), transparent 40%);
+}
+
+.finalFrase {
+  position: absolute;
+  z-index: 1;
+  left: max(var(--mk-gutter), calc((100% - var(--mk-max)) / 2));
+  bottom: 14vh;
+  max-width: 13ch;
+  margin: 0;
+  font: 400 clamp(40px, 5.4vw, 84px)/1 var(--mk-font-display), Georgia, serif;
+  letter-spacing: -0.015em;
+  color: var(--mk-ink);
+  opacity: var(--c);
+  translate: 0 calc((1 - var(--c)) * 30px);
+}
+
+.finalFrase em {
+  display: block;
+  font-style: italic;
+  background: var(--mk-gold-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ----------------------------------------------------------- Celular */
+
+@media (max-width: 700px) {
+  .destello {
+    --mascara: url("/ceduct/hero/papel-mascara-movil.png");
+  }
+
+  /* En vertical el papel queda bajo el texto: el titular sale en cuanto se desliza. */
+  .escena {
+    --t: clamp(0, (var(--p) - 0.01) / 0.05, 1);
+  }
+
+  .texto :global(p:nth-of-type(2)) {
+    display: none;
+  }
+
+  .lienzo {
+    --cx: 48.44%;
+    --cy: 67.88%;
+    --ancho: 58.14%;
+    --alto: 0.801;
+    --giro: -13.6deg;
+
+    right: auto;
+    left: 50%;
+    width: max(100%, calc(100svh * 768 / 1376));
+    aspect-ratio: 768 / 1376;
+    translate: -50% -50%;
+  }
+
+  .sombraTexto {
+    background: linear-gradient(180deg, rgba(5, 7, 12, 0.85) 0%, rgba(5, 7, 12, 0.5) 40%, transparent 58%);
+  }
+
+  .texto {
+    top: calc(var(--mk-nav-h) + 20px);
+    left: 16px;
+    right: 16px;
+    width: auto;
+    translate: 0 calc(var(--t) * -40px);
+  }
+
+  .finalFrase {
+    left: 16px;
+    right: 16px;
+    bottom: 12vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .impCabeza,
+  .impTitulo,
+  .impOtorga,
+  .aviso::after {
+    animation: none;
+  }
+}

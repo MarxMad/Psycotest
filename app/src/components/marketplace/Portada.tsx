@@ -142,15 +142,15 @@ export function Portada({
     >
       <defs>
         <linearGradient id={`${id}-f`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#17469f" />
-          <stop offset="100%" stopColor="#081f57" />
+          <stop offset="0%" stopColor="#1c2c49" />
+          <stop offset="100%" stopColor="#0a1222" />
         </linearGradient>
         <radialGradient id={`${id}-h`} cx={r(hx / 440)} cy={r(hy / 280)} r="0.7">
           <stop offset="0%" stopColor={cat.tono} stopOpacity="0.55" />
           <stop offset="100%" stopColor={cat.tono} stopOpacity="0" />
         </radialGradient>
         <pattern id={`${id}-p`} width="22" height="22" patternUnits="userSpaceOnUse">
-          <circle cx="2" cy="2" r="1.2" fill="#f0f6ff" opacity="0.16" />
+          <circle cx="2" cy="2" r="1.2" fill="#f3efe6" opacity="0.16" />
         </pattern>
       </defs>
       <rect width="440" height="280" fill={`url(#${id}-f)`} />
@@ -161,7 +161,7 @@ export function Portada({
           x="420"
           y="262"
           textAnchor="end"
-          fill="#f0f6ff"
+          fill="#f3efe6"
           opacity="0.09"
           fontSize="72"
           fontWeight="700"

@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Guilloche } from "../Ornamentos";
 import l from "./landing.module.css";
 
 /*
  * El manifiesto: entre la portada y el catálogo, la promesa dicha en grande.
  *
- * Tres frases que se relevan mientras la sección está a la vista y dos cintas
- * cruzadas con los estándares reales del catálogo: lo que se promete y con
- * qué se respalda, en la misma pantalla.
+ * Tres frases que se relevan mientras la sección está a la vista sobre una
+ * guilloché, entre dos bandas con filete: arriba los estándares reales del
+ * catálogo, abajo lo que respalda el papel.
  */
 
 const FRASES = [
@@ -31,7 +32,7 @@ function Cinta({ textos, clase }: { textos: string[]; clase: string }) {
             {textos.map((t) => (
               <span key={t}>
                 {t}
-                <span className={l.cintaAsterisco}>✳</span>
+                <span className={l.cintaAsterisco}>◆</span>
               </span>
             ))}
           </span>
@@ -62,6 +63,7 @@ export function Manifiesto({ estandares }: { estandares: string[] }) {
 
   return (
     <section ref={caja} className={l.manifiesto} aria-labelledby="manifiesto-titulo" data-visible={visible}>
+      <Guilloche className={l.manifiestoGuilloche} />
       <Cinta textos={estandares} clase={l.cintaAmarilla} />
       <Cinta textos={["Validez oficial", "SEP · CONOCER", "No caduca", "Verificable en línea", "ECE 002-10"]} clase={l.cintaNaranja} />
 

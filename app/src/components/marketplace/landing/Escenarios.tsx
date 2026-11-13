@@ -58,7 +58,7 @@ function ordenar(programas: Programa[]): Escena[] {
       ...p,
       foto: fotoDe(p) ?? p.imagen,
       sector: p.tipo === "diplomado" ? "Diplomado · 104 horas" : cat.nombre,
-      tono: p.tipo === "diplomado" ? "#facc15" : cat.tono,
+      tono: p.tipo === "diplomado" ? "#c9a54a" : cat.tono,
     };
   });
 }

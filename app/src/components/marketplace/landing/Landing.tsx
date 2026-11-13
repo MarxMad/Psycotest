@@ -1,19 +1,18 @@
 import Link from "next/link";
-import { ArrowRight, CreditCard, MousePointerClick, PlayCircle, Quote } from "lucide-react";
+import { ArrowRight, CreditCard, MousePointerClick, PlayCircle } from "lucide-react";
 import {
   PASOS,
   PREGUNTAS,
   PROPUESTA,
   RESPALDO,
-  TESTIMONIOS,
-  TESTIMONIOS_SON_EJEMPLO,
 } from "@/lib/ceduct/config";
 import { RUTAS } from "@/lib/ceduct/rutas";
 import type { Programa } from "@/lib/ceduct/tipos";
 import { Acordeon } from "../Acordeon";
+import { Guilloche, Sello } from "../Ornamentos";
 import { Revelar } from "../Revelar";
-import { Certificado } from "./Certificado";
 import { Escenarios } from "./Escenarios";
+import { HeroEscritorio } from "./HeroEscritorio";
 import { Luz } from "./Luz";
 import { Manifiesto } from "./Manifiesto";
 import { Ruta } from "./Ruta";
@@ -39,9 +38,9 @@ export function Landing({ programas }: { programas: Programa[] }) {
   return (
     <>
       {/* ------------------------------------------------------- Hero */}
-      <section className={l.hero} aria-labelledby="hero-titulo">
-        <div className={`${s.contenedor} ${l.heroRejilla}`}>
-          <div className={l.heroTexto}>
+      <HeroEscritorio
+        texto={
+          <>
             <p className={l.heroMeta}>
               <span>Entidad de Certificación y Evaluación</span>
               <span>Acreditación CONOCER ECE 002-10</span>
@@ -59,29 +58,27 @@ export function Landing({ programas }: { programas: Programa[] }) {
                 o empieza con un diplomado
               </Link>
             </div>
+          </>
+        }
+        datos={
+          <div className={s.contenedor}>
+            <dl className={l.heroDatos}>
+              {estandares.length > 0 && (
+                <div>
+                  <dt>{estandares.length}</dt>
+                  <dd>estándares de competencia en el catálogo</dd>
+                </div>
+              )}
+              {RESPALDO.map((r) => (
+                <div key={r.dato}>
+                  <dt>{r.dato}</dt>
+                  <dd>{r.texto}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
-          <div className={l.heroVisual}>
-            <Certificado />
-          </div>
-        </div>
-
-        <div className={s.contenedor}>
-          <dl className={l.heroDatos}>
-            {estandares.length > 0 && (
-              <div>
-                <dt>{estandares.length}</dt>
-                <dd>estándares de competencia en el catálogo</dd>
-              </div>
-            )}
-            {RESPALDO.map((r) => (
-              <div key={r.dato}>
-                <dt>{r.dato}</dt>
-                <dd>{r.texto}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+        }
+      />
 
       <Manifiesto estandares={estandares.length ? estandares : ["ECE 002-10"]} />
       <Luz />
@@ -91,21 +88,21 @@ export function Landing({ programas }: { programas: Programa[] }) {
       <Escenarios programas={programas} />
 
       {/* ---------------------------------------------- Cómo funciona */}
-      <section className={`${s.seccion} ${s.seccionAlt}`} aria-labelledby="pasos-titulo">
+      {/* Una hoja de papel entre secciones oscuras: los pasos como cláusulas. */}
+      <section className={`${s.seccion} ${l.papel}`} aria-labelledby="pasos-titulo">
         <div className={s.contenedor}>
-          <Revelar className={s.cabeceraSeccion}>
-            <div>
-              <p className={s.eyebrow}>Cómo funciona</p>
-              <h2 id="pasos-titulo" className={s.h2}>Tres pasos. Cero vueltas.</h2>
-            </div>
+          <Revelar className={l.papelCabecera}>
+            <p className={s.eyebrow}>Cómo funciona</p>
+            <h2 id="pasos-titulo" className={s.h2}>Tres pasos. Cero vueltas.</h2>
+            <p className={l.papelFolio}>Procedimiento de inscripción · ECE 002-10</p>
           </Revelar>
           <ol className={l.pasos}>
             {PASOS.map((p, i) => {
               const Icono = ICONOS_PASO[i];
               return (
                 <Revelar como="li" key={p.titulo} retraso={i * 100} className={l.paso}>
-                  <span className={l.pasoNum} aria-hidden>0{i + 1}</span>
-                  <span className={l.pasoIcono}><Icono size={24} aria-hidden /></span>
+                  <span className={l.pasoNum} aria-hidden>{["I", "II", "III"][i]}</span>
+                  <span className={l.pasoIcono}><Icono size={20} strokeWidth={1.6} aria-hidden /></span>
                   <h3>{p.titulo}</h3>
                   <p>{p.texto}</p>
                 </Revelar>
@@ -117,36 +114,6 @@ export function Landing({ programas }: { programas: Programa[] }) {
 
       {/* ------------------------------------------------------- Ruta */}
       <Ruta />
-
-      {/* ------------------------------------------------- Testimonios */}
-      <section className={s.seccion} aria-labelledby="test-titulo">
-        <div className={s.contenedor}>
-          <Revelar className={s.cabeceraSeccion}>
-            <div>
-              <p className={s.eyebrow}>Alumnos</p>
-              <h2 id="test-titulo" className={s.h2}>Lo que cambia después.</h2>
-            </div>
-            {TESTIMONIOS_SON_EJEMPLO && (
-              <p className={s.avisoDemo}>Testimonios de ejemplo: sustituir por testimonios reales.</p>
-            )}
-          </Revelar>
-          <ul className={l.testimonios}>
-            {TESTIMONIOS.map((t, i) => (
-              <Revelar como="li" key={i} retraso={i * 90}>
-                <figure className={`${s.tarjeta} ${l.testimonio}`}>
-                  <Quote size={28} className={l.comillas} aria-hidden />
-                  <blockquote>{t.texto}</blockquote>
-                  <figcaption>
-                    <strong>{t.nombre}</strong>
-                    <span>{t.rol}</span>
-                    <span className={l.testimonioPrograma}>{t.programa}</span>
-                  </figcaption>
-                </figure>
-              </Revelar>
-            ))}
-          </ul>
-        </div>
-      </section>
 
       {/* ---------------------------------------------------------- FAQ */}
       <section className={`${s.seccion} ${s.seccionAlt}`} aria-labelledby="faq-titulo">
@@ -171,6 +138,8 @@ export function Landing({ programas }: { programas: Programa[] }) {
       <section className={l.cta} aria-labelledby="cta-titulo">
         <div className={s.contenedor}>
           <Revelar className={l.ctaCaja}>
+            <Guilloche className={l.ctaGuilloche} />
+            <Sello className={l.ctaSello} />
             <h2 id="cta-titulo" className={l.ctaTitulo}>
               Tu siguiente certificado empieza <span className={l.resalte}>hoy.</span>
             </h2>

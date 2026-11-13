@@ -55,35 +55,35 @@ export const CATEGORIAS: Categoria[] = [
     nombre: "Servicio Público",
     resumen: "Atención al ciudadano en dependencias de gobierno.",
     icono: "edificio",
-    tono: "#38BDF8",
+    tono: "#7f9cc4",
   },
   {
     slug: "salud-y-bienestar",
     nombre: "Salud y Bienestar",
     resumen: "Consejería en adicciones.",
     icono: "pulso",
-    tono: "#34D399",
+    tono: "#6fa58b",
   },
   {
     slug: "turismo-y-hospitalidad",
     nombre: "Turismo y Hospitalidad",
     resumen: "Recepción de huéspedes y atención al comensal.",
     icono: "maleta",
-    tono: "#F97316",
+    tono: "#C07B5A",
   },
   {
     slug: "desarrollo-personal-y-profesional",
     nombre: "Desarrollo Personal y Profesional",
     resumen: "Evaluación de competencias y coaching.",
     icono: "brujula",
-    tono: "#FACC15",
+    tono: "#c9a54a",
   },
   {
     slug: "capacitacion-y-formacion",
     nombre: "Capacitación y Formación",
     resumen: "Impartición, tutoría y desarrollo de cursos.",
     icono: "birrete",
-    tono: "#A78BFA",
+    tono: "#9a8cc0",
   },
 ];
 
@@ -93,7 +93,7 @@ export const CATEGORIA_DIPLOMADOS: Categoria = {
   nombre: "Diplomados",
   resumen: "104 horas, mixtos: 60% práctica y 40% teoría.",
   icono: "diploma",
-  tono: "#F472B6",
+  tono: "#E2D6BA",
 };
 
 export function categoriaPorSlug(slug: string): Categoria {

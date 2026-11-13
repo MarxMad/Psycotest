@@ -41,7 +41,7 @@
 .introTitulo {
   margin: 0;
   font: 600 clamp(34px, 4.6vw, 66px) / 1.02 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -111,8 +111,8 @@
   pointer-events: none;
   opacity: calc(0.25 + var(--apertura) * 0.75);
   background:
-    linear-gradient(90deg, rgba(6, 26, 74, 0.1) 30%, rgba(6, 26, 74, 0.7) 100%),
-    linear-gradient(0deg, rgba(6, 26, 74, 0.85) 0%, transparent 32%);
+    linear-gradient(90deg, rgba(7, 13, 24, 0.1) 30%, rgba(7, 13, 24, 0.7) 100%),
+    linear-gradient(0deg, rgba(7, 13, 24, 0.85) 0%, transparent 32%);
 }
 
 /* La clave del estándar, gigante y hueca. Entra desde la derecha y sale por
@@ -121,10 +121,10 @@
   position: absolute;
   left: 3.5vw;
   bottom: 12vh;
-  font: 700 clamp(90px, 15vw, 250px) / 0.85 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.04em;
+  font: 600 clamp(90px, 15vw, 250px) / 0.85 var(--mk-font-display), sans-serif;
+  letter-spacing: -0.01em;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(240, 246, 255, 0.55);
+  -webkit-text-stroke: 1.2px rgba(220, 188, 104, 0.75);
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
@@ -158,9 +158,9 @@
   grid-area: 1 / 1;
   align-self: center;
   padding: 26px;
-  border: 1px solid rgba(190, 212, 255, 0.28);
+  border: 1px solid rgba(226, 214, 186, 0.28);
   border-radius: 22px;
-  background: rgba(6, 26, 74, 0.72);
+  background: rgba(7, 13, 24, 0.72);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
   backdrop-filter: blur(18px) saturate(1.2);
   box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.6);
@@ -232,7 +232,7 @@
 .fichaTitulo {
   margin: 0;
   font: 600 clamp(21px, 1.8vw, 27px) / 1.15 var(--mk-font-display), sans-serif;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
@@ -340,7 +340,7 @@
   height: 2px;
   overflow: hidden;
   border-radius: 2px;
-  background: rgba(240, 246, 255, 0.18);
+  background: rgba(243, 239, 230, 0.18);
 }
 
 .indiceBarra span {
@@ -363,9 +363,9 @@
 
 .indice button {
   padding: 7px 12px;
-  border: 1px solid rgba(240, 246, 255, 0.22);
+  border: 1px solid rgba(243, 239, 230, 0.22);
   border-radius: 999px;
-  background: rgba(6, 26, 74, 0.45);
+  background: rgba(7, 13, 24, 0.45);
   color: var(--mk-muted);
   font: 600 12px/1 var(--mk-font-display), sans-serif;
   letter-spacing: 0.04em;
@@ -381,12 +381,12 @@
 
 .indice button:hover {
   color: var(--mk-ink);
-  border-color: rgba(240, 246, 255, 0.5);
+  border-color: rgba(243, 239, 230, 0.5);
 }
 
 .indice button[aria-current="true"] {
   border-color: var(--tono);
-  background: color-mix(in srgb, var(--tono) 26%, rgba(6, 26, 74, 0.6));
+  background: color-mix(in srgb, var(--tono) 26%, rgba(7, 13, 24, 0.6));
   color: var(--mk-ink);
 }
 

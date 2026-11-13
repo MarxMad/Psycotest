@@ -19,8 +19,8 @@ import l from "./landing.module.css";
  * de una etapa a la siguiente, del diagnóstico al certificado.
  */
 
-const AMARILLO = "#facc15";
-const LUZ = "#bccdf0";
+const AMARILLO = "#c9a54a";
+const LUZ = "#b9c0cc";
 const CENTRO: [number, number] = [300, 240];
 
 /** Dónde queda cada etapa en el mundo; el panel es una ventana que viaja entre ellas. */
@@ -158,7 +158,7 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
         <path ref={hilo} d={HILO} fill="none" stroke={LUZ} strokeOpacity="0.25" strokeWidth="1.5" strokeDasharray="2 6" />
         <path ref={recorrido} d={HILO} fill="none" stroke={AMARILLO} strokeOpacity="0.9" strokeWidth="2" strokeLinecap="round" />
         {nudos.map(([x, y], i) => (
-          <circle key={i} cx={x} cy={y} r="4.5" fill="#0b2a6f" stroke={LUZ} strokeOpacity="0.6" strokeWidth="1.4" />
+          <circle key={i} cx={x} cy={y} r="4.5" fill="#0d1626" stroke={LUZ} strokeOpacity="0.6" strokeWidth="1.4" />
         ))}
 
         {/* 1 · reconoce: lo que ya dominas alrededor tuyo, y lo que falta. */}
@@ -169,8 +169,8 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
           {SABERES.map((b, k) => (
             <g key={k}>
               <line x1={CENTRO[0]} y1={CENTRO[1]} x2={b.x} y2={b.y} stroke={LUZ} strokeOpacity={b.sabe ? 0.35 : 0.12} />
-              <circle cx={b.x} cy={b.y} r="17" fill={b.sabe ? AMARILLO : "#0b2a6f"} stroke={b.sabe ? AMARILLO : LUZ} strokeOpacity={b.sabe ? 1 : 0.5} strokeDasharray={b.sabe ? undefined : "3 4"} />
-              {b.sabe && <path d={`M ${b.x - 6} ${b.y} l 4 4.5 l 8 -9`} fill="none" stroke="#0a1b45" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />}
+              <circle cx={b.x} cy={b.y} r="17" fill={b.sabe ? AMARILLO : "#0d1626"} stroke={b.sabe ? AMARILLO : LUZ} strokeOpacity={b.sabe ? 1 : 0.5} strokeDasharray={b.sabe ? undefined : "3 4"} />
+              {b.sabe && <path d={`M ${b.x - 6} ${b.y} l 4 4.5 l 8 -9`} fill="none" stroke="#12161f" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />}
             </g>
           ))}
         </g>
@@ -191,12 +191,12 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
 
         <g ref={viajero} transform={`translate(${ESTACIONES[0][0]} ${ESTACIONES[0][1]})`}>
           <circle r="28" fill={AMARILLO} opacity="0.45" filter={`url(#b${id})`} />
-          <circle r="9" fill="#fff7cc" />
+          <circle r="9" fill="#f5ead0" />
         </g>
 
         {/* 2 · cursa: los módulos que te faltan se van llenando. */}
         <g transform={en(1)} style={capa(1)}>
-          <rect x="140" y="110" width="320" height="260" rx="16" fill="#0b2a6f" fillOpacity="0.6" stroke={LUZ} strokeOpacity="0.3" />
+          <rect x="140" y="110" width="320" height="260" rx="16" fill="#0d1626" fillOpacity="0.6" stroke={LUZ} strokeOpacity="0.3" />
           {MODULOS.map((m, k) => (
             <g key={m} transform={`translate(170 ${148 + k * 52})`}>
               <text x="0" y="-8" fill={LUZ} fontSize={angosto ? 15 : 12} opacity="0.8">
@@ -221,19 +221,19 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
         {/* 3 · certifícate: el certificado, con su sello. Como los módulos, va encima: la luz llega y se mete debajo. */}
         <g transform={en(2)} style={capa(2)}>
           <g transform="rotate(-5 300 240)">
-            <rect x="140" y="130" width="320" height="210" rx="12" fill="#f0f6ff" />
-            <rect x="140" y="130" width="320" height="40" rx="12" fill="#1d4ed8" />
-            <rect x="140" y="158" width="320" height="12" fill="#1d4ed8" />
-            <text x="160" y="156" fill="#f0f6ff" fontSize="12" fontWeight="700" letterSpacing="2">
+            <rect x="140" y="130" width="320" height="210" rx="12" fill="#f3efe6" />
+            <rect x="140" y="130" width="320" height="40" rx="12" fill="#2a3d5e" />
+            <rect x="140" y="158" width="320" height="12" fill="#2a3d5e" />
+            <text x="160" y="156" fill="#f3efe6" fontSize="12" fontWeight="700" letterSpacing="2">
               CERTIFICADO DE COMPETENCIA
             </text>
-            <text x="160" y="204" fill="#0a1b45" fontSize="22" fontWeight="700">
+            <text x="160" y="204" fill="#12161f" fontSize="22" fontWeight="700">
               EC0217.01
             </text>
             {[226, 244, 262].map((y, k) => (
-              <rect key={y} x="160" y={y} width={[200, 170, 120][k]} height="8" rx="4" fill="#0a1b45" fillOpacity="0.15" />
+              <rect key={y} x="160" y={y} width={[200, 170, 120][k]} height="8" rx="4" fill="#12161f" fillOpacity="0.15" />
             ))}
-            <path d="M 162 312 c 14 -16 22 10 34 -4 s 18 -10 28 2" fill="none" stroke="#1d4ed8" strokeWidth="2" />
+            <path d="M 162 312 c 14 -16 22 10 34 -4 s 18 -10 28 2" fill="none" stroke="#2a3d5e" strokeWidth="2" />
           </g>
           <g
             style={{
@@ -248,8 +248,8 @@ function Escena({ etapa, avance }: { etapa: number; avance: React.RefObject<numb
               return <circle key={k} cx={fijo(46 * Math.cos(a))} cy={fijo(46 * Math.sin(a))} r="9" fill={AMARILLO} />;
             })}
             <circle r="46" fill={AMARILLO} />
-            <circle r="34" fill="none" stroke="#0a1b45" strokeOpacity="0.25" strokeWidth="2" />
-            <path d="M -14 0 l 9 10 l 19 -21" fill="none" stroke="#0a1b45" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+            <circle r="34" fill="none" stroke="#12161f" strokeOpacity="0.25" strokeWidth="2" />
+            <path d="M -14 0 l 9 10 l 19 -21" fill="none" stroke="#12161f" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
           </g>
         </g>
       </g>

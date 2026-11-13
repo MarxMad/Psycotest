@@ -34,12 +34,12 @@ export function Emblema({ className }: { className?: string }) {
         ))}
         <circle cx="20" cy="17" r="11.5" />
       </g>
-      <circle cx="20" cy="17" r="6" fill="#0b2a6f" />
+      <circle cx="20" cy="17" r="6" fill="#0d1626" />
       <path
         d="M6 30 Q13 27 20 31 Q27 27 34 30 L34 36 Q27 33 20 37 Q13 33 6 36 Z"
         fill="currentColor"
       />
-      <path d="M20 31 L20 37" stroke="#0b2a6f" strokeWidth="1.4" />
+      <path d="M20 31 L20 37" stroke="#0d1626" strokeWidth="1.4" />
     </svg>
   );
 }
