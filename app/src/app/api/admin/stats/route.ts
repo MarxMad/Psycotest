@@ -50,7 +50,7 @@ export async function GET() {
         (select count(*) from assessment_sessions where aprobada = false) as pruebas_pendientes,
         (select count(*) from courses where status = 'published')        as cursos_publicados,
         (select count(*) from course_enrollments)                        as estudiantes,
-        (select count(*) from live_classes where status = 'scheduled')   as clases_programadas,
+        (select count(*) from live_classes where status = 'scheduled' and scheduled_at::timestamptz + make_interval(mins => coalesce(duration_minutes, 60)) > now()) as clases_programadas,
         (select count(*) from live_classes
           where status = 'scheduled'
             and scheduled_at >= ${desde} and scheduled_at < ${hasta})    as clases_hoy,

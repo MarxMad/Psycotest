@@ -41,16 +41,25 @@ interface ActividadItem {
 const ACCION_LABEL: Record<string, string> = {
   create: "creó",
   update: "actualizó",
+  save: "guardó",
   delete: "eliminó",
-  login: "inició sesión en",
-  approve: "aprobó",
+  approve: "validó",
+  redeem: "usó",
+  remove_participant: "sacó a un participante de",
+  start_recording: "empezó a grabar",
 };
 
 const ENTIDAD_LABEL: Record<string, string> = {
   channel_page: "una página pública",
   course: "un curso",
+  course_category: "una categoría de cursos",
+  course_module: "un módulo de curso",
+  course_lesson: "una lección",
   access_code: "un código de acceso",
   session: "una sesión de evaluación",
+  assessment_session: "un informe de evaluación",
+  participant: "un participante",
+  order: "una orden",
   user: "un usuario",
   coupon: "un cupón",
   live_class: "una clase en vivo",
@@ -59,7 +68,9 @@ const ENTIDAD_LABEL: Record<string, string> = {
 };
 
 function describirActividad(a: ActividadItem): string {
-  const quien = a.userNombre ?? "Alguien";
+  // Quien canjea un código no tiene cuenta: es un candidato.
+  const quien = a.userNombre ?? (a.action === "redeem" ? "Un candidato" : "Alguien");
+  if (a.action === "login") return `${quien} inició sesión`;
   const verbo = ACCION_LABEL[a.action] ?? a.action;
   const que = ENTIDAD_LABEL[a.entity] ?? a.entity;
   return `${quien} ${verbo} ${que}`;
@@ -246,7 +257,7 @@ export default function AdminDashboard() {
                   </div>
                   <div className={s.statValue}>{stats?.clasesVivo.programadas || 0}</div>
                 </div>
-                {stats?.clasesVivo.hoy && stats.clasesVivo.hoy > 0 && (
+                {(stats?.clasesVivo.hoy ?? 0) > 0 && stats && (
                   <div className={s.highlight}>
                     <span className={s.highlightDot} />
                     {stats.clasesVivo.hoy} clase{stats.clasesVivo.hoy > 1 ? "s" : ""} hoy

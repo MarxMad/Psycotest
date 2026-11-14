@@ -41,6 +41,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Correo o contraseña incorrectos" }, { status: 401 });
     }
 
+    // El equipo (todo lo que no sea cliente) entra sólo con Privy: una
+    // contraseña filtrada no debe abrir el panel.
+    if (result.user.rol !== "cliente") {
+      return NextResponse.json(
+        { error: "Esta cuenta entra con «Entrar con mi correo»." },
+        { status: 403 },
+      );
+    }
+
     resetRateLimit(claveCorreo);
     const token = await createSessionToken(result.user);
     await setSessionCookie(token);

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
-import { liveClasses } from "@/db/schema";
+import { courses, liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
   authErrorResponse,
   canTransitionStatus,
+  cerrarClasesVencidas,
   cursosDelProfesor,
   dirigeLaClase,
   listAttendances,
@@ -33,6 +34,7 @@ export async function GET(_request: Request, props: { params: Promise<{ id: stri
       return NextResponse.json({ error: "No autorizado" }, { status: 401 });
     }
 
+    await cerrarClasesVencidas();
     const [liveClass] = await db.select().from(liveClasses).where(eq(liveClasses.id, params.id));
 
     if (!liveClass) {
@@ -48,9 +50,17 @@ export async function GET(_request: Request, props: { params: Promise<{ id: stri
       ? await listAttendances(liveClass.id)
       : undefined;
 
+    const [curso] = liveClass.courseId
+      ? await db
+          .select({ title: courses.title })
+          .from(courses)
+          .where(eq(courses.id, liveClass.courseId))
+      : [];
+
     return NextResponse.json({
       liveClass,
       attendances,
+      courseTitle: curso?.title ?? null,
     });
   } catch (error) {
     console.error("Error fetching live class:", error);

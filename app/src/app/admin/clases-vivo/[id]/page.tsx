@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { Card } from "@/components/admin/Card";
 import type { LiveClass } from "@/db/schema";
+import { sinRealizar } from "@/lib/clase-horario";
 import s from "../clases-vivo.module.css";
 
 type AttendanceRow = {
@@ -51,6 +52,7 @@ function fmt(iso: string) {
 export default function LiveClassDetailPage() {
   const { id } = useParams<{ id: string }>();
   const [liveClass, setLiveClass] = useState<LiveClass | null>(null);
+  const [cursoTitulo, setCursoTitulo] = useState<string | null>(null);
   const [attendances, setAttendances] = useState<AttendanceRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -66,6 +68,7 @@ export default function LiveClassDetailPage() {
       }
       const data = await res.json();
       setLiveClass(data.liveClass);
+      setCursoTitulo(data.courseTitle ?? null);
       setAttendances(porPersona(data.attendances || []));
       setError(null);
     } catch {
@@ -117,13 +120,15 @@ export default function LiveClassDetailPage() {
     );
   }
 
-  const abierta = liveClass.status === "scheduled" || liveClass.status === "live";
+  const vencida = sinRealizar(liveClass);
+  const abierta = !vencida && (liveClass.status === "scheduled" || liveClass.status === "live");
+  const estado = vencida ? "Sin realizar" : ESTADO[liveClass.status];
 
   return (
     <div className={s.container}>
       <PageHeader
         title={liveClass.title}
-        subtitle={`${ESTADO[liveClass.status]} · ${fmt(liveClass.scheduledAt)}`}
+        subtitle={`${estado} · ${fmt(liveClass.scheduledAt)}`}
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },
@@ -177,7 +182,7 @@ export default function LiveClassDetailPage() {
             <strong>Duración:</strong> {liveClass.durationMinutes} min
           </p>
           <p>
-            <strong>Curso:</strong> {liveClass.courseId || "Sin curso asociado"}
+            <strong>Curso:</strong> {cursoTitulo ?? liveClass.courseId ?? "Sin curso asociado"}
           </p>
           <p>
             <strong>Sala:</strong> sala propia de la plataforma. Los alumnos inscritos entran desde

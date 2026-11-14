@@ -10,6 +10,7 @@ import {
 } from "@/db/schema";
 import type { AuthUser } from "@/lib/auth";
 import { salaDeClase } from "@/lib/livekit";
+import { yaTermino } from "@/lib/clase-horario";
 
 const JOIN_EARLY_MS = 15 * 60 * 1000;
 
@@ -28,6 +29,21 @@ export function isWithinJoinWindow(liveClass: LiveClass, now = Date.now()): bool
   if (Number.isNaN(start)) return false;
   const end = start + (liveClass.durationMinutes || 60) * 60 * 1000;
   return now >= start - JOIN_EARLY_MS && now <= end;
+}
+
+/**
+ * Una clase en vivo que nadie terminó se quedaba «En vivo» para siempre. Al
+ * leer las clases, las que ya pasaron su hora (más el margen) se completan.
+ */
+export async function cerrarClasesVencidas(): Promise<void> {
+  const db = getDb();
+  const enVivo = await db.select().from(liveClasses).where(eq(liveClasses.status, "live"));
+  const vencidas = enVivo.filter((c) => yaTermino(c)).map((c) => c.id);
+  if (vencidas.length === 0) return;
+  await db
+    .update(liveClasses)
+    .set({ status: "completed" })
+    .where(inArray(liveClasses.id, vencidas));
 }
 
 export function canTransitionStatus(
@@ -89,6 +105,7 @@ export async function userCanAccessLiveClass(
 /** Las clases que ve en el panel quien las lleva. */
 export async function listLiveClassesForHost(user: AuthUser): Promise<LiveClass[]> {
   const db = getDb();
+  await cerrarClasesVencidas();
   if (user.rol === "admin") return db.select().from(liveClasses);
   if (user.rol !== "profesor") return [];
   const propios = await cursosDelProfesor(user.id);
@@ -98,6 +115,7 @@ export async function listLiveClassesForHost(user: AuthUser): Promise<LiveClass[
 
 export async function listLiveClassesForUser(userId: string): Promise<LiveClass[]> {
   const db = getDb();
+  await cerrarClasesVencidas();
   const enrollments = await db
     .select({ courseId: courseEnrollments.courseId })
     .from(courseEnrollments)

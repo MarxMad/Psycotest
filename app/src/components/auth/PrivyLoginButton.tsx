@@ -51,9 +51,14 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
 
   /** Evita dos canjes a la vez: el automático y el de «onComplete». */
   const canjeEnCurso = useRef(false);
+  /**
+   * Tras un canje exitoso no hay otro: el de «onComplete» y el automático
+   * llegaban uno detrás del otro y la sesión se abría (y se auditaba) dos veces.
+   */
+  const canjeHecho = useRef(false);
 
   const canjearSesion = useCallback(async (manual: boolean) => {
-    if (canjeEnCurso.current) return;
+    if (canjeEnCurso.current || canjeHecho.current) return;
     canjeEnCurso.current = true;
     setCanjeando(true);
     setError(null);
@@ -72,6 +77,7 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
         return;
       }
       if (!r.ok) throw new Error(d.error ?? "No se pudo iniciar sesión");
+      canjeHecho.current = true;
       // El servidor ya validó el destino contra el rol; no se sobreescribe.
       router.push(d.next);
       router.refresh();

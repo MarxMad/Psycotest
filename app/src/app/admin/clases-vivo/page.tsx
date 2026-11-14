@@ -8,6 +8,7 @@ import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
 import type { LiveClass } from "@/db/schema";
 import s from "./clases-vivo.module.css";
+import { sinRealizar } from "@/lib/clase-horario";
 
 function fmt(iso: string) {
   return new Date(iso).toLocaleString("es-MX", {
@@ -40,7 +41,7 @@ export default function ClasesVivoPage() {
   }, []);
 
   const stats = {
-    programadas: clases.filter((c) => c.status === "scheduled").length,
+    programadas: clases.filter((c) => c.status === "scheduled" && !sinRealizar(c)).length,
     enVivo: clases.filter((c) => c.status === "live").length,
     completadas: clases.filter((c) => c.status === "completed").length,
   };
@@ -127,8 +128,11 @@ export default function ClasesVivoPage() {
                     <td className={s.muted}>{fmt(clase.scheduledAt)}</td>
                     <td className={s.muted}>{clase.durationMinutes} min</td>
                     <td>
-                      {clase.status === "scheduled" && (
+                      {clase.status === "scheduled" && !sinRealizar(clase) && (
                         <span className={s.badge}>Programada</span>
+                      )}
+                      {sinRealizar(clase) && (
+                        <span className={`${s.badge} ${s.badgeCancelled}`}>Sin realizar</span>
                       )}
                       {clase.status === "live" && (
                         <span className={`${s.badge} ${s.badgeLive}`}>
@@ -148,7 +152,7 @@ export default function ClasesVivoPage() {
                         <Link href={`/admin/clases-vivo/${clase.id}`} className="btn btn-sm">
                           Detalles
                         </Link>
-                        {(clase.status === "live" || clase.status === "scheduled") && (
+                        {(clase.status === "live" || clase.status === "scheduled") && !sinRealizar(clase) && (
                           <Link
                             href={`/admin/clases-vivo/${clase.id}/sala`}
                             className={`btn btn-sm ${clase.status === "live" ? s.btnLive : ""}`}
