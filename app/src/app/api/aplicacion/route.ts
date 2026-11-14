@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { avisarPruebasTerminadas } from "@/lib/avisos-evaluacion";
 import type { Instrumento } from "@/lib/storage";
 import { procesarSesion } from "@/lib/procesar-sesion";
 import { getSession, saveSession } from "@/lib/session-store";
@@ -125,6 +126,10 @@ export async function POST(request: Request) {
       completed: updated.redemption.completedInstruments as Instrumento[],
     });
   }
+
+  // Si fue la última prueba, avisa a quien compró y a los psicólogos.
+  const origen = new URL(request.url).origin;
+  after(() => avisarPruebasTerminadas(applicant.redemptionId, origen));
 
   return NextResponse.json({ ok: true, id: row.id }, { status: 201 });
 }

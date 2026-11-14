@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { avisarInformeListo } from "@/lib/avisos-evaluacion";
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db";
 import { logAudit, requireStaff, requireUser } from "@/lib/auth";
@@ -103,6 +104,12 @@ export async function PATCH(request: Request, { params }: Params) {
       .set({ approvedById: user.id })
       .where(eq(schema.assessmentSessions.id, id));
     await logAudit(user.id, "approve", "assessment_session", id);
+    // Recién validada: si era la última del candidato, avisa a quien compró.
+    const canje = existing.accessRedemptionId;
+    if (!existing.aprobada && canje) {
+      const origen = new URL(request.url).origin;
+      after(() => avisarInformeListo(canje, origen));
+    }
   } else {
     // La auditoría no copia el expediente: son datos personales y sensibles.
     const { investigacion, ...resto } = body;
