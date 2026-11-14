@@ -73,25 +73,23 @@ function buildGrupos(): GrupoMabeUI[] {
   });
 }
 
+/**
+ * Las referencias del Excel («D6», «K7»…) son celdas de cada hoja, y la misma
+ * celda existe en varias hojas: D6 está en Proc. Puesto, Val. Puesto y Val.
+ * Ps. Cada clave se resuelve sólo dentro de su propia hoja; buscarla en la
+ * primera hoja que la tuviera sumaba respuestas del puesto a los valores.
+ */
 function buildKeys(): Record<string, string[]> {
-  const idMap = new Map<string, string>();
-  for (const g of oldGroups) {
-    const ui = GRUPOS_MABE.find((x) => x.id === g.id)!;
-    g.items.forEach((oldItem, i) => {
-      idMap.set(`${g.id}:${oldItem.id}`, ui.items[i].id);
-    });
-  }
-
   const raw = keysJson.keys as Record<string, string[]>;
   const out: Record<string, string[]> = {};
   for (const [key, refs] of Object.entries(raw)) {
+    const g = oldGroups.find((x) => key.startsWith(`${x.id}_`));
+    const ui = g && GRUPOS_MABE.find((x) => x.id === g.id);
+    if (!g || !ui) throw new Error(`Clave MABE sin hoja: ${key}`);
     out[key] = refs.map((oldRef) => {
-      for (const g of oldGroups) {
-        if (g.items.some((it) => it.id === oldRef)) {
-          return idMap.get(`${g.id}:${oldRef}`) ?? oldRef;
-        }
-      }
-      return oldRef;
+      const i = g.items.findIndex((it) => it.id === oldRef);
+      if (i < 0) throw new Error(`MABE ${key}: la celda ${oldRef} no está en ${g.id}`);
+      return ui.items[i].id;
     });
   }
   return out;
