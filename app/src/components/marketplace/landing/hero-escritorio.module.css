@@ -2,7 +2,7 @@
  * Portada en escena. Geometría del papel medida sobre las fotos
  * (public/ceduct/hero): centro, ancho y giro en % de la imagen.
  *   escritorio.webp        1376×768  centro 68.06% 37.83%  ancho 35.59%  alto/ancho 0.791  giro −13.58°
- *   escritorio-movil.webp  768×1376  centro 48.44% 67.88%  ancho 58.14%  alto/ancho 0.801  giro −13.60°
+ *   escritorio-movil.webp  768×1376 (servida a 1536×2752)  centro 48.44% 67.88%  ancho 58.14%  alto/ancho 0.801  giro −13.60°
  * Si se cambian las fotos, se vuelven a medir con scratchpad/hero/capas.py.
  */
 
@@ -377,9 +377,21 @@
     --mascara: url("/ceduct/hero/papel-mascara-movil.png");
   }
 
-  /* En vertical el papel queda bajo el texto: el titular sale en cuanto se desliza. */
+  /* En vertical el papel queda bajo el texto: el titular sale en cuanto se
+     desliza. Sube entero y nítido y sólo se desvanece al final; si se
+     desvanecía desde el primer píxel, al tocar la pantalla ya se veía opaco. */
   .escena {
-    --t: clamp(0, (var(--p) - 0.01) / 0.05, 1);
+    --t: clamp(0, (var(--p) - 0.015) / 0.07, 1);
+  }
+
+  /* En iOS, will-change congela el lienzo a la resolución del primer cuadro
+     y lo estira al acercarse: la foto se veía borrosa. */
+  .lienzo {
+    will-change: auto;
+  }
+
+  .impreso {
+    filter: none;
   }
 
   .texto :global(p:nth-of-type(2)) {
@@ -409,7 +421,8 @@
     left: 16px;
     right: 16px;
     width: auto;
-    translate: 0 calc(var(--t) * -40px);
+    translate: 0 calc(var(--t) * -45svh);
+    opacity: clamp(0, (1 - var(--t)) * 3, 1);
   }
 
   .finalFrase {
