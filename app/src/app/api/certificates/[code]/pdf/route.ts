@@ -3,6 +3,7 @@ import { pdf } from "@react-pdf/renderer";
 import { getReadyDb } from "@/db/index";
 import { findCertificateByCode, qrDataUrl } from "@/lib/certificates";
 import { ConstanciaPdfDocument } from "@/lib/constancia-pdf";
+import { urlDelSitio } from "@/lib/sitio";
 
 export async function GET(
   _request: Request,
@@ -19,7 +20,7 @@ export async function GET(
     const dictamen = (found.certificate.dictamenJson || {}) as Record<string, unknown>;
     const verificationUrl =
       (dictamen.verificationUrl as string) ||
-      `${process.env.NEXT_PUBLIC_APP_URL || ""}/verificar/${found.certificate.verificationCode}`;
+      `${urlDelSitio()}/verificar/${found.certificate.verificationCode}`;
 
     const qr = await qrDataUrl(verificationUrl);
     const blob = await pdf(

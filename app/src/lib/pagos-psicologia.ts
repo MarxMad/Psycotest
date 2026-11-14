@@ -15,6 +15,7 @@ import {
 } from "@/lib/pruebas-catalogo";
 import { psycotest } from "@/lib/routes";
 import { stripe } from "@/lib/stripe";
+import { urlDelSitio } from "@/lib/sitio";
 
 /**
  * Cobro en línea de Psicología Aplicada.
@@ -256,7 +257,7 @@ export async function cumplirCompraPsicologia(sesion: Stripe.Checkout.Session): 
 
 async function avisarCompra(sesion: Stripe.Checkout.Session, compra: Compra, codigos: string[], vence: string) {
   const para = sesion.customer_details?.email || sesion.customer_email;
-  const origen = sesion.metadata?.origen || (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const origen = sesion.metadata?.origen || urlDelSitio();
   const acceso = `${origen}${psycotest.acceso}`;
   const pruebas = nombresDe(compra.pruebas);
   const persona = compra.modo === "persona";

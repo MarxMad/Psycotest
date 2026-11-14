@@ -6,6 +6,7 @@ import { logAudit } from "@/lib/auth";
 import { activateEnrollment } from "@/lib/course-access";
 import { correoVentas, enviarCorreo, esMarca, pesos, plantilla, textoPlano, type Marca } from "@/lib/correo";
 import { stripe } from "@/lib/stripe";
+import { urlDelSitio } from "@/lib/sitio";
 
 /**
  * Cobro de cursos y diplomados.
@@ -85,7 +86,7 @@ export function origenDe(request: Request): string {
   try {
     return new URL(request.url).origin;
   } catch {
-    return (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+    return urlDelSitio();
   }
 }
 
@@ -357,7 +358,7 @@ async function avisarCompraDeCursos({
 
   const canal = items.find((i) => i.canal)?.canal;
   const marca: Marca = esMarca(canal) ? canal : "ceduct";
-  const origen = sesion.metadata?.origen || (process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "");
+  const origen = sesion.metadata?.origen || urlDelSitio();
   const nombre = (usuario?.nombre || sesion.customer_details?.name || "").split(" ")[0];
 
   const contenido = {

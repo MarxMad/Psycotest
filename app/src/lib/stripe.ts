@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { urlDelSitio } from "@/lib/sitio";
 
 /**
  * Cliente de Stripe.
@@ -14,7 +15,7 @@ export const stripe = secreto
   : null;
 
 export function siteUrl() {
-  return (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
+  return urlDelSitio();
 }
 
 export function isStripeConfigured() {
