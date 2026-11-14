@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   courseEnrollments,
@@ -7,6 +7,9 @@ import {
   lessonProgress,
   vodEvents,
 } from "@/db/schema";
+
+/** El reproductor avisa cada 15 s; el margen cubre la latencia de red. */
+const MAX_AVANCE_POR_LATIDO = 20;
 
 function id(prefix: string) {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
@@ -20,16 +23,21 @@ export async function recordVodEvent(input: {
 }) {
   const db = getDb();
   const now = new Date().toISOString();
-  const eventId = id("vod");
+  const position = Math.max(0, Math.floor(input.positionSeconds || 0));
 
-  await db.insert(vodEvents).values({
-    id: eventId,
-    enrollmentId: input.enrollmentId,
-    lessonId: input.lessonId,
-    eventType: input.eventType,
-    positionSeconds: Math.max(0, Math.floor(input.positionSeconds || 0)),
-    createdAt: now,
-  });
+  // Los latidos sólo mueven el avance de la lección: guardarlos como eventos
+  // eran ~4 filas por minuto por alumno que nadie leía. Play, pausa, salto y
+  // fin sí se quedan como bitácora.
+  if (input.eventType !== "heartbeat") {
+    await db.insert(vodEvents).values({
+      id: id("vod"),
+      enrollmentId: input.enrollmentId,
+      lessonId: input.lessonId,
+      eventType: input.eventType,
+      positionSeconds: position,
+      createdAt: now,
+    });
+  }
 
   const [lesson] = await db
     .select()
@@ -48,16 +56,21 @@ export async function recordVodEvent(input: {
     )
     .limit(1);
 
+  // Se acredita lo que avanzó el video desde el último aviso, nunca más de un
+  // intervalo: un aviso repetido no suma y saltar hacia adelante no cuenta.
   let watched = progress?.watchedSeconds || 0;
-  if (input.eventType === "heartbeat" || input.eventType === "play") {
-    watched = Math.min(duration, watched + 15);
+  if (input.eventType === "heartbeat") {
+    const avance = position - (progress?.lastPositionSeconds ?? 0);
+    if (avance > 0 && avance <= MAX_AVANCE_POR_LATIDO) {
+      watched = Math.min(duration, watched + avance);
+    }
   }
   if (input.eventType === "ended") {
     watched = Math.max(watched, duration);
   }
 
   const permanencePercent = Math.min(100, Math.round((watched / duration) * 100));
-  const lastPosition = Math.floor(input.positionSeconds || 0);
+  const lastPosition = position;
   const completed =
     permanencePercent >= 80 || input.eventType === "ended" || Boolean(progress?.completed);
 
@@ -99,10 +112,11 @@ export async function recordVodEvent(input: {
     const moduleIds = modules.map((m) => m.id);
     let totalLessons = 0;
     if (moduleIds.length) {
-      const allLessons = await db
-        .select({ id: courseLessons.id, moduleId: courseLessons.moduleId })
-        .from(courseLessons);
-      totalLessons = allLessons.filter((l) => moduleIds.includes(l.moduleId)).length;
+      const lecciones = await db
+        .select({ id: courseLessons.id })
+        .from(courseLessons)
+        .where(inArray(courseLessons.moduleId, moduleIds));
+      totalLessons = lecciones.length;
     }
     const allProgress = await db
       .select()

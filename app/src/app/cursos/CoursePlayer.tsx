@@ -70,9 +70,15 @@ export function CoursePlayer({
     const onPlay = () => send("play", Math.floor(v.currentTime));
     const onPause = () => send("pause", Math.floor(v.currentTime));
     const onEnded = () => send("ended", Math.floor(v.duration || v.currentTime), true);
+    // `timeupdate` llega ~4 veces por segundo: sin recordar el último tramo
+    // avisado, cada latido salía repetido.
+    let ultimoTramo = -1;
     const onTimeUpdate = () => {
-      if (v.currentTime > 0 && Math.floor(v.currentTime) % 15 === 0) {
-        send("heartbeat", Math.floor(v.currentTime));
+      const segundo = Math.floor(v.currentTime);
+      const tramo = Math.floor(segundo / 15);
+      if (segundo > 0 && segundo % 15 === 0 && tramo !== ultimoTramo) {
+        ultimoTramo = tramo;
+        send("heartbeat", segundo);
       }
     };
 
