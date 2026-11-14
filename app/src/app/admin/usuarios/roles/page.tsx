@@ -27,7 +27,12 @@ const ROLES: { id: Rol; label: string; descripcion: string }[] = [
   {
     id: "psicologo",
     label: "Psicólogo",
-    descripcion: "Aplica y califica evaluaciones, emite códigos y revisa expedientes.",
+    descripcion: "Psicología Aplicada: aplica y califica pruebas, emite códigos y gestiona participantes.",
+  },
+  {
+    id: "profesor",
+    label: "Profesor",
+    descripcion: "Tutor: programa y da las clases en vivo de los cursos que tiene asignados.",
   },
   {
     id: "aplicador",
@@ -44,6 +49,7 @@ const ROLES: { id: Rol; label: string; descripcion: string }[] = [
 const TONO: Record<Rol, "danger" | "info" | "neutral"> = {
   admin: "danger",
   psicologo: "info",
+  profesor: "info",
   aplicador: "neutral",
   cliente: "neutral",
 };
@@ -51,6 +57,7 @@ const TONO: Record<Rol, "danger" | "info" | "neutral"> = {
 const LABEL: Record<Rol, string> = {
   admin: "Administrador",
   psicologo: "Psicólogo",
+  profesor: "Profesor",
   aplicador: "Aplicador",
   cliente: "Cliente",
 };

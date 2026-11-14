@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
-import { userCanAccessLiveClass } from "@/lib/live-classes";
+import { recordJoin, userCanAccessLiveClass } from "@/lib/live-classes";
 import { recordHeartbeat } from "@/lib/live-presence";
 
 export async function POST(_request: Request, props: { params: Promise<{ id: string }> }) {
@@ -19,7 +19,14 @@ export async function POST(_request: Request, props: { params: Promise<{ id: str
     const allowed = await userCanAccessLiveClass(user, liveClass);
     if (!allowed) return NextResponse.json({ error: "Sin acceso" }, { status: 403 });
 
-    const attendance = await recordHeartbeat(liveClass.id, user.id);
+    // El navegador solo late mientras está conectado a la sala. Si la fila
+    // quedó cerrada (un corte breve que el servidor reportó como salida), se
+    // reabre: la persona sigue dentro.
+    let attendance = await recordHeartbeat(liveClass.id, user.id);
+    if (!attendance) {
+      await recordJoin(liveClass.id, user.id);
+      attendance = await recordHeartbeat(liveClass.id, user.id);
+    }
     return NextResponse.json({ attendance });
   } catch (error) {
     console.error("heartbeat error:", error);

@@ -7,7 +7,7 @@ import { requireUser } from "@/lib/auth";
 /** Reporte de ventas: ingreso por mes, por curso y uso de cupones. */
 export async function GET() {
   try {
-    await requireUser(["admin", "psicologo"]);
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

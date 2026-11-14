@@ -85,7 +85,8 @@
   color: var(--red-600);
 }
 
-.badge-psicologo {
+.badge-psicologo,
+.badge-profesor {
   background: color-mix(in srgb, var(--blue-600) 15%, transparent);
   color: var(--blue-600);
 }

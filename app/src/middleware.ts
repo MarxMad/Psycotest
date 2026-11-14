@@ -5,7 +5,7 @@ import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
 import { dominioPrincipal, getChannelFromHost, isChannelPath, isPlatformPath } from "@/lib/channels";
-import { esSoloAdmin, operaElPanel, type Rol } from "@/lib/auth-rutas";
+import { inicioDelPanel, operaElPanel, puedeVerSeccion, type Rol } from "@/lib/auth-rutas";
 import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
 const COOKIE = "psycotest_session";
@@ -121,12 +121,17 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/mi-cuenta", request.url));
     }
 
-    // Personas, dinero y marca quedan para el administrador.
-    if (rol !== "admin" && esSoloAdmin(pathname)) {
-      return NextResponse.redirect(new URL("/admin", request.url));
+    // Cada rol abre solo sus secciones: el psicólogo las pruebas, el profesor
+    // sus clases en vivo; el resto es del administrador.
+    if (!puedeVerSeccion(rol as Rol, pathname)) {
+      return NextResponse.redirect(new URL(inicioDelPanel(rol as Rol), request.url));
     }
 
-    return NextResponse.next();
+    // El layout del panel vuelve a revisar la sección con el rol de la base;
+    // para eso necesita saber qué ruta se pidió.
+    const cabeceras = new Headers(request.headers);
+    cabeceras.set("x-ruta-panel", pathname);
+    return NextResponse.next({ request: { headers: cabeceras } });
   } catch {
     const login = new URL("/login", request.url);
     login.searchParams.set("next", pathname);

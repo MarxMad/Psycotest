@@ -5,8 +5,10 @@ import { liveClasses } from "@/db/schema";
 import { getSessionUser, requireUser } from "@/lib/auth";
 import {
   authErrorResponse,
-  buildJitsiRoom,
+  cursosDelProfesor,
+  listLiveClassesForHost,
   listLiveClassesForUser,
+  referenciaDeSala,
 } from "@/lib/live-classes";
 
 export async function GET(request: Request) {
@@ -33,20 +35,24 @@ export async function GET(request: Request) {
       return NextResponse.json({ classes });
     }
 
+    let host;
     try {
-      await requireUser(["admin"]);
+      host = await requireUser(["admin", "profesor"]);
     } catch (error) {
       const { error: msg, status: code } = authErrorResponse(error);
       return NextResponse.json({ error: msg }, { status: code });
     }
 
-    const allClasses =
+    // El admin ve todas; el profesor, las de sus cursos.
+    let allClasses = await listLiveClassesForHost(host);
+    if (
       status === "scheduled" ||
       status === "live" ||
       status === "completed" ||
       status === "cancelled"
-        ? await db.select().from(liveClasses).where(eq(liveClasses.status, status))
-        : await db.select().from(liveClasses);
+    ) {
+      allClasses = allClasses.filter((c) => c.status === status);
+    }
 
     return NextResponse.json({ classes: allClasses });
   } catch (error) {
@@ -57,8 +63,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    let host;
     try {
-      await requireUser(["admin"]);
+      host = await requireUser(["admin", "profesor"]);
     } catch (error) {
       const { error: msg, status: code } = authErrorResponse(error);
       return NextResponse.json({ error: msg }, { status: code });
@@ -67,6 +74,16 @@ export async function POST(request: Request) {
     const db = await getReadyDb();
     const body = await request.json();
     const { title, scheduledAt, durationMinutes, courseId } = body;
+
+    // El profesor solo programa clases de los cursos que tiene asignados.
+    if (host.rol === "profesor") {
+      if (!courseId || !(await cursosDelProfesor(host.id)).includes(courseId)) {
+        return NextResponse.json(
+          { error: "Elige uno de los cursos que tienes asignados" },
+          { status: 403 },
+        );
+      }
+    }
 
     if (!title || typeof title !== "string" || !title.trim()) {
       return NextResponse.json({ error: "Título requerido" }, { status: 400 });
@@ -88,7 +105,7 @@ export async function POST(request: Request) {
 
     const now = new Date().toISOString();
     const classId = `liveclass_${Date.now()}`;
-    const { roomUrl } = buildJitsiRoom(classId);
+    const roomUrl = referenciaDeSala(classId);
 
     await db.insert(liveClasses).values({
       id: classId,
@@ -96,15 +113,18 @@ export async function POST(request: Request) {
       title: title.trim(),
       scheduledAt: scheduled.toISOString(),
       durationMinutes: duration,
-      provider: "jitsi",
+      provider: "livekit",
       roomUrl,
-      dailyRoomUrl: roomUrl,
+      dailyRoomUrl: null,
       recordingUrl: null,
       status: "scheduled",
       createdAt: now,
     });
 
-    const [liveClass] = await db.select().from(liveClasses).where(eq(liveClasses.id, classId));
+    const [liveClass] = await db
+      .select()
+      .from(liveClasses)
+      .where(eq(liveClasses.id, classId));
 
     return NextResponse.json({ liveClass }, { status: 201 });
   } catch (error) {

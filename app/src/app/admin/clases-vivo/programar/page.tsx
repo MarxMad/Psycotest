@@ -30,7 +30,7 @@ function ProgramarClaseForm() {
   useEffect(() => {
     async function loadCourses() {
       try {
-        const res = await fetch("/api/courses");
+        const res = await fetch("/api/courses?asignados=1");
         if (res.ok) {
           const data = await res.json();
           setCourses(data.courses || []);
@@ -77,7 +77,7 @@ function ProgramarClaseForm() {
     <div className={s.container}>
       <PageHeader
         title="Programar Clase en Vivo"
-        subtitle="Crea la sesión y genera automáticamente la sala Meet (Jitsi)"
+        subtitle="Crea la sesión; la sala en vivo queda lista para la hora de la clase"
         breadcrumbs={[
           { label: "Dashboard", href: "/admin" },
           { label: "Clases en Vivo", href: "/admin/clases-vivo" },

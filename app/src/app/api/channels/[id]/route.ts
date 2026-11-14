@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { logAudit, requireStaff, requireUser } from "@/lib/auth";
+import { logAudit, requireUser } from "@/lib/auth";
 import { CHANNELS, getChannel, type ChannelId } from "@/lib/channels";
 import { getChannelPage, updateChannelPage } from "@/lib/channel-store";
 import type { ChannelHero, ChannelSection } from "@/lib/channel-content";
@@ -8,7 +8,7 @@ type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_request: Request, { params }: Params) {
   try {
-    await requireStaff();
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
@@ -22,7 +22,7 @@ export async function GET(_request: Request, { params }: Params) {
 export async function PATCH(request: Request, { params }: Params) {
   let user;
   try {
-    user = await requireUser(["admin", "psicologo"]);
+    user = await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

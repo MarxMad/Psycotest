@@ -48,7 +48,7 @@ export async function GET() {
 export async function POST(request: Request) {
   let actor;
   try {
-    actor = await requireUser(["admin", "psicologo"]);
+    actor = await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

@@ -24,27 +24,9 @@ export async function recordHeartbeat(liveClassId: string, userId: string) {
       ),
     );
 
-  let active = rows.find((row) => !row.leftAt);
-  if (!active) {
-    const id = `attendance_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
-    await db.insert(liveClassAttendances).values({
-      id,
-      liveClassId,
-      userId,
-      joinedAt: nowIso,
-      leftAt: null,
-      durationSeconds: null,
-      connectedSeconds: 0,
-      presencePercent: 0,
-      lastHeartbeatAt: nowIso,
-    });
-    const [created] = await db
-      .select()
-      .from(liveClassAttendances)
-      .where(eq(liveClassAttendances.id, id));
-    active = created;
-  }
-
+  // Solo cuenta mientras la persona está dentro: la fila la abre la entrada a
+  // la sala (o el aviso del servidor) y la cierra la salida.
+  const active = rows.find((row) => !row.leftAt);
   if (!active) return null;
 
   let delta = HEARTBEAT_INTERVAL_SEC;

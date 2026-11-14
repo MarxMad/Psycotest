@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
-import { userCanAccessLiveClass } from "@/lib/live-classes";
+import { dirigeLaClase, userCanAccessLiveClass } from "@/lib/live-classes";
 import {
   WhiteboardConflict,
   createSnapshot,
@@ -99,7 +99,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
     // La pizarra de la clase la lleva el instructor; las de las salas de
     // división las lleva quien está asignado a esa sala.
     const breakoutRoomId = body.breakoutRoomId || null;
-    if (user.rol !== "admin") {
+    if (!(await dirigeLaClase(user, liveClass))) {
       const suya = breakoutRoomId
         ? await getAssignmentForUser(liveClass.id, user.id)
         : null;

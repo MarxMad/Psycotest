@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { liveClasses } from "@/db/schema";
-import { getSessionUser, requireUser } from "@/lib/auth";
-import { authErrorResponse, userCanAccessLiveClass } from "@/lib/live-classes";
+import { getSessionUser } from "@/lib/auth";
+import { authErrorResponse, dirigeLaClase, userCanAccessLiveClass } from "@/lib/live-classes";
 import {
   closeIcebreaker,
   getActiveIcebreaker,
@@ -26,7 +26,9 @@ export async function GET(_request: Request, props: { params: Promise<{ id: stri
     if (!allowed) return NextResponse.json({ error: "Sin acceso" }, { status: 403 });
 
     const active = await getActiveIcebreaker(liveClass.id);
-    const sessions = user.rol === "admin" ? await listIcebreakers(liveClass.id) : undefined;
+    const sessions = (await dirigeLaClase(user, liveClass))
+      ? await listIcebreakers(liveClass.id)
+      : undefined;
     return NextResponse.json({ active, sessions });
   } catch (error) {
     console.error("icebreakers GET:", error);
@@ -66,7 +68,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
     }
 
     if (action === "close") {
-      await requireUser(["admin"]);
+      if (!(await dirigeLaClase(user, liveClass))) throw new Error("FORBIDDEN");
       if (!body.sessionId) {
         return NextResponse.json({ error: "Falta sessionId" }, { status: 400 });
       }
@@ -74,7 +76,7 @@ export async function POST(request: Request, props: { params: Promise<{ id: stri
       return NextResponse.json({ session });
     }
 
-    await requireUser(["admin"]);
+    if (!(await dirigeLaClase(user, liveClass))) throw new Error("FORBIDDEN");
     const type = body.type || "pregunta_rapida";
     if (!["pregunta_rapida", "dos_verdades", "asociacion"].includes(type)) {
       return NextResponse.json({ error: "Tipo inválido" }, { status: 400 });

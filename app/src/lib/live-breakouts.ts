@@ -1,4 +1,4 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, eq, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   liveBreakoutAssignments,
@@ -6,7 +6,7 @@ import {
   liveClassAttendances,
   users,
 } from "@/db/schema";
-import { buildJitsiRoom } from "@/lib/live-classes";
+import { livekitConfigurado, participantesDe, salaDeClase } from "@/lib/livekit";
 
 function id(prefix: string) {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
@@ -53,7 +53,9 @@ export async function createBreakouts(
 
   for (let i = 0; i < count; i++) {
     const roomId = id("breakout");
-    const { roomSlug, roomUrl } = buildJitsiRoom(`${liveClassId}-b${i}-${roomId}`);
+    // Cada sala de división es una sala de LiveKit propia, colgada de la clase.
+    const roomSlug = salaDeClase(liveClassId, roomId);
+    const roomUrl = `livekit:${roomSlug}`;
     const name = options.names?.[i] || `Sala ${i + 1}`;
     await db.insert(liveBreakoutRooms).values({
       id: roomId,
@@ -86,6 +88,29 @@ const LATIDO_VIGENTE_MS = 2 * 60 * 1000;
  * repartirlo deja salas de división con sillas vacías.
  */
 export async function presentesEnSala(liveClassId: string): Promise<string[]> {
+  // Con LiveKit lo sabe el servidor de video: quién está dentro de la sala
+  // principal en este instante, sin contar a quien la dirige.
+  if (livekitConfigurado()) {
+    const dentro = await participantesDe(salaDeClase(liveClassId));
+    // Fuera quien dirige y los participantes ocultos (p. ej. el grabador).
+    const ids = [
+      ...new Set(
+        dentro
+          .filter((p) => p.attributes?.rol !== "anfitrion" && !p.permission?.hidden)
+          .map((p) => p.identity),
+      ),
+    ];
+    // Es la fuente de verdad aunque esté vacía: caer a la estimación por
+    // latidos repartía también a quien dirige la clase.
+    if (ids.length === 0) return [];
+    // Solo usuarios de la plataforma: una identidad ajena tumbaría el reparto.
+    const reales = await getDb()
+      .select({ id: users.id })
+      .from(users)
+      .where(inArray(users.id, ids));
+    return reales.map((u) => u.id);
+  }
+
   const db = getDb();
   const filas = await db
     .select({

@@ -32,6 +32,7 @@ type Pedido = { id: string; total: number; status: string; createdAt: string };
 const ROL_NOMBRE: Record<Rol, string> = {
   admin: "Administrador",
   psicologo: "Psicólogo",
+  profesor: "Profesor",
   aplicador: "Aplicador",
   cliente: "Cliente",
 };

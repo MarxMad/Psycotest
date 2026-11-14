@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { desc, eq, sql } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { auditLog, users } from "@/db/schema";
-import { requireStaff } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 
 /** Primer día del mes en curso, en ISO. */
 function inicioDeMes(): string {
@@ -23,7 +23,7 @@ const n = (v: unknown) => Number(v ?? 0);
 
 export async function GET() {
   try {
-    await requireStaff();
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

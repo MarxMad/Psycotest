@@ -15,7 +15,7 @@ export const users = pgTable("users", {
   /** Identificador de Privy (did:privy:...), si la cuenta se creó por ahí. */
   privyId: text("privy_id").unique(),
   /** Toda cuenta nace como cliente; al panel solo se llega si un admin la promueve. */
-  rol: text("rol", { enum: ["admin", "psicologo", "aplicador", "cliente"] }).notNull().default("cliente"),
+  rol: text("rol", { enum: ["admin", "psicologo", "profesor", "aplicador", "cliente"] }).notNull().default("cliente"),
   emailVerified: boolean("email_verified").notNull().default(false),
   createdAt: text("created_at").notNull(),
 });
@@ -263,14 +263,14 @@ export const vodEvents = pgTable("vod_events", {
   createdAt: text("created_at").notNull(),
 });
 
-// Clases en vivo (provider-agnostic: jitsi | daily | none)
+// Clases en vivo (provider-agnostic: livekit; jitsi | daily quedan de clases antiguas)
 export const liveClasses = pgTable("live_classes", {
   id: text("id").primaryKey(),
   courseId: text("course_id").references(() => courses.id),
   title: text("title").notNull(),
   scheduledAt: text("scheduled_at").notNull(),
   durationMinutes: integer("duration_minutes").notNull().default(60),
-  provider: text("provider", { enum: ["jitsi", "daily", "none"] }).notNull().default("none"),
+  provider: text("provider", { enum: ["livekit", "jitsi", "daily", "none"] }).notNull().default("none"),
   roomUrl: text("room_url"),
   /** @deprecated Usar roomUrl; se mantiene por compatibilidad de lecturas antiguas */
   dailyRoomUrl: text("daily_room_url"),

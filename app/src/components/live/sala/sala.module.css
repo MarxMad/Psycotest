@@ -1,0 +1,1174 @@
+/*
+ * Sala en vivo. Escenario oscuro —el video se ve mejor y cansa menos en
+ * clases largas— con el acento y la tipografía de la marca que la envuelve.
+ * Toma `--ch-accent` y `--ch-font-*` del canal; en el panel cae al azul MH.
+ */
+
+.sala {
+  --sala-fondo: #0a0e13;
+  --sala-superficie: #121821;
+  --sala-elevada: #1a2230;
+  --sala-linea: rgba(255, 255, 255, 0.08);
+  --sala-texto: #eaf0f6;
+  --sala-tenue: #94a3b5;
+  --sala-acento: var(--ch-accent, var(--brand-bright, #2d6a9f));
+  --sala-sobre-acento: #fff;
+  --sala-peligro: #e5484d;
+  --sala-ok: #3dd68c;
+  --sala-radio: 14px;
+  --sala-titulos: var(--ch-font-display, inherit);
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  background: var(--sala-fondo);
+  color: var(--sala-texto);
+  font-family: var(--ch-font-body, inherit);
+  overflow: hidden;
+}
+
+.conexion {
+  display: contents;
+}
+
+.tenue {
+  color: var(--sala-tenue);
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.aviso {
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--sala-acento) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sala-acento) 35%, transparent);
+  font-size: 0.875rem;
+}
+
+/* ------------------------------------------------------------- botones */
+
+.primario,
+.secundario,
+.peligroSolido {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: filter 0.15s, background 0.15s;
+}
+
+.primario {
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+}
+
+.primario:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.primario:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.secundario {
+  background: transparent;
+  color: var(--sala-texto);
+  border-color: var(--sala-linea);
+}
+
+.secundario:hover:not(:disabled) {
+  background: var(--sala-elevada);
+}
+
+.peligroSolido {
+  background: var(--sala-peligro);
+  color: #fff;
+}
+
+.peligro {
+  color: var(--sala-peligro) !important;
+}
+
+.boton,
+.botonApagado {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--sala-linea);
+  background: rgba(10, 14, 19, 0.7);
+  color: var(--sala-texto);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.botonApagado {
+  background: var(--sala-peligro);
+  border-color: transparent;
+}
+
+/* ------------------------------------------------------------- estados de página */
+
+.centro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.mensajeGrande {
+  font-family: var(--sala-titulos);
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  max-width: 34ch;
+  margin: 0;
+}
+
+.acciones {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.girando {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid var(--sala-linea);
+  border-top-color: var(--sala-acento);
+  animation: girar 0.9s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cerrarSala {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  color: var(--sala-tenue);
+  text-decoration: none;
+  font-size: 0.9rem;
+  z-index: 2;
+}
+
+.cerrarSala:hover {
+  color: var(--sala-texto);
+}
+
+/* ------------------------------------------------------------- antesala */
+
+.antesala {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: center;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 4rem clamp(1rem, 4vw, 2.5rem) 2rem;
+  overflow-y: auto;
+}
+
+.antesalaVista {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--sala-superficie);
+  border: 1px solid var(--sala-linea);
+}
+
+.antesalaVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+
+.antesalaAvatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.antesalaAvatar span,
+.avatar span {
+  display: grid;
+  place-items: center;
+  width: clamp(56px, 18%, 120px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sala-acento) 30%, var(--sala-elevada));
+  font-family: var(--sala-titulos);
+  font-size: clamp(1.1rem, 3vw, 2.4rem);
+  font-weight: 600;
+}
+
+.antesalaControles {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+}
+
+.medidor {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 0.4rem;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--sala-linea);
+  overflow: hidden;
+}
+
+.medidor span {
+  display: block;
+  height: 100%;
+  background: var(--sala-ok);
+  transform-origin: left;
+  transition: transform 80ms linear;
+}
+
+.antesalaDatos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.antesalaEtiqueta {
+  margin: 0;
+  color: var(--sala-acento);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.antesalaTitulo {
+  margin: 0;
+  font-family: var(--sala-titulos);
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--sala-tenue);
+}
+
+.campo select,
+.campoEnLinea input,
+.dinamicaNueva select,
+.dinamicaNueva input,
+.chatForm input {
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--sala-texto);
+  background: var(--sala-superficie);
+  border: 1px solid var(--sala-linea);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+  min-width: 0;
+}
+
+.campo select:disabled {
+  opacity: 0.5;
+}
+
+/* ------------------------------------------------------------- dentro */
+
+.dentro {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--sala-linea);
+}
+
+.encabezadoTitulo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.encabezadoTitulo h1 {
+  margin: 0;
+  font-family: var(--sala-titulos);
+  font-size: 1.05rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.encabezadoEstado {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.enVivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sala-peligro) 18%, transparent);
+  color: #ff8f93;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: latir 1.6s ease-in-out infinite;
+}
+
+@keyframes latir {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.grabando {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--sala-peligro);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.insigniaSala {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sala-acento) 22%, transparent);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.insigniaSala button,
+.franja button,
+.franjaAcento button {
+  font: inherit;
+  font-size: 0.78rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.franja,
+.franjaAcento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  background: var(--sala-elevada);
+  text-align: center;
+}
+
+.franjaAcento {
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+}
+
+.cuerpo {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.cuerpo[data-panel] {
+  grid-template-columns: minmax(0, 1fr) 360px;
+}
+
+.escenario {
+  min-height: 0;
+  min-width: 0;
+  padding: 0.75rem;
+  display: flex;
+}
+
+/* ------------------------------------------------------------- mosaico */
+
+.mosaico {
+  flex: 1;
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(var(--columnas), minmax(0, 1fr));
+  grid-template-rows: repeat(var(--filas), minmax(0, 1fr));
+  min-height: 0;
+}
+
+.mosaicoCelda,
+.mosaicoCompacto {
+  position: relative;
+  border-radius: var(--sala-radio);
+  overflow: hidden;
+  background: var(--sala-superficie);
+  min-height: 0;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  transition: outline-color 0.15s;
+}
+
+.mosaicoCelda[data-hablando],
+.mosaicoCompacto[data-hablando] {
+  outline-color: var(--sala-acento);
+}
+
+.mosaicoCelda[data-mano],
+.mosaicoCompacto[data-mano] {
+  outline-color: #f5b83d;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video[data-propio] {
+  transform: scaleX(-1);
+}
+
+.avatar {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.etiqueta {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  max-width: calc(100% - 1rem);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(10, 14, 19, 0.72);
+  backdrop-filter: blur(6px);
+  font-size: 0.78rem;
+}
+
+.nombre {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.insignia {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 6px;
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.mano {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f5b83d;
+  color: #1a1206;
+  animation: saludar 1s ease-in-out 2;
+}
+
+@keyframes saludar {
+  25% {
+    transform: rotate(-14deg);
+  }
+  75% {
+    transform: rotate(14deg);
+  }
+}
+
+.mas {
+  display: grid;
+  place-items: center;
+  border-radius: var(--sala-radio);
+  background: var(--sala-superficie);
+  color: var(--sala-tenue);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------- enfoque */
+
+.enfoque {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 200px;
+  gap: 0.6rem;
+  min-height: 0;
+}
+
+.enfoquePrincipal {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+}
+
+.tira {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.mosaicoCompacto {
+  aspect-ratio: 16 / 10;
+  flex-shrink: 0;
+}
+
+.mosaicoCompacto .avatar span {
+  width: 44px;
+  font-size: 1rem;
+}
+
+.tira .mas {
+  aspect-ratio: 16 / 6;
+  flex-shrink: 0;
+}
+
+.pantalla {
+  position: relative;
+  flex: 1;
+  border-radius: var(--sala-radio);
+  overflow: hidden;
+  background: #000;
+}
+
+.pantallaVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pizarra {
+  flex: 1;
+  display: flex;
+  border-radius: var(--sala-radio);
+  overflow: hidden;
+  background: #fff;
+  color: #1a2230;
+  padding: 0.5rem;
+  min-height: 0;
+}
+
+/* ------------------------------------------------------------- panel lateral */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid var(--sala-linea);
+  background: var(--sala-superficie);
+}
+
+.panelEncabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--sala-linea);
+}
+
+.panelEncabezado h2 {
+  margin: 0;
+  font-family: var(--sala-titulos);
+  font-size: 1rem;
+}
+
+.panelEncabezado button {
+  background: none;
+  border: none;
+  color: var(--sala-tenue);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.panelCuerpo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.panelCuerpo p {
+  margin: 0;
+}
+
+.panelFila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.campoEnLinea {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.campoEnLinea input {
+  width: 4.5rem;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.persona {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.4rem;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.persona:hover {
+  background: var(--sala-elevada);
+}
+
+.personaAvatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--sala-acento) 30%, var(--sala-elevada));
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.personaNombre {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.personaNombre em {
+  color: var(--sala-tenue);
+  font-style: normal;
+}
+
+.iconoMano {
+  color: #f5b83d;
+}
+
+.personaAcciones {
+  display: flex;
+  gap: 0.25rem;
+  width: 100%;
+  padding-left: 2.6rem;
+}
+
+.personaAcciones button {
+  font: inherit;
+  font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--sala-linea);
+  background: transparent;
+  color: var(--sala-texto);
+  cursor: pointer;
+}
+
+.personaAcciones button:hover {
+  background: var(--sala-fondo);
+}
+
+.division {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--sala-linea);
+}
+
+/* chat */
+
+.chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.chatMensajes {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mensaje,
+.mensajePropio {
+  max-width: 88%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mensajePropio {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.mensaje p,
+.mensajePropio p {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 14px;
+  background: var(--sala-elevada);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.mensajePropio p {
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+}
+
+.mensajeAutor {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--sala-tenue);
+}
+
+.chatForm {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--sala-linea);
+}
+
+.chatForm input {
+  flex: 1;
+}
+
+.dinamica .chatForm {
+  padding: 0;
+  border: 0;
+}
+
+/* dinámicas */
+
+.dinamicaNueva {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--sala-linea);
+}
+
+.dinamica {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dinamicaTipo {
+  color: var(--sala-acento) !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.dinamicaPregunta {
+  font-family: var(--sala-titulos);
+  font-size: 1.15rem;
+  line-height: 1.3;
+}
+
+.respuesta {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: var(--sala-elevada);
+  font-size: 0.875rem;
+}
+
+.respuesta strong {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--sala-tenue);
+}
+
+/* ------------------------------------------------------------- barra de controles */
+
+.barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem 0.8rem;
+  border-top: 1px solid var(--sala-linea);
+}
+
+.barraGrupo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.control {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border: none;
+  background: var(--sala-elevada);
+  color: var(--sala-texto);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.control:hover {
+  background: color-mix(in srgb, var(--sala-elevada) 70%, #fff 8%);
+}
+
+.control:active {
+  transform: scale(0.95);
+}
+
+.control:focus-visible,
+.botonSalir:focus-visible,
+.botonTerminar:focus-visible {
+  outline: 2px solid var(--sala-acento);
+  outline-offset: 2px;
+}
+
+.control[data-apagado] {
+  background: var(--sala-peligro);
+  color: #fff;
+}
+
+.control[data-resaltado] {
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+}
+
+.control[data-peligro] {
+  background: var(--sala-peligro);
+  color: #fff;
+}
+
+.controlEtiqueta {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+}
+
+.control:hover .controlEtiqueta,
+.control:focus-visible .controlEtiqueta {
+  opacity: 1;
+}
+
+.contador {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+
+.control[data-resaltado] .contador {
+  background: #fff;
+  color: #000;
+}
+
+.botonSalir {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 46px;
+  border-radius: 14px;
+  border: none;
+  background: var(--sala-peligro);
+  color: #fff;
+  cursor: pointer;
+}
+
+.botonTerminar {
+  height: 46px;
+  padding: 0 1rem;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--sala-peligro) 60%, transparent);
+  background: transparent;
+  color: #ff8f93;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.terminarEnvoltura {
+  position: relative;
+}
+
+.confirmar {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  width: 280px;
+  padding: 1rem;
+  border-radius: 14px;
+  background: var(--sala-elevada);
+  border: 1px solid var(--sala-linea);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  z-index: 5;
+}
+
+.confirmar p {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.confirmar div {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.activarAudio {
+  position: absolute;
+  top: 4.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--sala-acento);
+  color: var(--sala-sobre-acento);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* ------------------------------------------------------------- teléfono y tableta */
+
+@media (max-width: 900px) {
+  .antesala {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    padding-top: 3.5rem;
+  }
+
+  .enfoque {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .tira {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .mosaicoCompacto {
+    width: 120px;
+  }
+
+  .tira .mas {
+    width: 80px;
+    aspect-ratio: auto;
+  }
+
+  /* El panel se vuelve una hoja que sube desde abajo. */
+  .cuerpo[data-panel] {
+    grid-template-columns: minmax(0, 1fr);
+    position: relative;
+  }
+
+  .panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: min(70%, 520px);
+    border-left: none;
+    border-top: 1px solid var(--sala-linea);
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.5);
+    z-index: 4;
+  }
+}
+
+@media (max-width: 640px) {
+  .encabezado {
+    padding: 0.55rem 0.75rem;
+  }
+
+  .encabezadoTitulo h1 {
+    font-size: 0.95rem;
+  }
+
+  .escenario {
+    padding: 0.4rem;
+  }
+
+  .mosaico {
+    gap: 0.35rem;
+  }
+
+  /* Dos filas: arriba lo de la persona (micro, cámara, salir), abajo las
+     herramientas de la clase. Así el botón de salir nunca queda fuera. */
+  .barra {
+    padding: 0.5rem 0.5rem 0.7rem;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .barraGrupo:nth-child(2) {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .barraGrupo {
+    gap: 0.3rem;
+  }
+
+  .control {
+    width: 42px;
+    height: 42px;
+  }
+
+  .botonTerminar {
+    padding: 0 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .controlEtiqueta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .punto,
+  .mano,
+  .girando {
+    animation: none;
+  }
+}

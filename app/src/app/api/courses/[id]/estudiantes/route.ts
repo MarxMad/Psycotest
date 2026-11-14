@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { desc, eq } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { enrollments, users } from "@/db/schema";
-import { requireStaff } from "@/lib/auth";
+import { requireUser } from "@/lib/auth";
 
 /** Inscritos de un curso con su nombre y correo, los más recientes primero. */
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    await requireStaff();
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

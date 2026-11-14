@@ -9,7 +9,7 @@ type Params = { params: Promise<{ id: string }> };
 export async function PATCH(request: Request, { params }: Params) {
   let actor;
   try {
-    actor = await requireUser(["admin", "psicologo"]);
+    actor = await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

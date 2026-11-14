@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/db/index";
-import { courses } from "@/db/schema";
+import { courses, users } from "@/db/schema";
 import { and, eq, ne } from "drizzle-orm";
 import { logAudit, requireUser } from "@/lib/auth";
 
@@ -15,6 +15,7 @@ const EDITABLES = [
   "thumbnailUrl",
   "instructorName",
   "instructorBio",
+  "instructorId",
   "level",
   "modalidad",
   "estandarClave",
@@ -45,7 +46,7 @@ export async function GET(request: Request, props: { params: Promise<{ id: strin
 export async function PATCH(request: Request, props: { params: Promise<{ id: string }> }) {
   let actor;
   try {
-    actor = await requireUser(["admin", "psicologo"]);
+    actor = await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
@@ -86,6 +87,24 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
         return NextResponse.json({ error: "Precio inválido" }, { status: 400 });
       }
     }
+    // El profesor asignado es quien da las clases en vivo del curso.
+    if ("instructorId" in cambios) {
+      const instructorId = cambios.instructorId ? String(cambios.instructorId) : null;
+      if (instructorId) {
+        const [persona] = await db
+          .select({ rol: users.rol })
+          .from(users)
+          .where(eq(users.id, instructorId))
+          .limit(1);
+        if (!persona || (persona.rol !== "profesor" && persona.rol !== "admin")) {
+          return NextResponse.json(
+            { error: "El instructor asignado debe tener rol de profesor" },
+            { status: 400 },
+          );
+        }
+      }
+      cambios.instructorId = instructorId;
+    }
     // El catálogo lee `published` y el cobro lee `status`: se mueven juntos.
     if ("status" in cambios) cambios.published = cambios.status === "published";
 
@@ -106,7 +125,7 @@ export async function PATCH(request: Request, props: { params: Promise<{ id: str
 
 export async function DELETE(request: Request, props: { params: Promise<{ id: string }> }) {
   try {
-    await requireUser(["admin", "psicologo"]);
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

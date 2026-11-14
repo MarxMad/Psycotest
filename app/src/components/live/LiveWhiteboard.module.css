@@ -50,3 +50,16 @@
     height: 360px;
   }
 }
+
+/* Dentro del escenario de la sala: llena el espacio disponible. */
+.lleno {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+}
+
+.lleno .canvas {
+  flex: 1;
+  height: auto;
+  min-height: 0;
+}

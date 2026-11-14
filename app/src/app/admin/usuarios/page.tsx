@@ -14,6 +14,7 @@ import s from "./usuarios.module.css";
 const ROL_NOMBRE: Record<Rol, string> = {
   admin: "Administrador",
   psicologo: "Psicólogo",
+  profesor: "Profesor",
   aplicador: "Aplicador",
   cliente: "Cliente",
 };

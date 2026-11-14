@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import s from "./Sidebar.module.css";
 import { APP_NAME } from "@/lib/brand";
+import { NOMBRE_ROL, puedeVerSeccion, type Rol } from "@/lib/auth-rutas";
 import type { ReactNode } from "react";
 
 interface SidebarItemProps {
@@ -67,10 +68,10 @@ interface SidebarProps {
 }
 
 /**
- * Menú del panel. `soloAdmin` marca las secciones que el psicólogo no abre
- * (el middleware también las bloquea; esto solo evita mostrar un camino muerto).
+ * Menú del panel. Cada rol ve solo lo que puede abrir, con la misma regla que
+ * aplican el middleware y el layout (esto solo evita mostrar caminos muertos).
  */
-const NAV: { href: string; label: string; icon: ReactNode; soloAdmin?: boolean }[] = [
+const NAV: { href: string; label: string; icon: ReactNode }[] = [
   { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
   { href: "/admin/pruebas", label: "Pruebas", icon: <FlaskConical size={20} /> },
   { href: "/admin/participantes", label: "Participantes", icon: <UserRound size={20} /> },
@@ -78,9 +79,9 @@ const NAV: { href: string; label: string; icon: ReactNode; soloAdmin?: boolean }
   { href: "/admin/clases-vivo", label: "Clases en Vivo", icon: <Video size={20} /> },
   { href: "/admin/expedientes", label: "Expedientes", icon: <FolderOpen size={20} /> },
   { href: "/admin/canales", label: "Canales", icon: <Globe2 size={20} /> },
-  { href: "/admin/pagos", label: "Pagos", icon: <CreditCard size={20} />, soloAdmin: true },
-  { href: "/admin/marketing", label: "Marketing", icon: <Mail size={20} />, soloAdmin: true },
-  { href: "/admin/usuarios", label: "Usuarios", icon: <Users size={20} />, soloAdmin: true },
+  { href: "/admin/pagos", label: "Pagos", icon: <CreditCard size={20} /> },
+  { href: "/admin/marketing", label: "Marketing", icon: <Mail size={20} /> },
+  { href: "/admin/usuarios", label: "Usuarios", icon: <Users size={20} /> },
 ];
 
 export function Sidebar({
@@ -93,8 +94,8 @@ export function Sidebar({
 }: SidebarProps) {
   // En drawer móvil siempre mostramos labels aunque el desktop esté colapsado
   const compact = isCollapsed && !mobileOpen;
-  const esAdmin = user?.rol === "admin";
-  const navVisible = NAV.filter((item) => !item.soloAdmin || esAdmin);
+  const rol = user?.rol as Rol | undefined;
+  const navVisible = rol ? NAV.filter((item) => puedeVerSeccion(rol, item.href)) : [];
 
   return (
     <aside
@@ -110,7 +111,7 @@ export function Sidebar({
               exit={{ opacity: 0 }}
             >
               <h2 className={s.headerTitle}>{APP_NAME}</h2>
-              <span className={s.headerSubtitle}>Panel Admin</span>
+              <span className={s.headerSubtitle}>{rol ? NOMBRE_ROL[rol] ?? "Panel" : "Panel"}</span>
             </motion.div>
           )}
           <button

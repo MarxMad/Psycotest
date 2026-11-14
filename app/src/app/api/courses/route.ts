@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { asc, eq } from "drizzle-orm";
 import { getReadyDb } from "@/db/index";
 import { courseCategories, courses } from "@/db/schema";
-import { requireUser } from "@/lib/auth";
+import { getSessionUser, requireUser } from "@/lib/auth";
 
 /** Turso exige category_id NOT NULL; usa la pedida, la primera existente o crea General. */
 async function resolveCategoryId(
@@ -45,10 +45,20 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
-    const allCourses =
+    let allCourses =
       status && (status === "draft" || status === "published" || status === "archived")
         ? await db.select().from(courses).where(eq(courses.status, status))
         : await db.select().from(courses);
+
+    // ?asignados=1: los cursos en los que quien pregunta puede programar
+    // clases en vivo. El admin, todos; el profesor, los que lleva.
+    if (searchParams.get("asignados") === "1") {
+      const user = await getSessionUser();
+      if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+      if (user.rol !== "admin") {
+        allCourses = allCourses.filter((c) => c.instructorId === user.id);
+      }
+    }
 
     return NextResponse.json({ courses: allCourses });
   } catch (error) {
@@ -59,7 +69,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    await requireUser(["admin", "psicologo"]);
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }

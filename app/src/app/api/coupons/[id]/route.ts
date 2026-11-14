@@ -8,7 +8,7 @@ type Params = { params: Promise<{ id: string }> };
 
 async function staff() {
   try {
-    return await requireUser(["admin", "psicologo"]);
+    return await requireUser(["admin"]);
   } catch {
     return null;
   }

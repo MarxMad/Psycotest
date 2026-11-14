@@ -1,17 +1,41 @@
 /**
  * Reglas de a dónde va cada rol. Módulo sin dependencias de servidor para
- * que la pantalla de login y el middleware usen exactamente la misma regla:
- * tenerla duplicada en el cliente ya hizo que el psicólogo cayera en el área
- * de alumno en vez del panel.
+ * que la pantalla de login, el middleware, el layout del panel y el menú usen
+ * exactamente la misma regla: tenerla duplicada en el cliente ya hizo que el
+ * psicólogo cayera en el área de alumno en vez del panel.
  */
 
-export type Rol = "admin" | "psicologo" | "aplicador" | "cliente";
+export type Rol = "admin" | "psicologo" | "profesor" | "aplicador" | "cliente";
 
 /** Todos los roles, en orden de privilegio. */
-export const ROLES: readonly Rol[] = ["admin", "psicologo", "aplicador", "cliente"];
+export const ROLES: readonly Rol[] = ["admin", "psicologo", "profesor", "aplicador", "cliente"];
 
-/** Quienes operan el panel. */
+/** Nombre de cada rol para mostrar en pantalla. */
+export const NOMBRE_ROL: Record<Rol, string> = {
+  admin: "Administrador",
+  psicologo: "Psicólogo",
+  profesor: "Profesor",
+  aplicador: "Aplicador",
+  cliente: "Cliente / alumno",
+};
+
+/** Quienes operan la parte de Psicología Aplicada (pruebas). */
 export const PERSONAL: Rol[] = ["admin", "psicologo"];
+
+/**
+ * Secciones del panel que abre cada rol. El administrador abre todo.
+ *
+ * - psicólogo: solo Psicología Aplicada — pruebas y participantes.
+ * - profesor: solo las clases en vivo de los cursos que tiene asignados.
+ *
+ * Cursos, canales, expedientes, pagos, marketing y usuarios son del admin.
+ */
+const SECCIONES: Record<Exclude<Rol, "admin">, readonly string[]> = {
+  psicologo: ["/admin/pruebas", "/admin/participantes"],
+  profesor: ["/admin/clases-vivo"],
+  aplicador: [],
+  cliente: [],
+};
 
 /**
  * El personal opera el panel; el alumno, la empresa cliente y el aplicador,
@@ -19,14 +43,20 @@ export const PERSONAL: Rol[] = ["admin", "psicologo"];
  * administrador lo decidió.
  */
 export function operaElPanel(rol: Rol): boolean {
-  return rol === "admin" || rol === "psicologo";
+  return rol === "admin" || SECCIONES[rol]?.length > 0;
 }
 
-/** Secciones del panel reservadas al administrador. */
-export const SOLO_ADMIN = ["/admin/usuarios", "/admin/pagos", "/admin/marketing"] as const;
+/** ¿Puede este rol abrir esta ruta del panel? */
+export function puedeVerSeccion(rol: Rol, pathname: string): boolean {
+  if (rol === "admin") return true;
+  const propias = SECCIONES[rol] ?? [];
+  return propias.some((r) => pathname === r || pathname.startsWith(`${r}/`));
+}
 
-export function esSoloAdmin(pathname: string): boolean {
-  return SOLO_ADMIN.some((r) => pathname.startsWith(r));
+/** Primera pantalla del panel para cada rol. */
+export function inicioDelPanel(rol: Rol): string {
+  if (rol === "admin") return "/admin";
+  return SECCIONES[rol]?.[0] ?? "/mi-cuenta";
 }
 
 /**
@@ -36,7 +66,7 @@ export function esSoloAdmin(pathname: string): boolean {
  * pertenece y lo deja en la sección que le corresponde.
  */
 export function homePathForUser(user: { rol: Rol }): string {
-  return operaElPanel(user.rol) ? "/admin" : "/mi-cuenta";
+  return operaElPanel(user.rol) ? inicioDelPanel(user.rol) : "/mi-cuenta";
 }
 
 /** Resuelve `?next=` sin permitir que alguien llegue donde no le toca. */
@@ -51,7 +81,7 @@ export function resolvePostLoginPath(
 
   if (next.startsWith("/admin")) {
     if (!operaElPanel(user.rol)) return fallback;
-    if (user.rol !== "admin" && esSoloAdmin(next)) return "/admin";
+    if (!puedeVerSeccion(user.rol, next)) return inicioDelPanel(user.rol);
     return next;
   }
 

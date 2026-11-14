@@ -10,6 +10,8 @@ type Props = {
   breakoutRoomId?: string | null;
   /** El instructor dibuja; el resto ve la pizarra y se le actualiza sola. */
   isAdmin?: boolean;
+  /** Ocupa todo el espacio de su contenedor (el escenario de la sala). */
+  llenar?: boolean;
 };
 
 type Documento = {
@@ -20,7 +22,7 @@ type Documento = {
 const ESPERA_GUARDADO = 1500;
 const ESPERA_REFRESCO = 6000;
 
-export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin = false }: Props) {
+export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin = false, llenar = false }: Props) {
   const editorRef = useRef<Editor | null>(null);
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Marca del documento sobre el que estamos trabajando: detecta pisadas. */
@@ -237,7 +239,7 @@ export function LiveWhiteboard({ liveClassId, breakoutRoomId, isAdmin = false }:
   }
 
   return (
-    <div className={styles.shell}>
+    <div className={llenar ? `${styles.shell} ${styles.lleno}` : styles.shell}>
       <div className={styles.toolbar}>
         {isAdmin ? (
           <>

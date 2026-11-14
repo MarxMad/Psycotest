@@ -23,6 +23,7 @@ type Formulario = {
   thumbnailUrl: string;
   instructorName: string;
   instructorBio: string;
+  instructorId: string;
   level: Course["level"];
   modalidad: Course["modalidad"];
   estandarClave: string;
@@ -44,6 +45,7 @@ function desdeCurso(c: Course): Formulario {
     thumbnailUrl: c.thumbnailUrl ?? "",
     instructorName: c.instructorName,
     instructorBio: c.instructorBio ?? "",
+    instructorId: c.instructorId ?? "",
     level: c.level,
     modalidad: c.modalidad,
     estandarClave: c.estandarClave ?? "",
@@ -63,6 +65,7 @@ export default function EditarCursoPage() {
   const router = useRouter();
   const [form, setForm] = useState<Formulario | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [profesores, setProfesores] = useState<{ id: string; nombre: string; email: string }[]>([]);
   const [cargando, setCargando] = useState(true);
   const [guardando, setGuardando] = useState(false);
   const [error, setError] = useState("");
@@ -70,12 +73,22 @@ export default function EditarCursoPage() {
   useEffect(() => {
     async function load() {
       try {
-        const [rc, rcat] = await Promise.all([
+        const [rc, rcat, ru] = await Promise.all([
           fetch(`/api/courses/${id}`),
           fetch("/api/course-categories"),
+          fetch("/api/users"),
         ]);
         if (rc.ok) setForm(desdeCurso((await rc.json()).course));
         if (rcat.ok) setCategorias((await rcat.json()).categories ?? []);
+        if (ru.ok) {
+          const lista = ((await ru.json()).users ?? []) as {
+            id: string;
+            nombre: string;
+            email: string;
+            rol: string;
+          }[];
+          setProfesores(lista.filter((u) => u.rol === "profesor"));
+        }
       } catch (e) {
         console.error(e);
       }
@@ -108,6 +121,7 @@ export default function EditarCursoPage() {
           thumbnailUrl: vacioANull(form.thumbnailUrl),
           instructorName: form.instructorName.trim() || "Instructor",
           instructorBio: vacioANull(form.instructorBio),
+          instructorId: form.instructorId || null,
           level: form.level,
           modalidad: form.modalidad,
           estandarClave: vacioANull(form.estandarClave),
@@ -363,6 +377,26 @@ export default function EditarCursoPage() {
                 onChange={(e) => set("instructorName", e.target.value)}
                 className={s.input}
               />
+            </div>
+            <div className={s.field}>
+              <label htmlFor="instructorId" className={s.label}>Profesor de las clases en vivo</label>
+              <select
+                id="instructorId"
+                value={form.instructorId}
+                onChange={(e) => set("instructorId", e.target.value)}
+                className={s.input}
+              >
+                <option value="">Sin profesor (solo el administrador)</option>
+                {profesores.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.nombre} · {p.email}
+                  </option>
+                ))}
+              </select>
+              <small className={s.label} style={{ fontWeight: 400, opacity: 0.75 }}>
+                Podrá programar y dar las clases en vivo de este curso. Para que aparezca aquí,
+                dale el rol «Profesor» en Usuarios.
+              </small>
             </div>
             <div className={s.field}>
               <label htmlFor="instructorBio" className={s.label}>Semblanza</label>

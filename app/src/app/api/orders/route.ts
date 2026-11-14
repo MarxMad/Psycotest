@@ -7,7 +7,7 @@ import { requireUser } from "@/lib/auth";
 /** Órdenes de compra con comprador, cupón y cursos incluidos. */
 export async function GET(request: Request) {
   try {
-    await requireUser(["admin", "psicologo"]);
+    await requireUser(["admin"]);
   } catch {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
   }
