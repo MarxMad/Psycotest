@@ -3,7 +3,6 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { APP_NAME } from "@/lib/brand";
 import styles from "@/styles/conocer-pages.module.css";
 
 type Result = {
@@ -33,7 +32,7 @@ export default function VerificarPage() {
       <div className={styles.shell} data-anime="page">
         <main className={styles.main}>
           <header className={styles.hero} data-anime="hero">
-            <p className={styles.eyebrow}>{APP_NAME} · Verificación CONOCER</p>
+            <p className={styles.eyebrow}>CEDUCT · Verificación CONOCER</p>
             <h1>Constancia</h1>
           </header>
 

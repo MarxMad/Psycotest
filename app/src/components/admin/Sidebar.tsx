@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import s from "./Sidebar.module.css";
+import { APP_NAME } from "@/lib/brand";
 import type { ReactNode } from "react";
 
 interface SidebarItemProps {
@@ -108,7 +109,7 @@ export function Sidebar({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             >
-              <h2 className={s.headerTitle}>Sistema Psic</h2>
+              <h2 className={s.headerTitle}>{APP_NAME}</h2>
               <span className={s.headerSubtitle}>Panel Admin</span>
             </motion.div>
           )}

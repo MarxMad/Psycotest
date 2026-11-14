@@ -42,9 +42,9 @@
   font-weight: 700;
   color: var(--admin-text);
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* El nombre de la Sociedad no cabe en una línea: se parte en dos. */
+  line-height: 1.2;
+  text-wrap: balance;
 }
 
 .headerSubtitle {

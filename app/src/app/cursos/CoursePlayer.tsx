@@ -41,6 +41,7 @@ export function CoursePlayer({
   const [marking, setMarking] = useState(false);
   const [permanence, setPermanence] = useState<number | null>(null);
   const [couponCode, setCouponCode] = useState<string | null>(null);
+  const [aviso, setAviso] = useState<string | null>(null);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -94,6 +95,8 @@ export function CoursePlayer({
     };
   }, [courseSlug, currentLessonId]);
 
+  useEffect(() => setAviso(null), [currentLessonId]);
+
   async function markComplete() {
     setMarking(true);
     const res = await fetch("/api/courses/progress", {
@@ -104,6 +107,14 @@ export function CoursePlayer({
     if (res.ok) {
       const data = await res.json().catch(() => ({}));
       if (data.coupon?.code) setCouponCode(data.coupon.code);
+      if (typeof data.permanencePercent === "number") setPermanence(data.permanencePercent);
+      setAviso(
+        data.leccionCompletada === false
+          ? `Para darla por vista hay que ver al menos el 80 % del video. Llevas ${data.permanencePercent ?? 0} %.`
+          : null,
+      );
+    } else {
+      setAviso("No se pudo guardar. Inténtalo de nuevo.");
     }
     setMarking(false);
     router.refresh();
@@ -173,6 +184,11 @@ export function CoursePlayer({
             </Link>
           ) : null}
         </div>
+        {aviso && (
+          <p className={styles.progressLabel} role="status">
+            {aviso}
+          </p>
+        )}
       </main>
     </div>
   );

@@ -3,8 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { APP_NAME } from "@/lib/brand";
-import { BrandDot, TopNav } from "./TopNav";
+import { TopNav } from "./TopNav";
 
 /** Rutas que traen su propio encabezado: la barra global sobraría encima. */
 const CON_ENCABEZADO_PROPIO = [
@@ -48,12 +47,6 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
       {!hide ? (
         <header className="topbar">
           <div className="topbar-in">
-            {/* Rótulo, no enlace: el índice de marcas es sólo demo y no debe
-                alcanzarse desde ninguna página pública. */}
-            <span className="brand" title={APP_NAME}>
-              <BrandDot />
-              <span className="brand-text">{APP_NAME}</span>
-            </span>
             <div className="topbar-actions">
               <ThemeToggle />
               {!aplicante && <TopNav />}

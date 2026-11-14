@@ -1,53 +1,29 @@
 "use client";
 
-import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { AmbientBackground } from "@/components/AmbientBackground";
 import { APP_NAME } from "@/lib/brand";
-import { resolvePostLoginPath, type Rol } from "@/lib/auth-rutas";
 import { PrivyLoginButton } from "@/components/auth/PrivyLoginButton";
 import { PARAM_SALIDA } from "@/lib/salir";
 import s from "./login.module.css";
 
-type LoginUser = { id: string; email: string; nombre: string; rol: Rol };
-
+/**
+ * El equipo entra sólo con Privy: un código al correo, sin contraseñas. El
+ * botón canjea la sesión de Privy por la de la plataforma y redirige según
+ * el rol.
+ */
 function LoginForm() {
-  const router = useRouter();
   const params = useSearchParams();
   const nextParam = params.get("next");
   // Llega de pulsar «Salir»: hay que cerrar también la sesión de Privy.
   const salir = params.get(PARAM_SALIDA) === "1";
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-    setLoading(false);
-    if (!res.ok) {
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
-      setError(data.error ?? "Correo o contraseña incorrectos");
-      return;
-    }
-    const data = (await res.json()) as { user?: LoginUser };
-    const rol: Rol = data.user?.rol ?? "cliente";
-    router.push(resolvePostLoginPath({ rol }, nextParam));
-    router.refresh();
-  }
+  const privyListo = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
   return (
-    <motion.form
+    <motion.div
       className={s.card}
-      onSubmit={onSubmit}
       initial={{ opacity: 0, y: 18, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
@@ -55,55 +31,14 @@ function LoginForm() {
       <span className="eyebrow">{APP_NAME}</span>
       <h1>Inicio de sesión</h1>
 
-      <PrivyLoginButton next={nextParam || undefined} salir={salir} />
-
-      <div className={s.separador}>
-        <span>o con tu contraseña</span>
-      </div>
-      <label>
-        Correo
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          autoComplete="username"
-          required
-        />
-      </label>
-      <label>
-        Contraseña
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          autoComplete="current-password"
-          required
-        />
-      </label>
-
-      <AnimatePresence>
-        {error && (
-          <motion.p
-            className={s.error}
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            {error}
-          </motion.p>
-        )}
-      </AnimatePresence>
-
-      <motion.button
-        type="submit"
-        className="btn btn-primary"
-        disabled={loading}
-        whileTap={{ scale: 0.98 }}
-      >
-        {loading ? "Entrando…" : "Entrar"}
-      </motion.button>
-
-    </motion.form>
+      {privyListo ? (
+        <PrivyLoginButton next={nextParam || undefined} salir={salir} />
+      ) : (
+        <p className={s.error} role="alert">
+          El acceso no está configurado: falta NEXT_PUBLIC_PRIVY_APP_ID.
+        </p>
+      )}
+    </motion.div>
   );
 }
 

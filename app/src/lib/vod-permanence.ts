@@ -11,6 +11,9 @@ import {
 /** El reproductor avisa cada 15 s; el margen cubre la latencia de red. */
 const MAX_AVANCE_POR_LATIDO = 20;
 
+/** Porcentaje del video que hay que ver para dar la lección por vista. */
+export const PERMANENCIA_MINIMA = 80;
+
 function id(prefix: string) {
   return `${prefix}_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`;
 }
@@ -56,23 +59,38 @@ export async function recordVodEvent(input: {
     )
     .limit(1);
 
+  // Una lección con video sólo se completa viéndolo: llegar al final
+  // adelantando, o pulsar «Marcar como vista», no basta. Las que no tienen
+  // video (lectura, examen, o el video aún no sube) se marcan a mano.
+  const exigeVideo =
+    Boolean(lesson?.videoUrl) &&
+    (lesson?.durationSeconds ?? 0) > 0 &&
+    (lesson?.type === "video" || lesson?.type === "live_replay");
+
   // Se acredita lo que avanzó el video desde el último aviso, nunca más de un
   // intervalo: un aviso repetido no suma y saltar hacia adelante no cuenta.
   let watched = progress?.watchedSeconds || 0;
-  if (input.eventType === "heartbeat") {
+  if (input.eventType === "heartbeat" || (exigeVideo && input.eventType === "ended")) {
     const avance = position - (progress?.lastPositionSeconds ?? 0);
     if (avance > 0 && avance <= MAX_AVANCE_POR_LATIDO) {
       watched = Math.min(duration, watched + avance);
     }
   }
-  if (input.eventType === "ended") {
+  if (!exigeVideo && input.eventType === "ended") {
     watched = Math.max(watched, duration);
   }
 
   const permanencePercent = Math.min(100, Math.round((watched / duration) * 100));
-  const lastPosition = position;
+  // «Marcar como vista» llega como «ended» sin posición: no debe mover la
+  // marca desde la que se mide el siguiente avance.
+  const lastPosition =
+    exigeVideo && input.eventType === "ended" && position === 0
+      ? progress?.lastPositionSeconds ?? 0
+      : position;
   const completed =
-    permanencePercent >= 80 || input.eventType === "ended" || Boolean(progress?.completed);
+    Boolean(progress?.completed) ||
+    permanencePercent >= PERMANENCIA_MINIMA ||
+    (!exigeVideo && input.eventType === "ended");
 
   if (progress) {
     await db
@@ -140,5 +158,11 @@ export async function recordVodEvent(input: {
       .where(eq(courseEnrollments.id, input.enrollmentId));
   }
 
-  return { watchedSeconds: watched, permanencePercent, progressPercent };
+  return {
+    watchedSeconds: watched,
+    permanencePercent,
+    progressPercent,
+    leccionCompletada: completed,
+    exigeVideo,
+  };
 }
