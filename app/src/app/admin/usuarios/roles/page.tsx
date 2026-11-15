@@ -22,7 +22,7 @@ const ROLES: { id: Rol; label: string; descripcion: string }[] = [
   {
     id: "admin",
     label: "Administrador",
-    descripcion: "Acceso total: usuarios, cursos, pagos, canales y configuración.",
+    descripcion: "Acceso total: usuarios, cursos, pagos y configuración.",
   },
   {
     id: "psicologo",

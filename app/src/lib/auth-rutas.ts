@@ -28,7 +28,7 @@ export const PERSONAL: Rol[] = ["admin", "psicologo"];
  * - psicólogo: solo Psicología Aplicada — pruebas y participantes.
  * - profesor: solo las clases en vivo de los cursos que tiene asignados.
  *
- * Cursos, canales, expedientes, pagos, marketing y usuarios son del admin.
+ * Cursos, expedientes, pagos, marketing y usuarios son del admin.
  */
 const SECCIONES: Record<Exclude<Rol, "admin">, readonly string[]> = {
   psicologo: ["/admin/pruebas", "/admin/participantes"],

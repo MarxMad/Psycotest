@@ -43,7 +43,7 @@ import s from "./IgeLanding.module.css";
  * que hacemos a cómo lo hacemos, en qué formato, con qué respaldo y, al
  * final, el catálogo y el contacto.
  *
- * Los textos que se editan desde /admin/canales siguen mandando: portada,
+ * Los textos guardados en la base (channel-store) siguen mandando: portada,
  * consultoría, formatos, método, especialidades y contacto salen de
  * `content`. Lo fijo aquí es la puesta en escena.
  */

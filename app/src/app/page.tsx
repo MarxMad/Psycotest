@@ -4,7 +4,7 @@ import { MartinLanding } from "@/components/channels/MartinLanding";
 import { getChannelPage } from "@/lib/channel-store";
 import { CHANNELS } from "@/lib/channels";
 
-/** El contenido se edita desde /admin/canales: no se puede prerenderizar. */
+/** El contenido vive en la base (channel-store): no se puede prerenderizar. */
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {

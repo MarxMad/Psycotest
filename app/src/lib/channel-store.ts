@@ -2,7 +2,7 @@
  * Contenido editable de las páginas públicas (canales).
  *
  * Persiste en Postgres/Supabase, no en disco: el sistema de archivos de Vercel
- * es efímero y cualquier edición hecha desde /admin/canales se perdería en el
+ * es efímero y cualquier edición guardada en disco se perdería en el
  * siguiente deploy o cold start.
  *
  * Si la base no responde, se devuelve el contenido semilla para que la página

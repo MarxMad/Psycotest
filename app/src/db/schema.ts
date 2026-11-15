@@ -613,8 +613,9 @@ export type CourseEnrollment = typeof courseEnrollments.$inferSelect;
 export type LiveClass = typeof liveClasses.$inferSelect;
 
 /**
- * Contenido editable de cada página pública (canal), administrado desde
- * /admin/canales. Vive en la base porque el sistema de archivos de Vercel
+ * Contenido editable de cada página pública (canal). Ya no se edita desde el
+ * panel (se quitó para evitar cambios por error); se cambia con
+ * src/db/sembrar-canal.ts. Vive en la base porque el sistema de archivos de Vercel
  * es efímero: lo que se escriba en disco se pierde en el siguiente deploy.
  */
 export const channelPages = pgTable("channel_pages", {

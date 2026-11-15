@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   LogOut,
   FolderOpen,
-  Globe2,
   X,
 } from "lucide-react";
 import s from "./Sidebar.module.css";
@@ -78,7 +77,6 @@ const NAV: { href: string; label: string; icon: ReactNode }[] = [
   { href: "/admin/cursos", label: "Cursos", icon: <GraduationCap size={20} /> },
   { href: "/admin/clases-vivo", label: "Clases en Vivo", icon: <Video size={20} /> },
   { href: "/admin/expedientes", label: "Expedientes", icon: <FolderOpen size={20} /> },
-  { href: "/admin/canales", label: "Canales", icon: <Globe2 size={20} /> },
   { href: "/admin/pagos", label: "Pagos", icon: <CreditCard size={20} /> },
   { href: "/admin/marketing", label: "Marketing", icon: <Mail size={20} /> },
   { href: "/admin/usuarios", label: "Usuarios", icon: <Users size={20} /> },

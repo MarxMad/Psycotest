@@ -13,7 +13,7 @@ import { clasesDeCanal, estiloDeCanal } from "@/lib/tema-canal";
 import { getChannelPage } from "@/lib/channel-store";
 import { cursosVistaDeCanal } from "@/lib/cursos-vista";
 
-/** El contenido se edita desde /admin/canales: no se puede prerenderizar. */
+/** El contenido vive en la base (channel-store): no se puede prerenderizar. */
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ channel: string }> };

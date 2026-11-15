@@ -6,7 +6,7 @@
  *
  *   npm run canal:sembrar -- psicologia
  *
- * Ojo: pisa lo que se haya editado desde /admin/canales para ese canal.
+ * Ojo: pisa el contenido guardado en la base para ese canal.
  */
 import { config } from "dotenv";
 import { eq } from "drizzle-orm";
