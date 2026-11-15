@@ -4,10 +4,7 @@
 import json, pathlib
 
 IMG = json.loads(pathlib.Path("capturas/slides.json").read_text())
-DEST = pathlib.Path(
-    "/private/tmp/claude-501/-Users-gerryvela-Documents-PsycoTest/"
-    "69f7fc87-8d2c-43b0-acf5-1bc3ba7106f1/scratchpad/presentacion.html"
-)
+DEST = pathlib.Path("presentacion.html")
 
 
 def img(nombre, alt):
