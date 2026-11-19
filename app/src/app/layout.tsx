@@ -9,6 +9,14 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: APP_NAME,
   description: APP_DESCRIPTION,
+  // Cada dominio sirve el ícono de su marca (ver /api/marca).
+  icons: {
+    icon: [
+      { url: "/api/marca/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/api/marca/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/api/marca/apple-icon.png", sizes: "180x180" },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

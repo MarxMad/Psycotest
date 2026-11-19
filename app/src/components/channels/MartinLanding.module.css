@@ -344,12 +344,6 @@
 }
 
 /* El sello de Psicología no tiene archivo: es obra, y se tiñe con el tono. */
-.marcaSello {
-  width: 4rem;
-  height: 4rem;
-  --ch-accent: currentColor;
-}
-
 /* ---------- secciones ---------- */
 
 .seccion {
@@ -848,11 +842,6 @@
 .necesidadLogo img {
   height: 100%;
   width: auto;
-}
-
-.necesidadLogo .marcaSello {
-  width: 1.7rem;
-  height: 1.7rem;
 }
 
 .necesidadCta {

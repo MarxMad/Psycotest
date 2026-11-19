@@ -1,0 +1,131 @@
+/* Logo en 3D del cargador: capas del mismo dibujo separadas en profundidad. */
+
+.escena {
+  --ancho: 150px;
+  --paso: 1.5px; /* separación entre capas: 16 capas ≈ 24 px de grosor */
+  position: relative;
+  width: var(--ancho);
+  aspect-ratio: 300 / 260;
+  perspective: 900px;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.giro {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation:
+    entrada 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    vaiven 3.2s 0.9s ease-in-out infinite;
+}
+
+.capa {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateZ(calc(var(--z) * var(--paso)));
+  /* Al entrar, el volumen crece desde la cara plana. */
+  animation: extruir 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.cara {
+  filter: drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.15));
+}
+
+/* Destello que barre la cara, recortado con la silueta del logo. */
+.brillo {
+  position: absolute;
+  inset: 0;
+  transform: translateZ(calc(1.2 * var(--paso)));
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.55) 46%,
+    rgba(255, 255, 255, 0.1) 54%,
+    transparent 64%
+  );
+  background-size: 260% 100%;
+  -webkit-mask: url("/marcas/psicologia/logo.svg") center / 100% 100% no-repeat;
+  mask: url("/marcas/psicologia/logo.svg") center / 100% 100% no-repeat;
+  animation: destello 3.2s 0.9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.sombra {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -34px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(120, 22, 16, 0.32), transparent);
+  animation: sombra 3.2s 0.9s ease-in-out infinite;
+}
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotateX(24deg) rotateY(-70deg) scale(0.86);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotateX(10deg) rotateY(-30deg) scale(1);
+  }
+}
+
+@keyframes vaiven {
+  0%,
+  100% {
+    transform: translateY(0) rotateX(10deg) rotateY(-30deg);
+  }
+  50% {
+    transform: translateY(-8px) rotateX(4deg) rotateY(30deg);
+  }
+}
+
+@keyframes extruir {
+  from {
+    transform: translateZ(0);
+  }
+}
+
+@keyframes destello {
+  0%,
+  100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+}
+
+@keyframes sombra {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleX(0.82);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .giro,
+  .capa,
+  .brillo,
+  .sombra {
+    animation: none;
+  }
+  .giro {
+    transform: rotateX(10deg) rotateY(-24deg);
+  }
+}

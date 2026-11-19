@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="26" fill="#0c1222"/>
+  <defs><clipPath id="tri"><path d="M64 16 L114 104 H14 Z"/></clipPath></defs>
+  <g clip-path="url(#tri)">
+    <rect y="16" width="128" height="27" fill="#d4a24c"/>
+    <rect y="50" width="128" height="20" fill="#5fa0c8"/>
+    <rect y="77" width="128" height="27" fill="#2b86b3"/>
+  </g>
+</svg>

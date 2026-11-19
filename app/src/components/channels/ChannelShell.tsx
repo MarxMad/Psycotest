@@ -40,7 +40,9 @@ export function ChannelShell({
             <img
               src={channel.logo}
               alt=""
-              className={`${s.brandLogo} ${channel.id === "ceduct" ? s.brandLogoWide : ""}`}
+              className={`${s.brandLogo} ${
+                channel.id === "ceduct" ? s.brandLogoWide : channel.id === "martin" ? s.brandLogoPlano : ""
+              }`}
               width={channel.id === "ceduct" ? 56 : 40}
               height={channel.id === "ceduct" ? 42 : 40}
             />

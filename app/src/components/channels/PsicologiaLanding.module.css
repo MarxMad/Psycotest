@@ -92,36 +92,72 @@
   visibility: hidden;
 }
 
-.cargadorFila {
-  position: absolute;
-  left: var(--g);
-  right: var(--g);
-  top: 50%;
+.cargadorCentro {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  font-size: 12.5px;
+  justify-items: center;
+  gap: 22px;
+  animation: cargadorSube 0.7s 0.15s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
-.cargadorDescriptor {
+.cargadorNombre {
+  margin: 30px 0 0;
+  text-align: center;
+  color: #d8342a;
+  font-family: Rockwell, "Roboto Slab", "Courier New", Georgia, serif;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.cargadorAvance {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
   color: var(--p-tenue);
 }
 
+.cargadorBarra {
+  --avance: 0;
+  position: relative;
+  width: 140px;
+  height: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: color-mix(in srgb, #d8342a 14%, transparent);
+}
+
+.cargadorBarra::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #d8342a;
+  transform: scaleX(var(--avance));
+  transform-origin: left;
+}
+
 .cargadorCifra {
-  justify-self: end;
+  min-width: 3.4ch;
   font-variant-numeric: tabular-nums;
 }
 
-.cargadorPildora {
+.cargadorDescriptor {
   position: absolute;
-  left: var(--g);
-  top: calc(50% + 40px);
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: var(--p-amarillo);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  left: 0;
+  right: 0;
+  bottom: max(28px, env(safe-area-inset-bottom));
+  text-align: center;
+  font-size: 12px;
+  color: var(--p-tenue);
+}
+
+@keyframes cargadorSube {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
 /* -------------------------------------------------------------- cabecera */
@@ -155,9 +191,18 @@
 }
 
 .marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   font-weight: 700;
   text-decoration: none;
   letter-spacing: -0.01em;
+}
+
+.marcaLogo {
+  width: 26px;
+  height: auto;
+  flex: none;
 }
 
 .descriptor {
@@ -1625,7 +1670,7 @@
 
 .selloArte {
   width: 72px;
-  height: 72px;
+  height: auto;
   flex: none;
 }
 

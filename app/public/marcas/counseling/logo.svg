@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 104" role="img" aria-label="Counseling">
+  <defs><clipPath id="tri"><path d="M60 0 L120 104 H0 Z"/></clipPath></defs>
+  <g clip-path="url(#tri)">
+    <rect y="0" width="120" height="33" fill="#d4a24c"/>
+    <rect y="40" width="120" height="25" fill="#5fa0c8"/>
+    <rect y="72" width="120" height="32" fill="#2b86b3"/>
+  </g>
+</svg>

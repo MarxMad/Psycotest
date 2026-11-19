@@ -11,7 +11,7 @@ import { channelPublicUrl, type ChannelId } from "@/lib/channels";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { menosMovimiento, useAparicion, useAparicionLista } from "@/lib/aparicion";
 import { Cifras, Cita, Declaracion, Pasos } from "./Secciones";
-import { SelloSociedad, TresOficios } from "./arte";
+import { TresOficios } from "./arte";
 import s from "./MartinLanding.module.css";
 
 /**
@@ -64,7 +64,7 @@ const ENTREGABLES = [
 /** Las estructuras que opera, con su propia marca y su propio color. */
 const LINEAS: Record<
   string,
-  { canal: ChannelId; marca: string; logo?: string; sello?: boolean; tono: string }
+  { canal: ChannelId; marca: string; logo: string; tono: string }
 > = {
   CEDUCT: {
     canal: "ceduct",
@@ -75,7 +75,7 @@ const LINEAS: Record<
   "Psicología Aplicada": {
     canal: "psicologia",
     marca: "Evaluación y selección de personal",
-    sello: true,
+    logo: "/marcas/psicologia/logo.svg",
     tono: "#d4895a",
   },
   "Ingeniería de Grupos Efectivos": {
@@ -302,11 +302,7 @@ export function MartinLanding({
                   <span className={s.necesidadMarca}>
                     {LINEAS[n.marca] && (
                       <span className={s.necesidadLogo} aria-hidden>
-                        {LINEAS[n.marca].sello ? (
-                          <SelloSociedad className={s.marcaSello} />
-                        ) : (
-                          <img src={LINEAS[n.marca].logo} alt="" />
-                        )}
+                        <img src={LINEAS[n.marca].logo} alt="" />
                       </span>
                     )}
                     <strong>{n.marca}</strong>

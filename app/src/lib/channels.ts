@@ -108,6 +108,7 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     description:
       "Consultoría organizacional, valuación con dictamen técnico y certificación de competencias laborales.",
     accentLabel: "Grupo",
+    logo: "/marcas/counseling/logo.svg",
     theme: {
       fontDisplay: '"Fraunces", "Libre Baskerville", Georgia, serif',
       fontBody: '"DM Sans", "Segoe UI", sans-serif',

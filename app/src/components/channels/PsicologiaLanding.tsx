@@ -24,9 +24,9 @@ import { BATERIA_COMPLETA, PRUEBAS } from "@/lib/pruebas-catalogo";
 import { menosMovimiento, useAparicion } from "@/lib/aparicion";
 import { Cotizador } from "./Cotizador";
 import { RadarVivo } from "./RadarVivo";
-import { SelloSociedad } from "./arte";
 import { BARRAS, PRESENTACION } from "./psico/datos";
 import { CLIPS, VideoReal, type ClipId } from "./psico/medios";
+import { LogoPsi, LogoPsi3D } from "./psico/LogoPsi";
 import s from "./PsicologiaLanding.module.css";
 
 /*
@@ -199,6 +199,12 @@ function PildoraCursor({ raiz }: { raiz: RefObject<HTMLElement | null> }) {
 function Cargador({ listo }: { listo: boolean }) {
   const [fase, setFase] = useState<"visible" | "saliendo" | "fuera">("visible");
   const cifra = useRef<HTMLSpanElement>(null);
+  const barra = useRef<HTMLSpanElement>(null);
+
+  function pintarAvance(v: number) {
+    if (cifra.current) cifra.current.textContent = String(Math.round(v)).padStart(2, "0");
+    barra.current?.style.setProperty("--avance", String(v / 100));
+  }
 
   useEffect(() => {
     let visto = false;
@@ -218,12 +224,10 @@ function Cargador({ listo }: { listo: boolean }) {
       v: 100,
       duration: 1200,
       ease: "inOut(2)",
-      onUpdate: () => {
-        if (cifra.current) cifra.current.textContent = String(Math.round(contador.v)).padStart(2, "0");
-      },
+      onUpdate: () => pintarAvance(contador.v),
     });
-    // Nunca más de 2.5 s: si la escena tarda, el póster ya ocupa su lugar.
-    const tope = window.setTimeout(() => setFase("saliendo"), 2500);
+    // Nunca más de 3 s: si la escena tarda, el póster ya ocupa su lugar.
+    const tope = window.setTimeout(() => setFase("saliendo"), 3000);
     return () => {
       anim.pause();
       window.clearTimeout(tope);
@@ -239,8 +243,8 @@ function Cargador({ listo }: { listo: boolean }) {
   }, []);
   useEffect(() => {
     if (!listo || fase !== "visible") return;
-    if (cifra.current) cifra.current.textContent = "100";
-    const espera = Math.max(0, 1000 - (performance.now() - inicio.current));
+    pintarAvance(100);
+    const espera = Math.max(0, 1600 - (performance.now() - inicio.current));
     const t = window.setTimeout(() => setFase("saliendo"), espera);
     return () => window.clearTimeout(t);
   }, [listo, fase]);
@@ -254,14 +258,21 @@ function Cargador({ listo }: { listo: boolean }) {
   if (fase === "fuera") return null;
   return (
     <div className={s.cargador} data-fase={fase} aria-hidden>
-      <div className={s.cargadorFila}>
-        <span>Psicología Aplicada</span>
-        <span className={s.cargadorDescriptor}>Evaluación psicológica · Selección de personal</span>
-        <span className={s.cargadorCifra}>
-          <span ref={cifra}>00</span>%
-        </span>
+      <div className={s.cargadorCentro}>
+        <LogoPsi3D />
+        <p className={s.cargadorNombre}>
+          Sociedad de
+          <br />
+          Psicología Aplicada A. C.
+        </p>
+        <div className={s.cargadorAvance}>
+          <span className={s.cargadorBarra} ref={barra} />
+          <span className={s.cargadorCifra}>
+            <span ref={cifra}>00</span>%
+          </span>
+        </div>
       </div>
-      <span className={s.cargadorPildora}>Preparando — el aula</span>
+      <span className={s.cargadorDescriptor}>Evaluación psicológica · Selección de personal</span>
     </div>
   );
 }
@@ -299,6 +310,7 @@ function Cabecera() {
   return (
     <header className={s.cabecera} data-tono={oscuro ? "oscuro" : "claro"} data-abierto={abierto} data-bajo={bajo}>
       <a href="#acceso" className={s.marca} onClick={() => setAbierto(false)}>
+        <LogoPsi className={s.marcaLogo} />
         Psicología Aplicada
       </a>
       <span className={s.descriptor}>Evaluación psicológica · Selección de personal</span>
@@ -1055,7 +1067,7 @@ function Nosotros() {
 
       <div className={s.nosotrosPie} ref={pie}>
         <div className={s.sello}>
-          <SelloSociedad className={s.selloArte} />
+          <img src="/marcas/psicologia/logo.svg" alt="" className={s.selloArte} width={72} height={62} />
           <p>
             <strong>Sociedad de Psicología Aplicada A.C.</strong>
             <br />
