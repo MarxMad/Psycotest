@@ -130,6 +130,20 @@ export async function buscarSesionDePago(
   return null;
 }
 
+/**
+ * Cómo aparece cada empresa en el cobro cuando las tres comparten cuenta.
+ *
+ * - `sufijo`: se agrega al descriptor de la cuenta en el estado de cuenta de
+ *   la tarjeta (p. ej. «RAZONSOCIAL* CEDUCT»). Máximo 22 caracteres entre los
+ *   dos; Stripe recorta si no caben.
+ * - `nombre`: descripción del pago en el panel de Stripe y en el recibo.
+ */
+export const IDENTIDAD_COBRO: Record<MarcaCobro, { sufijo: string; nombre: string }> = {
+  ceduct: { sufijo: "CEDUCT", nombre: "CEDUCT" },
+  ige: { sufijo: "IGE", nombre: "Ingeniería de Grupos Efectivos" },
+  psicologia: { sufijo: "PSICOLOGIA", nombre: "Psicología Aplicada" },
+};
+
 export function siteUrl() {
   return urlDelSitio();
 }

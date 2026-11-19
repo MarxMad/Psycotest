@@ -5,7 +5,7 @@ import { accessCodes, courseCategories, courseEnrollments, coupons, courses, ord
 import { logAudit } from "@/lib/auth";
 import { activateEnrollment } from "@/lib/course-access";
 import { correoVentas, enviarCorreo, esMarca, pesos, plantilla, textoPlano, type Marca } from "@/lib/correo";
-import { esMarcaCobro, stripeDe, type MarcaCobro } from "@/lib/stripe";
+import { esMarcaCobro, IDENTIDAD_COBRO, stripeDe, type MarcaCobro } from "@/lib/stripe";
 import { urlDelSitio } from "@/lib/sitio";
 
 /**
@@ -256,7 +256,11 @@ export async function crearSesionDePago(opciones: {
       client_reference_id: pedido.id,
       // `origen` sirve al webhook para armar los enlaces del correo.
       metadata: { tipo: "curso", marca, pedidoId: pedido.id, origen: opciones.origen },
-      payment_intent_data: { metadata: { tipo: "curso", marca, pedidoId: pedido.id } },
+      payment_intent_data: {
+        description: `${IDENTIDAD_COBRO[marca].nombre} · ${lineas.map((l) => l.titulo).join(", ")}`.slice(0, 1000),
+        statement_descriptor_suffix: IDENTIDAD_COBRO[marca].sufijo,
+        metadata: { tipo: "curso", marca, pedidoId: pedido.id },
+      },
       ...OPCIONES_DE_PAGO,
       customer_email: opciones.email || undefined,
       locale: "es",

@@ -14,7 +14,7 @@ import {
   type PruebaDigital,
 } from "@/lib/pruebas-catalogo";
 import { psycotest } from "@/lib/routes";
-import { buscarSesionDePago, stripeDe } from "@/lib/stripe";
+import { buscarSesionDePago, IDENTIDAD_COBRO, stripeDe } from "@/lib/stripe";
 import { urlDelSitio } from "@/lib/sitio";
 
 /**
@@ -164,7 +164,11 @@ export async function crearCompraPsicologia(entrada: {
         empresa: (entrada.empresa ?? "").slice(0, 200),
         origen: entrada.origen,
       },
-      payment_intent_data: { metadata: { tipo: "psicologia", marca: "psicologia", pedidoId } },
+      payment_intent_data: {
+        description: `${IDENTIDAD_COBRO.psicologia.nombre} · ${descripcion}`.slice(0, 1000),
+        statement_descriptor_suffix: IDENTIDAD_COBRO.psicologia.sufijo,
+        metadata: { tipo: "psicologia", marca: "psicologia", pedidoId },
+      },
       ...OPCIONES_DE_PAGO,
       locale: "es",
       success_url: `${entrada.origen}${psycotest.compra}?session_id={CHECKOUT_SESSION_ID}`,
