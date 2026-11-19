@@ -4,7 +4,28 @@ import { jwtVerify } from "jose";
 import { APPLICANT_COOKIE, verifyApplicantToken } from "@/lib/applicant-auth";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
-import { dominioPrincipal, getChannelFromHost, isChannelPath, isPlatformPath } from "@/lib/channels";
+import {
+  canalPorDominio,
+  dominioDeCanal,
+  dominioPrincipal,
+  getChannelFromHost,
+  isChannelPath,
+  isPlatformPath,
+  type ChannelId,
+} from "@/lib/channels";
+
+/**
+ * Secciones de la plataforma que son de una sola marca. Si alguien las abre
+ * desde el dominio de otra marca, se le manda al dominio correcto (solo
+ * cuando ese dominio está configurado). En el dominio del panel o en la URL
+ * de Vercel se sirven tal cual.
+ */
+const RUTAS_CON_DUENO: ReadonlyArray<readonly [string, ChannelId]> = [
+  ["/diplomados", "ceduct"],
+  ["/carrito", "ceduct"],
+  ["/checkout", "ceduct"],
+  ["/evaluacion", "psicologia"],
+];
 import { inicioDelPanel, operaElPanel, puedeVerSeccion, type Rol } from "@/lib/auth-rutas";
 import { secretoDeSesion as secret } from "@/lib/auth-secreto";
 
@@ -44,13 +65,28 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const host = request.headers.get("host");
 
-  // --- Multi-canal: rewrite por subdominio ---
+  // --- Dominios propios: cada sección compartida vive en el dominio de su marca ---
+  const propio = canalPorDominio(host);
+  if (propio) {
+    const dueno = RUTAS_CON_DUENO.find(
+      ([p]) => pathname === p || pathname.startsWith(`${p}/`),
+    )?.[1];
+    if (dueno && dueno !== propio && dominioDeCanal(dueno)) {
+      return NextResponse.redirect(
+        new URL(`https://${dominioDeCanal(dueno)}${pathname}${request.nextUrl.search}`),
+        308,
+      );
+    }
+  }
+
+  // --- Multi-canal: rewrite por dominio o subdominio ---
   if (!isPlatformPath(pathname) && !pathname.includes(".")) {
     const channel = getChannelFromHost(host);
     // martin.* era el portafolio suelto; ahora es la portada del grupo en el
-    // dominio principal. Los enlaces viejos llegan ahí.
+    // dominio principal. Los enlaces viejos llegan ahí (salvo que Martín
+    // tenga dominio propio: entonces ese dominio es su portada).
     const raiz = dominioPrincipal();
-    if (channel?.id === "martin" && raiz) {
+    if (channel?.id === "martin" && raiz && propio !== "martin") {
       return NextResponse.redirect(new URL(`https://${raiz}${pathname}${request.nextUrl.search}`), 308);
     }
     // Una ruta propia del canal (p. ej. /nosotros en CEDUCT) se sirve tal cual;

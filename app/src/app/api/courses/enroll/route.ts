@@ -8,6 +8,11 @@ import { getCourseBySlug } from "@/lib/courses";
 async function enrollUser(userId: string, courseSlug: string) {
   const courseRow = await getCourseBySlug(courseSlug);
   if (!courseRow) return { error: "Curso no encontrado", status: 404 as const };
+  // Inscripción directa solo para cursos gratuitos. Los de pago pasan por
+  // Stripe; en desarrollo se permite para probar sin cobrar.
+  if (courseRow.course.priceMxn > 0 && process.env.NODE_ENV === "production") {
+    return { error: "Este curso se inscribe con el pago.", status: 402 as const };
+  }
 
   const existing = await getEnrollment(userId, courseRow.course.id);
   if (existing) {

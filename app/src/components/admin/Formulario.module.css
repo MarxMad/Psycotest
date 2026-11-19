@@ -1,0 +1,121 @@
+/* Formularios del panel: invitaciones y campañas de correo. */
+.form {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.9rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: var(--admin-fs-sm);
+  font-weight: 600;
+  color: var(--admin-text);
+}
+
+.ayuda {
+  font-weight: 400;
+  color: var(--admin-text-muted);
+}
+
+.input,
+.area {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--admin-border);
+  border-radius: var(--r);
+  background: var(--admin-card-bg);
+  color: var(--admin-text);
+  font: inherit;
+  font-size: var(--admin-fs-base);
+}
+
+.input {
+  height: 2.6rem;
+}
+
+.area {
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus,
+.area:focus {
+  outline: none;
+  border-color: var(--admin-primary);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ok,
+.error,
+.aviso {
+  margin: 0;
+  font-size: var(--admin-fs-sm);
+}
+
+.ok {
+  color: var(--admin-success);
+}
+
+.error {
+  color: var(--admin-danger);
+}
+
+.aviso {
+  color: var(--admin-text-muted);
+}
+
+.lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--admin-fs-sm);
+  display: grid;
+  gap: 0.3rem;
+}
+
+.lista li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.tablaCaja {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--admin-fs-sm);
+}
+
+.tabla th,
+.tabla td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--admin-border);
+  text-align: left;
+}
+
+.tabla th {
+  color: var(--admin-text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}

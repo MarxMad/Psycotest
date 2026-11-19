@@ -1,11 +1,11 @@
 import type Stripe from "stripe";
 import { and, eq, inArray, ne, sql } from "drizzle-orm";
 import { getDb } from "@/db";
-import { courseCategories, courseEnrollments, coupons, courses, orderItems, orders, users } from "@/db/schema";
+import { accessCodes, courseCategories, courseEnrollments, coupons, courses, orderItems, orders, users } from "@/db/schema";
 import { logAudit } from "@/lib/auth";
 import { activateEnrollment } from "@/lib/course-access";
 import { correoVentas, enviarCorreo, esMarca, pesos, plantilla, textoPlano, type Marca } from "@/lib/correo";
-import { stripe } from "@/lib/stripe";
+import { esMarcaCobro, stripeDe, type MarcaCobro } from "@/lib/stripe";
 import { urlDelSitio } from "@/lib/sitio";
 
 /**
@@ -28,10 +28,13 @@ export const ETIQUETA_FLUJO = "psycotest-vqhtzmrk";
  * - OXXO: la ficha vence en 3 días.
  * - SPEI: transferencia a una CLABE que Stripe asigna al cliente y concilia
  *   sola. Necesita un cliente en Stripe, de ahí `customer_creation`.
+ * - Tarjeta: se ofrecen meses sin intereses cuando la tarjeta y el importe
+ *   califican (tarjetas mexicanas; Stripe decide los plazos disponibles).
  */
 export const OPCIONES_DE_PAGO = {
   customer_creation: "always",
   payment_method_options: {
+    card: { installments: { enabled: true } },
     oxxo: { expires_after_days: 3 },
     customer_balance: {
       funding_type: "bank_transfer",
@@ -173,10 +176,6 @@ export async function crearSesionDePago(opciones: {
   email?: string | null;
   cancelarEn?: string;
 }): Promise<Resultado> {
-  if (!stripe) {
-    return { ok: false, error: "El cobro con tarjeta no está configurado.", status: 503 };
-  }
-
   const db = getDb();
   const [pedido] = await db.select().from(orders).where(eq(orders.id, opciones.pedidoId)).limit(1);
   if (!pedido) return { ok: false, error: "Pedido no encontrado.", status: 404 };
@@ -188,13 +187,30 @@ export async function crearSesionDePago(opciones: {
   }
 
   const lineas = await db
-    .select({ titulo: courses.title, precio: orderItems.price })
+    .select({ titulo: courses.title, precio: orderItems.price, canal: courseCategories.channelId })
     .from(orderItems)
     .innerJoin(courses, eq(orderItems.courseId, courses.id))
+    .leftJoin(courseCategories, eq(courses.categoryId, courseCategories.id))
     .where(eq(orderItems.orderId, pedido.id));
 
   if (lineas.length === 0) {
     return { ok: false, error: "El pedido no tiene programas.", status: 400 };
+  }
+
+  // Cada empresa puede cobrar en su propia cuenta de Stripe: un pedido no
+  // puede mezclar programas de dos marcas.
+  const marcas = new Set(lineas.map((l) => marcaDeCanal(l.canal)));
+  if (marcas.size > 1) {
+    return {
+      ok: false,
+      error: "Paga por separado los programas de cada escuela.",
+      status: 409,
+    };
+  }
+  const marca = [...marcas][0];
+  const stripe = stripeDe(marca);
+  if (!stripe) {
+    return { ok: false, error: "El cobro con tarjeta no está configurado.", status: 503 };
   }
   // Stripe no cobra importes de cero. Un diplomado con precio «Consultar» se
   // cierra por contacto, no aquí.
@@ -239,8 +255,8 @@ export async function crearSesionDePago(opciones: {
       line_items: conceptos,
       client_reference_id: pedido.id,
       // `origen` sirve al webhook para armar los enlaces del correo.
-      metadata: { tipo: "curso", pedidoId: pedido.id, origen: opciones.origen },
-      payment_intent_data: { metadata: { tipo: "curso", pedidoId: pedido.id } },
+      metadata: { tipo: "curso", marca, pedidoId: pedido.id, origen: opciones.origen },
+      payment_intent_data: { metadata: { tipo: "curso", marca, pedidoId: pedido.id } },
       ...OPCIONES_DE_PAGO,
       customer_email: opciones.email || undefined,
       locale: "es",
@@ -400,6 +416,41 @@ async function avisarCompraDeCursos({
     clave: `venta-curso-${pedido.id}`,
     responderA: para,
   });
+}
+
+/** Marca que cobra un curso: la de su escuela; IGE si no tiene. */
+export function marcaDeCanal(canal: string | null | undefined): MarcaCobro {
+  return esMarcaCobro(canal) ? canal : "ige";
+}
+
+/**
+ * Reembolso total hecho desde el panel de Stripe: el pedido pasa a
+ * reembolsado y se retira lo que se había concedido (inscripciones o
+ * códigos de evaluación sin usar). Un reembolso parcial no quita nada.
+ */
+export async function reembolsarPorPago(pagoId: string): Promise<void> {
+  const db = getDb();
+  const cerrados = await db
+    .update(orders)
+    .set({ status: "refunded" })
+    .where(and(eq(orders.stripePaymentIntentId, pagoId), ne(orders.status, "refunded")))
+    .returning({ id: orders.id, userId: orders.userId });
+  if (cerrados.length === 0) return;
+
+  await db
+    .update(courseEnrollments)
+    .set({ status: "refunded", updatedAt: new Date().toISOString() })
+    .where(eq(courseEnrollments.stripePaymentIntentId, pagoId));
+
+  for (const p of cerrados) {
+    if (p.id.startsWith("ord-psi-")) {
+      await db
+        .update(accessCodes)
+        .set({ active: false, updatedAt: new Date().toISOString() })
+        .where(sql`${accessCodes.id} like ${`code-psi-${p.id}-%`} and ${accessCodes.usedCount} = 0`);
+    }
+    await logAudit(p.userId, "update", "order", p.id, { via: "stripe", reembolso: pagoId });
+  }
 }
 
 /** El pago falló o la sesión caducó: el pedido deja de estar pendiente. */

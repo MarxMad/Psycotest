@@ -146,7 +146,7 @@ export async function POST(request: Request) {
     let pagoUrl: string | null = null;
     // Tarjeta, OXXO y SPEI se cobran en la misma página de Stripe, que
     // concilia sola los pagos en efectivo y por transferencia.
-    if (isStripeConfigured() && total > 0) {
+    if (isStripeConfigured("ceduct") && total > 0) {
       const pago = await crearSesionDePago({
         pedidoId,
         origen: origenDe(request),

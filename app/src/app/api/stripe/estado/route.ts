@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cumplirPedido } from "@/lib/pagos";
-import { stripe } from "@/lib/stripe";
+import { buscarSesionDePago, esMarcaCobro, isStripeConfigured } from "@/lib/stripe";
 
 /**
  * Estado de un pago para la página de gracias.
@@ -10,17 +10,20 @@ import { stripe } from "@/lib/stripe";
  * ver su confirmación. Solo devuelve si está pagado y por cuánto.
  */
 export async function GET(request: Request) {
-  if (!stripe) {
+  if (!isStripeConfigured()) {
     return NextResponse.json({ error: "Stripe no configurado" }, { status: 503 });
   }
 
-  const sessionId = new URL(request.url).searchParams.get("session_id");
+  const params = new URL(request.url).searchParams;
+  const sessionId = params.get("session_id");
+  const marca = params.get("marca");
   if (!sessionId || !sessionId.startsWith("cs_")) {
     return NextResponse.json({ error: "Falta la sesión" }, { status: 400 });
   }
 
   try {
-    const sesion = await stripe.checkout.sessions.retrieve(sessionId);
+    const sesion = await buscarSesionDePago(sessionId, esMarcaCobro(marca) ? marca : null);
+    if (!sesion) throw new Error("no encontrada");
     // Si el webhook aún no llega, se cumple aquí. Es idempotente y los datos
     // vienen de Stripe, no del navegador.
     if (sesion.payment_status !== "unpaid" && sesion.metadata?.tipo !== "psicologia") {

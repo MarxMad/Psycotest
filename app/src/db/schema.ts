@@ -636,3 +636,42 @@ export type CourseCertificate = typeof courseCertificates.$inferSelect;
 export type CertificationProgram = typeof certificationPrograms.$inferSelect;
 
 export type ChannelPageRow = typeof channelPages.$inferSelect;
+
+/**
+ * Campañas de correo promocional, enviadas desde Panel → Marketing.
+ * Cada una es de una marca y sale con el remitente y el dominio de esa marca.
+ */
+export const emailCampaigns = pgTable("email_campaigns", {
+  id: text("id").primaryKey(),
+  /** ceduct | ige | psicologia */
+  marca: text("marca").notNull(),
+  /** alumnos | compradores | todos */
+  audiencia: text("audiencia").notNull(),
+  asunto: text("asunto").notNull(),
+  titulo: text("titulo").notNull(),
+  cuerpo: text("cuerpo").notNull(),
+  botonTexto: text("boton_texto"),
+  botonUrl: text("boton_url"),
+  cuponCodigo: text("cupon_codigo"),
+  estado: text("estado", { enum: ["enviando", "enviada", "con_errores"] }).notNull(),
+  destinatarios: integer("destinatarios").notNull().default(0),
+  enviados: integer("enviados").notNull().default(0),
+  fallidos: integer("fallidos").notNull().default(0),
+  creadoPor: text("creado_por").references(() => users.id),
+  createdAt: text("created_at").notNull(),
+  enviadaAt: text("enviada_at"),
+});
+
+/**
+ * Personas que pidieron no recibir promociones. El id es `marca:correo`;
+ * marca `todas` vale para las tres. Los correos de pago e invitaciones a
+ * cursos siguen llegando: son parte del servicio contratado.
+ */
+export const emailBajas = pgTable("email_bajas", {
+  id: text("id").primaryKey(),
+  email: text("email").notNull(),
+  marca: text("marca").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
+export type EmailCampaign = typeof emailCampaigns.$inferSelect;

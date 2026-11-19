@@ -16,7 +16,9 @@ import {
 import { courseThumbnail, evaluationFocus } from "@/lib/course-marketing";
 import { formatMxn, isStripeConfigured } from "@/lib/stripe";
 import { whatsapp } from "@/lib/contacto";
-import { CHANNELS, channelPublicUrl } from "@/lib/channels";
+import { headers } from "next/headers";
+import { CHANNELS, canalPorDominio, channelPublicUrl, dominioDeCanal } from "@/lib/channels";
+import { marcaDeCanal } from "@/lib/pagos";
 import { ChannelShell } from "@/components/channels/ChannelShell";
 import { FichaIge } from "@/components/channels/ige/FichaIge";
 import { tinteDeBloque } from "@/components/channels/ige/tintes";
@@ -64,6 +66,13 @@ export default async function CourseDetailPage({ params }: Props) {
   const focus = evaluationFocus(course.id);
   const canal = canalDelCurso(category?.channelId);
 
+  // Con dominios propios, la ficha se abre en el dominio de su marca: ahí se
+  // inicia sesión, se paga y se vuelve. Abierta desde otra marca, se redirige.
+  const enHost = canalPorDominio((await headers()).get("host"));
+  if (enHost && enHost !== canal && dominioDeCanal(canal)) {
+    redirect(channelPublicUrl(canal, `/cursos/${slug}`));
+  }
+
   // IGE trae su propia ficha, con la cabecera y el cielo de su portada.
   if (canal === "ige") {
     const [catalogo, bloques] = await Promise.all([cursosVistaDeCanal("ige"), listCategoriesByChannel("ige")]);
@@ -86,7 +95,7 @@ export default async function CourseDetailPage({ params }: Props) {
           curriculum={curriculum}
           lessonCount={lessonCount}
           enrolled={enrolled}
-          stripeReady={isStripeConfigured()}
+          stripeReady={isStripeConfigured(marcaDeCanal(canal))}
           priceLabel={formatMxn(course.priceMxn)}
           thumb={thumb}
           focus={focus}
@@ -154,7 +163,7 @@ export default async function CourseDetailPage({ params }: Props) {
                   <CourseCheckout
                     courseSlug={course.slug}
                     priceLabel={formatMxn(course.priceMxn)}
-                    stripeReady={isStripeConfigured()}
+                    stripeReady={isStripeConfigured(marcaDeCanal(canal))}
                     enrolled={enrolled}
                   />
                 ) : (

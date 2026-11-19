@@ -30,6 +30,59 @@ export type ChannelDef = {
 
 const ROOT = () => (process.env.ROOT_DOMAIN || "").trim().replace(/^www\./, "");
 
+/** Deja un dominio como `ejemplo.com`: sin protocolo, sin www, sin ruta ni puerto. */
+function limpiarDominio(v: string | undefined): string | null {
+  const d = (v ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/\/.*$/, "")
+    .replace(/:\d+$/, "")
+    .replace(/^www\./, "");
+  return d || null;
+}
+
+/**
+ * Dominio propio de cada marca.
+ *
+ * Cada empresa tiene su dominio (p. ej. psicologiaaplicada.mx, ceduct.org.mx,
+ * ige.com.mx) y los tres apuntan al mismo despliegue: la plataforma, la base y
+ * el panel son uno solo. Van en NEXT_PUBLIC_ porque los enlaces entre marcas
+ * también se arman en el navegador, y se leen uno por uno (no con
+ * `process.env[nombre]`) para que Next los pueda incrustar al compilar.
+ *
+ * Sin dominio propio, la marca sigue funcionando como antes: por subdominio
+ * de ROOT_DOMAIN o por la ruta interna /sites/<canal>.
+ */
+export function dominioDeCanal(id: ChannelId): string | null {
+  switch (id) {
+    case "ceduct":
+      return limpiarDominio(process.env.NEXT_PUBLIC_DOMINIO_CEDUCT);
+    case "ige":
+      return limpiarDominio(process.env.NEXT_PUBLIC_DOMINIO_IGE);
+    case "psicologia":
+      return limpiarDominio(process.env.NEXT_PUBLIC_DOMINIO_PSICOLOGIA);
+    case "martin":
+      return limpiarDominio(process.env.NEXT_PUBLIC_DOMINIO_MARTIN);
+  }
+}
+
+/**
+ * Dominio donde vive el panel (opcional). El panel responde en /admin de
+ * cualquiera de los dominios, pero conviene entrar siempre por el mismo: la
+ * sesión es una cookie por dominio.
+ */
+export function dominioDelPanel(): string | null {
+  return limpiarDominio(process.env.NEXT_PUBLIC_DOMINIO_PANEL);
+}
+
+/** El canal cuyo dominio propio es exactamente este host (sin www). */
+export function canalPorDominio(hostHeader: string | null): ChannelId | null {
+  const host = limpiarDominio(hostHeader ?? undefined);
+  if (!host) return null;
+  return CHANNEL_IDS.find((id) => dominioDeCanal(id) === host) ?? null;
+}
+
 /**
  * ¿Hay un dominio propio donde los subdominios sí existen?
  *
@@ -197,6 +250,11 @@ export function getChannelFromHost(hostHeader: string | null): ChannelDef | null
   const host = hostHeader.toLowerCase().split(":")[0];
   if (!host) return null;
 
+  // Primero los dominios propios de cada marca; el del panel no es de ninguna.
+  const propio = canalPorDominio(host);
+  if (propio) return CHANNELS[propio];
+  if (dominioDelPanel() === host.replace(/^www\./, "")) return null;
+
   // *.localhost or subdomain.ROOT_DOMAIN
   const parts = host.split(".");
   if (parts.length < 2) return null;
@@ -230,6 +288,8 @@ export function dominioPrincipal(): string | null {
 export function channelPublicUrl(channelId: ChannelId, path = "/"): string {
   const ch = CHANNELS[channelId];
   const p = path.startsWith("/") ? path : `/${path}`;
+  const propio = dominioDeCanal(ch.id);
+  if (propio) return `https://${propio}${p}`;
   const root = dominioConSubdominios();
 
   // Martín es la portada del grupo: vive en el dominio principal, no en
@@ -311,6 +371,8 @@ export function isPlatformPath(pathname: string): boolean {
     // Vuelta del pago. Sin esto, en el subdominio de CEDUCT se reescribía a
     // /sites/ceduct/gracias, que no existe: quien pagaba caía en un 404.
     "/gracias",
+    // Baja de correos promocionales: el enlace sale con el dominio de cada marca.
+    "/baja",
     "/api",
     "/login",
     "/evaluacion",

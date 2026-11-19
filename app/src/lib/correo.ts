@@ -79,6 +79,8 @@ export async function enviarCorreo(opciones: {
   texto: string;
   clave?: string;
   responderA?: string;
+  /** Encabezados extra, p. ej. List-Unsubscribe en las promociones. */
+  encabezados?: Record<string, string>;
 }): Promise<Envio> {
   const llave = process.env.RESEND_API_KEY;
   if (!llave) {
@@ -101,6 +103,7 @@ export async function enviarCorreo(opciones: {
         html: opciones.html,
         text: opciones.texto,
         reply_to: opciones.responderA ?? CONTACTO.email,
+        ...(opciones.encabezados ? { headers: opciones.encabezados } : {}),
       }),
     });
     const datos = (await r.json().catch(() => ({}))) as { id?: string; message?: string };
@@ -111,6 +114,65 @@ export async function enviarCorreo(opciones: {
     return { ok: true, id: datos.id ?? null };
   } catch (error) {
     console.error("[correo] fallo de red:", error);
+    return { ok: false, error: (error as Error).message };
+  }
+}
+
+export function correoConfigurado(): boolean {
+  return Boolean(process.env.RESEND_API_KEY);
+}
+
+export type MensajeLote = {
+  para: string;
+  asunto: string;
+  html: string;
+  texto: string;
+  encabezados?: Record<string, string>;
+};
+
+/**
+ * Manda hasta 100 correos en una sola llamada (API batch de Resend). Para
+ * promociones: cada destinatario recibe su propio correo, nadie ve a los demás.
+ * Devuelve cuántos aceptó Resend; si la llamada falla, ninguno salió.
+ */
+export async function enviarLote(
+  marca: Marca,
+  mensajes: MensajeLote[],
+  clave?: string,
+): Promise<{ ok: true; enviados: number } | { ok: false; error: string }> {
+  const llave = process.env.RESEND_API_KEY;
+  if (!llave) return { ok: false, error: "Correo no configurado" };
+  if (mensajes.length === 0) return { ok: true, enviados: 0 };
+  if (mensajes.length > 100) return { ok: false, error: "Máximo 100 correos por lote" };
+
+  try {
+    const r = await fetch("https://api.resend.com/emails/batch", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${llave}`,
+        "Content-Type": "application/json",
+        ...(clave ? { "Idempotency-Key": clave.slice(0, 256) } : {}),
+      },
+      body: JSON.stringify(
+        mensajes.map((m) => ({
+          from: remitente(marca),
+          to: [m.para],
+          subject: m.asunto,
+          html: m.html,
+          text: m.texto,
+          reply_to: CONTACTO.email,
+          ...(m.encabezados ? { headers: m.encabezados } : {}),
+        })),
+      ),
+    });
+    const datos = (await r.json().catch(() => ({}))) as { data?: unknown[]; message?: string };
+    if (!r.ok) {
+      console.error(`[correo] lote Resend ${r.status}:`, datos.message);
+      return { ok: false, error: datos.message ?? `HTTP ${r.status}` };
+    }
+    return { ok: true, enviados: Array.isArray(datos.data) ? datos.data.length : mensajes.length };
+  } catch (error) {
+    console.error("[correo] lote, fallo de red:", error);
     return { ok: false, error: (error as Error).message };
   }
 }
@@ -135,6 +197,12 @@ export type Fila = { concepto: string; importe?: string };
 export function plantilla(marca: Marca, c: {
   titulo: string;
   intro: string;
+  /** Más párrafos después de la introducción (texto, se escapa). */
+  parrafos?: string[];
+  /** Recuadro resaltado, p. ej. un código de cupón. */
+  destacado?: { etiqueta: string; valor: string };
+  /** Enlace para darse de baja (promociones). */
+  baja?: string;
   folio?: string;
   filas?: Fila[];
   total?: string;
@@ -164,6 +232,12 @@ export function plantilla(marca: Marca, c: {
   <tr><td style="padding:30px 28px 8px">
     <h1 style="margin:0 0 12px;font-size:24px;line-height:1.25;color:#111">${escapar(c.titulo)}</h1>
     <p style="margin:0 0 18px;font-size:16px;line-height:1.55;color:#333">${escapar(c.intro)}</p>
+    ${(c.parrafos ?? []).map((p) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.55;color:#333">${escapar(p)}</p>`).join("")}
+    ${
+      c.destacado
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 20px"><tr><td style="border:2px dashed ${m.acento};border-radius:12px;padding:16px;text-align:center"><div style="font-size:13px;color:#666;margin-bottom:6px">${escapar(c.destacado.etiqueta)}</div><div style="font-family:Menlo,Consolas,monospace;font-size:24px;letter-spacing:.08em;color:#111;font-weight:700">${escapar(c.destacado.valor)}</div></td></tr></table>`
+        : ""
+    }
     ${c.folio ? `<p style="margin:0 0 18px;font-size:14px;color:#666">Folio: <strong style="color:#111;font-family:Menlo,Consolas,monospace">${escapar(c.folio)}</strong></p>` : ""}
     ${filas ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 6px">${filas}</table>` : ""}
     ${c.total ? `<p style="margin:10px 0 22px;font-size:17px;color:#111;text-align:right">Total pagado: <strong>${escapar(c.total)}</strong></p>` : ""}
@@ -178,6 +252,7 @@ export function plantilla(marca: Marca, c: {
   <tr><td style="padding:18px 28px 26px;border-top:1px solid #ececec;font-size:12px;line-height:1.6;color:#888">
     ${escapar(m.pie)}<br>
     Dudas: ${escapar(CONTACTO.email)} · WhatsApp ${escapar(CONTACTO.phoneDisplay)}
+    ${c.baja ? `<br><br>Recibes este correo porque tienes una cuenta con nosotros. <a href="${escapar(c.baja)}" style="color:#888">Dejar de recibir promociones</a>.` : ""}
   </td></tr>
 </table>
 </td></tr></table>
@@ -188,6 +263,9 @@ export function plantilla(marca: Marca, c: {
 export function textoPlano(marca: Marca, c: {
   titulo: string;
   intro: string;
+  parrafos?: string[];
+  destacado?: { etiqueta: string; valor: string };
+  baja?: string;
   folio?: string;
   filas?: Fila[];
   total?: string;
@@ -201,6 +279,8 @@ export function textoPlano(marca: Marca, c: {
     c.titulo,
     "",
     c.intro,
+    ...(c.parrafos ?? []).map((p) => `\n${p}`),
+    c.destacado ? `\n${c.destacado.etiqueta}: ${c.destacado.valor}` : "",
     c.folio ? `\nFolio: ${c.folio}` : "",
     ...(c.filas ?? []).map((f) => `- ${f.concepto}${f.importe ? `: ${f.importe}` : ""}`),
     c.total ? `\nTotal pagado: ${c.total}` : "",
@@ -209,6 +289,7 @@ export function textoPlano(marca: Marca, c: {
     c.nota ? `\n${c.nota}` : "",
     "",
     `Dudas: ${CONTACTO.email} · WhatsApp ${CONTACTO.phoneDisplay}`,
+    c.baja ? `\nDejar de recibir promociones: ${c.baja}` : "",
   ]
     .filter((l) => l !== "")
     .join("\n");

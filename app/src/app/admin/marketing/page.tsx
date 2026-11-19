@@ -7,6 +7,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
 import { Card, CardHeader } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
+import { CampanasCorreo } from "@/components/admin/CampanasCorreo";
 import { Badge, DataTable, type Columna } from "@/components/admin/DataTable";
 import { fechaCorta } from "@/lib/formato";
 import s from "./marketing.module.css";
@@ -91,7 +92,7 @@ export default function MarketingPage() {
     <div className={s.container}>
       <PageHeader
         title="Marketing"
-        subtitle="Tu audiencia y las promociones activas"
+        subtitle="Tu audiencia, campañas por correo y promociones activas"
         breadcrumbs={[{ label: "Dashboard", href: "/admin" }, { label: "Marketing" }]}
         action={
           <Link href="/admin/pagos/cupones" className="btn btn-primary">
@@ -126,6 +127,10 @@ export default function MarketingPage() {
           icon={<Tag size={24} />}
           color="orange"
         />
+      </div>
+
+      <div style={{ display: "grid", gap: "1.5rem", marginBottom: "1.5rem" }}>
+        <CampanasCorreo cupones={activos.map((c) => c.code)} />
       </div>
 
       <Card padding="none">

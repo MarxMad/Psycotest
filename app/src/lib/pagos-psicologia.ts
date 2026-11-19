@@ -14,7 +14,7 @@ import {
   type PruebaDigital,
 } from "@/lib/pruebas-catalogo";
 import { psycotest } from "@/lib/routes";
-import { stripe } from "@/lib/stripe";
+import { buscarSesionDePago, stripeDe } from "@/lib/stripe";
 import { urlDelSitio } from "@/lib/sitio";
 
 /**
@@ -81,6 +81,7 @@ export async function crearCompraPsicologia(entrada: {
   origen: string;
   sesionUsuarioId?: string | null;
 }): Promise<{ ok: true; url: string } | { ok: false; error: string; status: number }> {
+  const stripe = stripeDe("psicologia");
   if (!stripe) return { ok: false, error: "El cobro en línea no está configurado.", status: 503 };
 
   const candidatos = entrada.modo === "persona" ? 1 : entrada.candidatos;
@@ -154,6 +155,7 @@ export async function crearCompraPsicologia(entrada: {
       customer_email: entrada.email,
       metadata: {
         tipo: "psicologia",
+        marca: "psicologia",
         pedidoId,
         pruebas: c.ids.join(","),
         candidatos: String(n),
@@ -162,7 +164,7 @@ export async function crearCompraPsicologia(entrada: {
         empresa: (entrada.empresa ?? "").slice(0, 200),
         origen: entrada.origen,
       },
-      payment_intent_data: { metadata: { tipo: "psicologia", pedidoId } },
+      payment_intent_data: { metadata: { tipo: "psicologia", marca: "psicologia", pedidoId } },
       ...OPCIONES_DE_PAGO,
       locale: "es",
       success_url: `${entrada.origen}${psycotest.compra}?session_id={CHECKOUT_SESSION_ID}`,
@@ -330,8 +332,8 @@ ${codigos
 
 /** Lo que ve quien pagó en la página de confirmación. */
 export async function estadoDeCompra(sesionId: string) {
-  if (!stripe) return null;
-  const sesion = await stripe.checkout.sessions.retrieve(sesionId);
+  const sesion = await buscarSesionDePago(sesionId, "psicologia");
+  if (!sesion) return null;
   const compra = leerCompra(sesion);
   if (!compra) return null;
   const pagado = sesion.payment_status !== "unpaid";

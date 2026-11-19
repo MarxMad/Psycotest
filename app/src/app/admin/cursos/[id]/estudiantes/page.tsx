@@ -8,6 +8,7 @@ import { PageHeader } from "@/components/admin/PageHeader";
 import { StatCard } from "@/components/admin/StatCard";
 import { Card } from "@/components/admin/Card";
 import { EmptyState } from "@/components/admin/EmptyState";
+import { InvitarCurso } from "@/components/admin/InvitarCurso";
 import type { Course } from "@/db/schema";
 import s from "../../../usuarios/usuarios.module.css";
 
@@ -37,6 +38,8 @@ export default function EstudiantesCursoPage() {
   const [estudiantes, setEstudiantes] = useState<Estudiante[]>([]);
   const [cargando, setCargando] = useState(true);
 
+  const [recarga, setRecarga] = useState(0);
+
   useEffect(() => {
     async function load() {
       try {
@@ -52,7 +55,7 @@ export default function EstudiantesCursoPage() {
       setCargando(false);
     }
     load();
-  }, [id]);
+  }, [id, recarga]);
 
   const cursando = estudiantes.filter((e) => e.status === "active").length;
   const terminados = estudiantes.filter((e) => e.status === "completed").length;
@@ -75,6 +78,10 @@ export default function EstudiantesCursoPage() {
         <StatCard label="Inscritos" value={estudiantes.length} icon={<Users size={24} />} color="blue" />
         <StatCard label="Cursando" value={cursando} icon={<Clock size={24} />} color="purple" />
         <StatCard label="Terminados" value={terminados} icon={<CheckCircle size={24} />} color="green" />
+      </div>
+
+      <div style={{ marginBottom: "1.5rem" }}>
+        <InvitarCurso cursoId={id} alTerminar={() => setRecarga((n) => n + 1)} />
       </div>
 
       {cargando ? (
