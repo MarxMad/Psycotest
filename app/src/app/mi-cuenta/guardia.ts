@@ -16,11 +16,13 @@ import type { AuthUser } from "@/lib/auth";
 export async function asegurarSeccion(
   href: string,
 ): Promise<{ user: AuthUser; canal: ChannelId }> {
-  const user = await getSessionUser();
-  if (!user) redirect(`/login?next=${encodeURIComponent(href)}`);
-
   const host = (await headers()).get("host");
-  const canal = canalDelArea(getChannelFromHost(host)?.id ?? null);
+  const desdeHost = getChannelFromHost(host)?.id ?? null;
+
+  const user = await getSessionUser();
+  if (!user) redirect(`${desdeHost ? "/acceso" : "/login"}?next=${encodeURIComponent(href)}`);
+
+  const canal = canalDelArea(desdeHost);
   if (!seccionPertenece(canal, href)) redirect(AREA_BASE);
 
   return { user, canal };

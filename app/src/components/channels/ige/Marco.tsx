@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { ArrowUpRight, Mail, Menu, MessageCircle, Phone, X } from "lucide-react";
+import { ArrowUpRight, LogIn, Mail, Menu, MessageCircle, Phone, UserRound, X } from "lucide-react";
 import type { ChannelDef } from "@/lib/channels";
 import { CONTACTO, mailto, tel, whatsapp } from "@/lib/contacto";
 import { menosMovimiento } from "@/lib/aparicion";
@@ -65,9 +65,25 @@ export function Suave() {
   return null;
 }
 
+/** ¿Hay sesión abierta? Cambia «Iniciar sesión» por «Mi cuenta», como en CEDUCT. */
+function useConSesion() {
+  const [con, setCon] = useState(false);
+  useEffect(() => {
+    let vivo = true;
+    fetch("/api/auth/me", { credentials: "same-origin" })
+      .then((r) => vivo && setCon(r.ok))
+      .catch(() => {});
+    return () => {
+      vivo = false;
+    };
+  }, []);
+  return con;
+}
+
 export function Cabecera({ base = "" }: { base?: string }) {
   const [bajo, setBajo] = useState(false);
   const [abierto, setAbierto] = useState(false);
+  const conSesion = useConSesion();
   useScroll(() => setBajo(window.scrollY > 48));
 
   return (
@@ -95,6 +111,10 @@ export function Cabecera({ base = "" }: { base?: string }) {
           </a>
           <a className={m.botonCrema} href={`${base}#academia`}>
             Ver cursos
+          </a>
+          <a className={m.botonAcceso} href={conSesion ? "/mi-cuenta" : "/acceso"}>
+            {conSesion ? <UserRound size={16} aria-hidden /> : <LogIn size={16} aria-hidden />}
+            {conSesion ? "Mi cuenta" : "Iniciar sesión"}
           </a>
         </div>
         <button

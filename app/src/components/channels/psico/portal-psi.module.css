@@ -2,7 +2,7 @@
   --p: 0;
   position: relative;
   height: 260svh;
-  background: #12302a;
+  background: #1d1819;
 }
 
 .fijo {
@@ -48,7 +48,7 @@
   font-weight: 750;
   line-height: 1.02;
   letter-spacing: -0.045em;
-  color: #12302a;
+  color: #1d1819;
 }
 
 /* Cada línea entra cuando la ventana ya es grande. */

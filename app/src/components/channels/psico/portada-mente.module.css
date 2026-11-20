@@ -13,9 +13,9 @@
   min-height: 620px;
   overflow: hidden;
   background:
-    radial-gradient(70vmax 50vmax at 50% 110%, #2a6a58 0%, transparent 60%),
+    radial-gradient(70vmax 50vmax at 50% 110%, #6b1f1a 0%, transparent 60%),
     radial-gradient(50vmax 40vmax at 100% 0%, rgba(216, 52, 42, 0.18), transparent 60%),
-    #12302a;
+    #1d1819;
   color: #f5f2ec;
   isolation: isolate;
 }
@@ -229,7 +229,7 @@
   padding: 0.38rem 0.8rem;
   border-radius: 999px;
   background: #f5f2ec;
-  color: #12302a;
+  color: #1d1819;
   font-size: 0.78rem;
   font-weight: 700;
   white-space: nowrap;
@@ -246,7 +246,7 @@
 }
 
 .objetoEnlace:focus-visible .arte {
-  outline: 3px solid #f2d64b;
+  outline: 3px solid #f4b393;
   outline-offset: 6px;
   border-radius: 12px;
 }
@@ -271,15 +271,15 @@
   transform: none;
 }
 
-/* Sobre el verde, el bloque de texto heredado va en tinta clara. */
+/* Sobre el fondo oscuro, el bloque de texto heredado va en tinta clara. */
 .texto :global(h1) {
   color: #f5f2ec;
 }
 
 /* La acción principal, en el amarillo de la marca para que destaque. */
 .texto a[href*="acceso"] {
-  background: #f2d64b;
-  color: #12302a !important;
+  background: #f4b393;
+  color: #1d1819 !important;
 }
 
 /* ------------------------------------------------------------ celular */
@@ -302,7 +302,7 @@
     bottom: 0;
     max-width: none;
     padding: 3.5rem 1rem 1.25rem;
-    background: linear-gradient(180deg, transparent, #12302a 32%);
+    background: linear-gradient(180deg, transparent, #1d1819 32%);
   }
   .objeto {
     width: calc(var(--t) * 1.45);

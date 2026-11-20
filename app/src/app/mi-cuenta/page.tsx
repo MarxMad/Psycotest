@@ -73,7 +73,7 @@ function dominio(url: string) {
 
 export default async function MiCuentaInicio() {
   const user = await getSessionUser();
-  if (!user) redirect("/login?next=/mi-cuenta");
+  if (!user) redirect("/acceso?next=/mi-cuenta");
 
   const host = (await headers()).get("host");
   const canal = canalDelArea(getChannelFromHost(host)?.id ?? null);

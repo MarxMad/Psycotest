@@ -27,7 +27,7 @@
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--rule);
-  box-shadow: 0 1px 2px rgba(18, 48, 42, 0.05), 0 30px 60px -30px rgba(18, 48, 42, 0.35);
+  box-shadow: 0 1px 2px rgba(29, 24, 25, 0.05), 0 30px 60px -30px rgba(29, 24, 25, 0.35);
 }
 
 .lado {
@@ -39,7 +39,7 @@
   color: #f5f2ec;
   background:
     radial-gradient(28rem 18rem at 110% 0%, rgba(216, 52, 42, 0.35), transparent 65%),
-    linear-gradient(160deg, #1d5244 0%, #12302a 100%);
+    linear-gradient(160deg, #b52a22 0%, #1d1819 100%);
   overflow: hidden;
 }
 
@@ -98,7 +98,7 @@
 .ladoLista svg {
   flex: none;
   margin-top: 0.1rem;
-  color: #f2d64b;
+  color: #f4b393;
 }
 
 .ladoLista strong {
@@ -154,8 +154,8 @@
 .form input:focus {
   outline: none;
   background: var(--surface);
-  border-color: var(--verde-psi);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--verde-psi) 14%, transparent);
+  border-color: var(--acento-psi);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--acento-psi) 14%, transparent);
 }
 
 .form input.codigo {
@@ -190,23 +190,23 @@
   padding: 0.95rem 1.25rem;
   border: 0;
   border-radius: 999px;
-  background: var(--verde-psi);
+  background: var(--acento-psi);
   color: #ffffff;
   font: inherit;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 10px 24px -12px rgba(29, 82, 68, 0.7);
+  box-shadow: 0 10px 24px -12px rgba(181, 42, 34, 0.7);
 }
 
 .entrar:hover:not(:disabled) {
-  background: #12302a;
+  background: #1d1819;
   transform: translateY(-1px);
 }
 
 .entrar:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--verde-psi) 35%, transparent);
+  outline: 3px solid color-mix(in srgb, var(--acento-psi) 35%, transparent);
   outline-offset: 2px;
 }
 
@@ -249,7 +249,7 @@
   border-radius: 20px;
   background: var(--surface);
   border: 1px solid var(--rule);
-  box-shadow: 0 1px 2px rgba(18, 48, 42, 0.05), 0 30px 60px -30px rgba(18, 48, 42, 0.3);
+  box-shadow: 0 1px 2px rgba(29, 24, 25, 0.05), 0 30px 60px -30px rgba(29, 24, 25, 0.3);
 }
 
 .tableroCabeza {
@@ -274,8 +274,8 @@
   justify-items: center;
   padding: 0.6rem 0.9rem;
   border-radius: 14px;
-  background: color-mix(in srgb, var(--verde-psi) 8%, transparent);
-  color: var(--verde-psi);
+  background: color-mix(in srgb, var(--acento-psi) 8%, transparent);
+  color: var(--acento-psi);
 }
 
 .avance strong {
@@ -348,7 +348,7 @@
 }
 
 .testCard[data-done="true"] .testNum {
-  background: var(--verde-psi);
+  background: var(--acento-psi);
   color: #fff;
 }
 

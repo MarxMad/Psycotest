@@ -236,8 +236,8 @@ function Cabeza({ tapa, cara }: { tapa?: string; cara?: string }) {
             <stop offset="1" stopColor="#d9b493" />
           </radialGradient>
           <radialGradient id="pm-hueco" cx="50%" cy="40%" r="60%">
-            <stop offset="0" stopColor="#0a1a16" />
-            <stop offset="1" stopColor="#1d3d34" />
+            <stop offset="0" stopColor="#141011" />
+            <stop offset="1" stopColor="#2e2627" />
           </radialGradient>
         </defs>
         {/* Contorno blanco de calcomanía */}

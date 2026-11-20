@@ -660,7 +660,7 @@ function Saludo({ content, onCambiar }: { content: ChannelPageContent; onCambiar
       </div>
 
       <div ref={derecha} className={s.puertas}>
-        <a href="#bateria" className={s.puerta} data-tono="verde" onClick={() => onCambiar("empresas")}>
+        <a href="#bateria" className={s.puerta} data-tono="noche" onClick={() => onCambiar("empresas")}>
           <span className={s.puertaEtiqueta}>
             <Building2 size={14} aria-hidden /> Para tu empresa
           </span>
@@ -1004,7 +1004,7 @@ function Nosotros() {
               <>con método.</>,
               <>Interpretamos</>,
               <>
-                con <BloqueEnLinea color="#f2d64b" /> criterio.
+                con <BloqueEnLinea color="#f4b393" /> criterio.
               </>,
               <>
                 Cuidamos <BloqueEnLinea color="#f2b7a0" />

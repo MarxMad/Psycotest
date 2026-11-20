@@ -30,14 +30,14 @@ export const MARCAS: Record<Marca, DatosMarca> = {
   },
   ige: {
     nombre: "IGE · Ingeniería de Grupos Efectivos",
-    color: "#0e3a4a",
-    acento: "#f97316",
+    color: "#1f2a3d",
+    acento: "#f4c3a5",
     pie: "Capacitación para equipos de trabajo.",
   },
   psicologia: {
     nombre: "Psicología Aplicada",
-    color: "#1d5244",
-    acento: "#f2d64b",
+    color: "#b52a22",
+    acento: "#f4b393",
     pie: "Evaluación psicológica y selección de personal. Respaldo: Sociedad de Psicología Aplicada A.C.",
   },
   martin: {

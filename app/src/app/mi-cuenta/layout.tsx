@@ -19,8 +19,9 @@ export default async function MiCuentaLayout({ children }: { children: React.Rea
 
   const user = await getSessionUser();
   if (!user) {
-    // CEDUCT tiene su propia pantalla de acceso; las demás marcas usan la de la plataforma.
-    redirect(desdeHost === "ceduct" ? "/acceso?next=/mi-cuenta" : "/login?next=/mi-cuenta");
+    // Cada marca tiene su pantalla de acceso; /acceso manda al inicio de
+    // sesión del equipo cuando el dominio no es de ninguna.
+    redirect(desdeHost ? "/acceso?next=/mi-cuenta" : "/login?next=/mi-cuenta");
   }
 
   // La zona sigue al dominio: aunque no tenga nada aquí, ve esta marca y el

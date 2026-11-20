@@ -4,10 +4,10 @@
  * renders definitivos poniendo `imagen` en cada objeto de PortadaMente.
  */
 
-const VERDE = "#1d5244";
+const VERDE = "#1d1819";
 const CREMA = "#f1e3cf";
 const ROJO = "#d8342a";
-const AMARILLO = "#f2d64b";
+const AMARILLO = "#f4b393";
 
 function Cerebro() {
   return (
@@ -89,16 +89,16 @@ function Balanza() {
     <svg viewBox="0 0 180 160">
       <defs>
         <linearGradient id="am-metal" x1="0" x2="1">
-          <stop offset="0" stopColor="#2b6b59" />
-          <stop offset="0.5" stopColor="#3f8f78" />
-          <stop offset="1" stopColor="#174237" />
+          <stop offset="0" stopColor="#4a3f40" />
+          <stop offset="0.5" stopColor="#6d6162" />
+          <stop offset="1" stopColor="#3a3031" />
         </linearGradient>
       </defs>
       <rect x="84" y="24" width="12" height="112" rx="5" fill="url(#am-metal)" />
       <rect x="54" y="132" width="72" height="16" rx="8" fill={VERDE} />
       <rect x="18" y="30" width="144" height="9" rx="4.5" fill="url(#am-metal)" transform="rotate(-8 90 34)" />
       <circle cx="90" cy="26" r="9" fill={AMARILLO} />
-      <g stroke="#174237" strokeWidth="2.5">
+      <g stroke="#3a3031" strokeWidth="2.5">
         <path d="M26 45 L12 88 M26 45 L40 88" />
         <path d="M154 25 L140 68 M154 25 L168 68" />
       </g>

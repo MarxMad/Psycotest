@@ -14,6 +14,6 @@
 export const PARAM_SALIDA = "salir";
 
 /** Destino de los botones de «Salir». */
-export function rutaDeSalida(): string {
-  return `/login?${PARAM_SALIDA}=1`;
+export function rutaDeSalida(acceso: "/login" | "/acceso" = "/login"): string {
+  return `${acceso}?${PARAM_SALIDA}=1`;
 }

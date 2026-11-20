@@ -180,16 +180,16 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     theme: {
       fontDisplay: '"DM Sans", sans-serif',
       fontBody: '"DM Sans", sans-serif',
-      // Claro y cálido: papel, verde bosque y amarillo mantequilla. El sitio
+      // Claro y cálido: papel, tinta casi negra, el rojo del logo y durazno. El sitio
       // oscuro de antes no transmitía confianza a quien va a evaluar personas.
       vars: {
         "--ch-bg": "#f5f2ec",
         "--ch-surface": "#ffffff",
-        "--ch-ink": "#12302a",
-        "--ch-muted": "#5b6a64",
-        "--ch-accent": "#1d5244",
-        "--ch-accent-2": "#f2d64b",
-        "--ch-rule": "rgba(18,48,42,0.12)",
+        "--ch-ink": "#1d1819",
+        "--ch-muted": "#6e6461",
+        "--ch-accent": "#b52a22",
+        "--ch-accent-2": "#f4b393",
+        "--ch-rule": "rgba(29, 24, 25,0.12)",
         "--ch-hero-overlay": "linear-gradient(180deg, rgba(245,242,236,0) 0%, rgba(245,242,236,0.6) 100%)",
       },
     },
@@ -215,15 +215,17 @@ export const CHANNELS: Record<ChannelId, ChannelDef> = {
     theme: {
       fontDisplay: '"Outfit", "Space Grotesk", sans-serif',
       fontBody: '"Manrope", "DM Sans", sans-serif',
+      // El cielo de la portada: crema, tinta azul marino y durazno. Lo usan
+      // también «Mi cuenta», el acceso y las lecciones de IGE.
       vars: {
-        "--ch-bg": "#0a0d10",
-        "--ch-surface": "#12171c",
-        "--ch-ink": "#f3f6f8",
-        "--ch-muted": "#93a1ad",
-        "--ch-accent": "#22d3ee",
-        "--ch-accent-2": "#f97316",
-        "--ch-rule": "rgba(34,211,238,0.22)",
-        "--ch-hero-overlay": "linear-gradient(100deg, rgba(10,13,16,0.92) 0%, rgba(10,13,16,0.55) 50%, rgba(10,13,16,0.15) 100%)",
+        "--ch-bg": "#f8f4ea",
+        "--ch-surface": "#ffffff",
+        "--ch-ink": "#1f2a3d",
+        "--ch-muted": "#6c7487",
+        "--ch-accent": "#1f2a3d",
+        "--ch-accent-2": "#f4c3a5",
+        "--ch-rule": "rgba(31,42,61,0.13)",
+        "--ch-hero-overlay": "linear-gradient(180deg, rgba(248,244,234,0) 0%, rgba(248,244,234,0.6) 100%)",
       },
     },
     primaryCta: { label: "Ver cursos", href: "#academia" },
@@ -349,9 +351,11 @@ export function getChannelPlatformCtas(
  */
 const CHANNEL_PATHS: Record<ChannelId, readonly string[]> = {
   ceduct: ["/nosotros", "/contacto", "/acceso", "/mis-cursos"],
-  martin: [],
-  psicologia: [],
-  ige: [],
+  // El acceso de alumnos y clientes lleva la marca del dominio (Martín no
+  // tiene zona privada: su /acceso reenvía al inicio de sesión del equipo).
+  martin: ["/acceso"],
+  psicologia: ["/acceso"],
+  ige: ["/acceso"],
 };
 
 /** ¿`pathname` es una ruta propia de `channelId`? */

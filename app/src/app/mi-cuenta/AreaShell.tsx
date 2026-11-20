@@ -32,7 +32,9 @@ export function AreaShell({
 
   async function salir() {
     await fetch("/api/auth/login", { method: "DELETE" });
-    router.push(rutaDeSalida());
+    // Vuelve al acceso de esta marca; fuera de un dominio de marca, /acceso
+    // reenvía al inicio de sesión del equipo.
+    router.push(rutaDeSalida("/acceso"));
     router.refresh();
   }
 

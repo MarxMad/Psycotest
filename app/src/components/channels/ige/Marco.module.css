@@ -248,6 +248,35 @@
   font-size: 0.82rem;
 }
 
+/* La puerta a «Mi cuenta», como el «Iniciar sesión» de CEDUCT: se queda
+   visible también en el teléfono. */
+.botonAcceso {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.2rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 7px;
+  background: var(--tinta);
+  color: #fbf7ef;
+  font-family: var(--sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.botonAcceso:hover {
+  transform: translateY(-2px);
+  background: #2c3a54;
+}
+
+.botonAcceso:focus-visible {
+  outline: 3px solid var(--durazno);
+  outline-offset: 2px;
+}
+
 .botonMenu {
   display: none;
 }

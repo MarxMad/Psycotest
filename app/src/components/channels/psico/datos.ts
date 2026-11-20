@@ -19,8 +19,8 @@ export type Presentacion = {
 
 export const PRESENTACION: Record<string, Presentacion> = {
   papi: {
-    fondo: "#d4e4d6",
-    tinta: "#163f33",
+    fondo: "#f6ddd6",
+    tinta: "#6b1f1a",
     muestra: {
       instruccion: "Elige la frase que más se parece a ti",
       opciones: [

@@ -121,21 +121,21 @@
 /* Psicología: claro, igual que su portada. */
 .navPsico {
   background: rgba(245, 242, 236, 0.86);
-  border-bottom-color: rgba(18, 48, 42, 0.1);
-  color: #12302a;
+  border-bottom-color: rgba(29, 24, 25, 0.1);
+  color: #1d1819;
   backdrop-filter: blur(14px);
 }
 
 .navPsico .brandMark {
-  color: #1d5244;
+  color: #b52a22;
 }
 
 .navPsico .links a {
-  color: rgba(18, 48, 42, 0.72);
+  color: rgba(29, 24, 25, 0.72);
 }
 
 .navPsico .links a:hover {
-  color: #12302a;
+  color: #1d1819;
 }
 
 .footerLight {
@@ -157,7 +157,7 @@
 }
 
 .footerPsico {
-  background: #0f3a2e;
+  background: #221b1c;
   color: #f1e3cf;
   border-top-color: rgba(241, 227, 207, 0.12);
 }
