@@ -12,7 +12,7 @@ export type Prueba = {
   nombre: string;
   etiqueta: string;
   minutos: number;
-  /** Precio por candidato, en centavos. Sin precio, se cotiza aparte. */
+  /** Precio por candidato sin IVA, en centavos. Sin precio, se cotiza aparte. */
   precio: number | null;
   descripcion: string;
 };
@@ -23,7 +23,7 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Inventario de Personalidad",
     etiqueta: "Rasgos y estilo de trabajo",
     minutos: 20,
-    precio: 35000,
+    precio: 75000,
     descripcion: "Cómo se conduce en el día a día: iniciativa, trato, tolerancia a la presión.",
   },
   {
@@ -31,7 +31,7 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Axiología de Valores",
     etiqueta: "Valores y motivación",
     minutos: 15,
-    precio: 30000,
+    precio: 85000,
     descripcion: "Qué lo mueve de verdad y si embona con la cultura de tu organización.",
   },
   {
@@ -39,7 +39,7 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Toma de Decisiones",
     etiqueta: "Criterio aplicado",
     minutos: 25,
-    precio: 38000,
+    precio: 65000,
     descripcion: "Qué información usa para decidir, qué riesgo acepta y qué tan consistente es.",
   },
   {
@@ -47,7 +47,7 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Compatibilidad Puesto–Persona",
     etiqueta: "Ajuste al puesto",
     minutos: 12,
-    precio: 28000,
+    precio: 55000,
     descripcion: "Qué exige el puesto contra lo que la persona ofrece, y dónde habrá fricción.",
   },
   {
@@ -55,8 +55,7 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Estilos de Vida y Trabajo",
     etiqueta: "Fortalezas y estrés",
     minutos: 25,
-    // Provisional, igual que Estilos Gerenciales: lo confirma el cliente.
-    precio: 32000,
+    precio: 75000,
     descripcion:
       "Cómo trabaja cuando todo va bien y cómo cambia bajo presión: sus fortalezas y en qué se excede.",
   },
@@ -65,7 +64,8 @@ export const PRUEBAS: Prueba[] = [
     nombre: "Estilos Gerenciales",
     etiqueta: "Conducción de equipos",
     minutos: 15,
-    precio: 32000,
+    // Sin precio en la lista del cliente: se cotiza aparte.
+    precio: null,
     descripcion: "Cómo dirige, cómo delega y cómo sostiene el resultado con su equipo.",
   },
   {
@@ -74,8 +74,8 @@ export const PRUEBAS: Prueba[] = [
     etiqueta: "Entorno, visita y referencias",
     // Lo que tarda el candidato en su parte; la visita y las llamadas van aparte.
     minutos: 40,
-    // Aún sin precio: lo fija el cliente. Mientras, se cotiza aparte.
-    precio: null,
+    // $986 con IVA. No se cobra en línea: la visita se coordina aparte.
+    precio: 85000,
     descripcion:
       "Situación familiar y económica, visita domiciliaria y verificación de referencias laborales.",
   },
@@ -124,16 +124,23 @@ export function cotizar(ids: string[], candidatos: number): Cotizacion {
 }
 
 /** La prueba con precio más barata: el piso para anunciar «desde». */
+/** Precio por candidato con IVA, como lo paga el cliente. */
+export function conIva(centavos: number): number {
+  return Math.round(centavos * (1 + TASA_IVA));
+}
+
 export function precioMinimo(): number {
   return Math.min(...PRUEBAS.flatMap((p) => (p.precio == null ? [] : [p.precio])));
 }
 
 /**
  * La batería completa es el caso normal: las pruebas psicométricas se leen
- * juntas. El estudio socioeconómico no entra: es otro servicio y se agrega
- * a mano.
+ * juntas ($4,118 con IVA). El estudio socioeconómico no entra: es otro
+ * servicio y se agrega a mano; tampoco lo que aún no tiene precio.
  */
-export const BATERIA_COMPLETA = PRUEBAS.filter((p) => p.id !== "socioeconomico").map((p) => p.id);
+export const BATERIA_COMPLETA = PRUEBAS.filter((p) => p.id !== "socioeconomico" && p.precio != null).map(
+  (p) => p.id,
+);
 
 /**
  * Pruebas que se pueden pagar en línea: las que ya están digitalizadas (el

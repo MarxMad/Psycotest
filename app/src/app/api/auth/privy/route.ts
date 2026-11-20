@@ -9,6 +9,8 @@ import {
 } from "@/lib/auth";
 import { privyConfigurado, verificarToken } from "@/lib/privy";
 import { usuarioDesdePrivy } from "@/lib/privy-usuarios";
+import { operaElPanel } from "@/lib/auth-rutas";
+import { sitioDelAlumno } from "@/lib/canal-del-alumno";
 
 /**
  * Intercambia el token de Privy por la sesión propia de la aplicación.
@@ -22,9 +24,11 @@ export async function POST(request: Request) {
     );
   }
 
-  const { token, next, manual } = (await request.json().catch(() => ({}))) as {
+  const { token, next, manual, panel } = (await request.json().catch(() => ({}))) as {
     token?: string;
     next?: string;
+    /** Viene de la entrada del equipo (/login): solo entra quien opera el panel. */
+    panel?: boolean;
     /** La persona pulsó «Entrar»; si no, es el canje automático de una sesión de Privy abierta. */
     manual?: boolean;
   };
@@ -51,6 +55,18 @@ export async function POST(request: Request) {
     const user = await usuarioDesdePrivy(identidad);
     if (!user) {
       return NextResponse.json({ error: "No se pudo resolver la cuenta." }, { status: 500 });
+    }
+
+    // La entrada del equipo no es para alumnos ni clientes: no se les abre
+    // sesión aquí y se les manda al sitio de su empresa, que es el único que
+    // conocen.
+    if (panel && !operaElPanel(user.rol)) {
+      const sitio = await sitioDelAlumno(user.id);
+      if (sitio) return NextResponse.json({ next: sitio, fuera: true });
+      return NextResponse.json(
+        { error: "Esta entrada es solo para el equipo. Entra desde el sitio donde compraste." },
+        { status: 403 },
+      );
     }
 
     const sesion = await createSessionToken(user);

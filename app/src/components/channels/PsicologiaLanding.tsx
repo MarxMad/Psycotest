@@ -951,7 +951,7 @@ function Cotizar({ publico, onCambiar }: { publico: Publico | null; onCambiar: (
         <p>
           {personal
             ? "Marca los instrumentos que quieres responder y el precio se arma solo. Respondes en línea y tu informe llega en 72 horas."
-            : "Marca los instrumentos que necesitas, dinos a cuántas personas evalúas y el precio se arma solo. El estudio socioeconómico se cotiza aparte."}
+            : "Marca los instrumentos que necesitas, dinos a cuántas personas evalúas y el precio se arma solo. El estudio socioeconómico ($986 con IVA) incluye visita domiciliaria y se coordina aparte."}
         </p>
       </div>
       <Cotizador modo={personal ? "persona" : "empresa"} />

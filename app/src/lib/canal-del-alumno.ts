@@ -14,7 +14,7 @@ import {
   courses,
   studentExpedientes,
 } from "@/db/schema";
-import { CHANNEL_IDS, type ChannelId } from "./channels";
+import { CHANNEL_IDS, dominioDeCanal, type ChannelId } from "./channels";
 import { tieneAreaAlumno } from "./area-alumno";
 
 export type PertenenciaCanal = Record<ChannelId, number>;
@@ -82,4 +82,18 @@ export async function canalDeEntrada(
   );
 
   return conContenido[0] ?? null;
+}
+
+/**
+ * «Mi cuenta» en el sitio de la empresa que le corresponde, con su dominio.
+ *
+ * Para el alumno cada empresa es una plataforma distinta: nunca se le
+ * muestra que comparten panel. Quien llega por la entrada del equipo o por
+ * un dominio sin marca se manda aquí. Null si no tiene nada en ninguna o si
+ * esa empresa todavía no tiene dominio propio.
+ */
+export async function sitioDelAlumno(userId: string): Promise<string | null> {
+  const canal = await canalDeEntrada(userId, null);
+  const dominio = canal ? dominioDeCanal(canal) : null;
+  return dominio ? `https://${dominio}/mi-cuenta` : null;
 }

@@ -21,12 +21,12 @@ const TEXTOS: Partial<Record<ChannelId, { cita: string; resalte: string; puntos:
     ],
   },
   psicologia: {
-    cita: "Tus evaluaciones y tus diplomados,",
+    cita: "Tus evaluaciones y sus informes,",
     resalte: "en un solo lugar.",
     puntos: [
       "Consulta los resultados de tus candidatos",
       "Descarga los informes interpretados",
-      "Sigue tu avance en los diplomados",
+      "Revisa tus códigos y cuántas aplicaciones te quedan",
     ],
   },
 };

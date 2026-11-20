@@ -1,18 +1,15 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ArrowRight, ArrowUpRight, Lock } from "lucide-react";
+import { ArrowRight, Lock } from "lucide-react";
 import { getSessionUser } from "@/lib/auth";
 import { CHANNELS, channelPublicUrl, getChannelFromHost, type ChannelId } from "@/lib/channels";
 import { SECCIONES_ALUMNO, canalDelArea } from "@/lib/area-alumno";
-import { LOGO_DE_MARCA } from "@/lib/logos-marca";
 import { resumenDelAlumno, type CursoDelAlumno, type ResumenAlumno } from "@/lib/resumen-alumno";
 import { Avance } from "./Secciones";
 import s from "./inicio.module.css";
 
 export const dynamic = "force-dynamic";
-
-const MARCAS: ChannelId[] = ["psicologia", "ceduct", "ige"];
 
 /** Qué vende cada marca, en palabras de quien compra. */
 const QUE_OFRECE: Record<ChannelId, { texto: string; catalogo: string; cta: string }> = {
@@ -46,7 +43,6 @@ function cifrasDe(canal: ChannelId, r: ResumenAlumno, cursos: CursoDelAlumno[]):
       { valor: `${r.evaluaciones.usadas}/${r.evaluaciones.capacidad}`, etiqueta: "Aplicaciones usadas" },
       { valor: String(r.evaluaciones.terminadas), etiqueta: "Pruebas terminadas" },
     ];
-    if (cursos.length) lista.push({ valor: String(cursos.length), etiqueta: "Diplomados" });
     return lista;
   }
   if (canal === "ceduct") {
@@ -63,14 +59,6 @@ function cifrasDe(canal: ChannelId, r: ResumenAlumno, cursos: CursoDelAlumno[]):
   ];
 }
 
-function dominio(url: string) {
-  try {
-    return new URL(url).host.replace(/^www\./, "");
-  } catch {
-    return url;
-  }
-}
-
 export default async function MiCuentaInicio() {
   const user = await getSessionUser();
   if (!user) redirect("/acceso?next=/mi-cuenta");
@@ -80,39 +68,23 @@ export default async function MiCuentaInicio() {
   const r = await resumenDelAlumno(user.id);
   const nombre = user.nombre.split(" ")[0];
 
-  const otras = MARCAS.filter((m) => m !== canal && r.conteo[m] > 0);
-
-  // ---------------------------------------------------------------- tablero del grupo
+  // Dominio sin marca: el layout ya mandó a cada quien a su sitio. Si llega
+  // aquí es que no tiene nada en ninguna empresa; no se nombra ninguna.
   if (canal === "martin") {
-    const conAlgo = MARCAS.filter((m) => r.conteo[m] > 0);
     return (
       <>
         <header className={s.saludo}>
           <p className={s.kicker}>Mi cuenta</p>
           <h1>Hola, {nombre}.</h1>
-          <p>
-            {conAlgo.length
-              ? "Esto es lo que tienes en cada una de nuestras escuelas. Cada una vive en su propio sitio: entra con este mismo correo."
-              : "Tu cuenta está creada, pero todavía no tienes acceso a ningún curso, diplomado ni evaluación."}
-          </p>
         </header>
-        {!conAlgo.length && <SinAcceso />}
-        <div className={s.marcas}>
-          {(conAlgo.length ? conAlgo : MARCAS).map((m) => (
-            <TarjetaMarca
-              key={m}
-              canal={m}
-              tiene={r.conteo[m] > 0}
-              detalle={conAlgo.length ? lineaDe(m, r) : QUE_OFRECE[m].texto}
-            />
-          ))}
-        </div>
+        <SinAcceso />
       </>
     );
   }
 
   // ---------------------------------------------------------------- tablero de una marca
-  const cursos = r.cursos.filter((c) => c.canal === canal);
+  // Psicología Aplicada solo muestra sus pruebas; los cursos son de las otras.
+  const cursos = canal === "psicologia" ? [] : r.cursos.filter((c) => c.canal === canal);
   const tieneAqui = r.conteo[canal] > 0;
   const oferta = QUE_OFRECE[canal];
   const secciones = SECCIONES_ALUMNO[canal];
@@ -181,59 +153,12 @@ export default async function MiCuentaInicio() {
         />
       )}
 
-      {otras.length > 0 && (
-        <section className={s.bloque}>
-          <h2>También tienes contenido en</h2>
-          <p className={s.nota}>
-            Cada escuela tiene su propio sitio. Al entrar, inicia sesión con este mismo correo.
-          </p>
-          <div className={s.marcas}>
-            {otras.map((m) => (
-              <TarjetaMarca key={m} canal={m} tiene detalle={lineaDe(m, r)} />
-            ))}
-          </div>
-        </section>
-      )}
     </>
   );
 }
 
-/** Una línea con lo que la persona tiene en esa marca. */
-function lineaDe(canal: ChannelId, r: ResumenAlumno): string {
-  const cursos = r.cursos.filter((c) => c.canal === canal).length;
-  const partes: string[] = [];
-  if (canal === "psicologia" && r.evaluaciones.codigos) {
-    partes.push(`${r.evaluaciones.codigos} código${r.evaluaciones.codigos === 1 ? "" : "s"} de evaluación`);
-  }
-  if (canal === "ceduct" && r.expedientes.total) {
-    partes.push(`${r.expedientes.total} expediente${r.expedientes.total === 1 ? "" : "s"} de certificación`);
-  }
-  if (cursos) {
-    const palabra = canal === "ige" ? "curso" : canal === "ceduct" ? "programa" : "diplomado";
-    partes.push(`${cursos} ${palabra}${cursos === 1 ? "" : "s"}`);
-  }
-  return partes.join(" · ") || "Contenido disponible";
-}
-
-function TarjetaMarca({ canal, tiene, detalle }: { canal: ChannelId; tiene: boolean; detalle: string }) {
-  const url = channelPublicUrl(canal, tiene ? "/mi-cuenta" : "/");
-  return (
-    <a href={url} className={s.marca} data-canal={canal} style={CHANNELS[canal].theme.vars as React.CSSProperties}>
-      <img src={LOGO_DE_MARCA[canal]} alt="" className={s.marcaLogo} />
-      <span className={s.marcaTexto}>
-        <strong>{CHANNELS[canal].name}</strong>
-        <span>{detalle}</span>
-        <small>{dominio(url)}</small>
-      </span>
-      <span className={s.marcaIr}>
-        {tiene ? "Entrar" : "Conocer"} <ArrowUpRight size={15} aria-hidden />
-      </span>
-    </a>
-  );
-}
-
 function SinAcceso({
-  texto = "Cuando compres un curso, un diplomado o una evaluación —o alguien te invite— lo verás aquí.",
+  texto = "Cuando compres o alguien te invite, lo verás aquí.",
   accion,
 }: {
   texto?: string;

@@ -17,6 +17,7 @@ const CON_ENCABEZADO_PROPIO = [
   "/nosotros",
   "/contacto",
   "/acceso",
+  "/login",
   "/mis-cursos",
   "/mi-cuenta",
   // El flujo del aplicante trae la cabecera de Psicología Aplicada.

@@ -17,18 +17,27 @@ import s from "./PrivyLoginButton.module.css";
  * públicas sobre HTTP ("Embedded wallet is only available over HTTPS") y
  * cargaba su peso en cada visita sin hacer falta.
  */
-export function PrivyLoginButton({ next, salir }: { next?: string; salir?: boolean }) {
+export function PrivyLoginButton({
+  next,
+  salir,
+  panel,
+}: {
+  next?: string;
+  salir?: boolean;
+  /** Entrada del equipo: a un alumno se le manda al sitio de su empresa. */
+  panel?: boolean;
+}) {
   const appId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
   if (!appId) return null;
 
   return (
     <PrivyProvider>
-      <BotonPrivy next={next} salir={salir} />
+      <BotonPrivy next={next} salir={salir} panel={panel} />
     </PrivyProvider>
   );
 }
 
-function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
+function BotonPrivy({ next, salir, panel }: { next?: string; salir?: boolean; panel?: boolean }) {
   const router = useRouter();
   // Cada marca tiene su propia pantalla de acceso: al cerrar se queda en ella.
   const ruta = usePathname() || "/login";
@@ -67,7 +76,7 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       const r = await fetch("/api/auth/privy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, next, manual }),
+        body: JSON.stringify({ token, next, manual, panel }),
       });
       const d = await r.json();
       // Salió a propósito: la sesión de Privy que quedaba se cierra en
@@ -78,6 +87,13 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       }
       if (!r.ok) throw new Error(d.error ?? "No se pudo iniciar sesión");
       canjeHecho.current = true;
+      // Un alumno en la entrada del equipo: se va al sitio de su empresa,
+      // sin sesión abierta aquí.
+      if (d.fuera) {
+        await logoutRef.current().catch(() => {});
+        window.location.assign(d.next);
+        return;
+      }
       // El servidor ya validó el destino contra el rol; no se sobreescribe.
       router.push(d.next);
       router.refresh();
@@ -90,7 +106,7 @@ function BotonPrivy({ next, salir }: { next?: string; salir?: boolean }) {
       canjeEnCurso.current = false;
       setCanjeando(false);
     }
-  }, [next, router]);
+  }, [next, panel, router]);
 
   const canjearRef = useRef(canjearSesion);
   canjearRef.current = canjearSesion;

@@ -40,16 +40,12 @@ export const SECCIONES_ALUMNO: Record<ChannelId, SeccionAlumno[]> = {
       descripcion: "Los diplomados y estándares en los que estás inscrito.",
     },
   ],
+  // Psicología Aplicada solo vende pruebas: su zona solo muestra eso.
   psicologia: [
     {
       href: `${AREA_BASE}/evaluaciones`,
       label: "Mis evaluaciones",
       descripcion: "Resultados de los candidatos que evaluaste y sus informes.",
-    },
-    {
-      href: `${AREA_BASE}/programas`,
-      label: "Mis diplomados",
-      descripcion: "Tu avance en los diplomados de 90 horas.",
     },
   ],
   ige: [
@@ -85,9 +81,9 @@ export function inicioDelArea(_canal?: ChannelId): string {
  * Qué marca viste «Mi cuenta» en este dominio.
  *
  * Cada marca tiene su dominio y su sesión (la cookie es por dominio), así
- * que la zona privada sigue al dominio y nunca salta a la de otra marca: eso
- * era lo confuso. El dominio del grupo (Counseling) y el del panel no venden
- * por sí mismos: ahí «Mi cuenta» es un tablero que reparte a cada marca.
+ * que la zona privada sigue al dominio y nunca salta a la de otra marca. Para
+ * el alumno cada empresa es una plataforma distinta: ninguna menciona a las
+ * otras. En un dominio sin marca («martin»), el layout lo manda a la suya.
  */
 export function canalDelArea(canalDelHost: ChannelId | null): ChannelId {
   return canalDelHost && tieneAreaAlumno(canalDelHost) ? canalDelHost : "martin";

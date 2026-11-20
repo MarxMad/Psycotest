@@ -141,6 +141,12 @@
   color: var(--ch-muted);
 }
 
+.notaPrecios {
+  margin: -0.2rem 0 0.6rem;
+  font-size: 0.78rem;
+  color: var(--ch-muted);
+}
+
 .pruebaPrecio {
   font-size: 0.85rem;
   font-weight: 650;

@@ -8,6 +8,7 @@ import {
   MAX_CANDIDATOS_EN_LINEA,
   PRUEBAS,
   TASA_IVA,
+  conIva,
   cotizarEnLinea,
   descuentoPorVolumen,
 } from "@/lib/pruebas-catalogo";
@@ -170,6 +171,8 @@ export function Cotizador({
             </button>
           </legend>
 
+          <p className={s.notaPrecios}>Precio por {personal ? "evaluación" : "candidato"}, IVA incluido.</p>
+
           <div className={s.pruebas}>
             {PRUEBAS.map((p) => {
               const puesta = elegidas.includes(p.id);
@@ -197,7 +200,7 @@ export function Cotizador({
                     <em>{p.etiqueta}</em>
                   </span>
                   <span className={s.pruebaPrecio}>
-                    {p.precio == null ? "Por cotizar" : pesos(p.precio)}
+                    {p.precio == null ? "Por cotizar" : pesos(conIva(p.precio))}
                   </span>
                 </button>
               );
@@ -285,7 +288,11 @@ export function Cotizador({
             {cuenta.aparte.map((p) => (
               <li key={p.id}>
                 <span>{p.nombre}</span>
-                <strong>Se cotiza aparte</strong>
+                <strong>
+                  {p.precio == null
+                    ? "Se cotiza aparte"
+                    : `${pesos(conIva(p.precio))}${personal ? "" : " c/u"} · aparte`}
+                </strong>
               </li>
             ))}
             <li className={s.tiempo}>
