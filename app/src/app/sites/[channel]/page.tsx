@@ -4,7 +4,7 @@ import { Landing as CeductMarketplace } from "@/components/marketplace/landing/L
 import { MarketShell } from "@/components/marketplace/MarketShell";
 import { obtenerCatalogo } from "@/lib/ceduct/catalogo";
 import { IgeLanding } from "@/components/channels/IgeLanding";
-import { MartinLanding } from "@/components/channels/MartinLanding";
+import { CounselingLanding } from "@/components/channels/counseling/CounselingLanding";
 import { ChannelLanding } from "@/components/channels/ChannelLanding";
 import { ChannelShell } from "@/components/channels/ChannelShell";
 import { PsicologiaLanding } from "@/components/channels/PsicologiaLanding";
@@ -68,10 +68,19 @@ export default async function ChannelSitePage({ params }: Props) {
     );
   }
 
-  let landing = <ChannelLanding channel={channel} content={content} />;
+  // counseling.mx (Martín) es una sola pieza con la pirámide 3D: trae su
+  // propio encabezado y pie.
   if (channel.id === "martin") {
-    landing = <MartinLanding channel={channel} content={content} />;
+    return (
+      <div className={clasesDeCanal(channel.id)} data-channel={channel.id}>
+        <CounselingLanding content={content} />
+      </div>
+    );
   }
 
-  return <ChannelShell channel={channel}>{landing}</ChannelShell>;
+  return (
+    <ChannelShell channel={channel}>
+      <ChannelLanding channel={channel} content={content} />
+    </ChannelShell>
+  );
 }

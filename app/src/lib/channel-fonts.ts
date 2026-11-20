@@ -77,9 +77,10 @@ type ParTipografico = {
 };
 
 export const FUENTES_CANAL: Record<ChannelId, ParTipografico> = {
+  // counseling.mx: grotesca pesada para el nombre gigante; la serif queda de acento.
   martin: {
-    className: `${fraunces.variable} ${dmSans.variable}`,
-    display: "var(--f-fraunces), Georgia, serif",
+    className: `${outfit.variable} ${dmSans.variable} ${fraunces.variable}`,
+    display: "var(--f-outfit), system-ui, sans-serif",
     body: "var(--f-dm-sans), system-ui, sans-serif",
   },
   ceduct: {

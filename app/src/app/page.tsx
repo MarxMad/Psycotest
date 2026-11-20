@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { ChannelShell } from "@/components/channels/ChannelShell";
-import { MartinLanding } from "@/components/channels/MartinLanding";
+import { CounselingLanding } from "@/components/channels/counseling/CounselingLanding";
 import { getChannelPage } from "@/lib/channel-store";
-import { CHANNELS } from "@/lib/channels";
+import { clasesDeCanal } from "@/lib/tema-canal";
 
 /** El contenido vive en la base (channel-store): no se puede prerenderizar. */
 export const dynamic = "force-dynamic";
@@ -22,11 +21,10 @@ export const metadata: Metadata = {
  * persona necesita.
  */
 export default async function PortadaDelGrupo() {
-  const canal = CHANNELS.martin;
   const content = await getChannelPage("martin");
   return (
-    <ChannelShell channel={canal}>
-      <MartinLanding channel={canal} content={content} />
-    </ChannelShell>
+    <div className={clasesDeCanal("martin")} data-channel="martin">
+      <CounselingLanding content={content} />
+    </div>
   );
 }
