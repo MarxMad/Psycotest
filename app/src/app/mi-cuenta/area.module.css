@@ -57,15 +57,24 @@
 .brandMark {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   flex: none;
-  border-radius: 9px;
-  background: var(--acento);
-  color: var(--bg);
-  font-family: var(--ch-font-display);
-  font-size: 0.8rem;
-  font-weight: 700;
+  padding: 5px;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.brandMark img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* La pirámide de Counseling luce sobre su azul noche. */
+.brandMark[data-canal="martin"] {
+  background: #0c1222;
 }
 
 .brandText {

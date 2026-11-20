@@ -73,9 +73,24 @@ export function tieneAreaAlumno(canal: ChannelId): boolean {
   return SECCIONES_ALUMNO[canal].length > 0;
 }
 
-/** Primera sección del canal; es a donde cae alguien al entrar. */
-export function inicioDelArea(canal: ChannelId): string {
-  return SECCIONES_ALUMNO[canal][0]?.href ?? AREA_BASE;
+/**
+ * A dónde cae alguien al entrar: el inicio de «Mi cuenta», con el resumen de
+ * lo que tiene. Es igual en todos los canales.
+ */
+export function inicioDelArea(_canal?: ChannelId): string {
+  return AREA_BASE;
+}
+
+/**
+ * Qué marca viste «Mi cuenta» en este dominio.
+ *
+ * Cada marca tiene su dominio y su sesión (la cookie es por dominio), así
+ * que la zona privada sigue al dominio y nunca salta a la de otra marca: eso
+ * era lo confuso. El dominio del grupo (Counseling) y el del panel no venden
+ * por sí mismos: ahí «Mi cuenta» es un tablero que reparte a cada marca.
+ */
+export function canalDelArea(canalDelHost: ChannelId | null): ChannelId {
+  return canalDelHost && tieneAreaAlumno(canalDelHost) ? canalDelHost : "martin";
 }
 
 /** Título de la zona, para el encabezado. */

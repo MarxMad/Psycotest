@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ChannelId } from "@/lib/channels";
-import { SECCIONES_ALUMNO, TITULO_AREA } from "@/lib/area-alumno";
+import { AREA_BASE, SECCIONES_ALUMNO, TITULO_AREA } from "@/lib/area-alumno";
+import { LOGO_DE_MARCA } from "@/lib/logos-marca";
 import { FUENTES_CANAL } from "@/lib/channel-fonts";
 import { CHANNELS } from "@/lib/channels";
 import s from "./area.module.css";
@@ -35,11 +36,13 @@ export function AreaShell({
     router.refresh();
   }
 
-  const secciones = SECCIONES_ALUMNO[canal];
+  // «Inicio» (el resumen) va primero; luego las secciones de la marca.
+  const secciones = [{ href: AREA_BASE, label: "Inicio" }, ...SECCIONES_ALUMNO[canal]];
   const fuentes = FUENTES_CANAL[canal];
   const tema = CHANNELS[canal].theme.vars as Record<string, string>;
 
-  const activo = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const activo = (href: string) =>
+    href === AREA_BASE ? pathname === href : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <div
@@ -53,9 +56,9 @@ export function AreaShell({
     >
       <header className={s.header}>
         <div className={s.headerInner}>
-          <Link href={secciones[0]?.href ?? "/mi-cuenta"} className={s.brand}>
-            <span className={s.brandMark} aria-hidden>
-              {marca.slice(0, 2).toUpperCase()}
+          <Link href={AREA_BASE} className={s.brand}>
+            <span className={s.brandMark} data-canal={canal} aria-hidden>
+              <img src={LOGO_DE_MARCA[canal]} alt="" />
             </span>
             <span className={s.brandText}>
               <strong>{TITULO_AREA[canal]}</strong>

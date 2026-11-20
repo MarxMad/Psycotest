@@ -1,0 +1,151 @@
+/* Marco de marca del flujo del aplicante: Psicología Aplicada. */
+
+.tema {
+  /* Siempre claro: es la identidad de la marca y lo que el aplicante ve en
+     el sitio público; el modo oscuro del sistema no aplica aquí. */
+  color-scheme: light;
+  --rojo-psi: #d8342a;
+  --verde-psi: #1d5244;
+
+  /* Las pruebas conservan un color propio para distinguirse entre sí, pero
+     dentro de la familia de la marca (verdes, ocres, rojo del logo). */
+  --papi: #1d5244;
+  --hartman: #2e6b57;
+  --mabe: #9a7420;
+  --cleaver: #b3392f;
+  --lifo: #a4552c;
+  --socioeconomico: #5a4e7c;
+  --alert: #b3261e;
+
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(60rem 30rem at 100% -10%, color-mix(in srgb, var(--rojo-psi) 7%, transparent), transparent 70%),
+    radial-gradient(50rem 30rem at -10% 110%, color-mix(in srgb, var(--verde-psi) 8%, transparent), transparent 70%),
+    var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+/* El fondo de orbes azules es de la plataforma, no de esta marca. */
+.tema :global(.ambient-bg) {
+  display: none;
+}
+
+.tema :global(.eyebrow) {
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--rojo-psi);
+}
+
+.tema :global(h1),
+.tema :global(h2),
+.tema :global(h3) {
+  font-family: var(--sans);
+  letter-spacing: -0.02em;
+}
+
+/* ------------------------------------------------------------ cabecera */
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem clamp(1rem, 3vw, 2rem);
+  border-bottom: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.logo {
+  width: 34px;
+  height: auto;
+  flex: none;
+}
+
+.marcaTexto {
+  display: grid;
+  line-height: 1.15;
+}
+
+.marcaTexto strong {
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.marcaTexto span {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.seguro {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.seguro svg {
+  color: var(--verde-psi);
+}
+
+@media (max-width: 640px) {
+  .seguro {
+    display: none;
+  }
+}
+
+.contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.contenido > * {
+  flex: 1;
+}
+
+/* ----------------------------------------------------------------- pie */
+
+.pie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding: 1.1rem clamp(1rem, 3vw, 2rem);
+  border-top: 1px solid var(--rule);
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.pieEnlaces {
+  display: flex;
+  gap: 1.25rem;
+}
+
+.pie a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.pie a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { KeyRound } from "lucide-react";
-import { AmbientBackground } from "@/components/AmbientBackground";
+import { ArrowRight, Check, Clock, LogOut, Save, ShieldCheck } from "lucide-react";
 import { FadeIn } from "@/components/motion";
+import { LogoPsi } from "@/components/channels/psico/LogoPsi";
 import type { Instrumento } from "@/lib/storage";
 import { psycotest } from "@/lib/routes";
 import { useApplicantSession } from "@/lib/applicant-client";
@@ -104,42 +104,65 @@ function AccesoInner() {
 
   if (session) {
     const pendientes = session.allowed.filter((i) => !session.completed.includes(i));
+    const hechas = session.allowed.length - pendientes.length;
     return (
       <main className={s.main}>
-        <FadeIn className={s.panel}>
-          <span className="eyebrow">Acceso autorizado</span>
-          <h1>Hola, {session.nombre.split(" ")[0]}</h1>
-          {session.label && <p className={s.sub}>{session.label}</p>}
+        <FadeIn className={s.tablero}>
+          <div className={s.tableroCabeza}>
+            <div>
+              <span className="eyebrow">Acceso autorizado</span>
+              <h1>Hola, {session.nombre.split(" ")[0]}</h1>
+              {session.label && <p className={s.sub}>{session.label}</p>}
+            </div>
+            <div className={s.avance} aria-label={`${hechas} de ${session.allowed.length} pruebas completadas`}>
+              <strong>
+                {hechas}/{session.allowed.length}
+              </strong>
+              <span>completadas</span>
+            </div>
+          </div>
 
-          <div className={s.grid}>
-            {session.allowed.map((slug) => {
+          <ol className={s.grid}>
+            {session.allowed.map((slug, i) => {
               const done = session.completed.includes(slug);
               const p = PRUEBAS[slug];
               return (
-                <Link
-                  key={slug}
-                  href={done ? "#" : p.href}
-                  className={s.testCard}
-                  data-done={done}
-                  style={{ ["--tint" as string]: p.tint }}
-                  aria-disabled={done}
-                  onClick={(e) => done && e.preventDefault()}
-                >
-                  <strong>{p.nombre}</strong>
-                  <span>{done ? "Completada" : "Iniciar →"}</span>
-                </Link>
+                <li key={slug}>
+                  <Link
+                    href={done ? "#" : p.href}
+                    className={s.testCard}
+                    data-done={done}
+                    style={{ ["--tint" as string]: p.tint }}
+                    aria-disabled={done}
+                    onClick={(e) => done && e.preventDefault()}
+                  >
+                    <span className={s.testNum} aria-hidden>
+                      {done ? <Check size={16} strokeWidth={2.5} /> : String(i + 1).padStart(2, "0")}
+                    </span>
+                    <strong>{p.nombre}</strong>
+                    <span className={s.testEstado}>
+                      {done ? (
+                        "Completada"
+                      ) : (
+                        <>
+                          Iniciar <ArrowRight size={15} aria-hidden />
+                        </>
+                      )}
+                    </span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ol>
 
-          {pendientes.length === 0 ? (
-            <p className={s.mensaje}>Completaste todas las pruebas de tu código. Pronto sabrás tus resultados.</p>
-          ) : (
-            <p className={s.mensaje}>Selecciona una prueba pendiente para comenzar.</p>
-          )}
+          <p className={s.mensaje}>
+            {pendientes.length === 0
+              ? "Completaste todas las pruebas de tu código. Gracias: el psicólogo responsable revisará tus resultados."
+              : "Elige una prueba pendiente. Puedes hacerlas en el orden que prefieras; tu avance se guarda."}
+          </p>
 
-          <button type="button" className="btn" onClick={salir}>
-            Cerrar sesión de aplicante
+          <button type="button" className={s.salir} onClick={salir}>
+            <LogOut size={15} aria-hidden /> Salir
           </button>
         </FadeIn>
       </main>
@@ -147,28 +170,52 @@ function AccesoInner() {
   }
 
   return (
-    <>
-      <AmbientBackground />
-      <main className={s.main}>
-        <FadeIn className={s.panel}>
-          <span className={s.iconWrap}>
-            <KeyRound size={28} strokeWidth={1.5} />
-          </span>
+    <main className={s.main}>
+      <FadeIn className={s.tarjeta}>
+        <aside className={s.lado}>
+          <LogoPsi className={s.ladoLogo} color="#ffffff" />
+          <p className={s.ladoMarca}>Sociedad de Psicología Aplicada A. C.</p>
+          <h2 className={s.ladoTitulo}>Tu evaluación, en buenas manos.</h2>
+          <ul className={s.ladoLista}>
+            <li>
+              <ShieldCheck size={18} aria-hidden />
+              <span>
+                <strong>Confidencial.</strong> Solo el psicólogo responsable ve tus respuestas.
+              </span>
+            </li>
+            <li>
+              <Save size={18} aria-hidden />
+              <span>
+                <strong>Tu avance se guarda.</strong> Si se corta la conexión, retomas donde ibas.
+              </span>
+            </li>
+            <li>
+              <Clock size={18} aria-hidden />
+              <span>
+                <strong>Sin prisa.</strong> No hay respuestas buenas ni malas: contesta con sinceridad.
+              </span>
+            </li>
+          </ul>
+        </aside>
+
+        <div className={s.formulario}>
           <span className="eyebrow">Acceso del aplicante</span>
           <h1>Ingresa tu código</h1>
           <p className={s.sub}>
-            Tu empresa o el psicólogo te proporcionó un código de acceso. Sin él no es posible aplicar
-            las pruebas.
+            Tu empresa o el psicólogo te dio un código de acceso. Con él entras a las pruebas que te
+            corresponden.
           </p>
 
           <form className={s.form} onSubmit={onSubmit}>
             <label>
               Código de acceso
               <input
+                className={s.codigo}
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value.toUpperCase())}
                 placeholder="XXXX-XXXX-XXXX"
                 autoComplete="off"
+                autoCapitalize="characters"
                 spellCheck={false}
                 required
               />
@@ -179,26 +226,45 @@ function AccesoInner() {
                 value={nombre}
                 onChange={(e) => setNombre(e.target.value)}
                 placeholder="Como aparece en tu identificación"
+                autoComplete="name"
                 required
               />
             </label>
-            <label>
-              Puesto (opcional)
-              <input value={puesto} onChange={(e) => setPuesto(e.target.value)} placeholder="Ej. Analista" />
-            </label>
-            <label>
-              Empresa (opcional)
-              <input value={empresa} onChange={(e) => setEmpresa(e.target.value)} placeholder="Si no viene en el código" />
-            </label>
-            {error && <p className={s.error}>{error}</p>}
-            <button type="submit" className="btn btn-primary" disabled={enviando}>
+            <div className={s.fila}>
+              <label>
+                <span>
+                  Puesto <em>(opcional)</em>
+                </span>
+                <input value={puesto} onChange={(e) => setPuesto(e.target.value)} placeholder="Ej. Analista" />
+              </label>
+              <label>
+                <span>
+                  Empresa <em>(opcional)</em>
+                </span>
+                <input
+                  value={empresa}
+                  onChange={(e) => setEmpresa(e.target.value)}
+                  placeholder="Si no viene en el código"
+                  autoComplete="organization"
+                />
+              </label>
+            </div>
+            {error && (
+              <p className={s.error} role="alert">
+                {error}
+              </p>
+            )}
+            <button type="submit" className={s.entrar} disabled={enviando}>
               {enviando ? "Validando…" : "Acceder a las pruebas"}
+              {!enviando && <ArrowRight size={18} aria-hidden />}
             </button>
           </form>
-
-        </FadeIn>
-      </main>
-    </>
+          <p className={s.ayuda}>
+            ¿No tienes código? Pídeselo a la empresa que te evalúa o al psicólogo que te atiende.
+          </p>
+        </div>
+      </FadeIn>
+    </main>
   );
 }
 

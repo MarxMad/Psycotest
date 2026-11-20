@@ -1,0 +1,314 @@
+/* Inicio de «Mi cuenta»: resumen de lo contratado. Usa los tokens del área
+   (--ink, --muted, --surface, --linea, --acento), que vienen de la marca. */
+
+.saludo {
+  margin-bottom: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.kicker {
+  margin: 0 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--acento);
+}
+
+.saludo h1 {
+  margin: 0;
+  font-family: var(--ch-font-display);
+  font-size: clamp(1.9rem, 4.5vw, 2.75rem);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.saludo p:last-child {
+  max-width: 60ch;
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------ cifras */
+
+.cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 0.75rem;
+  margin: 0 0 clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.cifra {
+  padding: 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid var(--linea);
+  background: var(--surface);
+}
+
+.cifra dt {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.cifra dd {
+  margin: 0.35rem 0 0;
+  font-family: var(--ch-font-display);
+  font-size: 1.85rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------ bloques */
+
+.bloque {
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.bloque h2 {
+  margin: 0 0 0.9rem;
+  font-family: var(--ch-font-display);
+  font-size: 1.15rem;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+}
+
+.nota {
+  margin: -0.4rem 0 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.continuar {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.curso {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(8rem, 1fr) auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid var(--linea);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.curso:hover {
+  border-color: var(--acento);
+  transform: translateY(-1px);
+}
+
+.cursoTitulo {
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cursoMeta {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.cursoIr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--acento);
+}
+
+@media (max-width: 640px) {
+  .curso {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+}
+
+.secciones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: 0.75rem;
+}
+
+.seccion {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.2rem 2.75rem 1.2rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid var(--linea);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+
+.seccion:hover {
+  border-color: var(--acento);
+}
+
+.seccion strong {
+  font-family: var(--ch-font-display);
+  font-weight: 650;
+}
+
+.seccion span {
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.seccionFlecha {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.1rem;
+  color: var(--acento);
+}
+
+/* ------------------------------------------------------------ marcas */
+
+.marcas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 0.75rem;
+}
+
+.marca {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 14px;
+  border: 1px solid var(--linea);
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.marca:hover {
+  border-color: var(--ch-accent);
+  transform: translateY(-1px);
+}
+
+.marcaLogo {
+  width: 46px;
+  height: 46px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #ffffff;
+  object-fit: contain;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+.marca[data-canal="martin"] .marcaLogo {
+  background: #0c1222;
+}
+
+.marcaTexto {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.marcaTexto strong {
+  font-weight: 650;
+}
+
+.marcaTexto span {
+  font-size: 0.84rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.marcaTexto small {
+  font-size: 0.74rem;
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.marcaIr {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--acento);
+}
+
+/* ------------------------------------------------------------ sin acceso */
+
+.sinAcceso {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--acento) 45%, var(--linea));
+  background: color-mix(in srgb, var(--acento) 5%, var(--surface));
+}
+
+.candado {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--acento) 14%, transparent);
+  color: var(--acento);
+}
+
+.sinAcceso h2 {
+  margin: 0 0 0.35rem;
+  font-family: var(--ch-font-display);
+  font-size: 1.2rem;
+  font-weight: 650;
+}
+
+.sinAcceso p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+  font-size: 0.92rem;
+}
+
+.sinAcceso .nota {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+}
+
+.sinAccesoBoton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.2rem;
+  border-radius: 999px;
+  background: var(--acento);
+  color: var(--bg);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .sinAcceso {
+    grid-template-columns: 1fr;
+  }
+  .sinAccesoBoton {
+    justify-self: start;
+  }
+}

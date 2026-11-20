@@ -19,6 +19,8 @@ const CON_ENCABEZADO_PROPIO = [
   "/acceso",
   "/mis-cursos",
   "/mi-cuenta",
+  // El flujo del aplicante trae la cabecera de Psicología Aplicada.
+  "/evaluacion",
 ];
 
 function hideGlobalTopbar(pathname: string) {
