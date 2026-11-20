@@ -1,0 +1,66 @@
+.portal {
+  --p: 0;
+  position: relative;
+  height: 260svh;
+  background: #12302a;
+}
+
+.fijo {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.pista {
+  position: absolute;
+  bottom: 12svh;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(241, 227, 207, 0.6);
+  opacity: calc(1 - var(--p) * 6);
+}
+
+/* La capa crema solo se ve a través de la Ψ, que crece con el scroll. El
+   tallo de la Ψ queda al centro: al final cubre toda la pantalla. */
+.ventana {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #f5f2ec;
+  --tam: calc(26vmin + var(--p) * var(--p) * var(--p) * 1100vw);
+  -webkit-mask: url("/marcas/psicologia/psi-ventana.svg") 50% 50% / var(--tam) auto no-repeat;
+  mask: url("/marcas/psicologia/psi-ventana.svg") 50% 50% / var(--tam) auto no-repeat;
+}
+
+.frase {
+  margin: 0;
+  padding: 0 1.5rem;
+  max-width: 18ch;
+  text-align: center;
+  font-size: clamp(2.2rem, 7vw, 6rem);
+  font-weight: 750;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  color: #12302a;
+}
+
+/* Cada línea entra cuando la ventana ya es grande. */
+.linea {
+  display: block;
+  --desde: calc(0.45 + var(--i) * 0.12);
+  --t: clamp(0, (var(--p) - var(--desde)) * 7, 1);
+  opacity: var(--t);
+  transform: translateY(calc((1 - var(--t)) * 40px));
+}
+
+.linea em {
+  font-style: normal;
+  color: #d8342a;
+}

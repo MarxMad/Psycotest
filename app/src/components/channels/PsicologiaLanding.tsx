@@ -27,6 +27,8 @@ import { RadarVivo } from "./RadarVivo";
 import { BARRAS, PRESENTACION } from "./psico/datos";
 import { CLIPS, VideoReal, type ClipId } from "./psico/medios";
 import { LogoPsi, LogoPsi3D } from "./psico/LogoPsi";
+import { PortadaMente } from "./psico/PortadaMente";
+import { PortalPsi } from "./psico/PortalPsi";
 import s from "./PsicologiaLanding.module.css";
 
 /*
@@ -257,7 +259,7 @@ function Cargador({ listo }: { listo: boolean }) {
 
   if (fase === "fuera") return null;
   return (
-    <div className={s.cargador} data-fase={fase} aria-hidden>
+    <div className={s.cargador} data-fase={fase} data-cargador aria-hidden>
       <div className={s.cargadorCentro}>
         <LogoPsi3D />
         <p className={s.cargadorNombre}>
@@ -297,9 +299,16 @@ function Cabecera() {
   useEffect(() => {
     const oscuras = document.querySelectorAll<HTMLElement>('[data-tono="oscuro"]');
     if (!oscuras.length || !("IntersectionObserver" in window)) return;
+    // Varias secciones oscuras pueden reportar en la misma tanda: se lleva la
+    // cuenta de cuáles cruzan la franja en vez de quedarse con la última.
+    const cruzando = new Set<Element>();
     const io = new IntersectionObserver(
       (entradas) => {
-        for (const e of entradas) setOscuro(e.isIntersecting);
+        for (const e of entradas) {
+          if (e.isIntersecting) cruzando.add(e.target);
+          else cruzando.delete(e.target);
+        }
+        setOscuro(cruzando.size > 0);
       },
       { rootMargin: "-30px 0px -94% 0px" },
     );
@@ -546,78 +555,25 @@ function Portada({
   onListo: () => void;
   lista: boolean;
 }) {
-  const zona = useRef<HTMLElement>(null);
-  const visible = useEnPantalla(zona, "0px");
-  const [turno, setTurno] = useState(0);
-  const texto = useAparicion<HTMLDivElement>({ inmediato: true, y: 18, retraso: 300 });
-  const ronda = publico ? RONDA_DE[publico] : RONDA;
-  const n = ronda.length;
-  const pos = ((turno % n) + n) % n;
-  const actual = ronda[pos];
-  // Sólo se montan la escena en curso, la que se va (para el fundido) y la
-  // que sigue (para que ya esté cargando): no se bajan ocho videos de golpe.
-  const montadas = new Set([ronda[(pos + n - 1) % n], actual, ronda[(pos + 1) % n]]);
-
-  // Al cambiar de público, su ronda empieza por la escena que lo presenta.
-  useEffect(() => setTurno(0), [publico]);
-
+  // `lista` era para esperar al primer video; la portada nueva no lo necesita.
+  void lista;
   return (
-    <section id="acceso" ref={zona} className={s.portada} aria-label="Inicio">
-      <div className={s.escena} data-lista={lista}>
-        {ronda.map((id) => (
-          <div
-            key={id}
-            className={s.toma}
-            data-activa={id === actual}
-            style={{ "--foco": FOCO_VERTICAL[id] ?? "50% 50%" } as React.CSSProperties}
-          >
-            {montadas.has(id) && (
-              <VideoReal
-                clip={id}
-                className={s.tomaVideo}
-                decorativo
-                prioridad={id === actual}
-                reproducir={visible && id === actual}
-                // Cada escena corre una vez y cede su lugar a la siguiente.
-                loop={false}
-                onEnded={() => setTurno((t) => t + 1)}
-                onListo={id === actual ? onListo : undefined}
-              />
-            )}
-          </div>
-        ))}
-        <p className={s.oculto}>{CLIPS[actual].alt}</p>
-      </div>
-
-      <a className={s.pildoraGirada} href={evaluacion.acceso} data-oculta={publico ? "" : undefined}>
-        Entra <span aria-hidden>—</span> con tu código
-      </a>
-
-      <div className={s.portadaTexto} ref={texto}>
-        <Interruptor publico={publico} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
-        <h1 key={publico ?? "ambos"} className={s.portadaTitular}>
-          {publico ? PORTADA[publico].titular : content.hero.headline}
-        </h1>
-        <div className={s.portadaAcciones}>
-          {publico && (
-            <a href="#bateria" className={s.portadaAccion}>
-              {PORTADA[publico].accion} <ArrowRight size={15} aria-hidden />
-            </a>
-          )}
-          <a href="#manifiesto" className={s.desliza}>
-            <ArrowDown size={13} aria-hidden /> Desliza
+    <PortadaMente titulo="Psicología Aplicada" onListo={onListo}>
+      <Interruptor publico={publico} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
+      <h1 key={publico ?? "ambos"} className={s.portadaTitular}>
+        {publico ? PORTADA[publico].titular : content.hero.headline}
+      </h1>
+      <div className={s.portadaAcciones}>
+        <a href={evaluacion.acceso} className={s.portadaAccion}>
+          Entrar con mi código <ArrowRight size={15} aria-hidden />
+        </a>
+        {publico && (
+          <a href="#bateria" className={s.portadaAccion}>
+            {PORTADA[publico].accion} <ArrowRight size={15} aria-hidden />
           </a>
-        </div>
+        )}
       </div>
-
-      <p className={s.portadaPie}>
-        Selección de personal
-        <br />
-        Evaluación individual
-        <br />
-        Informe en 72 h
-      </p>
-    </section>
+    </PortadaMente>
   );
 }
 
@@ -1157,6 +1113,15 @@ export function PsicologiaLanding({ channel, content }: { channel: ChannelDef; c
       <Cabecera />
       <PildoraCursor raiz={raiz} />
       <Portada content={content} publico={publico} onCambiar={setPublico} onListo={alListo} lista={escenaLista} />
+      <PortalPsi
+        lineas={[
+          "Lo que una prueba mide,",
+          <>
+            <em>un psicólogo</em>
+          </>,
+          "lo interpreta.",
+        ]}
+      />
       <Manifiesto />
       <Saludo content={content} onCambiar={setPublico} />
       <Escenas />
