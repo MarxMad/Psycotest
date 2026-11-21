@@ -11,15 +11,19 @@ import s from "./logo.module.css";
 
 export const ROJO_PSI = "#d8342a";
 
-const CUADRO = "M22 0 H274 Q300 0 300 26 V236 Q300 260 276 260 H34 Q0 260 0 226 V20 Q0 0 22 0 Z";
-const BRAZOS = "M58 -10 V28 C58 98 96 132 150 132 C204 132 242 98 242 28 V-10";
+// Arriba recto y abajo redondeado, como el original; los brazos de la Ψ se
+// abren hacia arriba (más anchos arriba que donde tocan el tallo).
+const CUADRO = "M0 0 H300 V234 Q300 260 274 260 H26 Q0 260 0 234 Z";
+const BRAZO_IZQ = "M38 -10 H84 V0 C86 68 102 106 140 106 V127 C74 127 44 92 38 0 Z";
+const BRAZO_DER = "M262 -10 H216 V0 C214 68 198 106 160 106 V127 C226 127 256 92 262 0 Z";
 
 function Calado({ id }: { id: string }) {
   return (
     <mask id={id}>
-      <rect width="300" height="260" fill="#fff" />
-      <rect x="131" y="-10" width="38" height="280" fill="#000" />
-      <path d={BRAZOS} fill="none" stroke="#000" strokeWidth="44" />
+      <rect x="-10" y="-10" width="320" height="280" fill="#fff" />
+      <rect x="139" y="-10" width="22" height="280" fill="#000" />
+      <path d={BRAZO_IZQ} fill="#000" />
+      <path d={BRAZO_DER} fill="#000" />
     </mask>
   );
 }

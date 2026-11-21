@@ -27,7 +27,6 @@ import { RadarVivo } from "./RadarVivo";
 import { BARRAS, PRESENTACION } from "./psico/datos";
 import { CLIPS, VideoReal, type ClipId } from "./psico/medios";
 import { LogoPsi, LogoPsi3D } from "./psico/LogoPsi";
-import { PortadaMente } from "./psico/PortadaMente";
 import { PortalPsi } from "./psico/PortalPsi";
 import s from "./PsicologiaLanding.module.css";
 
@@ -320,7 +319,10 @@ function Cabecera() {
     <header className={s.cabecera} data-tono={oscuro ? "oscuro" : "claro"} data-abierto={abierto} data-bajo={bajo}>
       <a href="#acceso" className={s.marca} onClick={() => setAbierto(false)}>
         <LogoPsi className={s.marcaLogo} />
-        Psicología Aplicada
+        <span className={s.marcaNombre}>
+          <small>Sociedad de</small>
+          Psicología Aplicada A. C.
+        </span>
       </a>
       <span className={s.descriptor}>Evaluación psicológica · Selección de personal</span>
       <nav className={s.nav} aria-label="Principal" id="menu-psico">
@@ -555,25 +557,80 @@ function Portada({
   onListo: () => void;
   lista: boolean;
 }) {
-  // `lista` era para esperar al primer video; la portada nueva no lo necesita.
-  void lista;
+  const zona = useRef<HTMLElement>(null);
+  const visible = useEnPantalla(zona, "0px");
+  const [turno, setTurno] = useState(0);
+  const ronda = publico ? RONDA_DE[publico] : RONDA;
+  const n = ronda.length;
+  const pos = ((turno % n) + n) % n;
+  const actual = ronda[pos];
+  // Sólo se montan la escena en curso, la que se va (para el fundido) y la
+  // que sigue (para que ya esté cargando): no se bajan todos los videos de golpe.
+  const montadas = new Set([ronda[(pos + n - 1) % n], actual, ronda[(pos + 1) % n]]);
+
+  // Al cambiar de público, su ronda empieza por la escena que lo presenta.
+  useEffect(() => setTurno(0), [publico]);
+
   return (
-    <PortadaMente titulo="Psicología Aplicada" onListo={onListo}>
-      <Interruptor publico={publico} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
-      <h1 key={publico ?? "ambos"} className={s.portadaTitular}>
-        {publico ? PORTADA[publico].titular : content.hero.headline}
-      </h1>
-      <div className={s.portadaAcciones}>
-        <a href={evaluacion.acceso} className={s.portadaAccion}>
-          Entrar con mi código <ArrowRight size={15} aria-hidden />
-        </a>
-        {publico && (
-          <a href="#bateria" className={s.portadaAccion}>
-            {PORTADA[publico].accion} <ArrowRight size={15} aria-hidden />
-          </a>
-        )}
+    <section id="acceso" ref={zona} className={s.portada} data-tono="oscuro" aria-label="Inicio">
+      <div className={s.escena} data-lista={lista}>
+        {ronda.map((id) => (
+          <div
+            key={id}
+            className={s.toma}
+            data-activa={id === actual}
+            style={{ "--foco": FOCO_VERTICAL[id] ?? "50% 50%" } as React.CSSProperties}
+          >
+            {montadas.has(id) && (
+              <VideoReal
+                clip={id}
+                className={s.tomaVideo}
+                decorativo
+                prioridad={id === actual}
+                reproducir={visible && id === actual}
+                // Cada escena corre una vez y cede su lugar a la siguiente.
+                loop={false}
+                onEnded={() => setTurno((t) => t + 1)}
+                onListo={id === actual ? onListo : undefined}
+              />
+            )}
+          </div>
+        ))}
+        <p className={s.oculto}>{CLIPS[actual].alt}</p>
       </div>
-    </PortadaMente>
+
+      {/* El nombre gigante sube línea por línea sobre el video. */}
+      <h2 className={s.portadaNombre} aria-hidden>
+        {["Psicología", "Aplicada"].map((p, i) => (
+          <span key={p} className={s.portadaNombreLinea} style={{ ["--i" as string]: i }}>
+            <span>{p}</span>
+          </span>
+        ))}
+      </h2>
+
+      <div className={s.portadaTexto}>
+        <Interruptor publico={publico} onCambiar={onCambiar} etiqueta="¿Para quién es la evaluación?" />
+        <h1 key={publico ?? "ambos"}>{publico ? PORTADA[publico].titular : content.hero.headline}</h1>
+        <div className={s.portadaAcciones}>
+          <a href={evaluacion.acceso} className={s.portadaAccion}>
+            Entrar con mi código <ArrowRight size={15} aria-hidden />
+          </a>
+          {publico && (
+            <a href="#bateria" className={s.portadaAccionLinea}>
+              {PORTADA[publico].accion} <ArrowRight size={15} aria-hidden />
+            </a>
+          )}
+        </div>
+      </div>
+
+      <p className={s.portadaPie}>
+        Selección de personal
+        <br />
+        Evaluación individual
+        <br />
+        Informe en 72 h
+      </p>
+    </section>
   );
 }
 
