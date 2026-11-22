@@ -7,6 +7,7 @@ import { getRedemption } from "@/lib/access-code-store";
 import { parseCompletedInstruments } from "@/lib/access-codes";
 import { rateLimit } from "@/lib/rate-limit";
 import type { Instrumento } from "@/lib/storage";
+import { HORAS_PARA_CONTESTAR, tiempoAgotado } from "@/lib/pruebas-catalogo";
 
 const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "lifo", "socioeconomico"];
 
@@ -38,6 +39,14 @@ export async function POST(request: Request) {
   const previas = canje.iniciadas ?? {};
   if (previas[instrumento]) {
     return NextResponse.json({ ok: true, inicio: previas[instrumento], nueva: false });
+  }
+
+  // Una prueba nueva no se puede empezar pasadas las 24 h desde la activación.
+  if (tiempoAgotado(canje.createdAt)) {
+    return NextResponse.json(
+      { error: `Se terminó tu tiempo: tenías ${HORAS_PARA_CONTESTAR} horas desde que activaste el código.` },
+      { status: 403 },
+    );
   }
 
   const inicio = new Date().toISOString();

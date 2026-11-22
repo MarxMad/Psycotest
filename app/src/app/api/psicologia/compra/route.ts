@@ -9,12 +9,11 @@ const CORREO = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
  * Abre el pago de evaluaciones. El importe se recalcula aquí con el catálogo;
- * del navegador solo se toman las pruebas elegidas y el número de candidatos.
+ * del navegador solo se toma cuántos códigos de cada prueba se quieren.
  */
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as {
-    pruebas?: unknown;
-    candidatos?: unknown;
+    cantidades?: unknown;
     modo?: unknown;
     nombre?: unknown;
     email?: unknown;
@@ -24,7 +23,12 @@ export async function POST(request: Request) {
   const nombre = typeof body.nombre === "string" ? body.nombre.trim().slice(0, 120) : "";
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase().slice(0, 200) : "";
   const empresa = typeof body.empresa === "string" ? body.empresa.trim().slice(0, 160) : "";
-  const pruebas = Array.isArray(body.pruebas) ? body.pruebas.filter((p): p is string => typeof p === "string") : [];
+  const cantidades: Record<string, number> = {};
+  if (body.cantidades && typeof body.cantidades === "object" && !Array.isArray(body.cantidades)) {
+    for (const [id, n] of Object.entries(body.cantidades as Record<string, unknown>)) {
+      if (typeof n === "number" || typeof n === "string") cantidades[id.slice(0, 40)] = Number(n);
+    }
+  }
   const modo = body.modo === "persona" ? "persona" : "empresa";
 
   if (nombre.length < 3) return NextResponse.json({ error: "Escribe tu nombre completo." }, { status: 400 });
@@ -36,8 +40,7 @@ export async function POST(request: Request) {
 
   const usuario = await getSessionUser();
   const r = await crearCompraPsicologia({
-    pruebas,
-    candidatos: Number(body.candidatos) || 1,
+    cantidades,
     modo,
     nombre,
     email,

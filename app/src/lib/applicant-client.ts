@@ -10,6 +10,8 @@ export interface ApplicantSessionClient {
   allowed: Instrumento[];
   completed: Instrumento[];
   label?: string;
+  /** Hasta cuándo puede contestar. */
+  venceEn?: string;
 }
 
 export function useApplicantSession() {

@@ -13,6 +13,7 @@ import { rateLimit } from "@/lib/rate-limit";
 import { clientIp, parseCompletedInstruments } from "@/lib/access-codes";
 
 import { respuestasDelCandidato } from "@/lib/socioeconomico";
+import { HORAS_PARA_CONTESTAR, limiteParaContestar, tiempoAgotado } from "@/lib/pruebas-catalogo";
 
 const INSTRUMENTOS: Instrumento[] = ["papi", "hartman", "mabe", "cleaver", "lifo", "socioeconomico"];
 
@@ -85,6 +86,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ya completaste esta prueba" }, { status: 403 });
   }
 
+  // 24 h desde que activó el código. Si empezó la prueba dentro del plazo se
+  // le acepta el envío aunque termine un poco después: no se pierde lo contestado.
+  if (tiempoAgotado(canje.createdAt)) {
+    const empezo = canje.iniciadas?.[instrumento];
+    if (!empezo || empezo > limiteParaContestar(canje.createdAt)) {
+      return NextResponse.json(
+        { error: `Se terminó tu tiempo: tenías ${HORAS_PARA_CONTESTAR} horas desde que activaste el código.` },
+        { status: 403 },
+      );
+    }
+  }
+
   // Inicio: el que guardó el servidor al pulsar «Comenzar». Si no hay (una
   // pestaña abierta antes de este cambio), el del navegador. Fin: ahora.
   const inicioServidor = canje.iniciadas?.[instrumento];
@@ -130,6 +143,7 @@ export async function POST(request: Request) {
       puesto: applicant.puesto,
       allowed: updated.allowed,
       completed: updated.redemption.completedInstruments as Instrumento[],
+      venceEn: applicant.venceEn,
     });
   }
 

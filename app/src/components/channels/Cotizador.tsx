@@ -2,22 +2,25 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { animate } from "animejs";
-import { ArrowRight, Check, Clock, Lock } from "lucide-react";
+import { ArrowRight, Check, Clock, Lock, Minus, Plus } from "lucide-react";
 import {
   BATERIA_COMPLETA,
-  MAX_CANDIDATOS_EN_LINEA,
+  HORAS_ENTREGA,
+  HORAS_PARA_CONTESTAR,
+  MAX_POR_PRUEBA,
   PRUEBAS,
-  TASA_IVA,
+  TRAMOS,
   conIva,
-  cotizarEnLinea,
-  descuentoPorVolumen,
+  cantidadValida,
+  cotizarPorPrueba,
+  type Cantidades,
 } from "@/lib/pruebas-catalogo";
 import { whatsapp } from "@/lib/contacto";
 import { menosMovimiento } from "@/lib/aparicion";
 import s from "./Cotizador.module.css";
 
-// Con centavos solo cuando los hay: el total con IVA tiene que coincidir con
-// lo que cobra Stripe, no redondeado.
+// Con centavos solo cuando los hay: el total tiene que coincidir con lo que
+// cobra Stripe, no redondeado.
 const pesos = (centavos: number) => {
   const decimales = centavos % 100 === 0 ? 0 : 2;
   return new Intl.NumberFormat("es-MX", {
@@ -45,24 +48,24 @@ export function Cotizador({
   modo?: "empresa" | "persona";
 }) {
   const personal = modo === "persona";
-  const [elegidas, setElegidas] = useState<string[]>(BATERIA_COMPLETA);
-  const bateriaPuesta = BATERIA_COMPLETA.every((id) => elegidas.includes(id));
-  const [cuantos, setCandidatos] = useState(5);
-  const candidatos = personal ? 1 : cuantos;
+  // Cuántos códigos de cada prueba. Cada código abre una sola prueba para
+  // una persona. En una evaluación personal es 0 o 1.
+  const [cantidades, setCantidades] = useState<Cantidades>(() =>
+    Object.fromEntries(BATERIA_COMPLETA.map((id) => [id, 1])),
+  );
+  const bateriaPuesta = BATERIA_COMPLETA.every((id) => (cantidades[id] ?? 0) > 0);
   const total = useRef<HTMLSpanElement>(null);
   const anterior = useRef<number | null>(null);
 
-  // Lo que se paga en línea, ya con IVA. Lo que no está digitalizado
+  // Lo que se paga en línea, precio final. Lo que no está digitalizado
   // (Estilos Gerenciales, socioeconómico) va en `aparte` y se coordina.
-  const cuenta = useMemo(
-    () => cotizarEnLinea(elegidas, candidatos),
-    [elegidas, candidatos],
-  );
+  const cuenta = useMemo(() => cotizarPorPrueba(cantidades), [cantidades]);
+  const minutos = PRUEBAS.reduce((n, p) => n + ((cantidades[p.id] ?? 0) > 0 ? p.minutos : 0), 0);
   const [pagando, setPagando] = useState(false);
   const [datos, setDatos] = useState({ nombre: "", email: "", empresa: "" });
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const sePuedePagar = cuenta.ids.length > 0 && cuenta.totalConIva > 0;
+  const sePuedePagar = cuenta.renglones.length > 0 && cuenta.total > 0;
 
   async function pagar(e: React.FormEvent) {
     e.preventDefault();
@@ -76,8 +79,7 @@ export function Cotizador({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          pruebas: cuenta.ids,
-          candidatos,
+          cantidades: Object.fromEntries(cuenta.renglones.map((r) => [r.prueba.id, r.cantidad])),
           modo,
           nombre: datos.nombre.trim(),
           email: datos.email.trim(),
@@ -92,17 +94,16 @@ export function Cotizador({
       setEnviando(false);
     }
   }
-  const descuento = descuentoPorVolumen(candidatos);
 
   // El total cuenta hasta su nuevo valor en vez de saltar: se ve qué cambió.
   useEffect(() => {
     const nodo = total.current;
     if (!nodo) return;
     const desde = anterior.current;
-    anterior.current = cuenta.totalConIva;
+    anterior.current = cuenta.total;
 
-    if (desde === null || desde === cuenta.totalConIva || menosMovimiento()) {
-      nodo.textContent = pesos(cuenta.totalConIva);
+    if (desde === null || desde === cuenta.total || menosMovimiento()) {
+      nodo.textContent = pesos(cuenta.total);
       return;
     }
 
@@ -111,7 +112,7 @@ export function Cotizador({
 
     const objeto = { v: desde };
     const animacion = animate(objeto, {
-      v: cuenta.totalConIva,
+      v: cuenta.total,
       duration: 480,
       ease: "out(3)",
       onUpdate: () => {
@@ -120,35 +121,42 @@ export function Cotizador({
     });
     return () => {
       animacion.pause();
-      nodo.textContent = pesos(cuenta.totalConIva);
+      nodo.textContent = pesos(cuenta.total);
     };
-  }, [cuenta.totalConIva]);
+  }, [cuenta.total]);
 
-  function alternar(id: string, casilla?: HTMLElement | null) {
-    setElegidas((previas) =>
-      previas.includes(id) ? previas.filter((x) => x !== id) : [...previas, id],
-    );
-
-    // La casilla rebota al tocarla: confirma el toque antes de que el precio
+  function fijar(id: string, valor: number, nodo?: HTMLElement | null) {
+    const tope = personal ? 1 : MAX_POR_PRUEBA;
+    const v = Math.min(tope, cantidadValida(valor));
+    setCantidades((previas) => ({ ...previas, [id]: v }));
+    // El número rebota al cambiar: confirma el toque antes de que el precio
     // termine de contar.
-    if (!casilla || menosMovimiento()) return;
-    animate(casilla, { scale: [1, 1.3, 1], duration: 420, ease: "out(3)" });
+    if (!nodo || menosMovimiento()) return;
+    animate(nodo, { scale: [1, 1.25, 1], duration: 380, ease: "out(3)" });
   }
 
+  function alternarBateria() {
+    setCantidades((previas) =>
+      bateriaPuesta
+        ? {}
+        : {
+            ...previas,
+            ...Object.fromEntries(BATERIA_COMPLETA.map((id) => [id, Math.max(1, previas[id] ?? 0)])),
+          },
+    );
+  }
+
+  const elegidas = PRUEBAS.filter((p) => (cantidades[p.id] ?? 0) > 0);
   const nada = elegidas.length === 0;
   const mensaje = nada
     ? personal
       ? "Hola, quiero hacer una evaluación psicológica para mí."
       : "Hola, quiero cotizar evaluaciones de personal."
-    : `Hola, ${
-        personal
-          ? "quiero evaluarme"
-          : `quiero ${candidatos} ${candidatos === 1 ? "evaluación" : "evaluaciones"}`
-      } con: ${PRUEBAS.filter((p) => elegidas.includes(p.id))
-        .map((p) => p.nombre)
-        .join(", ")}. Total estimado ${pesos(cuenta.totalConIva)} con IVA${
+    : `Hola, ${personal ? "quiero evaluarme con" : "quiero"}: ${elegidas
+        .map((p) => (personal ? p.nombre : `${cantidades[p.id]} × ${p.nombre}`))
+        .join(", ")}. Total estimado ${pesos(cuenta.total)}${
         cuenta.aparte.length
-          ? `, más ${cuenta.aparte.map((p) => p.nombre).join(", ")} por cotizar`
+          ? `, más ${cuenta.aparte.map((a) => a.prueba.nombre).join(", ")} por cotizar`
           : ""
       }.`;
 
@@ -165,72 +173,95 @@ export function Cotizador({
             <button
               type="button"
               className={s.atajo}
-              onClick={() => setElegidas(bateriaPuesta ? [] : BATERIA_COMPLETA)}
+              onClick={alternarBateria}
             >
-              {bateriaPuesta ? "Quitar todas" : "Batería completa"}
+              {bateriaPuesta ? "Quitar todas" : personal ? "Batería completa" : "Una de cada"}
             </button>
           </legend>
 
-          <p className={s.notaPrecios}>Precio por {personal ? "evaluación" : "candidato"}, IVA incluido.</p>
+          <p className={s.notaPrecios}>
+            {personal
+              ? "Precio final por prueba."
+              : `Elige cuántas aplicaciones de cada prueba necesitas: cada una es un código. Precio final por código; desde ${TRAMOS[2].desde} códigos de una misma prueba hay descuento.`}
+          </p>
 
           <div className={s.pruebas}>
             {PRUEBAS.map((p) => {
-              const puesta = elegidas.includes(p.id);
+              const n = cantidades[p.id] ?? 0;
+              const puesta = n > 0;
+              const precio = p.precio == null ? "Por cotizar" : pesos(conIva(p.precio));
+              if (personal) {
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    className={s.prueba}
+                    data-puesta={puesta}
+                    aria-pressed={puesta}
+                    onClick={(e) =>
+                      fijar(p.id, puesta ? 0 : 1, e.currentTarget.querySelector<HTMLElement>("[data-marca]"))
+                    }
+                  >
+                    <span className={s.marca} data-marca aria-hidden>
+                      {puesta && <Check size={13} strokeWidth={3} />}
+                    </span>
+                    <span className={s.pruebaTexto}>
+                      <strong>{p.nombre}</strong>
+                      <em>{p.etiqueta}</em>
+                    </span>
+                    <span className={s.pruebaPrecio}>{precio}</span>
+                  </button>
+                );
+              }
               return (
-                <button
-                  key={p.id}
-                  type="button"
-                  className={s.prueba}
-                  data-puesta={puesta}
-                  aria-pressed={puesta}
-                  onClick={(e) =>
-                    alternar(
-                      p.id,
-                      e.currentTarget.querySelector<HTMLElement>(
-                        "[data-marca]",
-                      ),
-                    )
-                  }
-                >
-                  <span className={s.marca} data-marca aria-hidden>
-                    {puesta && <Check size={13} strokeWidth={3} />}
-                  </span>
+                <div key={p.id} className={`${s.prueba} ${s.pruebaCantidad}`} data-puesta={puesta}>
                   <span className={s.pruebaTexto}>
                     <strong>{p.nombre}</strong>
-                    <em>{p.etiqueta}</em>
+                    <em>
+                      {p.etiqueta} · {precio}
+                      {p.precio != null ? " c/u" : ""}
+                    </em>
                   </span>
-                  <span className={s.pruebaPrecio}>
-                    {p.precio == null ? "Por cotizar" : pesos(conIva(p.precio))}
+                  <span className={s.selector} role="group" aria-label={`Cantidad de ${p.nombre}`}>
+                    <button
+                      type="button"
+                      className={s.paso}
+                      onClick={(e) =>
+                        fijar(p.id, n - 1, e.currentTarget.parentElement?.querySelector<HTMLElement>("input"))
+                      }
+                      disabled={n === 0}
+                      aria-label={`Una menos de ${p.nombre}`}
+                    >
+                      <Minus size={14} strokeWidth={2.6} />
+                    </button>
+                    <input
+                      className={s.cantidad}
+                      type="number"
+                      inputMode="numeric"
+                      min={0}
+                      max={MAX_POR_PRUEBA}
+                      value={n}
+                      onChange={(e) => fijar(p.id, Number(e.target.value))}
+                      onFocus={(e) => e.currentTarget.select()}
+                      aria-label={`Códigos de ${p.nombre}`}
+                    />
+                    <button
+                      type="button"
+                      className={s.paso}
+                      onClick={(e) =>
+                        fijar(p.id, n + 1, e.currentTarget.parentElement?.querySelector<HTMLElement>("input"))
+                      }
+                      disabled={n >= MAX_POR_PRUEBA}
+                      aria-label={`Una más de ${p.nombre}`}
+                    >
+                      <Plus size={14} strokeWidth={2.6} />
+                    </button>
                   </span>
-                </button>
+                </div>
               );
             })}
           </div>
         </fieldset>
-
-        {!personal && (
-          <fieldset className={s.grupo}>
-            <legend className={s.leyenda}>
-              Candidatos
-              <span className={s.contador}>{candidatos}</span>
-            </legend>
-            <input
-              className={s.rango}
-              type="range"
-              min={1}
-              max={MAX_CANDIDATOS_EN_LINEA}
-              value={candidatos}
-              onChange={(e) => setCandidatos(Number(e.target.value))}
-              aria-label="Número de candidatos a evaluar"
-            />
-            <div className={s.tramos} aria-hidden>
-              <span>1</span>
-              <span>10</span>
-              <span>25</span>
-              <span>50</span>
-            </div>
-          </fieldset>
-        )}
       </div>
 
       <aside className={s.resumen}>
@@ -241,13 +272,15 @@ export function Cotizador({
             <span className={s.total}>Por cotizar</span>
           ) : (
             <span ref={total} className={s.total}>
-              {pesos(cuenta.totalConIva)}
+              {pesos(cuenta.total)}
             </span>
           )}
           <span className={s.totalPie}>
             {cuenta.aparte.length
-              ? "IVA incluido · más lo que se cotiza aparte"
-              : "IVA incluido"}
+              ? "Precio final · más lo que se cotiza aparte"
+              : personal
+                ? "Precio final"
+                : `Precio final · ${cuenta.codigos} código${cuenta.codigos === 1 ? "" : "s"}`}
           </span>
         </p>
 
@@ -257,37 +290,31 @@ export function Cotizador({
           </p>
         ) : (
           <ul className={s.desglose}>
-            {!personal && (
-              <>
-                <li>
-                  <span>Por candidato</span>
-                  <strong>{pesos(cuenta.porCandidato)}</strong>
-                </li>
-                <li>
-                  <span>
-                    {candidatos} candidato{candidatos === 1 ? "" : "s"}
-                  </span>
-                  <strong>{pesos(cuenta.subtotal)}</strong>
-                </li>
-              </>
-            )}
-            {descuento > 0 && (
-              <li className={s.ahorro}>
+            {cuenta.renglones.map((r) => (
+              <li key={r.prueba.id}>
                 <span>
-                  Descuento por volumen ({Math.round(descuento * 100)}%)
+                  {personal ? r.prueba.nombre : `${r.cantidad} × ${r.prueba.nombre}`}
+                  {r.descuento > 0 && (
+                    <em className={s.ahorroNota}>
+                      {" "}
+                      · {Math.round((1 - r.unitario / r.lista) * 100)}% menos
+                    </em>
+                  )}
                 </span>
+                <strong>{pesos(r.importe)}</strong>
+              </li>
+            ))}
+            {cuenta.descuento > 0 && (
+              <li className={s.ahorro}>
+                <span>Ahorras por volumen</span>
                 <strong>−{pesos(cuenta.descuento)}</strong>
               </li>
             )}
-            {sePuedePagar && (
-              <li>
-                <span>IVA ({Math.round(TASA_IVA * 100)}%)</span>
-                <strong>{pesos(cuenta.iva)}</strong>
-              </li>
-            )}
-            {cuenta.aparte.map((p) => (
+            {cuenta.aparte.map(({ prueba: p, cantidad }) => (
               <li key={p.id}>
-                <span>{p.nombre}</span>
+                <span>
+                  {personal ? p.nombre : `${cantidad} × ${p.nombre}`}
+                </span>
                 <strong>
                   {p.precio == null
                     ? "Se cotiza aparte"
@@ -297,10 +324,11 @@ export function Cotizador({
             ))}
             <li className={s.tiempo}>
               <span>
-                <Clock size={13} aria-hidden />{" "}
-                {personal ? "Tiempo para responder" : "Tiempo por candidato"}
+                <Clock size={13} aria-hidden /> Tiempo para responder
               </span>
-              <strong>~{cuenta.minutos} min</strong>
+              <strong>
+                {personal ? `~${minutos} min` : `${HORAS_PARA_CONTESTAR} h por código`}
+              </strong>
             </li>
           </ul>
         )}
@@ -351,7 +379,7 @@ export function Cotizador({
               </p>
             )}
             <button type="submit" className={s.comprar} disabled={enviando}>
-              {enviando ? "Abriendo el pago…" : `Pagar ${pesos(cuenta.totalConIva)}`}
+              {enviando ? "Abriendo el pago…" : `Pagar ${pesos(cuenta.total)}`}
               {!enviando && <ArrowRight size={16} aria-hidden />}
             </button>
             <p className={s.seguro}>
@@ -368,7 +396,7 @@ export function Cotizador({
         >
           {sePuedePagar
             ? cuenta.aparte.length
-              ? `Cotizar ${cuenta.aparte.map((p) => p.nombre).join(" y ")} por WhatsApp`
+              ? `Cotizar ${cuenta.aparte.map((a) => a.prueba.nombre).join(" y ")} por WhatsApp`
               : "¿Dudas? Escríbenos por WhatsApp"
             : personal
               ? "Quiero evaluarme"
@@ -377,8 +405,8 @@ export function Cotizador({
         </a>
         <p className={s.letraChica}>
           {personal
-            ? "Te mandamos tu código en cuanto se confirma el pago; respondes desde donde estés. Tu informe, interpretado por un psicólogo, llega en 72 horas y solo lo ves tú."
-            : "Te mandamos los códigos de acceso en cuanto se confirma el pago. El informe interpretado por un psicólogo llega en 72 horas."}
+            ? `Te mandamos tu código en cuanto se confirma el pago. Al activarlo tienes ${HORAS_PARA_CONTESTAR} horas para contestar. Tu informe, firmado por un psicólogo, llega en ${HORAS_ENTREGA} horas y solo lo ves tú.`
+            : `Te mandamos un código por cada prueba en cuanto se confirma el pago, y quedan en tu panel. Cada candidato tiene ${HORAS_PARA_CONTESTAR} horas para contestar desde que activa su código. El informe, firmado por un psicólogo en formato profesional, llega en ${HORAS_ENTREGA} horas.`}
         </p>
       </aside>
     </div>

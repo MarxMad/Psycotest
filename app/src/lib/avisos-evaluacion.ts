@@ -1,11 +1,11 @@
 import { eq } from "drizzle-orm";
-import { renderToBuffer } from "@react-pdf/renderer";
 import { getDb, schema } from "@/db";
 import { correoVentas, enviarCorreo, escapar, plantilla, textoPlano, type Fila } from "@/lib/correo";
 import { CONTACTO, whatsapp } from "@/lib/contacto";
 import { parseAllowedInstruments } from "@/lib/access-codes";
 import { NOMBRE_INSTRUMENTO } from "@/lib/instrumentos";
-import { InformePdfDocument } from "@/lib/informe-pdf";
+import { pdfDeSesion } from "@/lib/informe-sesion";
+import { HORAS_ENTREGA } from "@/lib/pruebas-catalogo";
 import type { Instrumento } from "@/lib/storage";
 import { urlDelSitio } from "@/lib/sitio";
 import { fechaHora, tiemposDe } from "@/lib/tiempos-prueba";
@@ -84,6 +84,10 @@ function filasDeQuien(d: DatosAviso): Fila[] {
     { concepto: "Cliente", importe: d.cliente ? `${d.cliente.nombre} · ${d.cliente.email}` : "Creado desde el panel" },
   ];
 }
+
+/** Lo que distingue a Psicología Aplicada; va en los correos de informe. */
+export const VALOR_AGREGADO =
+  "Con Psicología Aplicada cada informe lo revisa y lo firma un psicólogo, y se entrega en formato de reporte profesional: no es un resultado automático.";
 
 /* ------------------------------------------------- retroalimentación con Martín */
 
@@ -189,7 +193,7 @@ function filasDeTiempo(f: Fin): Fila[] {
 export function correoFinCliente(d: DatosAviso, f: Fin): Correo {
   const retro = bloqueRetroalimentacion(mensajeRetroalimentacion(d, f.prueba), f.prueba);
   const sobreInforme = f.conInforme
-    ? "Te adjuntamos el informe con la interpretación de los resultados. Se genera al terminar; un psicólogo lo revisa y, si hay ajustes, te enviamos la versión validada."
+    ? `Te adjuntamos el informe preliminar con la interpretación de los resultados. En menos de ${HORAS_ENTREGA} horas un psicólogo lo revisa, lo firma y te enviamos el reporte profesional validado.`
     : "Recibimos las respuestas. Un especialista completa ahora el estudio y te avisamos cuando el informe esté listo.";
   return armar(
     {
@@ -197,7 +201,12 @@ export function correoFinCliente(d: DatosAviso, f: Fin): Correo {
       intro: `${saludo(d.cliente?.nombre)}${
         d.personal ? "Terminaste de contestar." : `${d.persona}${d.puesto ? `, para el puesto de ${d.puesto},` : ""} terminó de contestar.`
       } ${sobreInforme}`,
-      filas: filasDeTiempo(f),
+      filas: [
+        { concepto: "Persona evaluada", importe: d.persona },
+        ...(d.puesto ? [{ concepto: "Puesto", importe: d.puesto }] : []),
+        ...filasDeTiempo(f),
+      ],
+      parrafos: [VALOR_AGREGADO],
       extraHtml: f.conInforme ? retro.html : undefined,
       nota: "Por tratarse de datos personales, guarda este correo en un lugar seguro y no lo reenvíes.",
     },
@@ -229,17 +238,24 @@ export function correoFinEquipo(d: DatosAviso, f: Fin): Correo {
 /* ---------------------------------------------------------- 3. validado */
 
 /** Al cliente: el psicólogo validó todos los informes. */
-export function correoInformeListo(d: DatosAviso): Correo {
+export function correoInformeListo(d: DatosAviso, tiempos: Fila[] = [], firmante?: string): Correo {
   return armar(
     {
-      titulo: d.personal ? "Tu informe está validado" : `El informe de ${d.persona} está validado`,
+      titulo: d.personal ? "Tu informe está firmado" : `El informe de ${d.persona} está firmado`,
       intro: `${saludo(d.cliente?.nombre)}${
         d.personal
-          ? "Un psicólogo revisó y validó tus resultados."
-          : `Un psicólogo revisó y validó los resultados de ${d.persona}.`
-      }`,
-      filas: filasDe(d.pruebas, "validado"),
-      nota: "Si quieres la versión validada del informe o una retroalimentación detallada, responde a este correo.",
+          ? "Un psicólogo revisó y firmó tus resultados."
+          : `Un psicólogo revisó y firmó los resultados de ${d.persona}.`
+      } Te adjuntamos el reporte profesional validado en PDF.`,
+      filas: [
+        { concepto: "Persona evaluada", importe: d.persona },
+        ...(d.puesto ? [{ concepto: "Puesto", importe: d.puesto }] : []),
+        ...filasDe(d.pruebas, "firmado"),
+        ...tiempos,
+        ...(firmante ? [{ concepto: "Firma", importe: firmante }] : []),
+      ],
+      parrafos: [VALOR_AGREGADO],
+      nota: "También puedes descargarlo cuando quieras desde tu panel. Si quieres una retroalimentación detallada, responde a este correo.",
       boton: { texto: "Ver mis evaluaciones", url: `${d.origen}/mi-cuenta/evaluaciones` },
     },
     d.personal ? "Tu informe está validado · Psicología Aplicada" : `Informe validado: ${d.persona} · Psicología Aplicada`,
@@ -319,16 +335,6 @@ export async function avisarInicioPrueba(
   }
 }
 
-function nombreDeArchivo(persona: string, prueba: Instrumento) {
-  const slug = persona
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^\w\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
-  return `informe-${prueba}-${slug || "evaluacion"}.pdf`;
-}
-
 /** Llamar después de guardar una prueba terminada. Manda el informe de esa prueba. */
 export async function avisarPruebaTerminada(sesionId: string, origen = urlDelSitio()) {
   try {
@@ -347,29 +353,8 @@ export async function avisarPruebaTerminada(sesionId: string, origen = urlDelSit
     // El estudio socioeconómico no tiene interpretación hasta que el
     // investigador completa su parte: ese no lleva informe.
     const conInforme = prueba !== "socioeconomico" && Boolean(ses.interpretacion);
-    const adjuntos = conInforme
-      ? [
-          {
-            nombre: nombreDeArchivo(ses.participantNombre, prueba),
-            contenido: (
-              await renderToBuffer(
-                InformePdfDocument({
-                  data: {
-                    instrumento: prueba,
-                    participante: ses.participantNombre,
-                    puesto: ses.puesto,
-                    empresa: ses.empresa,
-                    iniciada: ses.iniciada,
-                    finalizada: fin,
-                    interpretacion: ses.interpretacion!,
-                    preliminar: true,
-                  },
-                }),
-              )
-            ).toString("base64"),
-          },
-        ]
-      : undefined;
+    const pdf = conInforme ? await pdfDeSesion(ses) : null;
+    const adjuntos = pdf ? [{ nombre: pdf.nombre, contenido: pdf.contenido.toString("base64") }] : undefined;
 
     const f: Fin = {
       prueba,
@@ -411,16 +396,44 @@ export async function avisarInformeListo(redemptionId: string, origen = urlDelSi
     const r = await datosDelCanje(redemptionId, origen);
     if (!r?.terminado || !r.datos.cliente) return;
     const sesiones = await getDb()
-      .select({ instrumento: schema.assessmentSessions.instrumento, aprobada: schema.assessmentSessions.aprobada })
+      .select()
       .from(schema.assessmentSessions)
       .where(eq(schema.assessmentSessions.accessRedemptionId, redemptionId));
-    const validadas = new Set(sesiones.filter((s) => s.aprobada).map((s) => s.instrumento));
-    if (!r.datos.pruebas.every((p) => validadas.has(p))) return;
+    const validadas = sesiones.filter((s) => s.aprobada);
+    const hechas = new Set(validadas.map((s) => s.instrumento));
+    if (!r.datos.pruebas.every((p) => hechas.has(p))) return;
+
+    // Los reportes firmados van adjuntos: es lo que el cliente pagó.
+    const adjuntos = [];
+    for (const ses of validadas) {
+      const pdf = await pdfDeSesion(ses);
+      if (pdf) adjuntos.push({ nombre: pdf.nombre, contenido: pdf.contenido.toString("base64") });
+    }
+    // Con una sola prueba (un código por prueba) se dicen inicio, fin y duración.
+    const una = validadas.length === 1 ? validadas[0] : null;
+    const t = una ? tiemposDe(una.iniciada, una.finalizada) : null;
+    const tiempos: Fila[] = t
+      ? [
+          { concepto: "Inicio", importe: t.inicio },
+          { concepto: "Fin", importe: t.fin },
+          { concepto: "Tiempo de respuesta", importe: t.duracion ?? "sin dato" },
+        ]
+      : [];
+    const firmante = una?.approvedById
+      ? (
+          await getDb()
+            .select({ nombre: schema.users.nombre })
+            .from(schema.users)
+            .where(eq(schema.users.id, una.approvedById))
+            .limit(1)
+        )[0]?.nombre
+      : undefined;
 
     await enviarCorreo({
       marca: "psicologia",
       para: r.datos.cliente.email,
-      ...correoInformeListo(r.datos),
+      ...correoInformeListo(r.datos, tiempos, firmante),
+      adjuntos: adjuntos.length ? adjuntos : undefined,
       clave: `informe-listo-${redemptionId}`,
     });
   } catch (error) {

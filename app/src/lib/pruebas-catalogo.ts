@@ -154,32 +154,114 @@ export function esDigital(id: string): id is PruebaDigital {
   return (DIGITALES as readonly string[]).includes(id);
 }
 
-/** Los precios del catálogo van sin IVA; al cobrar en línea se suma aparte. */
+/** Los precios del catálogo van sin IVA; al cliente se le muestra el precio final. */
 export const TASA_IVA = 0.16;
-export const MAX_CANDIDATOS_EN_LINEA = 50;
 
-export type CotizacionEnLinea = Cotizacion & {
-  /** Las elegidas que sí entran al cobro en línea. */
-  ids: PruebaDigital[];
-  /** Las elegidas que se coordinan aparte. */
-  aparte: Prueba[];
-  iva: number;
-  totalConIva: number;
+/** Cuántos códigos de una misma prueba se pueden comprar en un solo pago. */
+export const MAX_POR_PRUEBA = 100;
+
+/** Horas que tiene el candidato para contestar desde que activa su código. */
+export const HORAS_PARA_CONTESTAR = 24;
+
+/** Horas en que llega el informe firmado por el psicólogo. */
+export const HORAS_ENTREGA = 24;
+
+/** Cuántos códigos de cada prueba: { papi: 3, hartman: 1 }. */
+export type Cantidades = Partial<Record<string, number>>;
+
+export type RenglonCotizado = {
+  prueba: Prueba;
+  cantidad: number;
+  /** Precio final por código, ya con el descuento por volumen de esa prueba. */
+  unitario: number;
+  /** Precio final por código sin descuento. */
+  lista: number;
+  descuento: number;
+  importe: number;
 };
 
-/** Lo que se cobra en línea. El servidor la recalcula; nunca confía en el navegador. */
-export function cotizarEnLinea(ids: string[], candidatos: number): CotizacionEnLinea {
-  const validos = DIGITALES.filter(
-    (id) => ids.includes(id) && PRUEBAS.some((p) => p.id === id && p.precio != null),
-  );
-  const n = Math.min(MAX_CANDIDATOS_EN_LINEA, Math.max(1, Math.floor(candidatos) || 1));
-  const c = cotizar([...validos], n);
-  const iva = Math.round(c.total * TASA_IVA);
+export type CotizacionPorPrueba = {
+  /** Lo que se paga en línea: un código por cada unidad. */
+  renglones: RenglonCotizado[];
+  /** Elegidas que se coordinan aparte (no digitalizadas o sin precio). */
+  aparte: { prueba: Prueba; cantidad: number }[];
+  /** Total de códigos que se generan. */
+  codigos: number;
+  subtotal: number;
+  descuento: number;
+  /** Precio final: es lo que cobra Stripe, centavo por centavo. */
+  total: number;
+};
+
+export function cantidadValida(n: unknown): number {
+  const v = Math.floor(Number(n));
+  return Number.isFinite(v) ? Math.min(MAX_POR_PRUEBA, Math.max(0, v)) : 0;
+}
+
+/**
+ * Cotización con cantidad por prueba. Cada unidad es un código que abre una
+ * sola prueba. El descuento por volumen se aplica por prueba según cuántos
+ * códigos de esa prueba se compran. Los precios ya son finales: el cliente no
+ * ve desglose de impuestos. El servidor la recalcula; nunca confía en el navegador.
+ */
+export function cotizarPorPrueba(cantidades: Cantidades): CotizacionPorPrueba {
+  const renglones: RenglonCotizado[] = [];
+  const aparte: { prueba: Prueba; cantidad: number }[] = [];
+  for (const prueba of PRUEBAS) {
+    const cantidad = cantidadValida(cantidades[prueba.id]);
+    if (cantidad === 0) continue;
+    if (!esDigital(prueba.id) || prueba.precio == null) {
+      aparte.push({ prueba, cantidad });
+      continue;
+    }
+    const lista = conIva(prueba.precio);
+    const unitario = Math.round(lista * (1 - descuentoPorVolumen(cantidad)));
+    renglones.push({
+      prueba,
+      cantidad,
+      unitario,
+      lista,
+      descuento: (lista - unitario) * cantidad,
+      importe: unitario * cantidad,
+    });
+  }
+  const subtotal = renglones.reduce((n, r) => n + r.lista * r.cantidad, 0);
+  const total = renglones.reduce((n, r) => n + r.importe, 0);
   return {
-    ...c,
-    ids: validos,
-    aparte: PRUEBAS.filter((p) => ids.includes(p.id) && !validos.includes(p.id as PruebaDigital)),
-    iva,
-    totalConIva: c.total + iva,
+    renglones,
+    aparte,
+    codigos: renglones.reduce((n, r) => n + r.cantidad, 0),
+    subtotal,
+    descuento: subtotal - total,
+    total,
   };
+}
+
+/** «papi:3,hartman:1» ⇄ { papi: 3, hartman: 1 }, para los metadatos del pago. */
+export function cantidadesATexto(c: Cantidades): string {
+  return DIGITALES.flatMap((id) => {
+    const n = cantidadValida(c[id]);
+    return n > 0 ? [`${id}:${n}`] : [];
+  }).join(",");
+}
+
+export function textoACantidades(t: string): Partial<Record<PruebaDigital, number>> {
+  const out: Partial<Record<PruebaDigital, number>> = {};
+  for (const par of t.split(",")) {
+    const [id, n] = par.split(":");
+    if (id && esDigital(id)) {
+      const v = cantidadValida(n);
+      if (v > 0) out[id] = v;
+    }
+  }
+  return out;
+}
+
+/** Hasta cuándo puede contestar quien activó un código en `activado`. */
+export function limiteParaContestar(activado: string): string {
+  return new Date(new Date(activado).getTime() + HORAS_PARA_CONTESTAR * 3_600_000).toISOString();
+}
+
+export function tiempoAgotado(activado: string, ahora = new Date()): boolean {
+  return ahora.getTime() > new Date(limiteParaContestar(activado)).getTime();
 }

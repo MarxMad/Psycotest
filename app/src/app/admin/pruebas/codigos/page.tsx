@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Copy, KeyRound, Plus } from "lucide-react";
+import { Copy, KeyRound, Layers, Plus } from "lucide-react";
 import type { Instrumento } from "@/lib/storage";
 import s from "../../admin.module.css";
 import c from "./codigos.module.css";
@@ -43,6 +43,12 @@ export default function CodigosPage() {
   const [allowed, setAllowed] = useState<Instrumento[]>(["papi", "hartman", "mabe", "cleaver", "lifo"]);
   const [nuevoCodigo, setNuevoCodigo] = useState<string | null>(null);
   const [error, setError] = useState("");
+  // Banco de códigos: uno por cada aplicación de cada prueba.
+  const [showLote, setShowLote] = useState(false);
+  const [lote, setLote] = useState({ empresa: "", clienteEmail: "", clienteNombre: "", vigenciaDias: 180 });
+  const [cantidades, setCantidades] = useState<Partial<Record<Instrumento, number>>>({});
+  const [generados, setGenerados] = useState<{ codigo: string; prueba: string }[] | null>(null);
+  const [generando, setGenerando] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -85,6 +91,27 @@ export default function CodigosPage() {
     load();
   }
 
+  async function crearLote(e: React.FormEvent) {
+    e.preventDefault();
+    setError("");
+    setGenerando(true);
+    const res = await fetch("/api/admin/codigos/lote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...lote, cantidades }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setGenerando(false);
+    if (!res.ok) {
+      setError(data.error ?? "Error al generar");
+      return;
+    }
+    setGenerados(data.codigos);
+    setShowLote(false);
+    setCantidades({});
+    load();
+  }
+
   async function toggleActive(id: string, active: boolean) {
     await fetch(`/api/admin/codigos/${id}`, {
       method: "PATCH",
@@ -116,10 +143,16 @@ export default function CodigosPage() {
               aplicar el participante.
             </p>
           </div>
-          <button type="button" className="btn btn-primary" onClick={() => setShowForm(true)}>
-            <Plus size={16} />
-            Nuevo código
-          </button>
+          <div className={s.row}>
+            <button type="button" className="btn" onClick={() => { setShowLote(true); setShowForm(false); }}>
+              <Layers size={16} />
+              Banco de códigos
+            </button>
+            <button type="button" className="btn btn-primary" onClick={() => { setShowForm(true); setShowLote(false); }}>
+              <Plus size={16} />
+              Nuevo código
+            </button>
+          </div>
         </header>
 
         {nuevoCodigo && (
@@ -137,6 +170,104 @@ export default function CodigosPage() {
               ×
             </button>
           </div>
+        )}
+
+        {generados && (
+          <div className={c.reveal} role="alert">
+            <KeyRound size={20} />
+            <div>
+              <strong>{generados.length} códigos generados, uno por prueba</strong>
+              <p>
+                Cópialos ahora. Si indicaste el correo de la empresa, también los ve en su panel
+                (Mis evaluaciones).
+              </p>
+              <pre className={c.plainCode} style={{ maxHeight: 240, overflow: "auto", whiteSpace: "pre-wrap" }}>
+                {generados.map((g) => `${g.prueba}: ${g.codigo}`).join("\n")}
+              </pre>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => copiar(generados.map((g) => `${g.prueba}: ${g.codigo}`).join("\n"))}
+              >
+                <Copy size={14} /> Copiar todos
+              </button>
+            </div>
+            <button type="button" className={c.close} onClick={() => setGenerados(null)} aria-label="Cerrar">
+              ×
+            </button>
+          </div>
+        )}
+
+        {showLote && (
+          <form className={c.form} onSubmit={crearLote}>
+            <h2>Banco de códigos</h2>
+            <p className={s.muted}>
+              Un código por aplicación: cada uno abre una sola prueba para una persona, una vez. Quien lo
+              activa tiene 24 horas para contestar.
+            </p>
+            <label>
+              Empresa
+              <input
+                value={lote.empresa}
+                onChange={(e) => setLote((l) => ({ ...l, empresa: e.target.value }))}
+                placeholder="Ej. Empresa ABC"
+              />
+            </label>
+            <label>
+              Correo de la empresa (para que los vea en su panel)
+              <input
+                type="email"
+                value={lote.clienteEmail}
+                onChange={(e) => setLote((l) => ({ ...l, clienteEmail: e.target.value }))}
+                placeholder="Opcional"
+              />
+            </label>
+            <label>
+              Nombre del contacto
+              <input
+                value={lote.clienteNombre}
+                onChange={(e) => setLote((l) => ({ ...l, clienteNombre: e.target.value }))}
+                placeholder="Opcional"
+              />
+            </label>
+            <label>
+              Vigencia sin activar (días)
+              <input
+                type="number"
+                min={1}
+                max={730}
+                value={lote.vigenciaDias}
+                onChange={(e) => setLote((l) => ({ ...l, vigenciaDias: Number(e.target.value) }))}
+              />
+            </label>
+            <fieldset className={c.checks}>
+              <legend>Cuántos códigos de cada prueba</legend>
+              {INSTRUMENTOS.filter((i) => i.id !== "socioeconomico").map((i) => (
+                <label key={i.id} className={c.check}>
+                  <input
+                    type="number"
+                    min={0}
+                    max={500}
+                    value={cantidades[i.id] ?? 0}
+                    onChange={(e) => setCantidades((q) => ({ ...q, [i.id]: Math.max(0, Number(e.target.value) || 0) }))}
+                    style={{ width: "5rem" }}
+                  />
+                  {i.label}
+                </label>
+              ))}
+            </fieldset>
+            {error && <p className={c.error}>{error}</p>}
+            <div className={s.row}>
+              <button type="button" className="btn" onClick={() => setShowLote(false)}>
+                Cancelar
+              </button>
+              <button type="submit" className="btn btn-primary" disabled={generando}>
+                {generando
+                  ? "Generando…"
+                  : `Generar ${Object.values(cantidades).reduce((n, v) => n + (v ?? 0), 0)} códigos`}
+              </button>
+            </div>
+          </form>
         )}
 
         {showForm && (

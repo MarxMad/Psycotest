@@ -159,7 +159,86 @@
   color: var(--ch-ink);
 }
 
-/* ---------- candidatos ---------- */
+/* ---------- cantidad por prueba ---------- */
+
+.pruebaCantidad {
+  grid-template-columns: minmax(0, 1fr) auto;
+  cursor: default;
+}
+
+.pruebaCantidad:hover {
+  transform: none;
+}
+
+.selector {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--ch-rule);
+  border-radius: 999px;
+  background: var(--ch-surface);
+  overflow: hidden;
+}
+
+.pruebaCantidad[data-puesta="true"] .selector {
+  border-color: color-mix(in srgb, var(--ch-accent) 70%, transparent);
+}
+
+.paso {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 0;
+  background: transparent;
+  color: var(--ch-ink);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.paso:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ch-accent) 14%, transparent);
+  color: var(--ch-accent);
+}
+
+.paso:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.paso:focus-visible,
+.cantidad:focus-visible {
+  outline: 2px solid var(--ch-accent);
+  outline-offset: -2px;
+}
+
+.cantidad {
+  width: 2.6rem;
+  height: 2.1rem;
+  border: 0;
+  background: transparent;
+  color: var(--ch-ink);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.cantidad::-webkit-outer-spin-button,
+.cantidad::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ahorroNota {
+  font-style: normal;
+  font-size: 0.78em;
+  color: var(--ch-accent);
+}
+
+/* ---------- candidatos (ya no se usa el rango) ---------- */
 
 .rango {
   width: 100%;

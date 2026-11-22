@@ -119,14 +119,14 @@ const PARA_PERSONAS = {
     },
     {
       title: "Tus resultados son tuyos",
-      text: "Nadie más los ve. Recibes tu código, contestas desde donde estés y tu informe llega en 72 horas.",
+      text: "Nadie más los ve. Recibes tu código, contestas desde donde estés y tu informe llega en 24 horas.",
     },
   ],
 };
 
 const RESPALDO = [
   { etiqueta: "Instrumentos en la batería", valor: String(BATERIA_COMPLETA.length) },
-  { etiqueta: "Entrega del informe", valor: "72 h" },
+  { etiqueta: "Entrega del informe", valor: "24 h" },
   { etiqueta: "Aplicación", valor: "En línea" },
   { etiqueta: "Estudio socioeconómico", valor: "Con visita" },
   { etiqueta: "Resultados", valor: "Confidenciales" },
@@ -628,7 +628,7 @@ function Portada({
         <br />
         Evaluación individual
         <br />
-        Informe en 72 h
+        Informe en 24 h
       </p>
     </section>
   );
@@ -682,7 +682,7 @@ function Manifiesto() {
         ))}
       </dl>
 
-      <p className={s.nota}>En línea, desde donde estés · Informe en 72 h</p>
+      <p className={s.nota}>En línea, desde donde estés · Informe en 24 h</p>
     </section>
   );
 }
@@ -723,7 +723,7 @@ function Saludo({ content, onCambiar }: { content: ChannelPageContent; onCambiar
           </span>
           <strong>Necesito evaluar candidatos</strong>
           <span className={s.puertaTexto}>
-            Eliges los instrumentos, te damos los códigos y recibes el informe interpretado en 72 horas.
+            Eliges los instrumentos, te damos los códigos y recibes el informe interpretado en 24 horas.
           </span>
           <span className={s.puertaAccion}>
             Armar mi evaluación <ArrowRight size={16} aria-hidden />
@@ -777,7 +777,7 @@ const ESCENAS: { clip: ClipId; paso: string; titulo: string; texto: string; encu
     paso: "03",
     encuadre: "70% 50%",
     titulo: "Un psicólogo interpreta y lo explica",
-    texto: "Las pruebas se leen juntas y el informe llega firmado en 72 horas.",
+    texto: "Las pruebas se leen juntas y el informe llega firmado en 24 horas.",
   },
 ];
 
@@ -1007,8 +1007,8 @@ function Cotizar({ publico, onCambiar }: { publico: Publico | null; onCambiar: (
         </div>
         <p>
           {personal
-            ? "Marca los instrumentos que quieres responder y el precio se arma solo. Respondes en línea y tu informe llega en 72 horas."
-            : "Marca los instrumentos que necesitas, dinos a cuántas personas evalúas y el precio se arma solo. El estudio socioeconómico ($986 con IVA) incluye visita domiciliaria y se coordina aparte."}
+            ? "Marca los instrumentos que quieres responder y el precio se arma solo. Respondes en línea y tu informe, firmado por un psicólogo, llega en 24 horas."
+            : "Elige cuántas aplicaciones de cada prueba necesitas, una por una: cada aplicación es un código. Tus candidatos tienen 24 horas para contestar y el informe llega firmado por un psicólogo en 24 horas. El estudio socioeconómico ($986) incluye visita domiciliaria y se coordina aparte."}
         </p>
       </div>
       <Cotizador modo={personal ? "persona" : "empresa"} />

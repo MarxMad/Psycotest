@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { HORAS_PARA_CONTESTAR } from "@/lib/pruebas-catalogo";
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Clock, LogOut, Save, ShieldCheck } from "lucide-react";
@@ -113,6 +114,18 @@ function AccesoInner() {
               <span className="eyebrow">Acceso autorizado</span>
               <h1>Hola, {session.nombre.split(" ")[0]}</h1>
               {session.label && <p className={s.sub}>{session.label}</p>}
+              {session.venceEn && pendientes.length > 0 && (
+                <p className={s.sub}>
+                  Tienes hasta el{" "}
+                  <strong>
+                    {new Intl.DateTimeFormat("es-MX", {
+                      dateStyle: "long",
+                      timeStyle: "short",
+                    }).format(new Date(session.venceEn))}
+                  </strong>{" "}
+                  para contestar ({HORAS_PARA_CONTESTAR} horas desde que activaste tu código).
+                </p>
+              )}
             </div>
             <div className={s.avance} aria-label={`${hechas} de ${session.allowed.length} pruebas completadas`}>
               <strong>
@@ -158,7 +171,8 @@ function AccesoInner() {
           <p className={s.mensaje}>
             {pendientes.length === 0
               ? "Completaste todas las pruebas de tu código. Gracias: el psicólogo responsable revisará tus resultados."
-              : "Elige una prueba pendiente. Puedes hacerlas en el orden que prefieras; tu avance se guarda."}
+              : "Elige una prueba pendiente. Puedes hacerlas en el orden que prefieras; tu avance se guarda."}{" "}
+            ¿Te dieron otro código para otra prueba? Sal y escríbelo con tu mismo nombre.
           </p>
 
           <button type="button" className={s.salir} onClick={salir}>

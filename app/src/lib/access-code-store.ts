@@ -9,6 +9,9 @@ import {
   parseCompletedInstruments,
 } from "@/lib/access-codes";
 import type { Instrumento } from "@/lib/storage";
+import { HORAS_PARA_CONTESTAR, limiteParaContestar, tiempoAgotado } from "@/lib/pruebas-catalogo";
+
+const TIEMPO_AGOTADO = `Se terminó tu tiempo: tenías ${HORAS_PARA_CONTESTAR} horas para contestar desde que activaste este código. Escribe a quien te lo dio si necesitas otro.`;
 
 export async function createAccessCode(input: {
   label: string;
@@ -99,6 +102,12 @@ export async function redeemAccessCode(input: {
     if (allowed.every((i) => completed.includes(i))) {
       return { ok: false as const, error: "Ya completaste todas las pruebas de este código" };
     }
+    // Las 24 horas corren desde que se activó el código, no desde cada prueba.
+    const empezadas = Object.keys(existing.iniciadas ?? {}) as Instrumento[];
+    const enCurso = empezadas.some((i) => !completed.includes(i));
+    if (tiempoAgotado(existing.createdAt) && !enCurso) {
+      return { ok: false as const, error: TIEMPO_AGOTADO };
+    }
     return {
       ok: true as const,
       redemption: {
@@ -111,6 +120,7 @@ export async function redeemAccessCode(input: {
         completed,
         label: codeRow.label,
         resumed: true,
+        venceEn: limiteParaContestar(existing.createdAt),
       },
     };
   }
@@ -163,6 +173,7 @@ export async function redeemAccessCode(input: {
       completed: [] as Instrumento[],
       label: codeRow.label,
       resumed: false,
+      venceEn: limiteParaContestar(now),
     },
   };
 }

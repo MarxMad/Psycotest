@@ -61,6 +61,7 @@ export async function POST(request: Request) {
       puesto: redemption.puesto,
       allowed: redemption.allowed,
       completed: redemption.completed,
+      venceEn: redemption.venceEn,
     });
     await setApplicantCookie(token);
 
@@ -78,6 +79,7 @@ export async function POST(request: Request) {
         allowed: redemption.allowed,
         completed: redemption.completed,
         label: redemption.label,
+        venceEn: redemption.venceEn,
       },
     });
   } catch (err) {

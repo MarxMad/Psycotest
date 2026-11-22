@@ -8,6 +8,7 @@ import { AmbientBackground } from "@/components/AmbientBackground";
 import { FadeIn } from "@/components/motion";
 import { psycotest } from "@/lib/routes";
 import { CONTACTO, whatsapp } from "@/lib/contacto";
+import { HORAS_ENTREGA, HORAS_PARA_CONTESTAR } from "@/lib/pruebas-catalogo";
 import s from "./compra.module.css";
 
 type Estado = {
@@ -17,7 +18,7 @@ type Estado = {
   modo: "empresa" | "persona";
   pruebas: string[];
   folio: string;
-  codigos: string[];
+  codigos: { codigo: string; pruebas: string[] }[];
 };
 
 const pesos = (c: number) =>
@@ -109,7 +110,7 @@ function Cuerpo() {
     );
   }
 
-  const todos = estado.codigos.join("\n");
+  const todos = estado.codigos.map((c) => `${c.pruebas.join(", ")}: ${c.codigo}`).join("\n");
 
   return (
     <FadeIn className={s.panel}>
@@ -120,14 +121,17 @@ function Cuerpo() {
       <h1>{persona ? "Tu código está listo" : `Tus ${estado.codigos.length} códigos están listos`}</h1>
       <p className={s.sub}>
         {estado.total != null && <>Pagaste {pesos(estado.total)}. </>}
-        {persona ? "Sirve" : "Cada código sirve a un candidato, una vez,"} para: {estado.pruebas.join(", ")}.
-        También {persona ? "te lo mandamos" : "te los mandamos"} a <strong>{estado.correo}</strong>.
+        {persona
+          ? <>Sirve para: {estado.pruebas.join(", ")}.</>
+          : "Cada código abre una sola prueba para una persona, una vez."}{" "}
+        También {persona ? "te lo mandamos" : "te los mandamos"} a <strong>{estado.correo}</strong>
+        {persona ? "." : " y quedan en tu panel, en Mis evaluaciones."}
       </p>
 
       <ol className={s.codigos}>
-        {estado.codigos.map((c, i) => (
+        {estado.codigos.map(({ codigo: c, pruebas }) => (
           <li key={c}>
-            <span>{persona ? "Tu código" : `Candidato ${i + 1}`}</span>
+            <span>{persona ? "Tu código" : pruebas.join(", ")}</span>
             <code>{c}</code>
             <button type="button" onClick={() => copiar(c)} aria-label={`Copiar ${c}`}>
               {copiado === c ? <Check size={15} /> : <Copy size={15} />}
@@ -137,6 +141,11 @@ function Cuerpo() {
       </ol>
 
       <div className={s.acciones}>
+        {!persona && (
+          <Link className="btn" href="/mi-cuenta/evaluaciones">
+            Ir a mi panel
+          </Link>
+        )}
         {!persona && estado.codigos.length > 1 && (
           <button type="button" className="btn" onClick={() => copiar(todos)}>
             {copiado === todos ? "Copiados" : "Copiar todos"}
@@ -149,8 +158,8 @@ function Cuerpo() {
 
       <p className={s.pie}>
         {persona
-          ? "Contesta a tu ritmo: puedes pausar y retomar. Tu informe llega en 72 horas."
-          : "Manda un código a cada candidato. Entran en esta misma página de acceso, escriben su código y contestan desde donde estén. Los informes llegan en 72 horas."}
+          ? `Desde que activas tu código tienes ${HORAS_PARA_CONTESTAR} horas para contestar. Tu informe, firmado por un psicólogo, llega en ${HORAS_ENTREGA} horas.`
+          : `Manda a cada candidato el código de cada prueba que le toca. Entran en la página de acceso, escriben su código y tienen ${HORAS_PARA_CONTESTAR} horas para contestar desde que lo activan. Los informes, firmados por un psicólogo en formato profesional, llegan en ${HORAS_ENTREGA} horas.`}
       </p>
     </FadeIn>
   );

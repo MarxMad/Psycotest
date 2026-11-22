@@ -109,7 +109,7 @@ const NECESIDADES: {
     necesidad: "Necesito evaluar a",
     acento: "quién contrato",
     marca: "Psicología Aplicada",
-    que: "Pruebas psicométricas en línea, estudio socioeconómico e informe de un psicólogo en 72 h.",
+    que: "Pruebas psicométricas en línea, estudio socioeconómico e informe de un psicólogo en 24 h.",
     canal: "psicologia",
     tono: "#d8342a",
   },

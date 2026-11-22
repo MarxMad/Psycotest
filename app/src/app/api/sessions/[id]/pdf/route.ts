@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
 import { requireUser } from "@/lib/auth";
 import { getSession } from "@/lib/session-store";
-import { InformePdfDocument } from "@/lib/informe-pdf";
-import { SocioeconomicoPdfDocument } from "@/lib/socioeconomico-pdf";
-import { comoRespuestas, resumirSocioeconomico } from "@/lib/socioeconomico";
+import { pdfDeSesion } from "@/lib/informe-sesion";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -28,42 +25,13 @@ export async function GET(_request: Request, { params }: Params) {
     return NextResponse.json({ error: "Sin interpretación" }, { status: 400 });
   }
 
-  const respuestasSE = row.instrumento === "socioeconomico" ? comoRespuestas(row.respuestas) : null;
-  const buffer = await renderToBuffer(
-    respuestasSE
-      ? SocioeconomicoPdfDocument({
-          data: {
-            participante: row.participantNombre,
-            puesto: row.puesto,
-            empresa: row.empresa,
-            iniciada: row.iniciada,
-            respuestas: respuestasSE,
-            resumen: resumirSocioeconomico(respuestasSE),
-            interpretacion: row.interpretacion,
-            notas: row.notasPsicologo,
-          },
-        })
-      : InformePdfDocument({
-      data: {
-        instrumento: row.instrumento,
-        participante: row.participantNombre,
-        puesto: row.puesto,
-        empresa: row.empresa,
-        iniciada: row.iniciada,
-        finalizada: row.finalizada,
-        interpretacion: row.interpretacion,
-        notasPsicologo: row.notasPsicologo,
-      },
-    }),
-  );
+  const pdf = await pdfDeSesion(row);
+  if (!pdf) return NextResponse.json({ error: "Sin interpretación" }, { status: 400 });
 
-  const slug = row.participantNombre.replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
-  const filename = `informe-${row.instrumento}-${slug || id}.pdf`;
-
-  return new NextResponse(new Uint8Array(buffer), {
+  return new NextResponse(new Uint8Array(pdf.contenido), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Content-Disposition": `attachment; filename="${pdf.nombre}"`,
     },
   });
 }

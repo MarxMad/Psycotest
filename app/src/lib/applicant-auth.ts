@@ -14,6 +14,8 @@ export interface ApplicantSession {
   puesto?: string;
   allowed: Instrumento[];
   completed: Instrumento[];
+  /** Hasta cuándo puede contestar (24 h desde que activó el código). */
+  venceEn?: string;
 }
 
 export async function createApplicantToken(session: ApplicantSession): Promise<string> {
@@ -25,6 +27,7 @@ export async function createApplicantToken(session: ApplicantSession): Promise<s
     puesto: session.puesto,
     allowed: session.allowed,
     completed: session.completed,
+    vence: session.venceEn,
   })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -62,6 +65,7 @@ export async function getApplicantSession(): Promise<ApplicantSession | null> {
       puesto: (payload.puesto as string) || undefined,
       allowed: (payload.allowed as Instrumento[]) ?? [],
       completed: (payload.completed as Instrumento[]) ?? [],
+      venceEn: (payload.vence as string) || undefined,
     };
   } catch {
     return null;
@@ -89,6 +93,7 @@ export async function verifyApplicantToken(token: string): Promise<ApplicantSess
       puesto: (payload.puesto as string) || undefined,
       allowed: (payload.allowed as Instrumento[]) ?? [],
       completed: (payload.completed as Instrumento[]) ?? [],
+      venceEn: (payload.vence as string) || undefined,
     };
   } catch {
     return null;

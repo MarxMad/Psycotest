@@ -40,7 +40,7 @@ const OBJETOS: Objeto[] = [
   { id: "cerebro", etiqueta: "Batería completa", href: "#bateria", x: 50, y: 37, t: 21, prof: 0.9, giro: -4 },
   { id: "radar", etiqueta: "Perfil laboral · PAPI", href: "#bateria", x: 59, y: 27, t: 11, prof: 0.5, giro: 8 },
   { id: "psi", etiqueta: "Quiénes somos", href: "#hola", x: 42, y: 27, t: 12, prof: 0.6, giro: -12 },
-  { id: "informe", etiqueta: "Informe en 72 h", href: "#hola", x: 37, y: 42, t: 13, prof: 1.1, giro: -14 },
+  { id: "informe", etiqueta: "Informe en 24 h", href: "#hola", x: 37, y: 42, t: 13, prof: 1.1, giro: -14 },
   { id: "disc", etiqueta: "Comportamiento · Cleaver", href: "#bateria", x: 63, y: 41, t: 14, prof: 1.2, giro: 10 },
   { id: "ruta", etiqueta: "Decisiones · MABE", href: "#bateria", x: 70, y: 27, t: 9, prof: 0.4, giro: 6 },
   { id: "brujula", etiqueta: "Estilos · LIFO", href: "#bateria", x: 27, y: 53, t: 12, prof: 1.5, giro: -10 },
