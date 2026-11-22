@@ -20,6 +20,7 @@ import {
   nuevaSesion,
   type Sesion,
 } from "@/lib/storage";
+import { avisarInicioServidor } from "@/lib/persist-server";
 import s from "./lifo.module.css";
 
 type Fase = "intro" | "aplicando" | "resultado";
@@ -166,6 +167,7 @@ export default function LifoPage() {
     if (puesto) nueva.puesto = puesto;
     if (empresa) nueva.empresa = empresa;
     persistir(nueva);
+    avisarInicioServidor("lifo");
     setI(0);
     setDraft(VACIO);
     setFase("aplicando");

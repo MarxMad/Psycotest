@@ -6,6 +6,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { APP_NAME } from "./brand";
+import { duracion, fechaHora } from "./tiempos-prueba";
 import { SUBTITULO_INSTRUMENTO } from "@/lib/instrumentos";
 
 const styles = StyleSheet.create({
@@ -110,8 +111,12 @@ export interface InformePdfData {
   puesto?: string | null;
   empresa?: string | null;
   iniciada: string;
+  /** Cuándo terminó de contestar; con esto el informe muestra la duración exacta. */
+  finalizada?: string | null;
   interpretacion: string;
   notasPsicologo?: string | null;
+  /** Generado al terminar, antes de que un psicólogo lo valide. */
+  preliminar?: boolean;
 }
 
 export function InformePdfDocument({ data }: { data: InformePdfData }) {
@@ -132,7 +137,22 @@ export function InformePdfDocument({ data }: { data: InformePdfData }) {
           </Text>
           <Text style={styles.meta}>Participante: {data.participante}</Text>
           {contexto ? <Text style={styles.meta}>{contexto}</Text> : null}
-          <Text style={styles.meta}>Aplicación: {fmt(data.iniciada)}</Text>
+          {data.finalizada ? (
+            <>
+              <Text style={styles.meta}>Inicio: {fechaHora(data.iniciada)}</Text>
+              <Text style={styles.meta}>Fin: {fechaHora(data.finalizada)}</Text>
+              <Text style={styles.meta}>
+                Tiempo de respuesta: {duracion(data.iniciada, data.finalizada) ?? "sin dato"}
+              </Text>
+            </>
+          ) : (
+            <Text style={styles.meta}>Aplicación: {fmt(data.iniciada)}</Text>
+          )}
+          {data.preliminar ? (
+            <Text style={styles.meta}>
+              Informe preliminar, generado al terminar la prueba. Pendiente de revisión por un psicólogo.
+            </Text>
+          ) : null}
         </View>
 
         <View style={styles.section}>

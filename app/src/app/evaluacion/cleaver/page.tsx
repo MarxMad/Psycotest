@@ -22,6 +22,7 @@ import {
   nuevaSesion,
   type Sesion,
 } from "@/lib/storage";
+import { avisarInicioServidor } from "@/lib/persist-server";
 import { CONSIGNAS } from "./consignas";
 import s from "./cleaver.module.css";
 
@@ -77,6 +78,7 @@ export default function CleaverPage() {
     if (puesto) nueva.puesto = puesto;
     if (empresa) nueva.empresa = empresa;
     persistir(nueva);
+    avisarInicioServidor("cleaver");
     setI(0);
     setDraft({ mas: null, menos: null });
     setFase("aplicando");

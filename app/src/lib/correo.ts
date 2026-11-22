@@ -81,6 +81,8 @@ export async function enviarCorreo(opciones: {
   responderA?: string;
   /** Encabezados extra, p. ej. List-Unsubscribe en las promociones. */
   encabezados?: Record<string, string>;
+  /** Archivos adjuntos; `contenido` en base64. */
+  adjuntos?: { nombre: string; contenido: string }[];
 }): Promise<Envio> {
   const llave = process.env.RESEND_API_KEY;
   if (!llave) {
@@ -104,6 +106,9 @@ export async function enviarCorreo(opciones: {
         text: opciones.texto,
         reply_to: opciones.responderA ?? CONTACTO.email,
         ...(opciones.encabezados ? { headers: opciones.encabezados } : {}),
+        ...(opciones.adjuntos?.length
+          ? { attachments: opciones.adjuntos.map((a) => ({ filename: a.nombre, content: a.contenido })) }
+          : {}),
       }),
     });
     const datos = (await r.json().catch(() => ({}))) as { id?: string; message?: string };

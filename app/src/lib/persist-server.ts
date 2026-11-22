@@ -1,4 +1,17 @@
-import type { Sesion } from "./storage";
+import type { Instrumento, Sesion } from "./storage";
+
+/**
+ * Avisa que la persona empezó una prueba: el servidor guarda la hora de
+ * inicio y manda los avisos. No bloquea: si falla, la prueba sigue.
+ */
+export function avisarInicioServidor(instrumento: Instrumento): void {
+  fetch("/api/aplicacion/inicio", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ instrumento }),
+    keepalive: true,
+  }).catch(() => {});
+}
 
 /** Envía aplicación terminada al servidor (endpoint público, sin login del aplicante). */
 export async function enviarAplicacionServidor<TResp, TCalif>(

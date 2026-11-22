@@ -20,6 +20,7 @@ import { useApplicantSession } from "@/lib/applicant-client";
 import { PARTE_I, PARTE_II, type Consigna } from "./consignas";
 import s from "./hartman.module.css";
 import { finalizarSesion, nuevaSesion, type Sesion } from "@/lib/storage";
+import { avisarInicioServidor } from "@/lib/persist-server";
 import { interpretarHartman } from "@/lib/informes";
 
 type Item = { id: string; texto: string; norma: number; eje: "I" | "E" | "S" };
@@ -154,7 +155,13 @@ export default function Hartman() {
           </div>
 
           <div className={s.row}>
-            <button className="btn btn-primary" onClick={() => setFase("I")}>
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                avisarInicioServidor("hartman");
+                setFase("I");
+              }}
+            >
               Comenzar con la Parte I →
             </button>
             <Link href={channelPublicUrl("psicologia")} className="btn">Volver</Link>

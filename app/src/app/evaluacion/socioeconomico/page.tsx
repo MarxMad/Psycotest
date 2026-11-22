@@ -22,7 +22,7 @@ import {
   type AvisoAceptado,
   type RespuestasSocioeconomico,
 } from "@/lib/socioeconomico";
-import { enviarAplicacionServidor } from "@/lib/persist-server";
+import { avisarInicioServidor, enviarAplicacionServidor } from "@/lib/persist-server";
 import { borrarBorrador, cargarBorrador, guardarBorrador, nuevaSesion, type Sesion } from "@/lib/storage";
 import s from "./socioeconomico.module.css";
 
@@ -80,6 +80,7 @@ export default function SocioeconomicoPage() {
     if (aplicante?.puesto) nueva.puesto = aplicante.puesto;
     if (aplicante?.empresa) nueva.empresa = aplicante.empresa;
     persistir(nueva);
+    avisarInicioServidor("socioeconomico");
     setI(0);
     setFase("llenando");
   }

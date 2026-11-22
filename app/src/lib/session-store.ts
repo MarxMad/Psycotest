@@ -76,6 +76,7 @@ export async function saveSession(input: {
   accessCodeId?: string;
   accessRedemptionId?: string;
   iniciada: string;
+  finalizada?: string;
   terminada?: boolean;
 }) {
   const db = getDb();
@@ -107,6 +108,7 @@ export async function saveSession(input: {
     accessCodeId: input.accessCodeId ?? null,
     accessRedemptionId: input.accessRedemptionId ?? null,
     iniciada: input.iniciada,
+    finalizada: input.finalizada ?? existing?.finalizada ?? null,
     actualizada: now,
     terminada: input.terminada ?? true,
   };

@@ -81,6 +81,11 @@ export const accessRedemptions = pgTable("access_redemptions", {
     .$type<Array<"papi" | "hartman" | "mabe" | "cleaver" | "lifo" | "socioeconomico">>()
     .notNull()
     .default([]),
+  /**
+   * Cuándo empezó cada prueba, con la hora del servidor. Se fija la primera
+   * vez que la persona pulsa «Comenzar» y no cambia aunque recargue.
+   */
+  iniciadas: jsonb("iniciadas").$type<Partial<Record<"papi" | "hartman" | "mabe" | "cleaver" | "lifo" | "socioeconomico", string>>>(),
   ipHash: text("ip_hash"),
   createdAt: text("created_at").notNull(),
 });
@@ -107,6 +112,8 @@ export const assessmentSessions = pgTable("assessment_sessions", {
   accessCodeId: text("access_code_id").references(() => accessCodes.id),
   accessRedemptionId: text("access_redemption_id").references(() => accessRedemptions.id),
   iniciada: text("iniciada").notNull(),
+  /** Cuándo llegó la última respuesta (hora del servidor). `actualizada` cambia con cada edición; esta no. */
+  finalizada: text("finalizada"),
   actualizada: text("actualizada").notNull(),
   terminada: boolean("terminada").notNull().default(true),
 });

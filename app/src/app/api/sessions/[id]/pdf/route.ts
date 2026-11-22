@@ -50,6 +50,7 @@ export async function GET(_request: Request, { params }: Params) {
         puesto: row.puesto,
         empresa: row.empresa,
         iniciada: row.iniciada,
+        finalizada: row.finalizada,
         interpretacion: row.interpretacion,
         notasPsicologo: row.notasPsicologo,
       },

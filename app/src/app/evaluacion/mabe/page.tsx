@@ -23,6 +23,7 @@ import {
   nuevaSesion,
   type Sesion,
 } from "@/lib/storage";
+import { avisarInicioServidor } from "@/lib/persist-server";
 import { ConfirmacionPrueba } from "@/components/ConfirmacionPrueba";
 import { useApplicantSession } from "@/lib/applicant-client";
 import s from "./mabe.module.css";
@@ -70,6 +71,7 @@ export default function MabePage() {
       { puesto, empresa },
     );
     persistir(nueva);
+    avisarInicioServidor("mabe");
     setGrupoIdx(0);
     setFase("captura");
   }

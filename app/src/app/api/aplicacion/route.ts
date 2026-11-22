@@ -1,5 +1,5 @@
 import { after, NextResponse } from "next/server";
-import { avisarPruebasTerminadas } from "@/lib/avisos-evaluacion";
+import { avisarPruebaTerminada } from "@/lib/avisos-evaluacion";
 import type { Instrumento } from "@/lib/storage";
 import { procesarSesion } from "@/lib/procesar-sesion";
 import { getSession, saveSession } from "@/lib/session-store";
@@ -85,6 +85,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ya completaste esta prueba" }, { status: 403 });
   }
 
+  // Inicio: el que guardó el servidor al pulsar «Comenzar». Si no hay (una
+  // pestaña abierta antes de este cambio), el del navegador. Fin: ahora.
+  const inicioServidor = canje.iniciadas?.[instrumento];
+  const finalizada = new Date().toISOString();
+
   const participantNombre = applicant.nombre;
   const puesto = body.puesto ?? applicant.puesto;
   const empresa = body.empresa ?? applicant.empresa;
@@ -108,7 +113,8 @@ export async function POST(request: Request) {
     aprobada: false,
     // El estudio queda en borrador hasta que el investigador haga su parte.
     estado: instrumento === "socioeconomico" ? "borrador" : "calificada",
-    iniciada,
+    iniciada: inicioServidor ?? iniciada,
+    finalizada,
     terminada: true,
     accessCodeId: applicant.codeId,
     accessRedemptionId: applicant.redemptionId,
@@ -127,9 +133,9 @@ export async function POST(request: Request) {
     });
   }
 
-  // Si fue la última prueba, avisa a quien compró y a los psicólogos.
+  // Manda el informe de esta prueba a quien compró y al equipo.
   const origen = new URL(request.url).origin;
-  after(() => avisarPruebasTerminadas(applicant.redemptionId, origen));
+  after(() => avisarPruebaTerminada(row.id, origen));
 
   return NextResponse.json({ ok: true, id: row.id }, { status: 201 });
 }

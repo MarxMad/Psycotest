@@ -19,6 +19,7 @@ import { CONSIGNAS } from "./consignas";
 import { ConfirmacionPrueba } from "@/components/ConfirmacionPrueba";
 import { useApplicantSession } from "@/lib/applicant-client";
 import { borrarBorrador, cargarBorrador, finalizarSesion, guardarBorrador, nuevaSesion, type Sesion } from "@/lib/storage";
+import { avisarInicioServidor } from "@/lib/persist-server";
 import { interpretarPapi } from "@/lib/informes";
 import s from "./papi.module.css";
 
@@ -61,6 +62,7 @@ export default function Papi() {
   function iniciar(nombre: string) {
     const nueva = nuevaSesion<Respuestas>("papi", nombre || "Sin nombre", {});
     persistir(nueva);
+    avisarInicioServidor("papi");
     setI(0);
     setFase("aplicando");
   }
